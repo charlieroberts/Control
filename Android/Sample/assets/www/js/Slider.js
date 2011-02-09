@@ -2,7 +2,8 @@ function Slider(ctx, props) {
 	this.ctx = ctx;
 	
 	this.__proto__ = new Widget(ctx,props);
-	
+	console.log("sw: " + this.width + " || sh: " + this.height);
+
 	this.isVertical =  (typeof props.isVertical != "undefined") ? props.isVertical : false;
 	
 	this.requiresTouchDown = (typeof props.requiresTouchDown != "undefined") ? props.requiresTouchDown : true;
@@ -74,7 +75,7 @@ function Slider(ctx, props) {
 					}
 					break;
 				case "touchmove":
-					
+					console.log("moving...");
 					var shouldChange = false;
 					if(this.requiresTouchDown) {
 						for(var i = 0; i < this.activeTouches.length; i++) {
@@ -118,6 +119,7 @@ function Slider(ctx, props) {
 	
     this.changeValue = function(val) { 
 		if(!this.isVertical) {
+			console.log("changing value...");
 			this.value = 1 - ((this.x + this.width) - val) / (this.width); 
 		}else{
 			this.value = (((this.y + this.height) - val) / (this.height)); 
@@ -128,6 +130,7 @@ function Slider(ctx, props) {
     }
     
 	this.draw = function() {
+		console.log("drawing");	
 		var range = this.max - this.min;
 		var percent = (this.value + (0 - this.min)) / range;
 		if(!this.shouldUseCanvas) {

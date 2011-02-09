@@ -53,7 +53,7 @@
 		
 		//PhoneGap.addConstructor(function(){
 		//	document.addEventListener("touchmove", preventBehavior, false); // prevents webkit from scrolling DNR
-			
+		function startControl() {
 			//window.plugins.nativeControls = new NativeControls();
 			console.log("before control");
             control = new Control();
@@ -65,7 +65,7 @@
 			//console.log("interface");
 			//destinationManager = new DestinationManager();
 			//destinationManager.init();
-
+			console.log("w: " + screen.width + " || h: " + screen.height);
 			interfaceManager = new InterfaceManager();
 			interfaceManager.init();
 			
@@ -80,6 +80,7 @@
 			preferencesManager = new PreferencesManager();
 
 			setTimeout(function() { destinationManager.createDestinationList(); }, 500);
+		}
 		//});
 		
 		function autolockToggle() {
@@ -114,9 +115,15 @@
 			 window.plugins.nativeControls.showTabBarItems("interfaces", "destinations", "preferences", "info");
 			 control.showToolbar();
 		}
+		
+		function init() {
+			document.addEventListener('deviceready', startControl(), true);
+		}
     </script>
   </head>
- <body id="stage" onload="document.addEventListener('touchmove', preventBehavior, false);" style="background-color:#000; -webkit-user-select: none;" class="theme"> 
+ <body id="stage" onload="init();" style="background-color:#000; -webkit-user-select: none;" class="theme"> 
+ <h2 style="font-size:32px; z-index:100; color:#fff; position:absolute; top:0em; right:0em;" ontouchend="console.log('refresh'); window.location.reload();">REFRESH</h2>			
+	
   <div id="selectedInterface"></div>
   
   <div id="Interfaces">
@@ -130,7 +137,9 @@
 			<div id="interfaceScroller" class="scroller">
 				<ul id="interfaceList"></ul>
 			</div>
+
 		</div>
+
   </div>
   
   <div id="Destinations">

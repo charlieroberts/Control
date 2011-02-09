@@ -98,6 +98,7 @@ Widget.prototype.setValue = function(newValue) {
         newValue = this.min;
     }
     this.value = newValue;
+	console.log("draw called");
     this.draw();    
     eval(this.onvaluechange);
 	if(!(arguments[1] === false))

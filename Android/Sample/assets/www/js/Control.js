@@ -15,6 +15,8 @@ function Control() {
 	acc = null;
 	compass = null;
 	gyro = null;
+	console.log("finished init control");
+	console.log(this.currentTab);
     //PhoneGap.exec("OSCManager.startReceiveThread");
 	//PhoneGap.exec("CNTRL_Accelerometer.setUpdateRate", 50);
 	//PhoneGap.exec("Gyro.setUpdateRate", 50);	
@@ -279,7 +281,8 @@ Control.prototype.onRotation = function(event) {
 
 
 Control.prototype.event = function(event) {
-  // REMEMBER : IN EVENT METHODS TRIGGERED FROM THE WEBVIEW "THIS" REFERS TO THE HTML OBJECT THAT GENERATED THE EVENT
+  // REMEMBER : IN EVENT METHODS TRIGGERED FROM THE WEBVIEW "THIS" REFERS TO THE HTML OBJECT THAT GENERATED THE EVENT	
+	event.preventDefault(); // needed for Android
 	var page = control.currentPage;
 	//debug.log("length = " + control.pages[page].length);
 	for(var i = 0; i < control.pages[page].length; i++) {
@@ -302,11 +305,11 @@ Control.prototype.drawWidgetsOnPage = function(page) {
 }
 
 Control.prototype.changeTab = function(tab) {
-    var oldTab = this.currentTab;
-	this.currentPage = 0;
+    var oldTab = control.currentTab;
+	control.currentPage = 0;
 
-    this.currentTab.style.display = "none";
-    this.currentTab = tab;
+    control.currentTab.style.display = "none";
+    control.currentTab = tab;
     
     this.currentTab.style.display = "block";    
     
