@@ -205,6 +205,7 @@ function Button(ctx, props) {
                                     this.draw();
                                     this.output();
                                 }
+
                                 eval(this.ontouchend);
                                 //break;
                             }
@@ -241,7 +242,7 @@ function Button(ctx, props) {
             case "toggle" :
                 this.isLit = (this.value == this.max);
                 break;
-            case "visufile://localhost/Users/charlie/Documents/code/control/iphone/www/OSCManager.jsalToggle" :
+            case "visualToggle" :
                 this.isLit = (this.visualToggleLit);
                 break;    
             case "latch" : case "momentary" :

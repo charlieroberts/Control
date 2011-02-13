@@ -261,7 +261,6 @@ function InterfaceManager() {
         this.currentInterfaceName = loadedInterfaceName;
         this.currentInterfaceJSON = json;
 
-		console.log("width = " + screen.width);		
         if(control.orientation == 0 || control.orientation == 180) {
             control.makePages(pages, screen.width, screen.height);
         }else{

@@ -8,10 +8,15 @@ function Widget(ctx, props) { // x, y, width, height, color, startingValue, stro
 		if(typeof props.bounds != "undefined") {
 			props.x = props.bounds[0];
 			props.y = props.bounds[1];
-			props.width = props.bounds[2];
-			props.height = props.bounds[3];
+			if(props.bounds.length > 3) {
+				props.width = props.bounds[2];
+				props.height = props.bounds[3];
+			}else{ // radius
+				props.width = props.bounds[2];
+				props.height = props.bounds[2];
+			}
 		}
-		//debug.log("x = " + props.x + " :: y = " + props.y + " :: width = " + props.width + " :: height = " + props.height);
+		//console.log("x = " + props.x + " :: y = " + props.y + " :: width = " + props.width + " :: height = " + props.height);
 		if(typeof props.x == "undefined") props.x = 0;
 		if(typeof props.y == "undefined") props.y = 0;		
 		this.x = Math.round(parseFloat(control.deviceWidth) * props.x);

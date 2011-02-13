@@ -21,10 +21,10 @@
 		301BF5C1109A6A2B0062928A /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 301BF5C0109A6A2B0062928A /* MediaPlayer.framework */; };
 		301BF5C3109A6A2B0062928A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 301BF5C2109A6A2B0062928A /* QuartzCore.framework */; };
 		301BF5C5109A6A2B0062928A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 301BF5C4109A6A2B0062928A /* SystemConfiguration.framework */; };
-		3053AC6F109B7857006FCFE7 /* VERSION in Resources */ = {isa = PBXBuildFile; fileRef = 3053AC6E109B7857006FCFE7 /* VERSION */; };
 		305D5FD1115AB8F900A74A75 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 305D5FD0115AB8F900A74A75 /* MobileCoreServices.framework */; };
 		307D28A2123043360040C0FA /* PhoneGapBuildSettings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 307D28A1123043350040C0FA /* PhoneGapBuildSettings.xcconfig */; };
 		30E1352710E2C1420031B30D /* PhoneGap.plist in Resources */ = {isa = PBXBuildFile; fileRef = 30E1352610E2C1420031B30D /* PhoneGap.plist */; };
+		CBC0573D1303AE9B00638426 /* VERSION in Resources */ = {isa = PBXBuildFile; fileRef = CBC0573C1303AE9B00638426 /* VERSION */; };
 		CBDDF34A1300B5280030E736 /* Bonjour.m in Sources */ = {isa = PBXBuildFile; fileRef = CBDDF3491300B5280030E736 /* Bonjour.m */; };
 		CBDDF3541300B63A0030E736 /* Compass.m in Sources */ = {isa = PBXBuildFile; fileRef = CBDDF3531300B63A0030E736 /* Compass.m */; };
 		CBDDF3571300B6580030E736 /* CNTRL_Accelerometer.m in Sources */ = {isa = PBXBuildFile; fileRef = CBDDF3561300B6580030E736 /* CNTRL_Accelerometer.m */; };
@@ -80,12 +80,12 @@
 		301BF5C0109A6A2B0062928A /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		301BF5C2109A6A2B0062928A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		301BF5C4109A6A2B0062928A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		3053AC6E109B7857006FCFE7 /* VERSION */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = VERSION; path = "../../Downloads/phonegap-0.9.3/iOS/PhoneGapLib/VERSION"; sourceTree = PHONEGAPLIB; };
 		305D5FD0115AB8F900A74A75 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		307D28A1123043350040C0FA /* PhoneGapBuildSettings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = PhoneGapBuildSettings.xcconfig; sourceTree = "<group>"; };
 		30E1352610E2C1420031B30D /* PhoneGap.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = PhoneGap.plist; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* Control_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Control_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Control-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Control-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		CBC0573C1303AE9B00638426 /* VERSION */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = VERSION; sourceTree = "<group>"; };
 		CBDDF3481300B5280030E736 /* Bonjour.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bonjour.h; sourceTree = "<group>"; };
 		CBDDF3491300B5280030E736 /* Bonjour.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bonjour.m; sourceTree = "<group>"; };
 		CBDDF3521300B63A0030E736 /* Compass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Compass.h; path = ../Classes/Compass.h; sourceTree = "<group>"; };
@@ -220,7 +220,7 @@
 			children = (
 				CBDDFBDC1301F48F0030E736 /* images */,
 				30E1352610E2C1420031B30D /* PhoneGap.plist */,
-				3053AC6E109B7857006FCFE7 /* VERSION */,
+				CBC0573C1303AE9B00638426 /* VERSION */,
 				8D1107310486CEB800E47090 /* Control-Info.plist */,
 				307D28A1123043350040C0FA /* PhoneGapBuildSettings.xcconfig */,
 			);
@@ -434,7 +434,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CBDDF41F1300BF1E0030E736 /* www in Resources */,
-				3053AC6F109B7857006FCFE7 /* VERSION in Resources */,
 				30E1352710E2C1420031B30D /* PhoneGap.plist in Resources */,
 				307D28A2123043360040C0FA /* PhoneGapBuildSettings.xcconfig in Resources */,
 				CBDDF7381300D2730030E736 /* interfaces in Resources */,
@@ -451,6 +450,7 @@
 				CBDDFBD01301F42D0030E736 /* destinations.png in Resources */,
 				CBDDFBD11301F42D0030E736 /* Info.png in Resources */,
 				CBDDFBD21301F42D0030E736 /* presets.png in Resources */,
+				CBC0573D1303AE9B00638426 /* VERSION in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

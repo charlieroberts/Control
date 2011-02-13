@@ -25,7 +25,6 @@ function Control() {
 
 Control.prototype.makePages = function(_pages,width, height) {
 	pages = _pages;
-	console.log("make pages width = " + width);
 	this.deviceWidth = width;
 	this.deviceHeight = height;
 	interfaceDiv.innerHTML = "";
@@ -39,7 +38,6 @@ Control.prototype.makePages = function(_pages,width, height) {
 	interfaceDiv.addEventListener('touchstart', control.event, false);
 	interfaceDiv.addEventListener('touchmove', control.event, false);
 	interfaceDiv.addEventListener('touchmove', preventBehavior, false);	
-	console.log("pages made");	
 }
 
 Control.prototype.showToolbar = function() {
@@ -110,7 +108,6 @@ Control.prototype.unloadWidgets = function() {
 			widget = null;
 		}
 	}
-	console.log("widgets unloaded");
 }
 
 Control.prototype.loadConstants = function(_constants) {
@@ -125,7 +122,6 @@ Control.prototype.loadConstants = function(_constants) {
 			eval("this.addConstantWidget(" + w.name + ");"); // PROBLEM
 		}
 	}
-	console.log("constants added");
 }
 	
 Control.prototype.makeWidget = function(w) {

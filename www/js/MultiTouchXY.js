@@ -108,23 +108,26 @@ function MultiTouchXY(ctx, props) {
 							this.addTouch(touch.pageX , touch.pageY , touch.identifier);
 						else
 							this.trackTouch(touch.pageX, touch.pageY , touch.identifier);
+						
+						eval(this.ontouchstart);
 					}
-					eval(this.ontouchstart);
 					break;
 				case "touchmove":
 					for(var t = 0; t < this.children.length; t++) {
 						_t = this.children[t];
 						if(touch.identifier == _t.id) {
 							this.changeValue(_t, touch.pageX, touch.pageY);
+							eval(this.ontouchmove);
 							break;
 						}
 					}
-					eval(this.ontouchmove);
+					
 					break;
 				case "touchend":
 					for(var t = 0; t < this.children.length; t++) {
 						_t = this.children[t];
 						if(touch.identifier == _t.id) {
+							eval(this.ontouchend);
 							if(this.isMomentary) {
 								this.removeTouch(_t);
 							}else{
@@ -133,7 +136,6 @@ function MultiTouchXY(ctx, props) {
 							}
 						}
 					}							
-					eval(this.ontouchend);
 					break;
 			}
 		}
@@ -189,7 +191,7 @@ function MultiTouchXY(ctx, props) {
 		}
         
 		if(this.onvaluechange != null) eval(this.onvaluechange);
-		this.output(touch);
+		if(!this.isLocal) this.output(touch);
 	}
 	
 	this.output = function(touch) {
