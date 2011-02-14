@@ -20,6 +20,7 @@ function Control() {
 	PhoneGap.exec("CNTRL_Accelerometer.setUpdateRate", 50);
 	PhoneGap.exec("Gyro.setUpdateRate", 50);	
 	this.changeTab(this.currentTab);
+	this.isAddingConstants = false;
 	return this;
 }
 
@@ -97,12 +98,10 @@ Control.prototype.setWidgetValueWithMIDIMessage = function(midiType, midiChannel
 }
 
 Control.prototype.unloadWidgets = function() {
-	//debug.log("unloading all widgets");
 	for(var page = 0; page < control.pages.length; page++) {
 		for(var j = 0; j < control.pages[page].length; j++) {
 			var widget = control.pages[page][j];
 			if(typeof widget.unload != "undefined") {
-				debug.log("unloading " + widget.name);
 				widget.unload();
 			}
 			widget = null;
@@ -111,6 +110,7 @@ Control.prototype.unloadWidgets = function() {
 }
 
 Control.prototype.loadConstants = function(_constants) {
+	this.isAddingConstants = true;
 	if(_constants != null) {
 		constants = _constants;
 
@@ -156,18 +156,21 @@ Control.prototype.makeWidget = function(w) {
 }
 
 Control.prototype.loadWidgets = function() {
+	this.isAddingConstants = false;
 	this.widgets = new Array();
 	this.pages = new Array();
-	for(var currentPage = 0; currentPage < pages.length; currentPage++) {
+	var oldCurrentPage = this.currentPage;
+	for(this.currentPage = 0; this.currentPage < pages.length; this.currentPage++) {
 		this.pages.push(new Array());
-        var page = pages[currentPage];
+        var page = pages[this.currentPage];
 		for(var i=0; i < page.length; i++) {
 			var w = page[i];
 			var _w = this.makeWidget(w);
 			this.widgets.push(_w);
-			eval("this.addWidget(" + w.name + ", currentPage);"); // PROBLEM
+			eval("this.addWidget(" + w.name + ", this.currentPage);"); // PROBLEM
 		}
 	}
+	this.currentPage = oldCurrentPage;
 }
 
 Control.prototype.getValues = function() {
@@ -206,7 +209,7 @@ Control.prototype.addConstantWidget = function(widget) {
 
 Control.prototype.addWidget = function(widget, page) {
 	this.pages[page].push(widget);
-	if(page == this.currentPage) {
+	if(page == 0) { // TODO: SHOULD THIS BE VARIABLE?
 		if(widget.show != null)
 			widget.show();
 		

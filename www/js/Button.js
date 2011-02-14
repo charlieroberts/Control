@@ -41,6 +41,19 @@ function Button(ctx, props) {
 		this.requiresTouchDown = props.requiresTouchDown;
 	}
 	
+	if(typeof props.label != "undefined") {
+		this.text = props.label;
+		this.label = {"name": this.name + "Label", "type": "Label", "bounds":[props.x, props.y, props.width, props.height], "value":this.text};
+		var _w = control.makeWidget(this.label);
+		control.widgets.push(_w);
+		if(!control.isAddingConstants)
+			eval("control.addWidget(" + _w.name + ", control.currentPage);"); // PROBLEM
+		else
+			eval("control.addConstantWidget(" + _w.name + ");"); // PROBLEM
+			
+		this.label = _w;
+	}
+	
 	this.yOffset = 0;
 	this.xOffset = 0;
 	
