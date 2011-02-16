@@ -32,6 +32,7 @@
 	<script type="text/javascript" src="js/DestinationManager.js"></script>
 	<script type="text/javascript" src="js/PreferencesManager.js"></script>
 	<script type="text/javascript" src="js/OSCManager.js"></script>		
+	<script type="text/javascript" src="js/MIDIManager.js"></script>		
 	
     <script type="text/javascript" src="js/Widget.js"></script>
     <script type="text/javascript" src="js/Slider.js"></script>
@@ -52,7 +53,7 @@
 			e.preventDefault(); 
 		};
         
-		console.log("something");
+		//console.log("something");
 		PhoneGap.addConstructor(function(){
 			document.addEventListener("touchmove", preventBehavior, false); // prevents webkit from scrolling DNR
 			
@@ -63,6 +64,7 @@
             _protocol = "OSC";
 			//console.setLevel(8);
 			oscManager = new OSCManager();
+			midiManager = new MIDIManager();
 			
 			destinationManager = new DestinationManager();
 			destinationManager.init();

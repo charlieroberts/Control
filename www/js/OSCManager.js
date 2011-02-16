@@ -1,6 +1,4 @@
-// TODO: Allow Canvas drawing instead of individual children... for large numbers of children this gets too slow.
-
-function OSCManager(ctx, props) {
+function OSCManager() {
 	this.delegate = this;
 	
 	return this;

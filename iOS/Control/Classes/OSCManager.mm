@@ -24,19 +24,10 @@ protected:
 		if([me.addresses objectForKey:oscAddress] != nil) {			
 			[me performSelector:NSSelectorFromString([me.addresses objectForKey:oscAddress]) withObject:[NSValue valueWithPointer:&m]];
 		}else{
-//			osc::ReceivedMessageArgumentStream args  = m.ArgumentStream();
 			osc::ReceivedMessage::const_iterator arg = m.ArgumentsBegin();
-			NSMutableString *jsString = [NSMutableString stringWithFormat:@"oscManager.processOSCMessage(\"%s\", \"%s\", ", m.AddressPattern(), m.TypeTags(), nil];
 			
-			/*
-			osc::ReceivedMessage::const_iterator arg = m.ArgumentsBegin();
-                bool a1 = (arg++)->AsBool();
-                int a2 = (arg++)->AsInt32();
-                float a3 = (arg++)->AsFloat();
-                const char *a4 = (arg++)->AsString();
-                if( arg != m.ArgumentsEnd() )
-                    throw osc::ExcessArgumentException();
-			*/
+			NSMutableString *jsString = [NSMutableString stringWithFormat:@"oscManager.processOSCMessage(\"%s\", \"%s\", ", m.AddressPattern(), m.TypeTags(), nil];
+
 			const char * tags = m.TypeTags();
 
 			for(int i = 0; i < m.ArgumentCount(); i++) {

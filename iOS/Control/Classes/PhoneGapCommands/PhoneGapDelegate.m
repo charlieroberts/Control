@@ -9,7 +9,7 @@
 #import "PhoneGapDelegate.h"
 #import "PhoneGapViewController.h"
 #import <UIKit/UIKit.h>
-#import "Movie.h"
+//#import "Movie.h"
 #import "InvokedUrlCommand.h"
 
 @implementation PhoneGapDelegate
