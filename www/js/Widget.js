@@ -2,9 +2,11 @@
 function Widget(ctx, props) { // x, y, width, height, color, startingValue, stroke, protocol) {
 
 	if(ctx != null) {
+		this.props = props;
         this.name = props.name;
 		this.ctx = ctx;
 		this.widgetType = props.type;
+		
 		if(typeof props.bounds != "undefined") {
 			props.x = props.bounds[0];
 			props.y = props.bounds[1];
@@ -16,26 +18,32 @@ function Widget(ctx, props) { // x, y, width, height, color, startingValue, stro
 				props.height = props.bounds[2];
 			}
 		}
-		//console.log("x = " + props.x + " :: y = " + props.y + " :: width = " + props.width + " :: height = " + props.height);
-		if(typeof props.x == "undefined") props.x = 0;
-		if(typeof props.y == "undefined") props.y = 0;		
-		this.x = Math.round(parseFloat(control.deviceWidth) * props.x);
-		this.y = Math.round(parseFloat(control.deviceHeight) * props.y);
-		//debug.log("x = " + this.x + " :: y = " + this.y);
-		
 		if(typeof props.width  == "undefined") props.width  = .2;
 		if(typeof props.height == "undefined") props.height = .2;	
 		this.width = Math.round(parseFloat(control.deviceWidth)* props.width);
 		this.height = Math.round(parseFloat(control.deviceHeight) * props.height);
-	
-		//debug.log("width = " + this.width + " :: height = " + this.height);
-		this.shouldSend = false;
+		if(typeof props.x == "undefined") props.x = 0;
+		if(typeof props.y == "undefined") props.y = 0;		
+		this.x = Math.round(parseFloat(control.deviceWidth) * props.x);
+		this.y = Math.round(parseFloat(control.deviceHeight) * props.y);
+		
+		//console.log("x = " + props.x + " :: y = " + props.y + " :: width = " + props.width + " :: height = " + props.height);
 
+		if(typeof props.colors != "undefined") {
+			this.backgroundColor = props.colors[0];
+			this.fillColor = props.colors[1];
+			this.color = this.fillColor;
+			this.strokeColor = props.colors[2];
+			this.stroke = this.strokeColor;
+		}else{
+			this.color =  props.color || "#fff";
+			this.fillColor = props.fillColor || this.color;
+			this.stroke = props.stroke || this.color;
+			this.strokeColor = props.strokeColor || this.stroke;
+			this.backgroundColor = props.backgroundColor || "#000";
+		}			
+		
 		this.activeTouches = new Array();
-        
-		var widgetColor = (typeof props.color != "undefined") ? props.color : "#ffffff";
-		this.color =  widgetColor;
-		this.stroke = props.stroke || widgetColor;
 		
 		this.isLocal = (typeof props.isLocal != "undefined") ? props.isLocal : false;
 		
@@ -48,9 +56,7 @@ function Widget(ctx, props) { // x, y, width, height, color, startingValue, stro
 		this.midiType   = (typeof props.midiType != "undefined") ? props.midiType : "cc";
 		this.channel	= (typeof props.channel != "undefined") ? props.channel : 1;
 		this.midiNumber = (typeof props.midiNumber != "undefined") ? props.midiNumber : 0;
-            
-		if(props.name == "refreshButton") debug.log("after type / channel / number");
-		
+            		
 		if(typeof props.address != "undefined") { 
 			this.address = props.address;
 		}else{

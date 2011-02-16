@@ -24,6 +24,25 @@
 		305D5FD1115AB8F900A74A75 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 305D5FD0115AB8F900A74A75 /* MobileCoreServices.framework */; };
 		307D28A2123043360040C0FA /* PhoneGapBuildSettings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 307D28A1123043350040C0FA /* PhoneGapBuildSettings.xcconfig */; };
 		30E1352710E2C1420031B30D /* PhoneGap.plist in Resources */ = {isa = PBXBuildFile; fileRef = 30E1352610E2C1420031B30D /* PhoneGap.plist */; };
+		CB367DF1130A738E000CDA68 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = CB367DDE130A738E000CDA68 /* NSData+Base64.m */; };
+		CB367DF2130A738E000CDA68 /* OCABMutableMultiValue.m in Sources */ = {isa = PBXBuildFile; fileRef = CB367DE0130A738E000CDA68 /* OCABMutableMultiValue.m */; };
+		CB367DF3130A738E000CDA68 /* OCABRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = CB367DE2130A738E000CDA68 /* OCABRecord.m */; };
+		CB367DF4130A738E000CDA68 /* OCCFObject.m in Sources */ = {isa = PBXBuildFile; fileRef = CB367DE4130A738E000CDA68 /* OCCFObject.m */; };
+		CB367DF5130A738E000CDA68 /* PhoneGapCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = CB367DE6130A738E000CDA68 /* PhoneGapCommand.m */; };
+		CB367DF6130A738E000CDA68 /* PhoneGapDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CB367DE8130A738E000CDA68 /* PhoneGapDelegate.m */; };
+		CB367DF7130A738E000CDA68 /* PhoneGapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB367DEA130A738E000CDA68 /* PhoneGapViewController.m */; };
+		CB367DF8130A738E000CDA68 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = CB367DEC130A738E000CDA68 /* Reachability.m */; };
+		CB367DF9130A738E000CDA68 /* Sound.m in Sources */ = {isa = PBXBuildFile; fileRef = CB367DEE130A738E000CDA68 /* Sound.m */; };
+		CB367DFA130A738E000CDA68 /* UIColor-Expanded.m in Sources */ = {isa = PBXBuildFile; fileRef = CB367DF0130A738E000CDA68 /* UIColor-Expanded.m */; };
+		CB367E08130A73DF000CDA68 /* InvokedUrlCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = CB367E07130A73DF000CDA68 /* InvokedUrlCommand.m */; };
+		CB367E19130A741E000CDA68 /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = CB367E0E130A741E000CDA68 /* NSObject+SBJSON.m */; };
+		CB367E1A130A741E000CDA68 /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = CB367E10130A741E000CDA68 /* NSString+SBJSON.m */; };
+		CB367E1B130A741E000CDA68 /* SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = CB367E12130A741E000CDA68 /* SBJSON.m */; };
+		CB367E1C130A741E000CDA68 /* SBJsonBase.m in Sources */ = {isa = PBXBuildFile; fileRef = CB367E14130A741E000CDA68 /* SBJsonBase.m */; };
+		CB367E1D130A741E000CDA68 /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = CB367E16130A741E000CDA68 /* SBJsonParser.m */; };
+		CB367E1E130A741E000CDA68 /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = CB367E18130A741E000CDA68 /* SBJsonWriter.m */; };
+		CB367E41130A755B000CDA68 /* File.m in Sources */ = {isa = PBXBuildFile; fileRef = CB367E40130A755B000CDA68 /* File.m */; };
+		CB367E52130A762D000CDA68 /* DebugConsole.m in Sources */ = {isa = PBXBuildFile; fileRef = CB367E51130A762D000CDA68 /* DebugConsole.m */; };
 		CBC0573D1303AE9B00638426 /* VERSION in Resources */ = {isa = PBXBuildFile; fileRef = CBC0573C1303AE9B00638426 /* VERSION */; };
 		CBDDF34A1300B5280030E736 /* Bonjour.m in Sources */ = {isa = PBXBuildFile; fileRef = CBDDF3491300B5280030E736 /* Bonjour.m */; };
 		CBDDF3541300B63A0030E736 /* Compass.m in Sources */ = {isa = PBXBuildFile; fileRef = CBDDF3531300B63A0030E736 /* Compass.m */; };
@@ -58,8 +77,6 @@
 		CBDDFBD01301F42D0030E736 /* destinations.png in Resources */ = {isa = PBXBuildFile; fileRef = CBDDFBCC1301F42D0030E736 /* destinations.png */; };
 		CBDDFBD11301F42D0030E736 /* Info.png in Resources */ = {isa = PBXBuildFile; fileRef = CBDDFBCD1301F42D0030E736 /* Info.png */; };
 		CBDDFBD21301F42D0030E736 /* presets.png in Resources */ = {isa = PBXBuildFile; fileRef = CBDDFBCE1301F42D0030E736 /* presets.png */; };
-		CBDDFC881301FC770030E736 /* libPhoneGapLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CBDDFC871301FC770030E736 /* libPhoneGapLib.a */; };
-		CBDDFD6613020A3F0030E736 /* libPhoneGapLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CBDDFD6513020A3F0030E736 /* libPhoneGapLib.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -85,6 +102,44 @@
 		30E1352610E2C1420031B30D /* PhoneGap.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = PhoneGap.plist; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* Control_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Control_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Control-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Control-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		CB367DDE130A738E000CDA68 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
+		CB367DDF130A738E000CDA68 /* OCABMutableMultiValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCABMutableMultiValue.h; sourceTree = "<group>"; };
+		CB367DE0130A738E000CDA68 /* OCABMutableMultiValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCABMutableMultiValue.m; sourceTree = "<group>"; };
+		CB367DE1130A738E000CDA68 /* OCABRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCABRecord.h; sourceTree = "<group>"; };
+		CB367DE2130A738E000CDA68 /* OCABRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCABRecord.m; sourceTree = "<group>"; };
+		CB367DE3130A738E000CDA68 /* OCCFObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCCFObject.h; sourceTree = "<group>"; };
+		CB367DE4130A738E000CDA68 /* OCCFObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCCFObject.m; sourceTree = "<group>"; };
+		CB367DE5130A738E000CDA68 /* PhoneGapCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneGapCommand.h; sourceTree = "<group>"; };
+		CB367DE6130A738E000CDA68 /* PhoneGapCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhoneGapCommand.m; sourceTree = "<group>"; };
+		CB367DE7130A738E000CDA68 /* PhoneGapDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneGapDelegate.h; sourceTree = "<group>"; };
+		CB367DE8130A738E000CDA68 /* PhoneGapDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhoneGapDelegate.m; sourceTree = "<group>"; };
+		CB367DE9130A738E000CDA68 /* PhoneGapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneGapViewController.h; sourceTree = "<group>"; };
+		CB367DEA130A738E000CDA68 /* PhoneGapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhoneGapViewController.m; sourceTree = "<group>"; };
+		CB367DEB130A738E000CDA68 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		CB367DEC130A738E000CDA68 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		CB367DED130A738E000CDA68 /* Sound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sound.h; sourceTree = "<group>"; };
+		CB367DEE130A738E000CDA68 /* Sound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sound.m; sourceTree = "<group>"; };
+		CB367DEF130A738E000CDA68 /* UIColor-Expanded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor-Expanded.h"; sourceTree = "<group>"; };
+		CB367DF0130A738E000CDA68 /* UIColor-Expanded.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor-Expanded.m"; sourceTree = "<group>"; };
+		CB367E06130A73DF000CDA68 /* InvokedUrlCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InvokedUrlCommand.h; sourceTree = "<group>"; };
+		CB367E07130A73DF000CDA68 /* InvokedUrlCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InvokedUrlCommand.m; sourceTree = "<group>"; };
+		CB367E0C130A741E000CDA68 /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
+		CB367E0D130A741E000CDA68 /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJSON.h"; sourceTree = "<group>"; };
+		CB367E0E130A741E000CDA68 /* NSObject+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJSON.m"; sourceTree = "<group>"; };
+		CB367E0F130A741E000CDA68 /* NSString+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+SBJSON.h"; sourceTree = "<group>"; };
+		CB367E10130A741E000CDA68 /* NSString+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+SBJSON.m"; sourceTree = "<group>"; };
+		CB367E11130A741E000CDA68 /* SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJSON.h; sourceTree = "<group>"; };
+		CB367E12130A741E000CDA68 /* SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJSON.m; sourceTree = "<group>"; };
+		CB367E13130A741E000CDA68 /* SBJsonBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonBase.h; sourceTree = "<group>"; };
+		CB367E14130A741E000CDA68 /* SBJsonBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonBase.m; sourceTree = "<group>"; };
+		CB367E15130A741E000CDA68 /* SBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonParser.h; sourceTree = "<group>"; };
+		CB367E16130A741E000CDA68 /* SBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonParser.m; sourceTree = "<group>"; };
+		CB367E17130A741E000CDA68 /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
+		CB367E18130A741E000CDA68 /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
+		CB367E3F130A755B000CDA68 /* File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = File.h; sourceTree = "<group>"; };
+		CB367E40130A755B000CDA68 /* File.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = File.m; sourceTree = "<group>"; };
+		CB367E50130A762D000CDA68 /* DebugConsole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugConsole.h; sourceTree = "<group>"; };
+		CB367E51130A762D000CDA68 /* DebugConsole.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DebugConsole.m; sourceTree = "<group>"; };
 		CBC0573C1303AE9B00638426 /* VERSION */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = VERSION; sourceTree = "<group>"; };
 		CBDDF3481300B5280030E736 /* Bonjour.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bonjour.h; sourceTree = "<group>"; };
 		CBDDF3491300B5280030E736 /* Bonjour.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bonjour.m; sourceTree = "<group>"; };
@@ -142,8 +197,6 @@
 		CBDDFBCC1301F42D0030E736 /* destinations.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = destinations.png; path = ../../resources/images/destinations.png; sourceTree = "<group>"; };
 		CBDDFBCD1301F42D0030E736 /* Info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Info.png; path = ../../resources/images/Info.png; sourceTree = "<group>"; };
 		CBDDFBCE1301F42D0030E736 /* presets.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = presets.png; path = ../../resources/images/presets.png; sourceTree = "<group>"; };
-		CBDDFC871301FC770030E736 /* libPhoneGapLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPhoneGapLib.a; path = "../PhoneGapLib/build/Release-iphoneos/libPhoneGapLib.a"; sourceTree = SOURCE_ROOT; };
-		CBDDFD6513020A3F0030E736 /* libPhoneGapLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPhoneGapLib.a; path = "../PhoneGapLib/build/Release-iphonesimulator/libPhoneGapLib.a"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,8 +219,6 @@
 				301BF5C5109A6A2B0062928A /* SystemConfiguration.framework in Frameworks */,
 				305D5FD1115AB8F900A74A75 /* MobileCoreServices.framework in Frameworks */,
 				CBDDF3A91300B8740030E736 /* CoreMIDI.framework in Frameworks */,
-				CBDDFC881301FC770030E736 /* libPhoneGapLib.a in Frameworks */,
-				CBDDFD6613020A3F0030E736 /* libPhoneGapLib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -177,6 +228,7 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				CB367DDD130A738E000CDA68 /* PhoneGapCommands */,
 				1D3623240D0F684500981E51 /* ControlAppDelegate.h */,
 				1D3623250D0F684500981E51 /* ControlAppDelegate.m */,
 			);
@@ -230,8 +282,6 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				CBDDFD6513020A3F0030E736 /* libPhoneGapLib.a */,
-				CBDDFC871301FC770030E736 /* libPhoneGapLib.a */,
 				CBDDF3B81300B8960030E736 /* CoreMotion.framework */,
 				CBDDF3A81300B8740030E736 /* CoreMIDI.framework */,
 				CBDDF3641300B6B10030E736 /* oscpack */,
@@ -299,6 +349,59 @@
 			);
 			path = Plugins;
 			sourceTree = SOURCE_ROOT;
+		};
+		CB367DDD130A738E000CDA68 /* PhoneGapCommands */ = {
+			isa = PBXGroup;
+			children = (
+				CB367E50130A762D000CDA68 /* DebugConsole.h */,
+				CB367E51130A762D000CDA68 /* DebugConsole.m */,
+				CB367E3F130A755B000CDA68 /* File.h */,
+				CB367E40130A755B000CDA68 /* File.m */,
+				CB367E0B130A741E000CDA68 /* JSON */,
+				CB367E06130A73DF000CDA68 /* InvokedUrlCommand.h */,
+				CB367E07130A73DF000CDA68 /* InvokedUrlCommand.m */,
+				CB367DDE130A738E000CDA68 /* NSData+Base64.m */,
+				CB367DDF130A738E000CDA68 /* OCABMutableMultiValue.h */,
+				CB367DE0130A738E000CDA68 /* OCABMutableMultiValue.m */,
+				CB367DE1130A738E000CDA68 /* OCABRecord.h */,
+				CB367DE2130A738E000CDA68 /* OCABRecord.m */,
+				CB367DE3130A738E000CDA68 /* OCCFObject.h */,
+				CB367DE4130A738E000CDA68 /* OCCFObject.m */,
+				CB367DE5130A738E000CDA68 /* PhoneGapCommand.h */,
+				CB367DE6130A738E000CDA68 /* PhoneGapCommand.m */,
+				CB367DE7130A738E000CDA68 /* PhoneGapDelegate.h */,
+				CB367DE8130A738E000CDA68 /* PhoneGapDelegate.m */,
+				CB367DE9130A738E000CDA68 /* PhoneGapViewController.h */,
+				CB367DEA130A738E000CDA68 /* PhoneGapViewController.m */,
+				CB367DEB130A738E000CDA68 /* Reachability.h */,
+				CB367DEC130A738E000CDA68 /* Reachability.m */,
+				CB367DED130A738E000CDA68 /* Sound.h */,
+				CB367DEE130A738E000CDA68 /* Sound.m */,
+				CB367DEF130A738E000CDA68 /* UIColor-Expanded.h */,
+				CB367DF0130A738E000CDA68 /* UIColor-Expanded.m */,
+			);
+			path = PhoneGapCommands;
+			sourceTree = "<group>";
+		};
+		CB367E0B130A741E000CDA68 /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				CB367E0C130A741E000CDA68 /* JSON.h */,
+				CB367E0D130A741E000CDA68 /* NSObject+SBJSON.h */,
+				CB367E0E130A741E000CDA68 /* NSObject+SBJSON.m */,
+				CB367E0F130A741E000CDA68 /* NSString+SBJSON.h */,
+				CB367E10130A741E000CDA68 /* NSString+SBJSON.m */,
+				CB367E11130A741E000CDA68 /* SBJSON.h */,
+				CB367E12130A741E000CDA68 /* SBJSON.m */,
+				CB367E13130A741E000CDA68 /* SBJsonBase.h */,
+				CB367E14130A741E000CDA68 /* SBJsonBase.m */,
+				CB367E15130A741E000CDA68 /* SBJsonParser.h */,
+				CB367E16130A741E000CDA68 /* SBJsonParser.m */,
+				CB367E17130A741E000CDA68 /* SBJsonWriter.h */,
+				CB367E18130A741E000CDA68 /* SBJsonWriter.m */,
+			);
+			path = JSON;
+			sourceTree = "<group>";
 		};
 		CBDDF3641300B6B10030E736 /* oscpack */ = {
 			isa = PBXGroup;
@@ -510,6 +613,25 @@
 				CBDDF3871300B6B10030E736 /* OscTypes.cpp in Sources */,
 				CBDDF58A1300CB850030E736 /* NativeControls.m in Sources */,
 				CBDDF907130128720030E736 /* Device.m in Sources */,
+				CB367DF1130A738E000CDA68 /* NSData+Base64.m in Sources */,
+				CB367DF2130A738E000CDA68 /* OCABMutableMultiValue.m in Sources */,
+				CB367DF3130A738E000CDA68 /* OCABRecord.m in Sources */,
+				CB367DF4130A738E000CDA68 /* OCCFObject.m in Sources */,
+				CB367DF5130A738E000CDA68 /* PhoneGapCommand.m in Sources */,
+				CB367DF6130A738E000CDA68 /* PhoneGapDelegate.m in Sources */,
+				CB367DF7130A738E000CDA68 /* PhoneGapViewController.m in Sources */,
+				CB367DF8130A738E000CDA68 /* Reachability.m in Sources */,
+				CB367DF9130A738E000CDA68 /* Sound.m in Sources */,
+				CB367DFA130A738E000CDA68 /* UIColor-Expanded.m in Sources */,
+				CB367E08130A73DF000CDA68 /* InvokedUrlCommand.m in Sources */,
+				CB367E19130A741E000CDA68 /* NSObject+SBJSON.m in Sources */,
+				CB367E1A130A741E000CDA68 /* NSString+SBJSON.m in Sources */,
+				CB367E1B130A741E000CDA68 /* SBJSON.m in Sources */,
+				CB367E1C130A741E000CDA68 /* SBJsonBase.m in Sources */,
+				CB367E1D130A741E000CDA68 /* SBJsonParser.m in Sources */,
+				CB367E1E130A741E000CDA68 /* SBJsonWriter.m in Sources */,
+				CB367E41130A755B000CDA68 /* File.m in Sources */,
+				CB367E52130A762D000CDA68 /* DebugConsole.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -520,7 +642,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -531,16 +653,22 @@
 					"\"$(SRCROOT)/\"../PhoneGapLib/**",
 				);
 				INFOPLIST_FILE = "Control-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/../../../../Documents/PhoneGapLib/build/Release-iphoneos\"",
 					"\"$(SRCROOT)/../PhoneGapLib/build/Release-iphonesimulator\"",
+					"\"$(SRCROOT)/../PhoneGapLib/build/Release-iphoneos\"",
 				);
+				ONLY_ACTIVE_ARCH = YES;
+				PHONEGAPLIB = "";
 				PRODUCT_NAME = Control;
 				SDKROOT = iphoneos;
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				k = "";
+				lllk = "$(PHONEGAPLIB)";
 			};
 			name = Debug;
 		};
@@ -548,7 +676,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_UNIVERSAL_IPHONE_OS)";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Control_Prefix.pch;
@@ -563,7 +691,9 @@
 					"\"$(SRCROOT)\"",
 					"\"$(SRCROOT)/../../../../Documents/PhoneGapLib/build/Release-iphoneos\"",
 					"\"$(SRCROOT)/../PhoneGapLib/build/Release-iphonesimulator\"",
+					"\"$(SRCROOT)/../PhoneGapLib/build/Release-iphoneos\"",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = Control;
 				SDKROOT = iphoneos;
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;

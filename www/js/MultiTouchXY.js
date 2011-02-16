@@ -19,12 +19,13 @@ function MultiTouchXY(ctx, props) {
 	this.container.style.height = this.height + "px";
 	this.container.style.top = this.y + "px";
 	this.container.style.left = this.x + "px";
+	this.container.style.backgroundColor = this.backgroundColor;
 	this.ctx.appendChild(this.container);
 	
     this.touchCount = 0;
-	this.container.style.border = "1px solid #999999";
+	this.container.style.border = "1px solid " + this.strokeColor;
 	
-	this.touchColors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFFFFF', '#80FF00', '#8000FF', '#0080FF', '#FF8080'];
+	//this.touchColors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFFFFF', '#80FF00', '#8000FF', '#0080FF', '#FF8080'];
 	
 	this.init = function() {
 		if(!this.isMomentary) {
@@ -40,7 +41,7 @@ function MultiTouchXY(ctx, props) {
 		touch.style.display = "block";
 		touch.style.position = "absolute";
 
-        touch.style.border = "#999 solid 1px";
+        touch.style.border = this.strokeColor + " solid 1px";
         touch.style.width = (this.width / 8) +"px";
 		touch.style.height = touch.style.width;
         touch.style.textAlign = "center";
@@ -49,9 +50,10 @@ function MultiTouchXY(ctx, props) {
 
         touch.style.left = xPos + "px";
         touch.style.top  = yPos + "px";
-        touch.style.color = "#ccc";
-        touch.style.backgroundColor = "#333";
+        touch.style.color = this.strokeColor;
+        touch.style.backgroundColor = this.fillColor;
 		touch.id = (this.isMomentary) ? id : gNOT_ACTIVE;
+		touch.childID = touch.id;
 		touch.isActive = (this.isMomentary);
         if(!this.isMomentary) {
             touch.activeNumber = id + 1;

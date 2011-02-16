@@ -2,8 +2,8 @@
 
 function MultiButton(ctx, props) {
 	this.ctx = ctx;
-	this.widthInPercentage  = props.width;
-	this.heightInPercentage = props.height;
+	this.widthInPercentage  = props.width || props.bounds[2];
+	this.heightInPercentage = props.height || props.bounds[3];
 
     this.mode    = (typeof props.mode != "undefined") ? props.mode : "toggle";
 	this.children = new Array();
@@ -37,8 +37,7 @@ function MultiButton(ctx, props) {
 					"y":this.origY + _y,
 					"width":this.buttonWidth, 
 					"height":this.buttonHeight,
-					"color":this.color,
-					"stroke":this.stroke,
+					"colors": [this.backgroundColor, this.fillColor, this.strokeColor],
 					"min":this.min,
 					"max":this.max,
 					"startingValue":this.value,
@@ -59,7 +58,7 @@ function MultiButton(ctx, props) {
 				var _w = new Button(this.ctx, newProps);
 				_w.address    = this.address + "/" + ((i * this.columns) + j);
 				_w.midiNumber = this.midiNumber + ((i * this.columns) + j);
-				
+				_w.childID = ((i * this.columns) + j);
 				this.children.push(_w);
 			}						
 		}

@@ -18,11 +18,11 @@ function Slider(ctx, props) {
 		this.fillDiv.style.width = this.width + "px";
 		this.fillDiv.style.height = this.height + "px";
 		this.fillDiv.style.position = "absolute";
-		this.fillDiv.style.left = this.x + "px";
-		this.fillDiv.style.top  = this.y + "px";
-		this.fillDiv.style.backgroundColor = this.color;
-		this.fillDiv.style.border = "1px solid " + this.color;		// must have border so that it aligns with the stroke div
-		this.fillDiv.style.zIndex = 1;
+		this.fillDiv.style.left = this.x + 1 + "px";
+		this.fillDiv.style.top  = this.y + 1 + "px";
+		this.fillDiv.style.backgroundColor = this.fillColor;
+		//this.fillDiv.style.border = "1px solid " + this.fillColor;		// must have border so that it aligns with the stroke div
+		this.fillDiv.style.zIndex = 10;
 		this.ctx.appendChild(this.fillDiv);							// THIS LINE IS IMPORTANT!!!!
 		
 		this.strokeDiv   = document.createElement("div");
@@ -31,8 +31,9 @@ function Slider(ctx, props) {
 		this.strokeDiv.style.position = "absolute";
 		this.strokeDiv.style.left = this.x + "px";
 		this.strokeDiv.style.top  = this.y + "px";
-		this.strokeDiv.style.border = "1px solid" + this.stroke;
-		this.strokeDiv.style.zIndex = 10;
+		this.strokeDiv.style.border = "1px solid" + this.strokeColor;
+		this.strokeDiv.style.zIndex = 1;
+		this.strokeDiv.style.backgroundColor = this.backgroundColor;
 		this.ctx.appendChild(this.strokeDiv);						// THIS LINE IS IMPORTANT!!!!
 	}else{
 		this.canvas = document.createElement('canvas');
@@ -52,7 +53,7 @@ function Slider(ctx, props) {
 		this.xFaderWidth = 50;
 		if(!this.shouldUseCanvas) {
 			this.fillDiv.style.width = this.xFaderWidth + "px";
-			this.fillDiv.style.left = (this.x + (this.value * this.width)) + "px";
+			this.fillDiv.style.left = (this.x + (this.value * this.width)) + 1 + "px";
 		}
 	}
 	    
@@ -133,13 +134,13 @@ function Slider(ctx, props) {
 		if(!this.shouldUseCanvas) {
 			if(!this.isVertical) {
 				if(!this.isXFader) {
-					this.fillDiv.style.width = (this.width * percent) + "px";
+					this.fillDiv.style.width = (this.width * percent) + 1 + "px";
 				}else{
-					this.fillDiv.style.left = (this.x  + (percent * (this.width - this.xFaderWidth))) + "px";
+					this.fillDiv.style.left = (this.x  + (percent * (this.width - this.xFaderWidth))) + 1 + "px";
 				}
 			}else{
-				this.fillDiv.style.height = this.height * percent + "px";
-				this.fillDiv.style.top = this.y + (this.height - (percent * this.height)) + "px";
+				this.fillDiv.style.height = this.height * percent  + "px";
+				this.fillDiv.style.top = this.y + (this.height - (percent * this.height)) + 1 + "px";
 			}
 		}else{
 			this.canvasCtx.clearRect(0,0,this.width,this.height);

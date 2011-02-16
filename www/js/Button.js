@@ -43,7 +43,7 @@ function Button(ctx, props) {
 	
 	if(typeof props.label != "undefined") {
 		this.text = props.label;
-		this.label = {"name": this.name + "Label", "type": "Label", "bounds":[props.x, props.y, props.width, props.height], "value":this.text};
+		this.label = {"name": this.name + "Label", "type": "Label", "bounds":[props.x, props.y, props.width, props.height], "value":this.text, "size":props.labelSize || 12,};
 		var _w = control.makeWidget(this.label);
 		control.widgets.push(_w);
 		if(!control.isAddingConstants)
@@ -66,8 +66,8 @@ function Button(ctx, props) {
 	this.fillDiv.style.position = "absolute";
 	this.fillDiv.style.left = this.x + "px";
 	this.fillDiv.style.top  = this.y + "px";
-    this.stroke = (typeof props.stroke != "undefined") ? props.stroke : "#ffffff";
-	this.fillDiv.style.border = "1px solid " + this.stroke;
+    //this.stroke = (typeof props.stroke != "undefined") ? props.stroke : "#fff";
+	this.fillDiv.style.border = "1px solid " + this.strokeColor;
 	
 	this.ctx.appendChild(this.fillDiv);
     
@@ -83,12 +83,13 @@ function Button(ctx, props) {
 	 */
 	this.draw = function() {
         if(this.mode != "contact") {
-            this.fillDiv.style.backgroundColor = (this.isLit) ? this.color : "rgb(0,0,0)";
+            this.fillDiv.style.backgroundColor = (this.isLit) ? this.fillColor : this.backgroundColor;
         } else {
-            this.fillDiv.style.backgroundColor = this.color;
+            this.fillDiv.style.backgroundColor = this.fillColor;
             var str = "gButton"+parseInt(Math.random()*10000);
             eval(str + " = this;");
-            var evalString = 'setTimeout(function() {'+str+'.fillDiv.style.backgroundColor="#000";}, 50)';
+            var evalString = 'setTimeout(function() {'+str+'.fillDiv.style.backgroundColor=' + str + '.backgroundColor;}, 50)';
+			console.log(evalString);
             eval(evalString);
         }
 	}

@@ -53,8 +53,8 @@ function Knob(ctx,props) {
 	
 	this.draw = function() {
 		this.canvasCtx.clearRect(0, 0, this.width,this.height);
-		this.canvasCtx.fillStyle = this.color;
-		this.canvasCtx.strokeStyle = this.stroke;
+		this.canvasCtx.fillStyle = this.backgroundColor;
+		this.canvasCtx.strokeStyle = this.strokeColor;
 		this.canvasCtx.lineWidth = 1.5;	
 
 		var angle0 = Math.PI * .6;
@@ -64,9 +64,11 @@ function Knob(ctx,props) {
 		this.canvasCtx.arc(this.radius, this.radius, this.radius - this.knobBuffer, angle0, angle1, false);
 		this.canvasCtx.arc(this.radius, this.radius, (this.radius - this.knobBuffer) * 0.3 , angle1, angle0, true);		
 		this.canvasCtx.closePath();
-		
+		this.canvasCtx.fill();
+
 		this.canvasCtx.stroke();
-			
+		
+		this.canvasCtx.fillStyle = this.fillColor;
 		if(this.centerZero) {
 			var angle3 = Math.PI * 1.5;
 			var angle4 = Math.PI * (1.5 + (.9 * (-1 + (this.rotationValue * 2))));

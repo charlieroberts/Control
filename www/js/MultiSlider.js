@@ -1,8 +1,8 @@
 function MultiSlider(ctx, props) {//x, y, width, height, color, stroke, min, max, startingValue, ontouchstart, ontouchmove, ontouchend, protocol, address, isVertical, numberOfSliders) { 
 	this.ctx = ctx;
 	// MUST BE BEFORE WIDGET INIT
-	this.widthInPercentage = props.width;
-	this.heightInPercentage = props.height;
+	this.widthInPercentage = props.width || props.bounds[2];
+	this.heightInPercentage = props.height || props.bounds[3];
 	
 	this.__proto__ = new Widget(ctx,props);
 	
@@ -17,30 +17,37 @@ function MultiSlider(ctx, props) {//x, y, width, height, color, stroke, min, max
 	
 	this.init = function() {
 		var sliderWidth, sliderHeight;
+		var pixelWidth = 1 / control.deviceWidth;
+		var pixelHeight = 1 / control.deviceHeight;
 		if(this.isVertical) {
 			sliderWidth =  this.widthInPercentage / this.numberOfSliders;
+			if((control.deviceWidth * sliderWidth) % 1 != 0)				
+				sliderWidth -= ((control.deviceWidth * sliderWidth) % 1) * pixelWidth;
 			sliderHeight = this.heightInPercentage;
 		}else{
 			sliderHeight = this.heightInPercentage / this.numberOfSliders;
+			if((control.deviceHeight * sliderHeight) % 1 != 0)				
+				sliderHeight -= ((control.deviceHeight * sliderHeight) % 1) * pixelHeight;
 			sliderWidth =  this.widthInPercentage;
 		}
 		for(var i = 0; i < this.numberOfSliders; i++) {
 			var _x, _y;
 			
 			if(this.isVertical) {
-				_x = sliderWidth * i;
+				_x = sliderWidth * i + ((i * 1 / control.deviceWidth));
 				_y = 0;
 			}else{
 				_x = 0;
-				_y = sliderHeight * i;
+				_y = sliderHeight * i + ((i * 1 / control.deviceHeight));
 			}
 			var newProps = {
 				"x":this.origX + _x,
 				"y":this.origY + _y,
 				"width":sliderWidth, 
 				"height":sliderHeight,
-				"color":this.color,
-				"stroke":this.stroke,
+				"fillColor":this.fillColor,
+				"strokeColor":this.strokeColor,
+				"backgroundColor":this.backgroundColor,				
 				"min":this.min,
 				"max":this.max,
 				"startingValue":this.value,
@@ -59,9 +66,10 @@ function MultiSlider(ctx, props) {//x, y, width, height, color, stroke, min, max
 			};
 			
 			var _w = new Slider(this.ctx, newProps);
+			_w.x += i;
 			_w.address = this.address + "/" + i;
 			_w.midiNumber = this.midiNumber+ i;
-			
+			_w.childID = i;
 			_w.requiresTouchDown = false;
 			this.children.push(_w);
         }
