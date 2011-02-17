@@ -213,34 +213,29 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 
 			MIDISend(outPort, dst, &myList);
 		}
-		
-		//NSLog(@"before sending");
-		//MIDISend(outPort, dst, &myList);
-		//NSLog(@"after sending");		
 	}
 	[pool drain];
 }
 
 - (void)send:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
-	/*lo_message msg = lo_message_new();
+	MIDIPacketList myList;
+	myList.numPackets = 1;
 	
-	NSString *typetags= [arguments objectAtIndex:1];
-	for(int i = 0; i < [typetags length]; i++) {	
-		char c = [typetags characterAtIndex:i];
-		switch(c) {
-			case 'i':
-				lo_message_add_int32(msg, [[arguments objectAtIndex:i+2] intValue]);
-				break;
-			case 'f':
-				lo_message_add_float(msg, [[arguments objectAtIndex:i+2] floatValue]);
-				break;
-			case 's':
-				lo_message_add_string(msg, [[arguments objectAtIndex:i+2] UTF8String]);
-				break;
-		}
-	}
-	lo_send_message(addr, [[arguments objectAtIndex:0] UTF8String], msg);
-	lo_message_free(msg);*/
+	MIDIPacket myMessage; 
+    myMessage.timeStamp = 0;
+    myMessage.length = [arguments count] - 1;
+	
+	int msgType = [[midiDict objectForKey:[arguments objectAtIndex:0]] intValue];
+	
+    myMessage.data[0] = msgType + [[arguments objectAtIndex:1] intValue] - 1;
+	myMessage.data[1] = [[arguments objectAtIndex:2] intValue];
+	
+	if (myMessage.length > 2) 
+		myMessage.data[2] = [[arguments objectAtIndex:3] intValue];
+	
+	myList.packet[0] = myMessage;
+	
+	MIDISend(outPort, dst, &myList);
 }
 
 - (void) dealloc {
