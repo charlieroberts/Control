@@ -41,7 +41,7 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 	
 	int number = packet->data[1];
 	int value = -1;
-	if(packet->length > 2)
+	if(packet->length == 3)
 		value = packet->data[2];
 
 	NSString * jsString = [NSString stringWithFormat:@"midiManager.processMIDIMessage(\"%s\", %d, %d, %d);", [msgType UTF8String], channel, number, value];	
