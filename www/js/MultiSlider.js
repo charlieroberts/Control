@@ -6,6 +6,14 @@ function MultiSlider(ctx, props) {//x, y, width, height, color, stroke, min, max
 	
 	this.__proto__ = new Widget(ctx,props);
 	
+	/*if(props.isVertical) {
+		var pixelWidth = 1 / control.deviceWidth;
+		this.width += pixelWidth * props.numberOfSliders;
+	}else{
+		var pixelHeight = 1 / control.deviceHeight;
+		this.height += pixelHeight * props.numberOfSliders;
+	}*/
+	
 	this.numberOfSliders = (typeof props.numberOfSliders != "undefined") ? props.numberOfSliders : 4;
     this.requiresTouchDown = (typeof props.requiresTouchDown != "undefined") ? props.requiresTouchDown : false;
 	this.children = [];
@@ -25,20 +33,26 @@ function MultiSlider(ctx, props) {//x, y, width, height, color, stroke, min, max
 				sliderWidth -= ((control.deviceWidth * sliderWidth) % 1) * pixelWidth;
 			sliderHeight = this.heightInPercentage;
 		}else{
-			sliderHeight = this.heightInPercentage / this.numberOfSliders;
+			sliderHeight = this.heightInPercentage / this.numberOfSliders - pixelHeight;
 			if((control.deviceHeight * sliderHeight) % 1 != 0)				
 				sliderHeight -= ((control.deviceHeight * sliderHeight) % 1) * pixelHeight;
 			sliderWidth =  this.widthInPercentage;
 		}
 		for(var i = 0; i < this.numberOfSliders; i++) {
-			var _x, _y;
+			var _x, _y, _width, _height;
 			
 			if(this.isVertical) {
 				_x = sliderWidth * i + ((i * 1 / control.deviceWidth));
+				if(i != 0) _x -= pixelWidth;
 				_y = 0;
+				_width = sliderWidth - (pixelWidth * 1);
+				_height = sliderHeight;
 			}else{
+				if(i != 0) _y -= pixelHeight;			
 				_x = 0;
 				_y = sliderHeight * i + ((i * 1 / control.deviceHeight));
+				_height = sliderHeight - (pixelHeight * 1);
+				_width  = sliderWidth;				
 			}
 			var newProps = {
 				"x":this.origX + _x,
