@@ -1,4 +1,4 @@
-loadedInterfaceName = "sequencer";
+loadedInterfaceName = "Sequencer";
 interfaceOrientation = "landscape";
 
 infoText = "This  is a simple step sequencer with an 8x16 grid and 8 16-step multisliders. The multisliders are assigned to CC 10 - 17 for MIDI, /sliders1 - /sliders8 for OSC. The button grid notes are designed to work with the Impulse instrument in Ableton Live; the MIDI notes are labeled and the osc address is /grid.";

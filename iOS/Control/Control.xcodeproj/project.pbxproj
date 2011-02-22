@@ -270,6 +270,15 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				CBDDFBB31301F3CD0030E736 /* Default-Portrait.png */,
+				CBDDFBB41301F3CD0030E736 /* Default.png */,
+				CBDDFBB51301F3CD0030E736 /* Default@2x.png */,
+				CBDDFBB61301F3CD0030E736 /* Default~ipad.png */,
+				CBDDFBBB1301F3FD0030E736 /* Icon-72.png */,
+				CBDDFBBC1301F3FD0030E736 /* Icon-Small-50.png */,
+				CBDDFBBD1301F3FD0030E736 /* Icon-Small.png */,
+				CBDDFBBE1301F3FD0030E736 /* icon.png */,
+				CBDDFBBF1301F3FD0030E736 /* Icon@2x.png */,
 				CBDDFBDC1301F48F0030E736 /* images */,
 				30E1352610E2C1420031B30D /* PhoneGap.plist */,
 				CBC0573C1303AE9B00638426 /* VERSION */,
@@ -305,11 +314,6 @@
 		3009C2AE127B8952007F4BC6 /* icons */ = {
 			isa = PBXGroup;
 			children = (
-				CBDDFBBB1301F3FD0030E736 /* Icon-72.png */,
-				CBDDFBBC1301F3FD0030E736 /* Icon-Small-50.png */,
-				CBDDFBBD1301F3FD0030E736 /* Icon-Small.png */,
-				CBDDFBBE1301F3FD0030E736 /* icon.png */,
-				CBDDFBBF1301F3FD0030E736 /* Icon@2x.png */,
 			);
 			name = icons;
 			sourceTree = "<group>";
@@ -317,10 +321,6 @@
 		3009C2AF127B8962007F4BC6 /* splash */ = {
 			isa = PBXGroup;
 			children = (
-				CBDDFBB31301F3CD0030E736 /* Default-Portrait.png */,
-				CBDDFBB41301F3CD0030E736 /* Default.png */,
-				CBDDFBB51301F3CD0030E736 /* Default@2x.png */,
-				CBDDFBB61301F3CD0030E736 /* Default~ipad.png */,
 			);
 			name = splash;
 			sourceTree = "<group>";
@@ -741,6 +741,59 @@
 			};
 			name = Release;
 		};
+		CB4A8EA81313A9B000321A2A /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 307D28A1123043350040C0FA /* PhoneGapBuildSettings.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"-Obj-C",
+				);
+				PREBINDING = NO;
+				SDKROOT = iphoneos;
+				USER_HEADER_SEARCH_PATHS = "$(PHONEGAPLIB)/Classes/JSON $(PHONEGAPLIB)/Classes";
+			};
+			name = Distribution;
+		};
+		CB4A8EA91313A9B000321A2A /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Charles Roberts";
+				COPY_PHASE_STRIP = YES;
+				CURRENT_PROJECT_VERSION = 1.2;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Control_Prefix.pch;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/\"**",
+					"\"$(SRCROOT)/\"../PhoneGapLib/**",
+				);
+				INFOPLIST_FILE = "Control-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/../../../../Documents/PhoneGapLib/build/Release-iphoneos\"",
+					"\"$(SRCROOT)/../PhoneGapLib/build/Release-iphonesimulator\"",
+					"\"$(SRCROOT)/../PhoneGapLib/build/Release-iphoneos\"",
+				);
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = Control;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "76DE8A7C-F39A-4EB4-ABA1-F07F0E6DF254";
+				SDKROOT = iphoneos;
+				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Distribution;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -749,6 +802,7 @@
 			buildConfigurations = (
 				1D6058940D05DD3E006BFB54 /* Debug */,
 				1D6058950D05DD3E006BFB54 /* Release */,
+				CB4A8EA91313A9B000321A2A /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -758,6 +812,7 @@
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
 				C01FCF5008A954540054247B /* Release */,
+				CB4A8EA81313A9B000321A2A /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

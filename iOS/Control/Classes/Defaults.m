@@ -8,15 +8,14 @@
 
 #import "Defaults.h"
 
-#define VERSION_ @"1.01"
-
+#define VERSION_ @"1.02"
 
 @implementation Defaults
 
 - (void)loadDefaultScripts:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
 	NSLog(@"loading default scripts");
 	NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    // TODO: remove before publishing
+    // TODO: remove commenting before publishing
 	if([defaults objectForKey:@"Control"] == nil || ![[defaults objectForKey:@"Control"] isEqualToString:VERSION_]) {		
 		NSArray * paths = [[NSBundle mainBundle] pathsForResourcesOfType:@"js" inDirectory:@"interfaces"];
 		for(int i = 0; i < [paths count]; i++) {

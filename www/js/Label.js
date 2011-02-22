@@ -43,6 +43,8 @@ function Label(ctx, props) { //x, y, width, height, color, value, size, align) {
 	this.hide = function() {
 		this.label.style.display = "none";
 	}
-
+	this.unload = function() {
+		this.ctx.removeChild(this.label);
+	}
 	return this;
 }

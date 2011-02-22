@@ -43,7 +43,7 @@ function Button(ctx, props) {
 	
 	if(typeof props.label != "undefined") {
 		this.text = props.label;
-		this.label = {"name": this.name + "Label", "type": "Label", "bounds":[props.x, props.y, props.width, props.height], "value":this.text, "size":props.labelSize || 12,};
+		this.label = {"name": this.name + "Label", "type": "Label", "bounds":[props.x, props.y, props.width, props.height], "color":this.strokeColor, "value":this.text, "size":props.labelSize || 12,};
 		var _w = control.makeWidget(this.label);
 		control.widgets.push(_w);
 		if(!control.isAddingConstants)
@@ -61,8 +61,8 @@ function Button(ctx, props) {
 	    fillDiv is the DIV tag representing the button in the DOM
 	*/
 	this.fillDiv   = document.createElement("div");
-	this.fillDiv.style.width = this.width + "px";
-	this.fillDiv.style.height = this.height + "px";	
+	this.fillDiv.style.width = this.width - 2 + "px";
+	this.fillDiv.style.height = this.height - 2 + "px";	
 	this.fillDiv.style.position = "absolute";
 	this.fillDiv.style.left = this.x + "px";
 	this.fillDiv.style.top  = this.y + "px";
@@ -89,7 +89,7 @@ function Button(ctx, props) {
             var str = "gButton"+parseInt(Math.random()*10000);
             eval(str + " = this;");
             var evalString = 'setTimeout(function() {'+str+'.fillDiv.style.backgroundColor=' + str + '.backgroundColor;}, 50)';
-			console.log(evalString);
+			//console.log(evalString);
             eval(evalString);
         }
 	}
@@ -284,6 +284,10 @@ function Button(ctx, props) {
 	 */
 	this.hide = function() {
 		this.fillDiv.style.display = "none";
+	}
+	
+	this.unload = function() {
+		this.ctx.removeChild(this.fillDiv);
 	}
 	
 	return this;
