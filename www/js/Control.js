@@ -107,6 +107,16 @@ Control.prototype.unloadWidgets = function() {
 			widget = null;
 		}
 	}
+	control.pages = [];
+	
+	for(var i = 0; i < control.constants.length; i++) {
+		var widget = control.constants[i];
+		if(typeof widget.unload != "undefined") {
+			widget.unload();
+		}
+		widget = null;
+	}
+	control.constants = [];
 }
 
 Control.prototype.loadConstants = function(_constants) {
@@ -257,20 +267,20 @@ Control.prototype.refresh = function() {
 }
 
 Control.prototype.onRotation = function(event) {
-	// debug.log(event.orientation);
+	console.log("onrotation " + event.orientation);
 
 	control.orientation = event.orientation;
 	
-	if(loadedInterfaceName != null) {
-		control.unloadWidgets();
+	/*if(loadedInterfaceName != null) {
+		//control.unloadWidgets();
 		if(event.orientation == 0 || event.orientation == 180) {
 			control.makePages(pages, screen.width, screen.height);
 		}else{
 			control.makePages(pages, screen.height, screen.width);
 		}
-		control.loadConstants(constants);
-		control.loadWidgets();	// LOAD WIDGETS IS THE PROBLEM	
-	}
+		//control.loadConstants(constants);
+		//control.loadWidgets();	// LOAD WIDGETS IS THE PROBLEM	
+	}*/
 }
 
 
@@ -318,32 +328,33 @@ Control.prototype.changeTab = function(tab) {
       }
 	  if(oldTab.id == "selectedInterface") {
 		control.unloadWidgets();
-		document.getElementById("Interfaces").style.height = "100%";
+		window.plugins.nativeControls.hideTabBar(false);
+		PhoneGap.exec("Device.setRotation", "portrait");
+		window.plugins.nativeControls.showTabBar({"orientation":"portrait",  "position":"bottom"});
 	  }
     }
-
     
     //TODO : make it work to change from landscape selected interface to portrait main menus
-	/*
+	
     if(typeof oldTab != "undefined") {
         if(oldTab.id == "selectedInterface" && this.currentTab.id != "selectedInterface") {
 		
             //var interface = document.getElementById("selectedInterface");
             //document.removeChild(interface);
-			PhoneGap.exec("Device.setRotation", "portrait");
+	//		setTimeout(function() { PhoneGap.exec("Device.setRotation", "portrait"); }, 500);
 			
-            for(var i = 0; i < this.pages[this.currentPage].length; i++) {
+            /*for(var i = 0; i < this.pages[this.currentPage].length; i++) {
                 var w = this.pages[this.currentPage][i];
                 debug.log("hiding");
                 w.hide();
             }
-            document.getElementById("selectedInterface").style.display = "none";
+            document.getElementById("selectedInterface").style.display = "none";*/
         }
     }
     if(this.currentTab.id == "Interfaces") {
         //interfaceManager.createInterfaceListWithStoredInterfaces();
     }
-	*/
+	
 	
 }
 

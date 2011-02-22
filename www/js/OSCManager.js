@@ -68,20 +68,22 @@ OSCManager.prototype.processOSC = function(oscAddress, typetags, args) {
 }
 
 OSCManager.prototype.sendOSC = function() {	// NOTE: PhoneGap.exec('OSCManager.send') will be much more efficient than this for a large number of strings.
-	var address = arguments[0];
-	var typetags = arguments[1];
-	var evalString = "PhoneGap.exec('OSCManager.send', '"+address+"','"+typetags+"',";
-	for(var i = 0; i < typetags.length; i++) {
-		var arg = arguments[i + 2];
-		if(typetags.charAt(i) != 's') 
-			evalString += arg;
-		else
-			evalString += "'" + arg + "'";
-			
-		if(i != typetags.length - 1) 
-			evalString += ",";
-		else
-			evalString += ");"
+	if(_protocol == "OSC") {
+		var address = arguments[0];
+		var typetags = arguments[1];
+		var evalString = "PhoneGap.exec('OSCManager.send', '"+address+"','"+typetags+"',";
+		for(var i = 0; i < typetags.length; i++) {
+			var arg = arguments[i + 2];
+			if(typetags.charAt(i) != 's') 
+				evalString += arg;
+			else
+				evalString += "'" + arg + "'";
+				
+			if(i != typetags.length - 1) 
+				evalString += ",";
+			else
+				evalString += ");"
+		}
+		eval(evalString);
 	}
-	eval(evalString);
 }

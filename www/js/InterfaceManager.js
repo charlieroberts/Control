@@ -260,8 +260,13 @@ function InterfaceManager() {
         eval(json);
         this.currentInterfaceName = loadedInterfaceName;
         this.currentInterfaceJSON = json;
-
-        if(control.orientation == 0 || control.orientation == 180) {
+		
+		if(typeof interfaceOrientation != "undefined") {
+			console.log(interfaceOrientation);
+            PhoneGap.exec("Device.setRotation", interfaceOrientation);
+        }
+        //if(control.orientation == 0 || control.orientation == 180) {
+		if(interfaceOrientation == "portrait") {
             control.makePages(pages, screen.width, screen.height);
         }else{
             control.makePages(pages, screen.height, screen.width);
@@ -271,14 +276,10 @@ function InterfaceManager() {
             control.loadConstants(constants);
         }
         
-        control.unloadWidgets();
         control.loadWidgets();
-        if(this.currentTab != document.getElementById("selectedInterface"))
+        if(this.currentTab != document.getElementById("selectedInterface")) {
             control.changeTab(document.getElementById("selectedInterface"));
-		
-		if(typeof interfaceOrientation != "undefined") {
-            PhoneGap.exec("Device.setRotation", interfaceOrientation);
-        }
+		}
     }
 	
 	this.selectInterfaceFromList = function(interfaceName) {

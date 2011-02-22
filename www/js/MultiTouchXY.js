@@ -15,8 +15,8 @@ function MultiTouchXY(ctx, props) {
 	this.container = document.createElement('div');
 	this.container.style.position = "absolute";
 	this.container.style.display = "block";
-	this.container.style.width = this.width + "px";
-	this.container.style.height = this.height + "px";
+	this.container.style.width  = this.width  - 2 + "px";
+	this.container.style.height = this.height - 2 + "px";
 	this.container.style.top = this.y + "px";
 	this.container.style.left = this.x + "px";
 	this.container.style.backgroundColor = this.backgroundColor;
@@ -207,7 +207,7 @@ function MultiTouchXY(ctx, props) {
         }else if(_protocol == "MIDI") {
             var xnum = this.midiNumber + (touch.activeNumber * 2) - 2;
             var ynum = xnum + 1;
-            
+				
             valueString  = "|" + this.midiType + "," + (this.channel - 1) + "," + xnum + "," + Math.round(this.xvalue);
             valueString += "|" + this.midiType + "," + (this.channel - 1) + "," + ynum + "," + Math.round(this.yvalue);
         }
@@ -245,6 +245,10 @@ function MultiTouchXY(ctx, props) {
 	}
 	
 	this.draw = function() {}
-
+	
+	this.unload = function() {
+		this.ctx.removeChild(this.container);
+	}
+	
 	return this;
 }

@@ -4,6 +4,11 @@ interfaceOrientation = "portrait";
 
 whRatio = 2 / 3;
 
+window.pixelHeight = 1 / control.deviceHeight;
+window.pixelWidth  = 1 / control.deviceWidth;
+
+console.log("device width = ");
+
 function buttonKiller() {
     for (var i = 0; i < multi.children.length; i++) {
         multi.children[i].setValue(0);
@@ -51,7 +56,6 @@ pages = [[
     "min": 0,
     "max": 127,
     "mode": "toggle",
-    "protocol": "MIDI",
     "midiType": "noteon",
     "channel": 2,
     "midiNumber": 0,
@@ -72,104 +76,50 @@ pages = [[
 {
     "name": "toggleButton",
     "type": "Button",
-    "x": .0,
-    "y": .675,
-    "width": .25,
-    "height": .075,
+	"bounds": [0, .675, .25, .075],
     "mode": "contact",
     "color": "#ff0000",
     "stroke": "#aaaaaa",
-    "min": 0,
-    "max": 1,
     "isLocal": true,
-    "ontouchstart": "control.buttonChanger(\'toggle\')"
-},
-
-{
-    "name": "toggleLabel",
-    "type": "Label",
-    "x": .0,
-    "y": .675,
-    "width": .25,
-    "height": .075,
-    "value": "toggle",
+    "ontouchstart": "control.buttonChanger(\'toggle\')",
+	"label": "toggle",
 },
 
 {
     "name": "momentaryButton",
     "type": "Button",
-    "x": .25,
-    "y": .675,
-    "width": .25,
-    "height": .075,
+	"bounds": [.25, .675, .25, .075],
     "mode": "contact",
     "color": "#ff0000",
     "stroke": "#aaaaaa",
-    "min": 0,
-    "max": 1,
     "isLocal": true,
-    "ontouchstart": "control.buttonChanger(\'momentary\')"
+    "ontouchstart": "control.buttonChanger(\'momentary\')",
+	"label": "momentary",
 },
-{
-    "name": "momentaryLabel",
-    "type": "Label",
-    "x": .25,
-    "y": .675,
-    "width": .25,
-    "height": .075,
-    "value": "momentary",
-},
-
 {
     "name": "latchButton",
     "type": "Button",
-    "x": .0,
-    "y": .75,
-    "width": .25,
-    "height": .075,
+	"bounds": [0, .75, .25, .075],	
     "mode": "contact",
     "color": "#ff0000",
     "stroke": "#aaaaaa",
-    "min": 0,
-    "max": 1,
     "isLocal": true,
-    "ontouchstart": "control.buttonChanger(\'latch\')"
-},
-
-{
-    "name": "latchLabel",
-    "type": "Label",
-    "x": .0,
-    "y": .75,
-    "width": .25,
-    "height": .075,
-    "value": "latch",
+    "ontouchstart": "control.buttonChanger(\'latch\')",
+	"label": "latch",
 },
 
 {
     "name": "contactButton",
     "type": "Button",
-    "x": .25,
-    "y": .75,
-    "width": .25,
-    "height": .075,
+	"bounds": [.25, .75, .25, .075],	
     "mode": "contact",
     "color": "#ff0000",
     "stroke": "#aaaaaa",
-    "min": 0,
-    "max": 1,
     "isLocal": true,
-    "ontouchstart": "control.buttonChanger(\'contact\')"
+    "ontouchstart": "control.buttonChanger(\'contact\')",
+	"label": "contact",
 },
-{
-    "name": "contactLabel",
-    "type": "Label",
-    "x": .25,
-    "y": .75,
-    "width": .25,
-    "height": .075,
-    "value": "contact",
-},
+
 {
     "name": "touchdownButton",
     "type": "Button",

@@ -19,7 +19,6 @@ pages = [ [
         "max": 127,
         "isXFader": true,
         "isVertical": false,
-        "protocol": "MIDI",
         "midiType": "cc",
         "midiNumber": 1,
     },
@@ -78,7 +77,7 @@ pages = [ [
     {
         "name": "rightXFadeLabel",
         "type": "Label",
-        "x": .86,
+        "x": .85,
         "y": .8,
         "width": .145,
         "height": .15,

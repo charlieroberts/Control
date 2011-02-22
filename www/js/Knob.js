@@ -159,6 +159,9 @@ function Knob(ctx,props) {
 		this.canvas.style.display = "none";
 	}
 	
+	this.unload = function() {
+		this.ctx.removeChild(this.canvas);
+	}
     this.setValue(this.value);
 	return this;
 }

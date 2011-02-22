@@ -16,22 +16,30 @@ function MultiButton(ctx, props) {
 	this.rows    = (typeof props.rows    != "undefined") ? props.rows    : 2;
 	this.columns = (typeof props.columns != "undefined") ? props.columns : 2;
 	
-	this.buttonWidth = this.widthInPercentage / this.columns;
-	this.buttonHeight = this.heightInPercentage / this.rows;
+	this.pixelWidth  = 1 / control.deviceWidth;
+	this.pixelHeight = 1 / control.deviceHeight;
+	
+	this.buttonWidth = this.widthInPercentage / this.columns + this.pixelWidth;
+	this.buttonHeight = this.heightInPercentage / this.rows + this.pixelHeight;
 	
 	this.buttonWidthInPixels = parseInt(this.width) / this.columns;
 	this.buttonHeightInPixels = parseInt(this.height) / this.rows;
+	
+	this.shouldLabel = (typeof props.shouldLabel != "undefined") ? props.shouldLabel : false;
+	this.labelSize = props.labelSize || 12;
 	
 	//debug.log("width = " + this.buttonWidthInPixels + " :: height = " + this.buttonHeightInPixels);
     
 	this.requiresTouchDown = (typeof props.requiresTouchDown == "undefined") ? true : props.requiresTouchDown;
 
 	this.init = function() {
+		var pixelWidth  = 1 / control.deviceWidth;
+		var pixelHeight = 1 / control.deviceHeight;
 		for(var i = 0; i < this.rows; i++) {
-			var _y = this.buttonHeight * i;
+			var _y = this.buttonHeight * i - (i * pixelHeight);
 			
 			for(var j = 0; j < this.columns; j++) {
-				var _x = this.buttonWidth * j;
+				var _x = this.buttonWidth * j - (j * pixelWidth);
 				var newProps = {
 					"x":this.origX + _x,
 					"y":this.origY + _y,
@@ -52,8 +60,13 @@ function MultiButton(ctx, props) {
 					"isLocal":this.isLocal,
 					"requiresTouchDown":this.requiresTouchDown,
 					"midiType":(typeof this.midiType == "undefined") ? "cc" : this.midiType,
-					"channel":(typeof this.channel != "undefined") ? this.channel : 1,
+					"channel" :(typeof this.channel != "undefined") ? this.channel : 1,
 				};
+				
+				if(this.shouldLabel) {
+					newProps["label"] = (1 + (i * this.columns) + j);
+					newProps["labelSize"] = this.labelSize;
+				}
 				
 				var _w = new Button(this.ctx, newProps);
 				_w.address    = this.address + "/" + ((i * this.columns) + j);
@@ -118,7 +131,13 @@ function MultiButton(ctx, props) {
 			_w.setValue(value);
 		}
 	}
-
+	
+	this.unload = function() {
+		console.log("unloading multibutton");
+		for(var i = 0; i < this.children.length; i++) {
+			this.children[i].unload();
+		}
+	}
 		
 	return this;
 }

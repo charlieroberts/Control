@@ -12,6 +12,9 @@
 #import <arpa/inet.h>
 #include <ifaddrs.h>
 
+// TODO: Support for displaying service names
+// TODO: Remove Bonjour destinations when they are no longer available... provide popup notification if the user is currently connected???
+
 @implementation Bonjour
 @synthesize isConnected, browser, services, connectedService, midiBrowser;
 
@@ -28,7 +31,7 @@
 
 - (void)start:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
 	netService = [[NSNetService alloc] initWithDomain:@"local." type:@"_osc._udp." 
-												 name:@"Control:7865" port:7865];
+												 name:@"Control" port:8080];
     netService.delegate = self;
     [netService publish];
 	
@@ -45,7 +48,6 @@
 	
 	myIP = [self getIPAddress];
 	[myIP retain];
-	NSLog(myIP);
 }
 
 - (void)stop:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options { }
@@ -61,38 +63,61 @@
 }
 
 -(void)netServiceBrowser:(NSNetServiceBrowser *)aBrowser didRemoveService:(NSNetService *)aService moreComing:(BOOL)more {
-    [services removeObject:aService];
-    if ( aService == self.connectedService ) self.isConnected = NO;}
+	/*NSLog(@"REMOVING");
+    //[services removeObject:aService];
+	NSLog([aService description]);
+	NSArray *addresses = aService.addresses;
+
+	@try {
+        //NSData * d = [addresses objectAtIndex:0];
+		//struct sockaddr_in *socketAddress  = (struct sockaddr_in *) [d bytes];
+        
+        int port;
+		NSLog(@"before for loop %@", [aService domain]);
+        for(NSData *d in [aService addresses]) {
+			NSLog(@"in for loop with data...");
+            struct sockaddr_in *socketAddress  = (struct sockaddr_in *) [d bytes];
+            //NSString *name = [service name];
+            char * ipaddress = inet_ntoa(socketAddress->sin_addr);
+			NSLog(@"REMOVING address = %s", ipaddress);
+            if(strcmp(ipaddress, "0.0.0.0") == 0 || strcmp(ipaddress, [myIP UTF8String]) == 0) { 
+                continue;
+            }
+            port = ntohs(socketAddress->sin_port); // ntohs converts from network byte order to host byte order 
+            BOOL isMIDI = ([[aService type] isEqualToString:@"_apple-midi._udp."]);
+            NSString *ipString = [NSString stringWithFormat: @"destinationManager.removeDestination(\"%s\", %d);", inet_ntoa(socketAddress->sin_addr), port];
+
+            [webView stringByEvaluatingJavaScriptFromString:ipString];
+        }
+    } @catch(NSException *e) { NSLog(@"error resolving bonjour address"); }
+	NSLog(@"after for loop");
+    if ( aService == self.connectedService ) self.isConnected = NO;*/	
+}
 
 -(void)netServiceDidResolveAddress:(NSNetService *)service {
     self.isConnected = YES;
-    self.connectedService = service;
+    //self.connectedService = service;
 	
 	NSArray *addresses = service.addresses;
 	//for(NSData *d in addresses) {
     @try {
-        NSData * d = [addresses objectAtIndex:0];
-        struct sockaddr_in *socketAddress  = (struct sockaddr_in *) [d bytes];
+		// NSData * d = [addresses objectAtIndex:0];
+		//struct sockaddr_in *socketAddress  = (struct sockaddr_in *) [d bytes];
         
         int port;
-        //NSLog(@"resolving!");
         for(NSData *d in [service addresses]) {
             struct sockaddr_in *socketAddress  = (struct sockaddr_in *) [d bytes];
-            NSString *name = [service name];
-            socketAddress = (struct sockaddr_in *)[d bytes];
+            //NSString *name = [service name];
             char * ipaddress = inet_ntoa(socketAddress->sin_addr);
-			//NSLog(@"ipaddress = %s, myip = %s", ipaddress, [myIP UTF8String]);
+			NSLog(@"bonjour address = %s", ipaddress);
             if(strcmp(ipaddress, "0.0.0.0") == 0 || strcmp(ipaddress, [myIP UTF8String]) == 0) { 
                 continue;
             }
             port = ntohs(socketAddress->sin_port); // ntohs converts from network byte order to host byte order 
             BOOL isMIDI = ([[service type] isEqualToString:@"_apple-midi._udp."]);
             NSString *ipString = [NSString stringWithFormat: @"destinationManager.addDestination(\"%s\", %d, %d, %d);", inet_ntoa(socketAddress->sin_addr), port, !isMIDI, isMIDI];
-            //NSLog([service type]); 
-            //NSLog(ipString);
+
             [webView stringByEvaluatingJavaScriptFromString:ipString];
-            
-            //NSLog(@"Server found is %@ %d",ipString,port);
         }
     } @catch(NSException *e) { NSLog(@"error resolving bonjour address"); }
 }
@@ -118,6 +143,7 @@
         if([[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en0"]) {
           // Get NSString from C String
           address = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
+		  NSLog(@"ipaddress = %@", address);
         }
       }
       temp_addr = temp_addr->ifa_next;
