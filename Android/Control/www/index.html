@@ -11,8 +11,9 @@
     <link rel="stylesheet" href="css/master.css" type="text/css" media="screen" title="no title" charset="utf-8">
 	<link rel="stylesheet" href="css/iscroll.css" type="text/css" media="screen" charset="utf-8">
 	
-    <script type="text/javascript" charset="utf-8" src="js/phonegap-uncompressed.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/phonegap.js"></script>
 	<script type="text/javascript" charset="utf-8" src="js/NativeControls.js"></script>
+	<script type="text/javascript" charset="utf-8" src="js/keyevent.js"></script>
 	
 	<!-- iScroll: scrolling table views for webkit interface: http://cubiq.org/iscroll -->
 	<script type="text/javascript" src="js/iscroll.js"></script>
@@ -56,13 +57,16 @@
 		//console.log("something");
 		PhoneGap.addConstructor(function(){
 			document.addEventListener("touchmove", preventBehavior, false); // prevents webkit from scrolling DNR
+			document.addEventListener('menuKeyDown', function(){
+			    alert('You pressed the menu button');
+			});
 			
 			window.plugins.nativeControls = new NativeControls();
             control = new Control();
 			setupToolbar();
 
             _protocol = "OSC";
-			//console.setLevel(8);
+			console.setLevel(8);
 			oscManager = new OSCManager();
 			midiManager = new MIDIManager();
 			
@@ -81,7 +85,11 @@
 			PhoneGap.exec("Device.setRotation", "portrait");
 			
 			preferencesManager = new PreferencesManager();
-
+			
+			document.addEventListener('menuKeyDown', function(){
+			    alert('You pressed the menu button');
+			});
+			
 			setTimeout(function() { destinationManager.createDestinationList(); }, 500);
 		});
 		

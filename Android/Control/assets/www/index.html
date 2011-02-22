@@ -12,7 +12,8 @@
 	
 	<!-- iScroll: scrolling table views for webkit interface: http://cubiq.org/iscroll -->
 	<script type="text/javascript" src="js/iscroll.js"></script>
-	<script type="text/javascript" charset="utf-8" src="js/phonegap-uncompressed.js"></script>
+	<script type="text/javascript" charset="utf-8" src="js/phonegap.js"></script>
+	<script type="text/javascript" charset="utf-8" src="js/keyevent.js"></script>
 	<script type="text/javascript" charset="utf-8" src="js/NativeControls.js"></script>
 	
 	<!-- Lawnchair. used to persistently store json files. http://brianleroux.github.com/lawnchair/ -->
@@ -51,8 +52,11 @@
 		};
         
 		
-		//PhoneGap.addConstructor(function(){
-		//	document.addEventListener("touchmove", preventBehavior, false); // prevents webkit from scrolling DNR
+		 document.addEventListener('menuKeyDown', function(){
+		    alert('You pressed the menu button');
+		});
+//		PhoneGap.addConstructor(function(){
+		//document.addEventListener("touchmove", preventBehavior, false); // prevents webkit from scrolling DNR
 		function startControl() {
 			//window.plugins.nativeControls = new NativeControls();
 			console.log("before control");
@@ -81,7 +85,7 @@
 
 			setTimeout(function() { destinationManager.createDestinationList(); }, 500);
 		}
-		//});
+//		});
 		
 		function autolockToggle() {
 			var autolockToggleLink = document.getElementById("autolockToggle");
@@ -121,7 +125,8 @@
 		}
     </script>
   </head>
- <body id="stage" onload="init();" style="background-color:#000; -webkit-user-select: none;" class="theme"> 
+ <body id="stage" onload="init();" style="background-color:#000; -webkit-user-select: none;" class="theme">
+  
  <h2 style="font-size:32px; z-index:100; color:#fff; position:absolute; top:0em; right:0em;" ontouchend="console.log('refresh'); window.location.reload();">REFRESH</h2>			
 	
   <div id="selectedInterface"></div>
