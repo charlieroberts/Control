@@ -8,10 +8,14 @@ function InterfaceManager() {
         interfaceOrientation = null;
         constants = null;
         PhoneGap.exec("Defaults.loadDefaultScripts");
+        //interfaceManager.createInterfaceListWithStoredInterfaces();
+        //debug.log("creating list");
         setTimeout("interfaceManager.createInterfaceListWithStoredInterfaces()", 1150);
+		//interfaceManager.createInterfaceListWithStoredInterfaces();
+		//this.createInterfaceListWithStoredInterfaces();
 	}
 	
-	 this.promptForInterfaceDownload = function() {
+	this.promptForInterfaceDownload = function() {
 		var interfacesDiv = document.getElementById("Interfaces");
 		var promptDiv = document.createElement("div");
 		var input =	document.createElement("input");
@@ -66,7 +70,7 @@ function InterfaceManager() {
 		interfaceManager.myRequest = new XMLHttpRequest();    	
 		var loadedInterfaceName = null;
         interfaceManager.myRequest.onreadystatechange = function() {
-            if(interfaceManager.myRequest.readyState == myRequest.DONE) {
+            if(interfaceManager.myRequest.readyState == 4) {
                 debug.log(interfaceManager.myRequest.responseText);
                 eval(interfaceManager.myRequest.responseText);
                 if(loadedInterfaceName != null) {
@@ -102,6 +106,7 @@ function InterfaceManager() {
 	}
     
     this.createInterfaceListWithStoredInterfaces = function() {
+		debug.log("CREATING LIST");
 		var list = document.getElementById('interfaceList');
 		//list.innerHTML = "";
 		if ( list.hasChildNodes() ) {
@@ -132,13 +137,14 @@ function InterfaceManager() {
 	}
 	
 	this.createInterfaceListWithArray = function(listArray) {
+		debug.log("new list maker called");
 		var list = document.getElementById('interfaceList');
 //		debug.log(listArray);
 		var count = 0;
 
 		for(var i = 0; i < listArray.length; i++) {
 			var r = listArray[i];
-			//debug.log("key " + i + " :: " + r.key);
+			debug.log("key " + i + " :: " + r.key);
 			var item = document.createElement('li');
                 
 			var link = document.createElement('a');
@@ -155,6 +161,7 @@ function InterfaceManager() {
 			//link.style.display = "block";
 			//link.style.backgroundColor = "#a33";
 		}
+		debug.log('before calling refresh');
 		interfaceScroller.refresh();
 		//setTimeout(function () { interfaceScroller.refresh(); }, 2550);
 	}
@@ -192,6 +199,7 @@ function InterfaceManager() {
 	}
     
     this.refreshInterface = function() {
+        debug.log("refreshing interface");
         interfaceManager.myRequest = new XMLHttpRequest();    	
         interfaceManager.myRequest.onreadystatechange = function() {
             if(interfaceManager.myRequest.readyState == 4) {              
@@ -260,11 +268,14 @@ function InterfaceManager() {
         eval(json);
         this.currentInterfaceName = loadedInterfaceName;
         this.currentInterfaceJSON = json;
-
+        if(typeof interfaceOrientation != "undefined") {
+            PhoneGap.exec("Device.setRotation", interfaceOrientation);
+        }
+				
         if(control.orientation == 0 || control.orientation == 180) {
-            control.makePages(pages, screen.width, screen.height);
+            control.makePages(pages, device.width, device.height);
         }else{
-            control.makePages(pages, screen.height, screen.width);
+            control.makePages(pages, device.height, device.width);
         }
 
         if(constants != null) {
@@ -274,11 +285,7 @@ function InterfaceManager() {
         control.unloadWidgets();
         control.loadWidgets();
         if(this.currentTab != document.getElementById("selectedInterface"))
-            control.changeTab(document.getElementById("selectedInterface"));
-		
-		if(typeof interfaceOrientation != "undefined") {
-            PhoneGap.exec("Device.setRotation", interfaceOrientation);
-        }
+            control.changeTab(document.getElementById("selectedInterface"));	
     }
 	
 	this.selectInterfaceFromList = function(interfaceName) {

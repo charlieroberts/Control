@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+  "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+	<title>Control</title>
+
+    <!-- <meta name="viewport" content="width=320; user-scalable=no" /> -->
+	<meta name="apple-mobile-web-app-capable" content="yes" />	
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	
+    <link rel="stylesheet" href="css/master.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<link rel="stylesheet" href="css/iscroll.css" type="text/css" media="screen" charset="utf-8">
+	
+    <script type="text/javascript" charset="utf-8" src="js/phonegap-uncompressed.js"></script>
+	<script type="text/javascript" charset="utf-8" src="js/NativeControls.js"></script>
+	
+	<!-- iScroll: scrolling table views for webkit interface: http://cubiq.org/iscroll -->
+	<script type="text/javascript" src="js/iscroll.js"></script>
+	
+	<!-- Lawnchair. used to persistently store json files. http://brianleroux.github.com/lawnchair/ -->
+	<script type="text/javascript" src="lawnchair/src/Lawnchair.js"></script>  
+	<script type="text/javascript" src="lawnchair/src/adaptors/LawnchairAdaptorHelpers.js"></script>  		
+	<script type="text/javascript" src="lawnchair/src/adaptors/WebkitSQLiteAdaptor.js"></script>  	
+
+    <!-- Font support for iPhone canvas. For more fonts go here: http://typeface.neocracy.org/fonts.html 
+    Google code project: http://code.google.com/p/canvas-text/ 
+    <script type="text/javascript" src="canvas.text.js?reimplement=true"></script>
+    <script type="text/javascript" src="faces/helvetiker_regular.typeface.js"></script>-->
+	
+	<script type="text/javascript" src="js/Control.js"></script>
+	<script type="text/javascript" src="js/InterfaceManager.js"></script>
+	<script type="text/javascript" src="js/DestinationManager.js"></script>
+	<script type="text/javascript" src="js/PreferencesManager.js"></script>
+	<script type="text/javascript" src="js/OSCManager.js"></script>		
+	<script type="text/javascript" src="js/MIDIManager.js"></script>		
+	
+    <script type="text/javascript" src="js/Widget.js"></script>
+    <script type="text/javascript" src="js/Slider.js"></script>
+    <script type="text/javascript" src="js/MultiSlider.js"></script>	
+	<script type="text/javascript" src="js/Knob.js"></script>
+	<script type="text/javascript" src="js/MultiTouchXY.js"></script>
+    <script type="text/javascript" src="js/Button.js"></script>
+    <script type="text/javascript" src="js/MultiButton.js"></script>	
+    <script type="text/javascript" src="js/Label.js"></script>
+	<script type="text/javascript" src="js/ControlAccelerometer.js"></script>
+	<script type="text/javascript" src="js/ControlCompass.js"></script>
+	<script type="text/javascript" src="js/ControlGyro.js"></script>
+	
+    <script type="text/javascript" charset="utf-8">
+		var pages, control, interfaceScroller, destinationScroller, interfaceManager, destinationManager, _protocol;
+
+		function preventBehavior(e) { // prevent scrolling
+			e.preventDefault(); 
+		};
+        
+		//console.log("something");
+		PhoneGap.addConstructor(function(){
+			document.addEventListener("touchmove", preventBehavior, false); // prevents webkit from scrolling DNR
+			
+			window.plugins.nativeControls = new NativeControls();
+            control = new Control();
+			setupToolbar();
+
+            _protocol = "OSC";
+			//console.setLevel(8);
+			oscManager = new OSCManager();
+			midiManager = new MIDIManager();
+			
+			destinationManager = new DestinationManager();
+			destinationManager.init();
+
+			interfaceManager = new InterfaceManager();
+			interfaceManager.init();
+			
+			document.addEventListener('orientationChanged', control.onRotation, false);
+			
+			interfaceScroller   = new iScroll('interfaceScroller');
+			destinationScroller = new iScroll('destinationScroller');
+			preferencesScroller = new iScroll('preferencesScroller');
+			
+			PhoneGap.exec("Device.setRotation", "portrait");
+			
+			preferencesManager = new PreferencesManager();
+
+			setTimeout(function() { destinationManager.createDestinationList(); }, 500);
+		});
+		
+		function autolockToggle() {
+			var autolockToggleLink = document.getElementById("autolockToggle");
+			autolock = !autolock;
+			(!autolock) ? autolockToggleLink.innerHTML = "Turn Autolock <b>Off</b>" : autolockToggleLink.innerHTML = "Turn Autolock <b>On</b>";			
+			PhoneGap.exec("Device.autolockToggle", autolock);
+			preferences.save({key:"autolock", shouldAutolock:autolock});
+		}
+
+      
+		function setupToolbar() {
+			 window.plugins.nativeControls.createTabBar();
+		 
+			 window.plugins.nativeControls.createTabBarItem("interfaces", "Interfaces", "presets.png", {
+			   onSelect: function() { control.changeTab(document.getElementById("Interfaces")); }
+			 });
+
+			 window.plugins.nativeControls.createTabBarItem("destinations", "Destinations", "destinations.png", {
+			   onSelect: function() { control.changeTab(document.getElementById("Destinations")); }
+			 });
+		 
+			 window.plugins.nativeControls.createTabBarItem("preferences", "Preferences", "19-gearSmall.png", {
+			   onSelect: function() { control.changeTab(document.getElementById("Preferences")); }
+			 });
+		 
+			 window.plugins.nativeControls.createTabBarItem("info", "Info", "Info.png", {
+			   onSelect: function() { control.changeTab(document.getElementById("Info")); }
+			 });
+		 
+			 //window.plugins.nativeControls.showTabBar({"position":"bottom"});
+			 window.plugins.nativeControls.showTabBarItems("interfaces", "destinations", "preferences", "info");
+			 control.showToolbar();
+		}
+    </script>
+  </head>
+  
+  <body id="stage" style="background-color:#000; -webkit-user-select: none;"  onload="document.addEventListener('touchmove', preventBehavior, false);" class="theme"> 
+  
+  <div id="selectedInterface"></div>
+  
+  <div id="Interfaces">
+		<div id="header">
+			<h1>Interfaces</h1>
+			<button id="interfaceEditBtn" class="edit" ontouchend="interfaceManager.editInterfaceList()">Edit</button>
+			
+			<button class="add" ontouchend="interfaceManager.promptForInterfaceDownload()">+</button>
+		</div>
+		<div id="wrapper">
+			<div id="interfaceScroller" class="scroller">
+				<ul id="interfaceList"></ul>
+			</div>
+		</div>
+  </div>
+  
+  <div id="Destinations">
+		<div id="header">
+			<h1>Destinations</h1>
+			<button id="destinationEditBtn" class="edit" ontouchend="destinationManager.editDestinationList()">Edit</button>
+			
+			<button class="add" ontouchend="destinationManager.promptForIP()">+</button>
+		</div>
+		<div id="wrapper">
+			<div id="destinationScroller" class="scroller">
+				<ul id="destinationList"></ul>
+			</div>
+		</div>
+  </div>
+  
+  <div id="Preferences">
+	<div id="header"><h1>Preferences</h1></div>
+		<div id="wrapper">
+			<div id="preferencesScroller" class="scroller">
+				<ul id="preferencesList">
+					<li><a id="autolockToggle" href="#" ontouchend="preferencesManager.autolockToggle()">Turn Autolock <b>On</b></a></li>
+					<li>OSC Receive Port : <form style="display:inline;" onsubmit="event.preventDefault();portField.blur(); preferencesManager.changePort(portField.value);"><input type="number" id="receivePortSelector" name="portField" value="51000" onchange=""></form></li>
+				</ul>
+			</div>
+		</div>
+  </div>
+  
+  <div id="Info">
+	<div id="header">
+		<h1>Info</h1>
+	</div>
+	<p>Control is an application enabling configurable control surfaces for mobile devices. For more information, interfaces, tutorials and references please visit
+	<a href="http://www.charlie-roberts.com/Control">the Control website</a>.
+	</p>
+	<p>
+	Control was created and is maintained by <a href="http://www.charlie-roberts.com">Charlie Roberts</a>, with additional contributions by <a href="www.thepersistentbeat.com">Greg Shear</a> 
+	and <a href="http://www.create.ucsb.edu/~matt/">Matt Wright</a>. Control was partially realized as a research project for the <a href="http://allosphere.ucsb.edu">AlloSphere Research Group</a>.
+	</p>
+
+	<p>Control is built using the following open source projects (thank you!):</p>
+	<ul>
+		<li><a href="http://www.phonegap.com">PhoneGap</a> - an API for developing cross-platform mobile applications</li>
+		<li><a href="http://cubiq.org/iscroll">iScroll</a> - scrolling table views for WebKit interfaces</li>
+		<li><a href="http://brianleroux.github.com/lawnchair/">Lawnchair</a> - cross-platform persistent storage of JSON information</li>
+		<li><a href="http://www.audiomulch.com/~rossb/code/oscpack/">oscpack</a> - cross-platform OSC library.
+	</ul>
+  </div>
+  
+  </body>
+</html>

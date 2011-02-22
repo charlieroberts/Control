@@ -85,6 +85,7 @@ function InterfaceManager() {
         interfaceManager.myRequest.ipAddress = ipAddress;        
 		//interfaceManager.myRequest.withCredentials = "true";                
 		interfaceManager.myRequest.open("GET", ipAddress, true);
+		console.log("getting interface from " + ipAddress);
         interfaceManager.myRequest.send(null);
 	}
 	
