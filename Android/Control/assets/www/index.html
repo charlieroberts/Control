@@ -4,7 +4,7 @@
 	<title>Control</title>
 
     <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, target-densitydpi=device-dpi" />
-	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<!--<meta name="apple-mobile-web-app-capable" content="yes" />	-->
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	
 	<link rel="stylesheet" href="css/jquery.mobile-1.0a3.css" />
@@ -12,9 +12,6 @@
 	<!--<link rel="stylesheet" href="css/iscroll.css" type="text/css" media="screen" charset="utf-8">-->
 
 	
-	<!-- iScroll: scrolling table views for webkit interface: http://cubiq.org/iscroll -->
-	<script type="text/javascript" src="js/iscroll.js"></script>
-	<script type="text/javascript" charset="utf-8" src="js/keyevent.js"></script>
     <script type="text/javascript" charset="utf-8" src="js/phonegap-uncompressed.js"></script>
 	<script type="text/javascript" charset="utf-8" src="js/NativeControls.js"></script>
 	
@@ -22,7 +19,6 @@
 	<script src="js/jquery-1.5.js"></script>
 	<script src="js/jquery.mobile-1.0a3.js"></script>
 
-	
 	<!-- iScroll: scrolling table views for webkit interface: http://cubiq.org/iscroll -->
 	<!--<script type="text/javascript" src="js/iscroll.js"></script>-->
 	
@@ -62,11 +58,8 @@
 			e.preventDefault(); 
 		};
         
-		 document.addEventListener('menuKeyDown', function(){
-		    alert('You pressed the menu button');
-		});
-//		PhoneGap.addConstructor(function(){
-		//document.addEventListener("touchmove", preventBehavior, false); // prevents webkit from scrolling DNR
+		//console.log("something");
+		//PhoneGap.addConstructor(function(){
 		function startControl() {
 			document.addEventListener("touchmove", preventBehavior, false); // prevents webkit from scrolling DNR
 			
@@ -98,8 +91,7 @@
 			preferencesManager = new PreferencesManager();
 			console.log("end of constructor");
 		}
-//		});
-		
+		//);
 		function autolockToggle() {
 			var autolockToggleLink = document.getElementById("autolockToggle");
 			autolock = !autolock;
@@ -140,6 +132,7 @@
   </head>
   
   <body id="stage" style="background-color:#000; -webkit-user-select: none;"  onload="init(); document.addEventListener('touchmove', preventBehavior, false);" class="theme"> 
+  
 
   <div data-role="page" id="Interfaces" data-theme="a">
 		<div class="ui-bar-a  ui-header " data-role="header" id="header" data-backbtn="false">
@@ -204,7 +197,7 @@
 	</div>
 	
 	<div data-role="content">
-	    <p>Control v1.2 is an application enabling configurable con trol surfaces for mobile devices. For more information, interfaces, tutorials and references please visit
+	    <p>Control v1.2 is an application enabling configurable control surfaces for mobile devices. For more information, interfaces, tutorials and references please visit
     	<a href="http://www.charlie-roberts.com/Control">the Control website</a>.
     	</p>
     	<p>

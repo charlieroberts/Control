@@ -76,7 +76,7 @@
              - copy/paste the content of the rules files (minus the top node)
                into this file, *after* the <setup> task
              - disable the import of the rules by changing the setup task
-               below to <setup import="false" />. 
+               below to <setup import="false" />.
              - customize to your needs.
     -->
     <setup />
