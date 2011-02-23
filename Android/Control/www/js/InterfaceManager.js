@@ -85,6 +85,7 @@ function InterfaceManager() {
         interfaceManager.myRequest.ipAddress = ipAddress;        
 		//interfaceManager.myRequest.withCredentials = "true";                
 		interfaceManager.myRequest.open("GET", ipAddress, true);
+		console.log("getting interface from " + ipAddress);
         interfaceManager.myRequest.send(null);
 	}
 	
@@ -260,13 +261,8 @@ function InterfaceManager() {
         eval(json);
         this.currentInterfaceName = loadedInterfaceName;
         this.currentInterfaceJSON = json;
-		
-		if(typeof interfaceOrientation != "undefined") {
-			console.log(interfaceOrientation);
-            PhoneGap.exec("Device.setRotation", interfaceOrientation);
-        }
-        //if(control.orientation == 0 || control.orientation == 180) {
-		if(interfaceOrientation == "portrait") {
+
+        if(control.orientation == 0 || control.orientation == 180) {
             control.makePages(pages, screen.width, screen.height);
         }else{
             control.makePages(pages, screen.height, screen.width);
@@ -276,10 +272,14 @@ function InterfaceManager() {
             control.loadConstants(constants);
         }
         
+        control.unloadWidgets();
         control.loadWidgets();
-        if(this.currentTab != document.getElementById("selectedInterface")) {
+        if(this.currentTab != document.getElementById("selectedInterface"))
             control.changeTab(document.getElementById("selectedInterface"));
-		}
+		
+		if(typeof interfaceOrientation != "undefined") {
+            PhoneGap.exec("Device.setRotation", interfaceOrientation);
+        }
     }
 	
 	this.selectInterfaceFromList = function(interfaceName) {
