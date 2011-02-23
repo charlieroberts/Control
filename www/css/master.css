@@ -87,7 +87,7 @@ b { font-weight: bold; }
   width:100%;
   overflow:hidden;
   background-color:#000;
-  display:none;
+  /*display:none;*/
   /*-webkit-transition: height .2s linear;*/
 }
 
@@ -113,3 +113,23 @@ h3 { font-weight: normal;}
 
 #Info a { color:#ccc; }
 #Info ul { list-style:none; padding:1em; font-size:1em;}
+
+.edit { 
+	margin:0px;
+	font-size:.7em;
+	color:#fff; 
+	-webkit-border-radius:4px; 
+	/*background-image:-webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #999), color-stop(0.02, #666), color-stop(1, #222)); */
+	background-image:-webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #333333), color-stop(0.05, #333333), color-stop(1, #000000));
+	top:.70em;
+	display:block;
+	
+}
+.ftr {
+	font-size: .7em; 
+	padding:.5em .2em .5em .2em;
+	width:100%;
+}
+.ftrButton {padding-top:.5em; width:4em; height:1.75em;}
+.edit { position:absolute; left:.5em;  width:4em; height:1.9em;  top:.925em;}
+.add  { position:absolute; right:.5em; font-weight:bold;width:3em; height:1.5em;	font-size:.9em; float:right;}

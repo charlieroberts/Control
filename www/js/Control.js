@@ -25,6 +25,7 @@ function Control() {
 }
 
 Control.prototype.makePages = function(_pages,width, height) {
+	console.log('making pages');
 	pages = _pages;
 	this.deviceWidth = width;
 	this.deviceHeight = height;
@@ -38,24 +39,34 @@ Control.prototype.makePages = function(_pages,width, height) {
 	interfaceDiv.addEventListener('touchend', control.event, false);
 	interfaceDiv.addEventListener('touchstart', control.event, false);
 	interfaceDiv.addEventListener('touchmove', control.event, false);
-	interfaceDiv.addEventListener('touchmove', preventBehavior, false);	
+	interfaceDiv.addEventListener('touchmove', preventBehavior, false);
 }
 
 Control.prototype.showToolbar = function() {
 	this.tabBarHidden = false;
 	//window.uicontrols.showTabBar();
-	if(this.orientation == 0 || this.orientation == 180) {
+	/*if(this.orientation == 0 || this.orientation == 180) {
 		window.plugins.nativeControls.showTabBar({"orientation":"portrait",  "position":"bottom"});
 	}else{
 		window.plugins.nativeControls.showTabBar({"orientation":"landscape", "position":"bottom"});
-	}
+	}*/
+	console.log("oOEUBROUEBRONSnodnosd");
+	$(".ftr").css("visibility", "visible");
+		//$("#interfaceFooter").css("background-color", "#f00");
+	console.log("ok");
 	//window.plugins.nativeControls.showTabBar({"position":"bottom"});	
 }
 
 Control.prototype.hideToolbar = function() {
 	this.tabBarHidden = true;
 	//window.uicontrols.hideTabBar();
-	window.plugins.nativeControls.hideTabBar();	
+	//window.plugins.nativeControls.hideTabBar();
+	//console.log($("#interfaceFooter"));
+	//console.log("oOEUBROUEBRONSnodnosd");
+
+	$(".ftr").css("visibility", "hidden");
+	
+	console.log("after");
 }
 
 Control.prototype.setWidgetValueWithMIDIMessage = function(midiType, midiChannel, midiNumber, value) {
@@ -311,13 +322,12 @@ Control.prototype.changeTab = function(tab) {
     var oldTab = this.currentTab;
 	this.currentPage = 0;
 
-    this.currentTab.style.display = "none";
+    //this.currentTab.style.display = "none";
     this.currentTab = tab;
     
-    this.currentTab.style.display = "block";    
+    //this.currentTab.style.display = "block";    
     
 	if(this.currentTab.id == "selectedInterface") {
-	  //interfaceScroller
 		this.tabBarHidden = true;
 		control.hideToolbar();
     }else{
@@ -328,9 +338,9 @@ Control.prototype.changeTab = function(tab) {
       }
 	  if(oldTab.id == "selectedInterface") {
 		control.unloadWidgets();
-		window.plugins.nativeControls.hideTabBar(false);
+		//window.plugins.nativeControls.hideTabBar(false);
 		PhoneGap.exec("Device.setRotation", "portrait");
-		window.plugins.nativeControls.showTabBar({"orientation":"portrait",  "position":"bottom"});
+		//window.plugins.nativeControls.showTabBar({"orientation":"portrait",  "position":"bottom"});
 	  }
     }
     

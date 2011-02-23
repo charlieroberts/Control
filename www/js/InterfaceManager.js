@@ -8,7 +8,8 @@ function InterfaceManager() {
         interfaceOrientation = null;
         constants = null;
         PhoneGap.exec("Defaults.loadDefaultScripts");
-        setTimeout("interfaceManager.createInterfaceListWithStoredInterfaces()", 1150);
+		this.createInterfaceListWithStoredInterfaces();
+        //setTimeout("interfaceManager.createInterfaceListWithStoredInterfaces()", 1150);
 	}
 	
 	 this.promptForInterfaceDownload = function() {
@@ -140,10 +141,14 @@ function InterfaceManager() {
 			var r = listArray[i];
 			//debug.log("key " + i + " :: " + r.key);
 			var item = document.createElement('li');
+			$('li').attr("data-icon","false");
+			//li.class = "
                 
 			var link = document.createElement('a');
 			link.style.color="#fff";
-			link.setAttribute("ontouchend", "interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "');");
+			link.setAttribute("ontouchend", "console.log('BLAH'); setTimeout(function() { console.log('BLAH 2');interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "'); }, 500);C");
+			link.setAttribute("href", "#SelectedInterfacePage");
+			//link.setAttribute("data-transition", "pop");
 			link.innerHTML = r.key;
 			
 			item.appendChild(link);
@@ -155,7 +160,8 @@ function InterfaceManager() {
 			//link.style.display = "block";
 			//link.style.backgroundColor = "#a33";
 		}
-		interfaceScroller.refresh();
+		$('ul').listview('refresh');
+		//interfaceScroller.refresh();
 		//setTimeout(function () { interfaceScroller.refresh(); }, 2550);
 	}
 
