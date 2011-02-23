@@ -36,7 +36,7 @@ OSCManager.prototype.processOSC = function(oscAddress, typetags, args) {
 				}else if(w.widgetType == "MultiTouchXY") {
 					var addressSplit = oscAddress.split('/');
 					var touchNumber =  addressSplit.pop();
-					w.setValue(touchNumber, args[0], args[2]);
+					w.setValue(touchNumber + 1, args[0], args[2]); // need + 1 to 1 index the touches similar to output
 				}
 			}	
 		}
@@ -61,11 +61,29 @@ OSCManager.prototype.processOSC = function(oscAddress, typetags, args) {
 				// TODO: multitouch setting
 				var addressSplit = oscAddress.split('/');
 				var touchNumber =  addressSplit.pop();
-				w.setValue(touchNumber, args[0], args[1]);
+				w.setValue(touchNumber, args[0], args[1]); // need + 1 to 1 index the touches similar to output
 			}
 		}	
 	}
 }
-OSCManager.prototype.setIPAddressAndPort = function() {
-	
+
+OSCManager.prototype.sendOSC = function() {	// NOTE: PhoneGap.exec('OSCManager.send') will be much more efficient than this for a large number of strings.
+	if(_protocol == "OSC") {
+		var address = arguments[0];
+		var typetags = arguments[1];
+		var evalString = "PhoneGap.exec('OSCManager.send', '"+address+"','"+typetags+"',";
+		for(var i = 0; i < typetags.length; i++) {
+			var arg = arguments[i + 2];
+			if(typetags.charAt(i) != 's') 
+				evalString += arg;
+			else
+				evalString += "'" + arg + "'";
+				
+			if(i != typetags.length - 1) 
+				evalString += ",";
+			else
+				evalString += ");"
+		}
+		eval(evalString);
+	}
 }

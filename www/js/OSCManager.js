@@ -36,7 +36,7 @@ OSCManager.prototype.processOSC = function(oscAddress, typetags, args) {
 				}else if(w.widgetType == "MultiTouchXY") {
 					var addressSplit = oscAddress.split('/');
 					var touchNumber =  addressSplit.pop();
-					w.setValue(touchNumber, args[0], args[2]);
+					w.setValue(touchNumber + 1, args[0], args[2]); // need + 1 to 1 index the touches similar to output
 				}
 			}	
 		}
@@ -61,7 +61,7 @@ OSCManager.prototype.processOSC = function(oscAddress, typetags, args) {
 				// TODO: multitouch setting
 				var addressSplit = oscAddress.split('/');
 				var touchNumber =  addressSplit.pop();
-				w.setValue(touchNumber, args[0], args[1]);
+				w.setValue(touchNumber, args[0], args[1]); // need + 1 to 1 index the touches similar to output
 			}
 		}	
 	}

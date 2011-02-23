@@ -41,6 +41,19 @@ function Button(ctx, props) {
 		this.requiresTouchDown = props.requiresTouchDown;
 	}
 	
+	if(typeof props.label != "undefined") {
+		this.text = props.label;
+		this.label = {"name": this.name + "Label", "type": "Label", "bounds":[props.x, props.y, props.width, props.height], "color":this.strokeColor, "value":this.text, "size":props.labelSize || 12,};
+		var _w = control.makeWidget(this.label);
+		control.widgets.push(_w);
+		if(!control.isAddingConstants)
+			eval("control.addWidget(" + _w.name + ", control.currentPage);"); // PROBLEM
+		else
+			eval("control.addConstantWidget(" + _w.name + ");"); // PROBLEM
+			
+		this.label = _w;
+	}
+	
 	this.yOffset = 0;
 	this.xOffset = 0;
 	
@@ -48,13 +61,13 @@ function Button(ctx, props) {
 	    fillDiv is the DIV tag representing the button in the DOM
 	*/
 	this.fillDiv   = document.createElement("div");
-	this.fillDiv.style.width = this.width + "px";
-	this.fillDiv.style.height = this.height + "px";	
+	this.fillDiv.style.width = this.width - 2 + "px";
+	this.fillDiv.style.height = this.height - 2 + "px";	
 	this.fillDiv.style.position = "absolute";
 	this.fillDiv.style.left = this.x + "px";
 	this.fillDiv.style.top  = this.y + "px";
-    this.stroke = (typeof props.stroke != "undefined") ? props.stroke : "#ffffff";
-	this.fillDiv.style.border = "1px solid " + this.stroke;
+    //this.stroke = (typeof props.stroke != "undefined") ? props.stroke : "#fff";
+	this.fillDiv.style.border = "1px solid " + this.strokeColor;
 	
 	this.ctx.appendChild(this.fillDiv);
     
@@ -70,12 +83,13 @@ function Button(ctx, props) {
 	 */
 	this.draw = function() {
         if(this.mode != "contact") {
-            this.fillDiv.style.backgroundColor = (this.isLit) ? this.color : "rgb(0,0,0)";
+            this.fillDiv.style.backgroundColor = (this.isLit) ? this.fillColor : this.backgroundColor;
         } else {
-            this.fillDiv.style.backgroundColor = this.color;
+            this.fillDiv.style.backgroundColor = this.fillColor;
             var str = "gButton"+parseInt(Math.random()*10000);
             eval(str + " = this;");
-            var evalString = 'setTimeout(function() {'+str+'.fillDiv.style.backgroundColor="#000";}, 50)';
+            var evalString = 'setTimeout(function() {'+str+'.fillDiv.style.backgroundColor=' + str + '.backgroundColor;}, 50)';
+			//console.log(evalString);
             eval(evalString);
         }
 	}
@@ -205,6 +219,7 @@ function Button(ctx, props) {
                                     this.draw();
                                     this.output();
                                 }
+
                                 eval(this.ontouchend);
                                 //break;
                             }
@@ -241,7 +256,7 @@ function Button(ctx, props) {
             case "toggle" :
                 this.isLit = (this.value == this.max);
                 break;
-            case "visufile://localhost/Users/charlie/Documents/code/control/iphone/www/OSCManager.jsalToggle" :
+            case "visualToggle" :
                 this.isLit = (this.visualToggleLit);
                 break;    
             case "latch" : case "momentary" :
@@ -269,6 +284,10 @@ function Button(ctx, props) {
 	 */
 	this.hide = function() {
 		this.fillDiv.style.display = "none";
+	}
+	
+	this.unload = function() {
+		this.ctx.removeChild(this.fillDiv);
 	}
 	
 	return this;

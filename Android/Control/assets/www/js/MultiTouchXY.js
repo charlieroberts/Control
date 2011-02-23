@@ -15,16 +15,17 @@ function MultiTouchXY(ctx, props) {
 	this.container = document.createElement('div');
 	this.container.style.position = "absolute";
 	this.container.style.display = "block";
-	this.container.style.width = this.width + "px";
-	this.container.style.height = this.height + "px";
+	this.container.style.width  = this.width  - 2 + "px";
+	this.container.style.height = this.height - 2 + "px";
 	this.container.style.top = this.y + "px";
 	this.container.style.left = this.x + "px";
+	this.container.style.backgroundColor = this.backgroundColor;
 	this.ctx.appendChild(this.container);
 	
     this.touchCount = 0;
-	this.container.style.border = "1px solid #999999";
+	this.container.style.border = "1px solid " + this.strokeColor;
 	
-	this.touchColors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFFFFF', '#80FF00', '#8000FF', '#0080FF', '#FF8080'];
+	//this.touchColors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFFFFF', '#80FF00', '#8000FF', '#0080FF', '#FF8080'];
 	
 	this.init = function() {
 		if(!this.isMomentary) {
@@ -40,7 +41,7 @@ function MultiTouchXY(ctx, props) {
 		touch.style.display = "block";
 		touch.style.position = "absolute";
 
-        touch.style.border = "#999 solid 1px";
+        touch.style.border = this.strokeColor + " solid 1px";
         touch.style.width = (this.width / 8) +"px";
 		touch.style.height = touch.style.width;
         touch.style.textAlign = "center";
@@ -49,9 +50,10 @@ function MultiTouchXY(ctx, props) {
 
         touch.style.left = xPos + "px";
         touch.style.top  = yPos + "px";
-        touch.style.color = "#ccc";
-        touch.style.backgroundColor = "#333";
+        touch.style.color = this.strokeColor;
+        touch.style.backgroundColor = this.fillColor;
 		touch.id = (this.isMomentary) ? id : gNOT_ACTIVE;
+		touch.childID = touch.id;
 		touch.isActive = (this.isMomentary);
         if(!this.isMomentary) {
             touch.activeNumber = id + 1;
@@ -108,23 +110,26 @@ function MultiTouchXY(ctx, props) {
 							this.addTouch(touch.pageX , touch.pageY , touch.identifier);
 						else
 							this.trackTouch(touch.pageX, touch.pageY , touch.identifier);
+						
+						eval(this.ontouchstart);
 					}
-					eval(this.ontouchstart);
 					break;
 				case "touchmove":
 					for(var t = 0; t < this.children.length; t++) {
 						_t = this.children[t];
 						if(touch.identifier == _t.id) {
 							this.changeValue(_t, touch.pageX, touch.pageY);
+							eval(this.ontouchmove);
 							break;
 						}
 					}
-					eval(this.ontouchmove);
+					
 					break;
 				case "touchend":
 					for(var t = 0; t < this.children.length; t++) {
 						_t = this.children[t];
 						if(touch.identifier == _t.id) {
+							eval(this.ontouchend);
 							if(this.isMomentary) {
 								this.removeTouch(_t);
 							}else{
@@ -133,7 +138,6 @@ function MultiTouchXY(ctx, props) {
 							}
 						}
 					}							
-					eval(this.ontouchend);
 					break;
 			}
 		}
@@ -189,7 +193,7 @@ function MultiTouchXY(ctx, props) {
 		}
         
 		if(this.onvaluechange != null) eval(this.onvaluechange);
-		this.output(touch);
+		if(!this.isLocal) this.output(touch);
 	}
 	
 	this.output = function(touch) {
@@ -203,7 +207,7 @@ function MultiTouchXY(ctx, props) {
         }else if(_protocol == "MIDI") {
             var xnum = this.midiNumber + (touch.activeNumber * 2) - 2;
             var ynum = xnum + 1;
-            
+				
             valueString  = "|" + this.midiType + "," + (this.channel - 1) + "," + xnum + "," + Math.round(this.xvalue);
             valueString += "|" + this.midiType + "," + (this.channel - 1) + "," + ynum + "," + Math.round(this.yvalue);
         }
@@ -241,6 +245,10 @@ function MultiTouchXY(ctx, props) {
 	}
 	
 	this.draw = function() {}
-
+	
+	this.unload = function() {
+		this.ctx.removeChild(this.container);
+	}
+	
 	return this;
 }
