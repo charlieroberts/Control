@@ -64,7 +64,7 @@ function ControlAccelerometer(props) {
 	}
 		
 	this.unload = function() {
-		PhoneGap.exec("Accelerometer.stop");
+		PhoneGap.exec("CNTRL_Accelerometer.stop");
 	}
     
     this.setUpdateRate = function(rateInHz) {
