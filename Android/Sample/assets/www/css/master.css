@@ -5,10 +5,8 @@ body {
   font-family:Helvetica;
   font-size:72%;
   line-height:1.5em;
-  margin:0;
-  padding:0;
-  border-top:1px solid #393939;
-  overflow:hidden;
+  margin:0 !important;
+  padding:0 !important;
 }
 
 /*#info{
@@ -26,51 +24,23 @@ body {
   margin:0;
   padding:0;
 }
-
-#stage.theme{
-  padding-top:3px;
-}
 */
-
-/* Content Styling */
-/* Stage Buttons */
-div.btn, #stage.theme a.btn {
-	border: 1px solid #555;
-/*	-webkit-border-radius: 5px;*/
-	border-radius: 5px;
-	text-align:center;
-	display:block;
-	float:left;
-	background:#000;
-	width:150px;
-	color:#9ab;
-	font-size:1.1em;
-	text-decoration:none;
-	padding:1.2em 0;
-	margin:3px 0px 3px 5px;
-}
-
-#stage.theme a.btn.large{
-	width:308px;
-	height:200px;
-	padding:1.2em 0;
-}
-
 b { font-weight: bold; }
 
 #selectedInterface, #Interfaces, #Destinations, #Preferences, #Info {
   position:absolute;
   left:0em;
-  top:4em;
-  height:100%;
+  top:0em;
   width:100%;
+  height:100%;
   overflow:hidden;
   background-color:#000;
-  display:none;
+  margin:0 !important;
+  padding:0 !important;
+  /*display:none;*/
   /*-webkit-transition: height .2s linear;*/
 }
 
-#Interfaces { display: block; }
 
 li { color: #fff; }
 
@@ -80,9 +50,9 @@ canvas { margin: 0; padding: 0;}
 
 h3 { font-weight: normal;}
 
-#Info { overflow:hidden; height:85%}
+#Info { overflow:scroll; height:85%}
 #Info #header {
-	margin-bottom:1em;
+	/*margin-bottom:1em;*/
 }
 #Info p {
 	padding:0em 1em;
@@ -92,3 +62,23 @@ h3 { font-weight: normal;}
 
 #Info a { color:#ccc; }
 #Info ul { list-style:none; padding:1em; font-size:1em;}
+
+.edit { 
+	margin:0px;
+	font-size:.7em;
+	color:#fff; 
+	-webkit-border-radius:4px; 
+	/*background-image:-webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #999), color-stop(0.02, #666), color-stop(1, #222)); */
+	background-image:-webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #333333), color-stop(0.05, #333333), color-stop(1, #000000));
+	top:.70em;
+	display:block;
+	
+}
+.ftr {
+	font-size: .7em; 
+	/*padding:.5em .2em .5em .2em;*/
+	width:100%;
+}
+.ftrButton {padding-top:.5em; width:4em; height:1.75em;}
+.edit { position:absolute; left:.5em;  width:4em; height:1.9em;  top:.925em;}
+.add  { position:absolute; right:.5em; font-weight:bold;width:3em; height:1.5em;	font-size:.9em; float:right;}

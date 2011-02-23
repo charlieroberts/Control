@@ -6,8 +6,10 @@ function DestinationManager() {
 		this.destinationsSynch = [];
 		this.ipaddress = null;
 		this.bonjourDestinations = new Array();
-		
-		PhoneGap.exec("Bonjour.start", null);
+		//PhoneGap.exec("Bonjour.start", null);
+
+		setTimeout(function() { window.destinationManager.createDestinationList(); }, 1000);
+
 	}
 	
 	this.setIPAndPort = function() {
@@ -19,6 +21,9 @@ function DestinationManager() {
 		}
 	}
 	
+	this.removeDestination = function(ip, port) {
+		console.log("destinationmanager removing " + ip + " : " + port);
+	}
 	this.pushDestination = function(newDestination) {
 		var segments = newDestination.split(":");
 		this.addDestination(segments[0], segments[1], false, false);
@@ -27,9 +32,8 @@ function DestinationManager() {
 	
 	this.addDestination = function(address, port, isBonjour, isMIDI) {
 		for(var i = 0; i < this.destinationsSynch.length; i++) {
-			debug.log("adding destination : " + i);
 			var destCheck = this.destinationsSynch[i];
-			debug.log(destCheck);
+			//console.log(destCheck);
 			if(address == destCheck.ip && port == destCheck.port) return;
 		}
 		this.destinationsSynch.push({ip:address, port:port});
@@ -38,7 +42,7 @@ function DestinationManager() {
 		var item = document.createElement('li');
 		if(isBonjour) item.setAttribute("class", "isBonjour");
 		if(isMIDI) item.setAttribute("class", "isMIDI");
-		//debug.log("address: " + address + " | port : " + port + " | isBonjour | " + isBonjour);
+		//console.log("address: " + address + " | port : " + port + " | isBonjour | " + isBonjour);
 		if(!isMIDI) 
 			item.setAttribute("ontouchend", "destinationManager.highlight(" + list.childNodes.length + "); _protocol='OSC'; destinationManager.selectIPAddressAndPort('" + address + "'," + port + ");");		
 		else
@@ -77,7 +81,7 @@ function DestinationManager() {
 	}
 	
 	this.selectIPAddressAndPort = function(address, port) {
-        debug.log("selecting ip and port");
+        console.log("selecting ip and port");
 		this.ipaddress = address;
 		this.port = port;
 		PhoneGap.exec("OSCManager.setIPAddressAndPort", this.ipaddress, this.port);
@@ -188,13 +192,13 @@ function DestinationManager() {
 			
 			for(var i = 0; i < list.childNodes.length; i++) {
 				var item = list.childNodes[i];
-				if(item.getAttribute("class") != "isBonjour") {
+				//if(item.getAttribute("class") != "isBonjour") {
 					var deleteButton = document.createElement("div"); // -webkit-border-radius:10px;
 					deleteButton.setAttribute("style", "float:left; margin-right: 5px; position:relative; top:10px; border: #fff 2px solid; -webkit-border-radius:10px; width: 15px; height: 15px; background-color:#f00; color:#fff; font-weight:bold;");
 					deleteButton.innerHTML = "<img style='position:relative; top:-.5em; left:-.5em;' src='dash.png'>";
 					deleteButton.setAttribute("ontouchend", "destinationManager.removeDestination("+i+")");
 					item.insertBefore(deleteButton, item.firstChild);
-				}
+				//}
 			}
 		}
 	}
@@ -206,8 +210,8 @@ function DestinationManager() {
 		document.getElementById('destinationEditBtn').ontouchend = destinationManager.editDestinationList;
 		for(var i = 0; i < list.childNodes.length; i++) {
 			var item = list.childNodes[i];
-			if(item.getAttribute("class") != "isBonjour")
-				item.removeChild(item.childNodes[0]);
+			//if(item.getAttribute("class") != "isBonjour")
+			item.removeChild(item.childNodes[0]);
 		}
 	}
 	
@@ -215,7 +219,7 @@ function DestinationManager() {
 	this.removeDestination = function (itemNumber) {
 		var listItem = document.getElementById('destinationList').childNodes[itemNumber];
 		var jsonKey = listItem.childNodes[1].innerHTML;
-		debug.log("removing "+ jsonKey);
+		console.log("removing "+ jsonKey);
 		document.getElementById('destinationList').removeChild(listItem);
 		destinationManager.destinations.remove(jsonKey);
 	}

@@ -2,8 +2,8 @@
 
 function Control() {
 	this.widgetCount = 0;
-	this.pages = [];
-	this.constants = [];
+	this.contexts = new Array();
+	this.pages = new Array();
 	this.currentPage = 0;
 	this.deviceWidth = null;
 	this.deviceHeight = null;
@@ -15,19 +15,19 @@ function Control() {
 	acc = null;
 	compass = null;
 	gyro = null;
-	console.log("finished init control");
-	console.log(this.currentTab);
+	interfaceDiv = document.getElementById("selectedInterface");
     //PhoneGap.exec("OSCManager.startReceiveThread");
 	//PhoneGap.exec("CNTRL_Accelerometer.setUpdateRate", 50);
 	//PhoneGap.exec("Gyro.setUpdateRate", 50);	
-	//this.changeTab(this.currentTab);
+	this.changeTab(this.currentTab);
+	this.isAddingConstants = false;
+	this.constants = [];
 	return this;
 }
 
 Control.prototype.makePages = function(_pages,width, height) {
+	console.log('making pages');
 	pages = _pages;
-	console.log("make pages width = " + width);
-	interfaceDiv = document.getElementById("selectedInterface");
 	this.deviceWidth = width;
 	this.deviceHeight = height;
 	interfaceDiv.innerHTML = "";
@@ -40,25 +40,34 @@ Control.prototype.makePages = function(_pages,width, height) {
 	interfaceDiv.addEventListener('touchend', control.event, false);
 	interfaceDiv.addEventListener('touchstart', control.event, false);
 	interfaceDiv.addEventListener('touchmove', control.event, false);
-	interfaceDiv.addEventListener('touchmove', preventBehavior, false);	
-	console.log("pages made");	
+	interfaceDiv.addEventListener('touchmove', preventBehavior, false);
 }
 
 Control.prototype.showToolbar = function() {
 	this.tabBarHidden = false;
 	//window.uicontrols.showTabBar();
-	if(this.orientation == 0 || this.orientation == 180) {
-	//	window.plugins.nativeControls.showTabBar({"orientation":"portrait",  "position":"bottom"});
+	/*if(this.orientation == 0 || this.orientation == 180) {
+		window.plugins.nativeControls.showTabBar({"orientation":"portrait",  "position":"bottom"});
 	}else{
-	//	window.plugins.nativeControls.showTabBar({"orientation":"landscape", "position":"bottom"});
-	}
+		window.plugins.nativeControls.showTabBar({"orientation":"landscape", "position":"bottom"});
+	}*/
+	console.log("oOEUBROUEBRONSnodnosd");
+	$(".ftr").css("visibility", "visible");
+		//$("#interfaceFooter").css("background-color", "#f00");
+	console.log("ok");
 	//window.plugins.nativeControls.showTabBar({"position":"bottom"});	
 }
 
 Control.prototype.hideToolbar = function() {
 	this.tabBarHidden = true;
 	//window.uicontrols.hideTabBar();
-	//window.plugins.nativeControls.hideTabBar();	
+	//window.plugins.nativeControls.hideTabBar();
+	//console.log($("#interfaceFooter"));
+	//console.log("oOEUBROUEBRONSnodnosd");
+
+	$(".ftr").css("visibility", "hidden");
+	
+	console.log("after");
 }
 
 Control.prototype.setWidgetValueWithMIDIMessage = function(midiType, midiChannel, midiNumber, value) {
@@ -101,25 +110,33 @@ Control.prototype.setWidgetValueWithMIDIMessage = function(midiType, midiChannel
 }
 
 Control.prototype.unloadWidgets = function() {
-	//debug.log("unloading all widgets");
 	for(var page = 0; page < control.pages.length; page++) {
 		for(var j = 0; j < control.pages[page].length; j++) {
 			var widget = control.pages[page][j];
 			if(typeof widget.unload != "undefined") {
-				debug.log("unloading " + widget.name);
 				widget.unload();
 			}
 			widget = null;
 		}
 	}
-	console.log("widgets unloaded");
+	control.pages = [];
+	
+	for(var i = 0; i < control.constants.length; i++) {
+		var widget = control.constants[i];
+		if(typeof widget.unload != "undefined") {
+			widget.unload();
+		}
+		widget = null;
+	}
+	control.constants = [];
 }
 
 Control.prototype.loadConstants = function(_constants) {
+	this.isAddingConstants = true;
 	if(_constants != null) {
 		constants = _constants;
 
-		this.constants = new Array();
+		this.constants = [];
 		for(var i = 0; i < constants.length; i++) {
 			var w = constants[i];
 			var _w = this.makeWidget(w);						
@@ -127,14 +144,13 @@ Control.prototype.loadConstants = function(_constants) {
 			eval("this.addConstantWidget(" + w.name + ");"); // PROBLEM
 		}
 	}
-	console.log("constants added");
 }
 	
 Control.prototype.makeWidget = function(w) {
 	var _w;
 	//debug.log("start " + w.type);
 	if(w.type != "Accelerometer" && w.type != "Compass" && w.type != "Gyro") {
-		_w = eval(w.name + " = new " + w.type + "(document.getElementById('selectedInterface'),w);");
+		_w = eval(w.name + " = new " + w.type + "(interfaceDiv,w);");
 	
 		if(_w.init != null) { 
 			_w.init();
@@ -162,21 +178,21 @@ Control.prototype.makeWidget = function(w) {
 }
 
 Control.prototype.loadWidgets = function() {
-	console.log("loading widgets");
+	this.isAddingConstants = false;
 	this.widgets = new Array();
 	this.pages = new Array();
-	for(var currentPage = 0; currentPage < pages.length; currentPage++) {
+	var oldCurrentPage = this.currentPage;
+	for(this.currentPage = 0; this.currentPage < pages.length; this.currentPage++) {
 		this.pages.push(new Array());
-        var page = pages[currentPage];
+        var page = pages[this.currentPage];
 		for(var i=0; i < page.length; i++) {
 			var w = page[i];
-			console.log("making widget :: " + w)
 			var _w = this.makeWidget(w);
-			console.log("made widget " + _w.name);
 			this.widgets.push(_w);
-			eval("this.addWidget(" + w.name + ", currentPage);"); // PROBLEM
+			eval("this.addWidget(" + w.name + ", this.currentPage);"); // PROBLEM
 		}
 	}
+	this.currentPage = oldCurrentPage;
 }
 
 Control.prototype.getValues = function() {
@@ -215,7 +231,7 @@ Control.prototype.addConstantWidget = function(widget) {
 
 Control.prototype.addWidget = function(widget, page) {
 	this.pages[page].push(widget);
-	if(page == this.currentPage) {
+	if(page == 0) { // TODO: SHOULD THIS BE VARIABLE?
 		if(widget.show != null)
 			widget.show();
 		
@@ -263,25 +279,26 @@ Control.prototype.refresh = function() {
 }
 
 Control.prototype.onRotation = function(event) {
-	// debug.log(event.orientation);
+	console.log("onrotation " + event.orientation);
 
 	control.orientation = event.orientation;
 	
-	if(loadedInterfaceName != null) {
-		control.unloadWidgets();
+	/*if(loadedInterfaceName != null) {
+		//control.unloadWidgets();
 		if(event.orientation == 0 || event.orientation == 180) {
 			control.makePages(pages, screen.width, screen.height);
 		}else{
 			control.makePages(pages, screen.height, screen.width);
 		}
-		control.loadConstants(constants);
-		control.loadWidgets();	// LOAD WIDGETS IS THE PROBLEM	
-	}
+		//control.loadConstants(constants);
+		//control.loadWidgets();	// LOAD WIDGETS IS THE PROBLEM	
+	}*/
 }
 
 
 Control.prototype.event = function(event) {
-  // REMEMBER : IN EVENT METHODS TRIGGERED FROM THE WEBVIEW "THIS" REFERS TO THE HTML OBJECT THAT GENERATED THE EVENT	
+  // REMEMBER : IN EVENT METHODS TRIGGERED FROM THE WEBVIEW "THIS" REFERS TO THE HTML OBJECT THAT GENERATED THE EVENT
+
 	event.preventDefault(); // needed for Android
 	var page = control.currentPage;
 	//debug.log("length = " + control.pages[page].length);
@@ -305,13 +322,13 @@ Control.prototype.drawWidgetsOnPage = function(page) {
 }
 
 Control.prototype.changeTab = function(tab) {
-    var oldTab = control.currentTab;
-	control.currentPage = 0;
+    var oldTab = this.currentTab;
+	this.currentPage = 0;
 
-    control.currentTab.style.display = "none";
-    control.currentTab = tab;
+    //this.currentTab.style.display = "none";
+    this.currentTab = tab;
     
-    this.currentTab.style.display = "block";    
+    //this.currentTab.style.display = "block";    
     
 	if(this.currentTab.id == "selectedInterface") {
 		this.tabBarHidden = true;
@@ -324,32 +341,33 @@ Control.prototype.changeTab = function(tab) {
       }
 	  if(oldTab.id == "selectedInterface") {
 		control.unloadWidgets();
-		document.getElementById("Interfaces").style.height = "100%";
+		//window.plugins.nativeControls.hideTabBar(false);
+		//PhoneGap.exec("Device.setRotation", "portrait");
+		//window.plugins.nativeControls.showTabBar({"orientation":"portrait",  "position":"bottom"});
 	  }
     }
-
     
     //TODO : make it work to change from landscape selected interface to portrait main menus
-	/*
+	
     if(typeof oldTab != "undefined") {
         if(oldTab.id == "selectedInterface" && this.currentTab.id != "selectedInterface") {
 		
             //var interface = document.getElementById("selectedInterface");
             //document.removeChild(interface);
-			PhoneGap.exec("Device.setRotation", "portrait");
+	//		setTimeout(function() { PhoneGap.exec("Device.setRotation", "portrait"); }, 500);
 			
-            for(var i = 0; i < this.pages[this.currentPage].length; i++) {
+            /*for(var i = 0; i < this.pages[this.currentPage].length; i++) {
                 var w = this.pages[this.currentPage][i];
                 debug.log("hiding");
                 w.hide();
             }
-            document.getElementById("selectedInterface").style.display = "none";
+            document.getElementById("selectedInterface").style.display = "none";*/
         }
     }
     if(this.currentTab.id == "Interfaces") {
         //interfaceManager.createInterfaceListWithStoredInterfaces();
     }
-	*/
+	
 	
 }
 

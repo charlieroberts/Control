@@ -8,7 +8,8 @@ function InterfaceManager() {
         interfaceOrientation = null;
         constants = null;
         //PhoneGap.exec("Defaults.loadDefaultScripts");
-		setTimeout("interfaceManager.createInterfaceListWithStoredInterfaces()", 1150);
+		this.createInterfaceListWithStoredInterfaces();
+        //setTimeout("interfaceManager.createInterfaceListWithStoredInterfaces()", 1150);
 	}
 	
 	 this.promptForInterfaceDownload = function() {
@@ -67,7 +68,7 @@ function InterfaceManager() {
 		var loadedInterfaceName = null;
         interfaceManager.myRequest.onreadystatechange = function() {
             if(interfaceManager.myRequest.readyState == 4) {
-                console.log(interfaceManager.myRequest.responseText);
+                //debug.log(interfaceManager.myRequest.responseText);
                 eval(interfaceManager.myRequest.responseText);
                 if(loadedInterfaceName != null) {
                     if(document.getElementById("promptDiv") != null) {
@@ -140,10 +141,14 @@ function InterfaceManager() {
 			var r = listArray[i];
 			//debug.log("key " + i + " :: " + r.key);
 			var item = document.createElement('li');
+			$('li').attr("data-icon","false");
+			//li.class = "
                 
 			var link = document.createElement('a');
 			link.style.color="#fff";
-			link.setAttribute("ontouchend", "interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "');");
+			link.setAttribute("ontouchend", "console.log('BLAH'); setTimeout(function() { console.log('BLAH 2');interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "'); }, 500);C");
+			link.setAttribute("href", "#SelectedInterfacePage");
+			//link.setAttribute("data-transition", "pop");
 			link.innerHTML = r.key;
 			
 			item.appendChild(link);
@@ -155,7 +160,8 @@ function InterfaceManager() {
 			//link.style.display = "block";
 			//link.style.backgroundColor = "#a33";
 		}
-		interfaceScroller.refresh();
+		$('ul').listview('refresh');
+		//interfaceScroller.refresh();
 		//setTimeout(function () { interfaceScroller.refresh(); }, 2550);
 	}
 
@@ -260,26 +266,28 @@ function InterfaceManager() {
         eval(json);
         this.currentInterfaceName = loadedInterfaceName;
         this.currentInterfaceJSON = json;
-
-		console.log("width = " + screen.width);		
-        if(control.orientation == 0 || control.orientation == 180) {
+		
+		if(typeof interfaceOrientation != "undefined") {
+			console.log(interfaceOrientation);
+            //PhoneGap.exec("Device.setRotation", interfaceOrientation);
+        }
+        //if(control.orientation == 0 || control.orientation == 180) {
+		console.log("screen.width =  " + screen.width + " :: screen.height = " + screen.height);
+		if(interfaceOrientation == "portrait") {
             control.makePages(pages, screen.width, screen.height);
         }else{
-            control.makePages(pages, screen.height, screen.width);
-        }
+            //control.makePages(pages, screen.height, screen.width); // THIS SHOULD BE USED
+		    control.makePages(pages, screen.width, screen.height);
+	    }
 
         if(constants != null) {
             control.loadConstants(constants);
         }
         
-        control.unloadWidgets();
         control.loadWidgets();
-        if(this.currentTab != document.getElementById("selectedInterface"))
+        if(this.currentTab != document.getElementById("selectedInterface")) {
             control.changeTab(document.getElementById("selectedInterface"));
-		
-		if(typeof interfaceOrientation != "undefined") {
-            //PhoneGap.exec("Device.setRotation", interfaceOrientation);
-        }
+		}
     }
 	
 	this.selectInterfaceFromList = function(interfaceName) {

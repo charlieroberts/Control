@@ -2,8 +2,8 @@
 
 function MultiButton(ctx, props) {
 	this.ctx = ctx;
-	this.widthInPercentage  = props.width;
-	this.heightInPercentage = props.height;
+	this.widthInPercentage  = props.width || props.bounds[2];
+	this.heightInPercentage = props.height || props.bounds[3];
 
     this.mode    = (typeof props.mode != "undefined") ? props.mode : "toggle";
 	this.children = new Array();
@@ -16,29 +16,36 @@ function MultiButton(ctx, props) {
 	this.rows    = (typeof props.rows    != "undefined") ? props.rows    : 2;
 	this.columns = (typeof props.columns != "undefined") ? props.columns : 2;
 	
-	this.buttonWidth = this.widthInPercentage / this.columns;
-	this.buttonHeight = this.heightInPercentage / this.rows;
+	this.pixelWidth  = 1 / control.deviceWidth;
+	this.pixelHeight = 1 / control.deviceHeight;
+	
+	this.buttonWidth = this.widthInPercentage / this.columns + this.pixelWidth;
+	this.buttonHeight = this.heightInPercentage / this.rows + this.pixelHeight;
 	
 	this.buttonWidthInPixels = parseInt(this.width) / this.columns;
 	this.buttonHeightInPixels = parseInt(this.height) / this.rows;
+	
+	this.shouldLabel = (typeof props.shouldLabel != "undefined") ? props.shouldLabel : false;
+	this.labelSize = props.labelSize || 12;
 	
 	//debug.log("width = " + this.buttonWidthInPixels + " :: height = " + this.buttonHeightInPixels);
     
 	this.requiresTouchDown = (typeof props.requiresTouchDown == "undefined") ? true : props.requiresTouchDown;
 
 	this.init = function() {
+		var pixelWidth  = 1 / control.deviceWidth;
+		var pixelHeight = 1 / control.deviceHeight;
 		for(var i = 0; i < this.rows; i++) {
-			var _y = this.buttonHeight * i;
+			var _y = this.buttonHeight * i - (i * pixelHeight);
 			
 			for(var j = 0; j < this.columns; j++) {
-				var _x = this.buttonWidth * j;
+				var _x = this.buttonWidth * j - (j * pixelWidth);
 				var newProps = {
 					"x":this.origX + _x,
 					"y":this.origY + _y,
 					"width":this.buttonWidth, 
 					"height":this.buttonHeight,
-					"color":this.color,
-					"stroke":this.stroke,
+					"colors": [this.backgroundColor, this.fillColor, this.strokeColor],
 					"min":this.min,
 					"max":this.max,
 					"startingValue":this.value,
@@ -53,13 +60,18 @@ function MultiButton(ctx, props) {
 					"isLocal":this.isLocal,
 					"requiresTouchDown":this.requiresTouchDown,
 					"midiType":(typeof this.midiType == "undefined") ? "cc" : this.midiType,
-					"channel":(typeof this.channel != "undefined") ? this.channel : 1,
+					"channel" :(typeof this.channel != "undefined") ? this.channel : 1,
 				};
+				
+				if(this.shouldLabel) {
+					newProps["label"] = (1 + (i * this.columns) + j);
+					newProps["labelSize"] = this.labelSize;
+				}
 				
 				var _w = new Button(this.ctx, newProps);
 				_w.address    = this.address + "/" + ((i * this.columns) + j);
 				_w.midiNumber = this.midiNumber + ((i * this.columns) + j);
-				
+				_w.childID = ((i * this.columns) + j);
 				this.children.push(_w);
 			}						
 		}
@@ -119,7 +131,13 @@ function MultiButton(ctx, props) {
 			_w.setValue(value);
 		}
 	}
-
+	
+	this.unload = function() {
+		console.log("unloading multibutton");
+		for(var i = 0; i < this.children.length; i++) {
+			this.children[i].unload();
+		}
+	}
 		
 	return this;
 }
