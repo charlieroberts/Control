@@ -13,7 +13,7 @@
 
 	
     <script type="text/javascript" charset="utf-8" src="js/phonegap-uncompressed.js"></script>
-	<script type="text/javascript" charset="utf-8" src="js/NativeControls.js"></script>
+	<script type="text/javascript" charset="utf-8" src="js/keyevent.js"></script>
 	
 	<!-- jQuery -->
 	<script src="js/jquery-1.5.js"></script>
@@ -61,12 +61,19 @@
 		//console.log("something");
 		//PhoneGap.addConstructor(function(){
 		function startControl() {
-			document.addEventListener("touchmove", preventBehavior, false); // prevents webkit from scrolling DNR
-			
-			//window.plugins.nativeControls = new NativeControls();
 			console.log("before making control");
             control = new Control();
             console.log("after making control");
+
+		    document.addEventListener('menuKeyDown', function(){
+				if (control.tabBarHidden)
+				    control.showToolbar();
+				else
+				    control.hideToolbar();
+			});    
+		
+			document.addEventListener("touchmove", preventBehavior, false); // prevents webkit from scrolling DNR
+			
 			//setupToolbar();
 
             _protocol = "OSC";
@@ -74,8 +81,8 @@
 			//oscManager = new OSCManager();
 			//midiManager = new MIDIManager();
 			
-			//destinationManager = new DestinationManager();
-			//destinationManager.init();
+			destinationManager = new DestinationManager();
+			destinationManager.init();
 
 			interfaceManager = new InterfaceManager();
 			interfaceManager.init();
@@ -136,7 +143,7 @@
 
   <div data-role="page" id="Interfaces" data-theme="a">
 		<div class="ui-bar-a  ui-header " data-role="header" id="header" data-backbtn="false">
-			<a href="#" id="interfaceEditBtn" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="interfaceManager.editInterfaceList()">Edit</a>
+			<a href="#" id="interfaceEditBtn" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="interfaceManager.editInterfaceList(); console.log('pressed plus');">Edit</a>
 			<h1 class="ui-title">Interfaces</h1>
 			<a href="#" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-right ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="interfaceManager.promptForInterfaceDownload()">+</a>
 		</div>
@@ -146,7 +153,7 @@
 		</div>
 		
 		
-		<div data-role="footer" data-position="fixed" data-id="myfooter" class="ui-bar ftr" data-theme="a">
+		<div data-role="footer" data-position="fixed" data-id="myfooter" class="ui-bar ftr" data-theme="a" visible="false">
 			<a href="#Interfaces"   data-transition="">Interfaces</a>
 			<a href="#Destinations" data-transition="">Destinations</a>
 			<a href="#Preferences"  data-transition="">Preferences</a>
@@ -158,7 +165,7 @@
 		<div data-role="header" id="header" data-backbtn="false">
 			<a href="#" id="destinationsEditBtn"style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="destinationManager.editDestinationList()">Edit</a>		
 			<h1>Destinations</h1>
-			<a href="#" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-right ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="destinationManager.promptForIP()">+</a>
+			<a href="#" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-right ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="destinationManager.promptForIP(); console.log('pressed plus');">+</a>
 		</div>
 		<div div data-role="content" id="wrapper">
 			<div id="destinationScroller" class="scroller">
