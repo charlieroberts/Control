@@ -31,7 +31,7 @@
 
 - (void)start:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
 	netService = [[NSNetService alloc] initWithDomain:@"local." type:@"_osc._udp." 
-												 name:@"Control" port:8080];
+												 name:@"" port:8080];
     netService.delegate = self;
     [netService publish];
 	
