@@ -67,8 +67,8 @@ function InterfaceManager() {
 		interfaceManager.myRequest = new XMLHttpRequest();    	
 		var loadedInterfaceName = null;
         interfaceManager.myRequest.onreadystatechange = function() {
-            if(interfaceManager.myRequest.readyState == 4) {
-                //debug.log(interfaceManager.myRequest.responseText);
+            if(interfaceManager.myRequest.readyState == interfaceManager.myRequest.DONE) {
+                //console.log(interfaceManager.myRequest.responseText);
                 eval(interfaceManager.myRequest.responseText);
                 if(loadedInterfaceName != null) {
                     if(document.getElementById("promptDiv") != null) {
@@ -141,12 +141,13 @@ function InterfaceManager() {
 			var r = listArray[i];
 			//debug.log("key " + i + " :: " + r.key);
 			var item = document.createElement('li');
+            item.style.borderBottom = "1px solid #666";            
 			$('li').attr("data-icon","false");
 			//li.class = "
                 
 			var link = document.createElement('a');
 			link.style.color="#fff";
-			link.setAttribute("ontouchend", "console.log('BLAH'); setTimeout(function() { console.log('BLAH 2');interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "'); }, 500);C");
+			link.setAttribute("ontouchend", "setTimeout(function() { interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "'); }, 500);C");
 			link.setAttribute("href", "#SelectedInterfacePage");
 			//link.setAttribute("data-transition", "pop");
 			link.innerHTML = r.key;
@@ -268,23 +269,22 @@ function InterfaceManager() {
         this.currentInterfaceJSON = json;
 		
 		if(typeof interfaceOrientation != "undefined") {
-			console.log(interfaceOrientation);
+			//console.log(interfaceOrientation);
             //PhoneGap.exec("Device.setRotation", interfaceOrientation);
         }
         //if(control.orientation == 0 || control.orientation == 180) {
-		console.log("screen.width =  " + screen.width + " :: screen.height = " + screen.height);
 		if(interfaceOrientation == "portrait") {
             control.makePages(pages, screen.width, screen.height);
         }else{
-            //control.makePages(pages, screen.height, screen.width); // THIS SHOULD BE USED
-		    control.makePages(pages, screen.width, screen.height);
-	    }
+            control.makePages(pages, screen.height, screen.width);
+        }
 
         if(constants != null) {
             control.loadConstants(constants);
         }
-        
+        console.log("before loading widgets");
         control.loadWidgets();
+		console.log("after loading widgets");
         if(this.currentTab != document.getElementById("selectedInterface")) {
             control.changeTab(document.getElementById("selectedInterface"));
 		}

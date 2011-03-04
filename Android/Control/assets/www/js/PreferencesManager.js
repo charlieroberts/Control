@@ -17,21 +17,17 @@ function PreferencesManager() {
 	}
 	
 	preferences.get("autolock", function(r){
-					if(r) {
-						autolock = r.shouldAutolock;
-						var autolockToggleLink = document.getElementById("autolockToggle");
-						(!autolock) ? autolockToggleLink.innerHTML = "Turn Autolock <b>Off</b>" : autolockToggleLink.innerHTML = "Turn Autolock <b>On</b>";	
-						PhoneGap.exec("Device.autolockToggle", autolock);
-						setTimeout(function () { (!autolock) ? autolockToggleLink.innerHTML = "Turn Autolock <b>Off</b>" : autolockToggleLink.innerHTML = "Turn Autolock <b>On</b>"; }, 500);		
-					}
+					autolock = r.shouldAutolock;
+					var autolockToggleLink = document.getElementById("autolockToggle");
+					(!autolock) ? autolockToggleLink.innerHTML = "Turn Autolock <b>Off</b>" : autolockToggleLink.innerHTML = "Turn Autolock <b>On</b>";	
+					PhoneGap.exec("Device.autolockToggle", autolock);
+					setTimeout(function () { (!autolock) ? autolockToggleLink.innerHTML = "Turn Autolock <b>Off</b>" : autolockToggleLink.innerHTML = "Turn Autolock <b>On</b>"; }, 500);		
 				});
 	
 	preferences.get("OSCReceivePort", function(r) {
-					if(r) {
-						var oscport = r.oscPort;
-						window.preferencesManager.changePort(oscport);
-						setTimeout(function () { document.getElementById("oscForm").portField.value = oscport; }, 250);
-					}
+					var oscport = r.oscPort;
+					window.preferencesManager.changePort(oscport);
+					setTimeout(function () { document.getElementById("oscForm").portField.value = oscport; }, 250);
 				});
 	return this;
 }

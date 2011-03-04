@@ -4,11 +4,12 @@ function DestinationManager() {
 		this.myRequest = new XMLHttpRequest();
 		this.destinations = new Lawnchair('destinations');
 		this.destinationsSynch = [];
+		this.midiDestinations = [];
 		this.ipaddress = null;
 		this.bonjourDestinations = new Array();
-		//PhoneGap.exec("Bonjour.start", null);
-
-		setTimeout(function() { window.destinationManager.createDestinationList(); }, 1000);
+		PhoneGap.exec("Bonjour.start", null);
+		//setTimeout(function() { window.destinationManager.createDestinationList(); }, 1000);
+        window.destinationManager.createDestinationList();        
 
 	}
 	
@@ -30,31 +31,62 @@ function DestinationManager() {
 		this.selectPushedDestination(segments[0], segments[1]);
 	}
 	
-	this.addDestination = function(address, port, isBonjour, isMIDI) {
+	// TODO: change to add Bonjour destination. Make all midi in add MIDI destination.
+	
+	this.addDestination = function(address, port, isBonjour, isMIDI, isHardware) {
 		for(var i = 0; i < this.destinationsSynch.length; i++) {
 			var destCheck = this.destinationsSynch[i];
-			//console.log(destCheck);
 			if(address == destCheck.ip && port == destCheck.port) return;
 		}
+        
 		this.destinationsSynch.push({ip:address, port:port});
 		if(isBonjour) destinationManager.bonjourDestinations.push([address, port]);
+        
 		var list = document.getElementById('destinationList');
 		var item = document.createElement('li');
-		if(isBonjour) item.setAttribute("class", "isBonjour");
-		if(isMIDI) item.setAttribute("class", "isMIDI");
+        $(item).addClass('destinationListItem');
+
 		//console.log("address: " + address + " | port : " + port + " | isBonjour | " + isBonjour);
+        
 		if(!isMIDI) 
 			item.setAttribute("ontouchend", "destinationManager.highlight(" + list.childNodes.length + "); _protocol='OSC'; destinationManager.selectIPAddressAndPort('" + address + "'," + port + ");");		
-		else
+		else if(!isHardware)
 			item.setAttribute("ontouchend", "destinationManager.highlight(" + list.childNodes.length + "); _protocol='MIDI';destinationManager.selectMIDIIPAddressAndPort('" + address + "'," + port + ");");		
-
-		if(isBonjour) {
-			item.innerHTML = "<div style='display:inline'>" + address + ":" + port +  "</div><img style='margin-top:.15em; width:2.5em; height:2.5em; float:right' src='images/bonjour.png'>";
-		}else if(isMIDI) {
-			item.innerHTML = "<div style='display:inline'>" + address + ":" + port +  "</div><img style='margin-top:.15em; width:2.5em; height:2.5em; float:right' src='images/MIDI_Icon.png'>";
-		}else{
-			item.innerHTML = "<div style='display:inline'>" + address + ":" + port +  "</div>";
+		else
+			//item.setAttribute("ontouchend", "destinationManager.highlight(" + list.childNodes.length + "); _protocol='MIDI';destinationManager.selectHardwareMIDI('" + address + ");");
+            item.setAttribute("ontouchend", "destinationManager.highlight(" + list.childNodes.length + "); _protocol='MIDI';destinationManager.selectMIDIIPAddressAndPort('" + address + "'," + port + ");");	
+		
+        var innerDiv = document.createElement('div');
+        $(innerDiv).css('display', 'inline');
+        $(innerDiv).append(document.createTextNode("" + address + ":" + port));
+		if(isBonjour || isMIDI) {
+            var _img = document.createElement('img');
+            $(_img).addClass('destinationImage');
+            if(isBonjour)
+                $(_img).attr('src', 'images/bonjour.png');
+            else
+                $(_img).attr('src', 'images/MIDI_Icon.png');
+            
+            $(innerDiv).append(_img);
 		}
+
+        $(item).append(innerDiv);        
+		list.appendChild(item);
+	}
+	
+	this.addMIDIDestination = function(destName) {
+		console.log("adding " + destName);
+		for(var i = 0; i < this.midiDestinations.length; i++) {
+			var destCheck = this.midiDestinations[i];
+			if(destName == destCheck) return;
+		}
+		
+		this.midiDestinations.push(destName);
+		var list = document.getElementById('destinationList');
+		var item = document.createElement('li');
+		item.innerHTML = destName;
+		item.setAttribute("ontouchend", "destinationManager.highlight(" + list.childNodes.length + "); _protocol='MIDI';destinationManager.selectMIDIDestination('" + destName + ");");		
+
 		list.appendChild(item);
 	}
     
@@ -71,7 +103,7 @@ function DestinationManager() {
 	this.selectMIDIIPAddressAndPort = function(address,port) {
 		this.ipaddress = address;
 		this.port = port;
-		PhoneGap.exec("MIDI.start", this.ipaddress, this.port);
+		PhoneGap.exec("MIDI.connect", 1, this.ipaddress, this.port);
         PhoneGap.exec("OSCManager.stopPolling");
 	}
 	

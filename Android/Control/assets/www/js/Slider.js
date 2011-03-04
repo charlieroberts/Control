@@ -38,8 +38,6 @@ function Slider(ctx, props) {
 		this.strokeDiv.style.zIndex = 1;
 		this.strokeDiv.style.backgroundColor = this.backgroundColor;
 		this.ctx.appendChild(this.strokeDiv);						// THIS LINE IS IMPORTANT!!!!
-		console.log("final width = " + this.strokeDiv.style.width);
-
 	}else{
 		this.canvas = document.createElement('canvas');
 		this.canvas.width = this.width;						// DO NOT USE STYLES TO RESIZE CANVAS OBJECT

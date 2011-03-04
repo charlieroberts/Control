@@ -1,6 +1,6 @@
 function MIDIManager() {
 	this.delegate = this;
-	
+	PhoneGap.exec("MIDI.start");
 	return this;
 }
 

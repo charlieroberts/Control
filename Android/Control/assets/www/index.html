@@ -4,7 +4,7 @@
 	<title>Control</title>
 
     <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, target-densitydpi=device-dpi" />
-	<!--<meta name="apple-mobile-web-app-capable" content="yes" />	-->
+
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
 	
 	<link rel="stylesheet" href="css/jquery.mobile-1.0a3.css" />
@@ -18,6 +18,7 @@
 	<script src="js/jquery-1.5.js"></script>
 	<script src="js/jquery.mobile-1.0a3.js"></script>
 
+	
 	<!-- iScroll: scrolling table views for webkit interface: http://cubiq.org/iscroll -->
 	<!--<script type="text/javascript" src="js/iscroll.js"></script>-->
 	
@@ -63,65 +64,35 @@
 			document.addEventListener("touchmove", preventBehavior, false); // prevents webkit from scrolling DNR
 			
 			//window.plugins.nativeControls = new NativeControls();
-			console.log("before making control");
             control = new Control();
-            console.log("after making control");
 			//setupToolbar();
 
             _protocol = "OSC";
-			//console.setLevel(8);
-			//oscManager = new OSCManager();
-			//midiManager = new MIDIManager();
+			/*
+			oscManager = new OSCManager();
+			midiManager = new MIDIManager();
 			
-			//destinationManager = new DestinationManager();
-			//destinationManager.init();
+			destinationManager = new DestinationManager();
+			destinationManager.init();
+			*/
 
 			interfaceManager = new InterfaceManager();
 			interfaceManager.init();
 
 			document.addEventListener('orientationChanged', control.onRotation, false);
-			
-			//interfaceScroller   = new iScroll('interfaceScroller');
-			//destinationScroller = new iScroll('destinationScroller');
-			//preferencesScroller = new iScroll('preferencesScroller');
-			
+
 			//PhoneGap.exec("Device.setRotation", "portrait");
 			
-			preferencesManager = new PreferencesManager();
+			//preferencesManager = new PreferencesManager();
 			console.log("end of constructor");
-		}
-		//);
+		};
+		
 		function autolockToggle() {
 			var autolockToggleLink = document.getElementById("autolockToggle");
 			autolock = !autolock;
 			(!autolock) ? autolockToggleLink.innerHTML = "Turn Autolock <b>Off</b>" : autolockToggleLink.innerHTML = "Turn Autolock <b>On</b>";			
-			PhoneGap.exec("Device.autolockToggle", autolock);
+			//PhoneGap.exec("Device.autolockToggle", autolock);
 			preferences.save({key:"autolock", shouldAutolock:autolock});
-		}
-
-      
-		function setupToolbar() {
-			 window.plugins.nativeControls.createTabBar();
-		 
-			 window.plugins.nativeControls.createTabBarItem("interfaces", "Interfaces", "presets.png", {
-			   onSelect: function() { control.changeTab(document.getElementById("Interfaces")); }
-			 });
-
-			 window.plugins.nativeControls.createTabBarItem("destinations", "Destinations", "destinations.png", {
-			   onSelect: function() { control.changeTab(document.getElementById("Destinations")); }
-			 });
-		 
-			 window.plugins.nativeControls.createTabBarItem("preferences", "Preferences", "19-gearSmall.png", {
-			   onSelect: function() { control.changeTab(document.getElementById("Preferences")); }
-			 });
-		 
-			 window.plugins.nativeControls.createTabBarItem("info", "Info", "Info.png", {
-			   onSelect: function() { control.changeTab(document.getElementById("Info")); }
-			 });
-		 
-			 //window.plugins.nativeControls.showTabBar({"position":"bottom"});
-			 window.plugins.nativeControls.showTabBarItems("interfaces", "destinations", "preferences", "info");
-			 control.showToolbar();
 		}
 		
 		function init() {
@@ -130,7 +101,7 @@
     </script>
   </head>
   
-  <body id="stage" style="background-color:#000; -webkit-user-select: none;"  onload="init(); document.addEventListener('touchmove', preventBehavior, false);" class="theme"> 
+  <body id="stage" style="background-color:#000; -webkit-user-select: none;"  onload="init();document.addEventListener('touchmove', preventBehavior, false);" class="theme"> 
   
 
   <div data-role="page" id="Interfaces" data-theme="a">
@@ -145,12 +116,12 @@
 		</div>
 		
 		
-		<div data-role="footer" data-position="fixed" data-id="myfooter" class="ui-bar ftr" data-theme="a">
-			<a href="#Interfaces"   data-transition="">Interfaces</a>
-			<a href="#Destinations" data-transition="">Destinations</a>
-			<a href="#Preferences"  data-transition="">Preferences</a>
-			<a href="#Info"         data-transition="">Info</a>
-		</div>
+		<!--<div id="f" data-role="footer" data-position="fixed" data-id="myfooter" class="ui-bar ftr" data-theme="a">
+			<a  href="#Interfaces"   data-transition="" data-icon="grid" data-iconpos="above">Interfaces</a>
+			<a  href="#Destinations" data-transition="">Destinations</a>
+			<a  href="#Preferences"  data-transition="">Preferences</a>
+			<a  href="#Info"         data-transition="">Info</a>
+		</div>-->
 	</div>
   
   <div data-role="page" id="Destinations" data-theme="a">
@@ -159,35 +130,19 @@
 			<h1>Destinations</h1>
 			<a href="#" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-right ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="destinationManager.promptForIP()">+</a>
 		</div>
-		<div div data-role="content" id="wrapper">
-			<div id="destinationScroller" class="scroller">
-				<ul id="destinationList" data-role="listview" data-theme="g"></ul>
-			</div>
-		</div>
-		<div data-role="footer" data-position="fixed" data-id="myfooter" class="ui-bar ftr" data-theme="a">
-			<a href="#Interfaces"   data-transition="">Interfaces</a>
-			<a href="#Destinations" data-transition="">Destinations</a>
-			<a href="#Preferences"  data-transition="">Preferences</a>
-			<a href="#Info"         data-transition="">Info</a>
+		<div data-role="content">
+            <ul id="destinationList" data-role="listview" data-theme="g"></ul>
 		</div>
   </div>
   
   <div data-role="page" id="Preferences" data-theme="a">
 	<div data-role="header" id="header" data-backbtn="false"><h1>Preferences</h1></div>
-	<div data-role="content" id="wrapper">
-		<div id="preferencesScroller" class="scroller">
-			<ul id="preferencesList">
-				<li><a id="autolockToggle" href="#" ontouchend="preferencesManager.autolockToggle()">Turn Autolock <b>On</b></a></li>
-				<li>OSC Receive Port : <form id="oscForm" style="display:inline;" onsubmit="event.preventDefault();portField.blur(); preferencesManager.changePort(portField.value);"><input type="number" id="receivePortSelector" name="portField" value="51000" onchange=""></form></li>
-			</ul>
-		</div>
+	<div data-role="content">
+        <ul id="preferencesList" data-role="listview" data-theme="g">
+            <li class="preferencesListItem"><a id="autolockToggle" href="#" ontouchend="preferencesManager.autolockToggle()">Turn Autolock <b>On</b></a></li>
+            <li class="preferencesListItem">OSC Receive Port : <form id="oscForm" style="display:inline;" onsubmit="event.preventDefault();portField.blur(); preferencesManager.changePort(portField.value);"><input style="display:inline; width:150px;" type="number" id="receivePortSelector" name="portField" value="51000" onchange=""></form></li>
+        </ul>
 	</div>
-		<div data-role="footer" data-position="fixed" data-id="myfooter" class="ui-bar ftr" data-theme="a">
-			<a href="#Interfaces"   data-transition="">Interfaces</a>
-			<a href="#Destinations" data-transition="">Destinations</a>
-			<a href="#Preferences"  data-transition="">Preferences</a>
-			<a href="#Info"         data-transition="">Info</a>
-		</div>
   </div>
   
   <div data-role="page" id="Info" data-theme="a">
@@ -212,28 +167,26 @@
     		<li><a href="http://www.audiomulch.com/~rossb/code/oscpack/">oscpack</a> - cross-platform OSC library.
     	</ul>
 	</div>
-	
-		<div data-role="footer" data-position="fixed" data-id="myfooter" class="ui-bar ftr" data-theme="a">
-			<a href="#Interfaces"   data-transition="">Interfaces</a>
-			<a href="#Destinations" data-transition="">Destinations</a>
-			<a href="#Preferences"  data-transition="">Preferences</a>
-			<a href="#Info"         data-transition="">Info</a>
-		</div>
   </div>
   
    <div data-role="page" id="SelectedInterfacePage">
 	   <div class="ui-bar-a ui-header" data-role="header" id="header" data-backbtn="false"></div>
 	   <div data-role="content" id="selectedInterface"></div>
-
-		<div data-role="footer" data-position="fixed" data-id="myfooter" class="ui-bar ftr" data-theme="a">
-			<a href="#Interfaces"   data-transition="">Interfaces</a>
-			<a href="#Destinations" data-transition="">Destinations</a>
-			<a href="#Preferences"  data-transition="">Preferences</a>
-			<a href="#Info"         data-transition="">Info</a>
-		</div>
   </div>
 
-  <div style="display:block; position:fixed; top: 0px; left: 150px; width:100px; height:50px; background-color:rgba(132,66,66,.5); z-index:100; text-align:center" ontouchend="window.location.reload(true)"><h2>RELOAD</h2></div>
-  
+  <div style="display:block; position:fixed; top: 100px; left: 100px; width:50px; height:50px; background-color:#f00; z-index:100;" ontouchend="window.location.reload(true)"><h2>RELOAD</h2></div>
+      
+  <div data-role="footer" data-id="foo1" data-position="fixed" class="ftr ui-bar-a ui-footer ui-footer-fixed ui-fixed-overlay" role="contentinfo" style=" border-top-width:0;bottom:0px; padding:0; margin:0">
+      <div data-role="navbar" class="ui-navbar ui-navbar-noicons" role="navigation">
+          <ul class="ui-navbar-noicons ui-grid-c"  style="border-top-width:0;">
+              <li class="ui-block-a" style=" border-top-width:0;"><a href="#Interfaces" class="ui-btn ui-btn-up-a" style=" border-top-width:0;" data-theme="a"><span class="ui-btn-inner"><span class="ui-btn-text" style="font-size:1em">Interfaces</span></span></a></li>
+              <li class="ui-block-b"><a href="#Destinations" data-theme="a" class="ui-btn ui-btn-up-a">
+                  <span class="ui-btn-inner" style="padding-left:0; padding-right:0;"><span class="ui-btn-text" >Destinations</span></span></a></li>
+              <li class="ui-block-b"><a href="#Preferences" data-theme="a" class="ui-btn ui-btn-up-a"><span class="ui-btn-inner" style="padding-left:0; padding-right:0;"><span class="ui-btn-text">Preferences</span></span></a></li>
+              <li class="ui-block-b"><a href="#Info" data-theme="a" class="ui-btn ui-btn-up-a"><span class="ui-btn-inner"><span class="ui-btn-text">Info</span></span></a></li>
+
+          </ul>
+      </div>
+  </div>
   </body>
 </html>

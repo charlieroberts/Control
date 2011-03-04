@@ -8,6 +8,7 @@ function Control() {
 	this.deviceWidth = null;
 	this.deviceHeight = null;
 	this.values = [];
+	this.constants = [];
 	this.valuesString = "";
 	this.currentTab = document.getElementById("Interfaces");
 	this.tabBarHidden = false;
@@ -16,12 +17,11 @@ function Control() {
 	compass = null;
 	gyro = null;
 	interfaceDiv = document.getElementById("selectedInterface");
-    //PhoneGap.exec("OSCManager.startReceiveThread");
-	//PhoneGap.exec("CNTRL_Accelerometer.setUpdateRate", 50);
-	//PhoneGap.exec("Gyro.setUpdateRate", 50);	
+    /*PhoneGap.exec("OSCManager.startReceiveThread");
+	PhoneGap.exec("CNTRL_Accelerometer.setUpdateRate", 50);
+	PhoneGap.exec("Gyro.setUpdateRate", 50);	*/
 	this.changeTab(this.currentTab);
 	this.isAddingConstants = false;
-	this.constants = [];
 	return this;
 }
 
@@ -136,7 +136,7 @@ Control.prototype.loadConstants = function(_constants) {
 	if(_constants != null) {
 		constants = _constants;
 
-		this.constants = [];
+		this.constants = new Array();
 		for(var i = 0; i < constants.length; i++) {
 			var w = constants[i];
 			var _w = this.makeWidget(w);						
@@ -298,10 +298,10 @@ Control.prototype.onRotation = function(event) {
 
 Control.prototype.event = function(event) {
   // REMEMBER : IN EVENT METHODS TRIGGERED FROM THE WEBVIEW "THIS" REFERS TO THE HTML OBJECT THAT GENERATED THE EVENT
-
-	event.preventDefault(); // needed for Android
 	var page = control.currentPage;
-	//debug.log("length = " + control.pages[page].length);
+	
+	event.preventDefault(); // needed for Android
+
 	for(var i = 0; i < control.pages[page].length; i++) {
 		var widget = control.pages[page][i];
 		//debug.log("widget event for " + widget.name);

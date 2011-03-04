@@ -1,0 +1,26 @@
+var pages = [
+  {"widgets" : [
+	/*{   
+		"name":"xypad", "type":"Button", 
+        "x":0,  "y":0, "width":.5, "height":.5, 
+        "color":"#00ffff",
+        "min":0, "max":127,
+        "protocol":"OSC",
+        "address":"/xypad",
+    },*/
+	
+	{
+		"name":"s", "type":"Slider", 
+		"x":0,  "y":0, "width":1, "height":.2,
+		"startingValue":.5, 
+        "color":"#00ffff", 
+        "min":0, "max":127,
+		"isInverted":false,
+		"isVertical":false,
+        "protocol":"OSC",
+        "address":"/xypad",
+		"hasLabel":false,
+	},
+  ]}
+];
+  

@@ -27,9 +27,8 @@ function Widget(ctx, props) { // x, y, width, height, color, startingValue, stro
 		this.x = Math.round(parseFloat(control.deviceWidth) * props.x);
 		this.y = Math.round(parseFloat(control.deviceHeight) * props.y);
 		
-		//console.log("name = " + this.name + " :: x = " + props.x + " :: y = " + props.y + " :: width = " + props.width + " :: height = " + props.height);
-		//console.log("name = " + this.name + " :: width = " + this.width + " :: this.height = " + this.height);
-		
+		//console.log("x = " + props.x + " :: y = " + props.y + " :: width = " + props.width + " :: height = " + props.height);
+
 		if(typeof props.colors != "undefined") {
 			this.backgroundColor = props.colors[0];
 			this.fillColor = props.colors[1];
