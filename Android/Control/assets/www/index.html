@@ -13,6 +13,8 @@
 
 	
     <script type="text/javascript" charset="utf-8" src="js/phonegap-uncompressed.js"></script>
+	<script type="text/javascript" charset="utf-8" src="js/keyevent.js"></script>
+
 	
 	<!-- jQuery -->
 	<script src="js/jquery-1.5.js"></script>
@@ -65,8 +67,14 @@
 			
 			//window.plugins.nativeControls = new NativeControls();
             control = new Control();
-			//setupToolbar();
 
+		    document.addEventListener('menuKeyDown', function(){
+				if (control.tabBarHidden)
+				    control.showToolbar();
+				else
+				    control.hideToolbar();
+			});    
+					
             _protocol = "OSC";
 			/*
 			oscManager = new OSCManager();
@@ -74,7 +82,9 @@
 			
 			destinationManager = new DestinationManager();
 			destinationManager.init();
+
 			*/
+
 
 			interfaceManager = new InterfaceManager();
 			interfaceManager.init();
@@ -106,7 +116,7 @@
 
   <div data-role="page" id="Interfaces" data-theme="a">
 		<div class="ui-bar-a  ui-header " data-role="header" id="header" data-backbtn="false">
-			<a href="#" id="interfaceEditBtn" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="interfaceManager.editInterfaceList()">Edit</a>
+			<a href="#" id="interfaceEditBtn" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="interfaceManager.editInterfaceList(); console.log('pressed plus');">Edit</a>
 			<h1 class="ui-title">Interfaces</h1>
 			<a href="#" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-right ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="interfaceManager.promptForInterfaceDownload()">+</a>
 		</div>
@@ -114,21 +124,13 @@
 		<div data-role="content">
 			<ul id="interfaceList" data-role="listview" data-theme="g"></ul>
 		</div>
-		
-		
-		<!--<div id="f" data-role="footer" data-position="fixed" data-id="myfooter" class="ui-bar ftr" data-theme="a">
-			<a  href="#Interfaces"   data-transition="" data-icon="grid" data-iconpos="above">Interfaces</a>
-			<a  href="#Destinations" data-transition="">Destinations</a>
-			<a  href="#Preferences"  data-transition="">Preferences</a>
-			<a  href="#Info"         data-transition="">Info</a>
-		</div>-->
 	</div>
   
   <div data-role="page" id="Destinations" data-theme="a">
 		<div data-role="header" id="header" data-backbtn="false">
 			<a href="#" id="destinationsEditBtn"style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="destinationManager.editDestinationList()">Edit</a>		
 			<h1>Destinations</h1>
-			<a href="#" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-right ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="destinationManager.promptForIP()">+</a>
+			<a href="#" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-right ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="destinationManager.promptForIP(); console.log('pressed plus');">+</a>
 		</div>
 		<div data-role="content">
             <ul id="destinationList" data-role="listview" data-theme="g"></ul>
