@@ -5,6 +5,7 @@ function ControlCompass(props) {
 	this.value = 0;
 	this.address  = (typeof props.address  != "undefined") ? props.address  : "/" + this.name;
 	this.onvaluechange = (typeof props.onvaluechange != "undefined") ? props.onvaluechange : null;
+    console.log("set onvaluechange to: " + this.onvaluechange);
     
 	this.isLocal    = (typeof props.isLocal != "undefined") ? props.isLocal : false;
     
@@ -13,6 +14,11 @@ function ControlCompass(props) {
 	this.midiNumber = (typeof props.midiNumber != "undefined") ? props.midiNumber : 0;
 	
 	this.address = (typeof props.address != "undefined") ? props.address : "/" + this.name;
+
+	this.watchID = null;
+	var delay = 1000;
+	var first = true;
+	var self = this;
 	
     this.hardwareMin = 0;
     this.hardwareMax = 360;
@@ -27,34 +33,62 @@ function ControlCompass(props) {
 	}
     this.userDefinedRange = this.max - this.min;
     
-    //if(typeof props.updateRate != "undefined") this.setUpdateRate(props.updateRate);
-
 	this._onCompassUpdate = function(_heading) {
-        this.value = this.min + (((0 - this.hardwareMin) + _heading) / this.hardwareRange ) * this.userDefinedRange;
+        self.value = self.min + (((0 - self.hardwareMin) + _heading) / self.hardwareRange ) * self.userDefinedRange;
         
-        if(!this.isLocal && _protocol == "OSC") {
-            var valueString = "|" + this.address;
-            valueString += ":" + this.value;
+        if(!self.isLocal && _protocol == "OSC") {
+            var valueString = "|" + self.address;
+            valueString += ":" + self.value;
             control.valuesString += valueString;
-        }else if (!this.isLocal && _protocol == "MIDI") {
-            var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.value);
+        }else if (!self.isLocal && _protocol == "MIDI") {
+            var valueString = "|" + self.midiType + "," + (self.channel - 1) + "," + self.midiNumber+ "," + Math.round(self.value);
             control.valuesString += valueString;
         }
-
-		if(this.onchange != null) {
-			eval(this.onvaluechange);
+        if (first) {
+            console.log("new heading:" + _heading + "; calling " + self.onvaluechange + " with new heading: " + self.value);
+            first = false;
+        }
+		if(self.onvaluechange != "undefined") {
+			eval(self.onvaluechange);
 		}
 	}
-	
+
+	function onError() {
+	    alert('Error: failed to get heading!');
+	};
+
 	this.draw = function() {}
 	
 	this.start = function() {
-		PhoneGap.exec("Compass.start", null);
+		//PhoneGap.exec("Compass.start", null);
+	    var options = new Object();
+	    options.frequency = delay;  //options.frequency is actually the period in milliseconds
+	    this.watchID = navigator.compass.watchHeading(
+	            this._onCompassUpdate, 
+	            onError, 
+	            options);	    
+	    console.log("Started compass: " + this.watchID);
 	}
 	
 	this.unload = function() {
-		PhoneGap.exec("Compass.stop", null);
-	}
+        //PhoneGap.exec("Compass.stop", null);
+        navigator.compass.clearWatch(this.watchID);
+    }
+	
+    this.setUpdateRate = function(rateInHz) {
+        //debug.log("setting accelerometer updateRate " + rateInHz);
+        //PhoneGap.exec("CNTRL_Accelerometer.setUpdateRate", rateInHz);
+        this.unload();
+        delay = (1/rateInHz) * 1000;
+        console.log("Delay set to " + delay + " milliseconds.");
+        this.start();
+    }
+
+    if(typeof props.updateRate != "undefined") {
+        this.setUpdateRate(props.updateRate);
+    }else{
+        this.setUpdateRate(10);
+    }
 		
 	return this;
 }
