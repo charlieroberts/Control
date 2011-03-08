@@ -51,21 +51,22 @@
 	<script type="text/javascript" src="js/ControlAccelerometer.js"></script>
 	<script type="text/javascript" src="js/ControlCompass.js"></script>
 	<script type="text/javascript" src="js/ControlGyro.js"></script>
-	
+        
+    <!--<script type="text/javascript" src="../../interfaces/test.js"></script>-->
+        
     <script type="text/javascript" charset="utf-8">
 		var pages, control, interfaceScroller, destinationScroller, interfaceManager, destinationManager, _protocol;
-
 		function preventBehavior(e) { // prevent scrolling
 			e.preventDefault(); 
 		};
         
-		//console.log("something");
+		console.log("something");
 		PhoneGap.addConstructor(function(){
 			document.addEventListener("touchmove", preventBehavior, false); // prevents webkit from scrolling DNR
-			
-			//window.plugins.nativeControls = new NativeControls();
+            //console.log("interface name = *******" + window.loadedInterfaceName);
+            // console.log("window.TEST.pages = " + window.TEST.pages);
+
             control = new Control();
-			//setupToolbar();
 
             _protocol = "OSC";
 			//console.setLevel(8);
@@ -98,30 +99,6 @@
 			preferences.save({key:"autolock", shouldAutolock:autolock});
 		}
 
-      
-		function setupToolbar() {
-			 window.plugins.nativeControls.createTabBar();
-		 
-			 window.plugins.nativeControls.createTabBarItem("interfaces", "Interfaces", "presets.png", {
-			   onSelect: function() { control.changeTab(document.getElementById("Interfaces")); }
-			 });
-
-			 window.plugins.nativeControls.createTabBarItem("destinations", "Destinations", "destinations.png", {
-			   onSelect: function() { control.changeTab(document.getElementById("Destinations")); }
-			 });
-		 
-			 window.plugins.nativeControls.createTabBarItem("preferences", "Preferences", "19-gearSmall.png", {
-			   onSelect: function() { control.changeTab(document.getElementById("Preferences")); }
-			 });
-		 
-			 window.plugins.nativeControls.createTabBarItem("info", "Info", "Info.png", {
-			   onSelect: function() { control.changeTab(document.getElementById("Info")); }
-			 });
-		 
-			 //window.plugins.nativeControls.showTabBar({"position":"bottom"});
-			 window.plugins.nativeControls.showTabBarItems("interfaces", "destinations", "preferences", "info");
-			 control.showToolbar();
-		}
     </script>
   </head>
   
@@ -138,14 +115,6 @@
 		<div data-role="content">
 			<ul id="interfaceList" data-role="listview" data-theme="g"></ul>
 		</div>
-		
-		
-		<div id="f" data-role="footer" data-position="fixed" data-id="myfooter" class="ui-bar ftr" data-theme="a">
-			<a  href="#Interfaces"   data-transition="" data-icon="grid" data-iconpos="above">Interfaces</a>
-			<a  href="#Destinations" data-transition="">Destinations</a>
-			<a  href="#Preferences"  data-transition="">Preferences</a>
-			<a  href="#Info"         data-transition="">Info</a>
-		</div>
 	</div>
   
   <div data-role="page" id="Destinations" data-theme="a">
@@ -154,34 +123,22 @@
 			<h1>Destinations</h1>
 			<a href="#" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-right ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="destinationManager.promptForIP()">+</a>
 		</div>
-		<div div data-role="content" id="wrapper">
-			<div id="destinationScroller" class="scroller">
-				<ul id="destinationList" data-role="listview" data-theme="g"></ul>
-			</div>
-		</div>
-		<div data-role="footer" data-position="fixed" data-id="myfooter" class="ui-bar ftr">
-			<a href="#Interfaces" data-role="button" data-icon="" data-transition="">Interfaces</a>
-			<a href="#Destinations" data-role="button" data-icon="" data-transition="">Destinations</a>
-			<a href="#Preferences" data-role="button" data-icon="" data-transition="">Preferences</a>
-		    <a href="#Info" data-role="button" data-icon="" data-transition="">Info</a>
+		<div data-role="content">
+            <ul id="destinationList" data-role="listview" data-theme="g"></ul>
 		</div>
   </div>
   
   <div data-role="page" id="Preferences" data-theme="a">
 	<div data-role="header" id="header" data-backbtn="false"><h1>Preferences</h1></div>
-	<div data-role="content" id="wrapper">
-		<div id="preferencesScroller" class="scroller">
-			<ul id="preferencesList">
-				<li><a id="autolockToggle" href="#" ontouchend="preferencesManager.autolockToggle()">Turn Autolock <b>On</b></a></li>
-				<li>OSC Receive Port : <form id="oscForm" style="display:inline;" onsubmit="event.preventDefault();portField.blur(); preferencesManager.changePort(portField.value);"><input type="number" id="receivePortSelector" name="portField" value="51000" onchange=""></form></li>
-			</ul>
-		</div>
-	</div>
-	<div data-role="footer" data-position="fixed" data-id="myfooter" class="ui-bar ftr">
-		<a href="#Interfaces" data-role="button" data-icon="" data-transition="">Interfaces</a>
-		<a href="#Destinations" data-role="button" data-icon="" data-transition="">Destinations</a>
-		<a href="#Preferences" data-role="button" data-icon="" data-transition="">Preferences</a>
-		<a href="#Info" data-role="button" data-icon="" data-transition="">Info</a>
+	<div data-role="content">
+        <ul id="preferencesList" data-role="listview" data-theme="g">
+            <li class="preferencesListItem"><a id="autolockToggle" href="#" ontouchend="preferencesManager.autolockToggle()">Turn Autolock <b>On</b></a></li>
+            <li class="preferencesListItem">OSC Receive Port : 
+                <form id="oscForm" style="display:inline;" onsubmit="console.log('NEORIB');portField.blur(); preferencesManager.changePort(portField.value);">
+                    <input style="display:inline; width:150px;" type="number" id="receivePortSelector" name="portField" value="8080" onchange="">
+                </form>
+            </li>
+        </ul>
 	</div>
   </div>
   
@@ -207,28 +164,26 @@
     		<li><a href="http://www.audiomulch.com/~rossb/code/oscpack/">oscpack</a> - cross-platform OSC library.
     	</ul>
 	</div>
-	
-	<div data-role="footer" data-position="fixed" data-id="myfooter" class="ui-bar ftr">
-		<a href="#Interfaces" data-role="button" data-icon="" data-transition="">Interfaces</a>
-		<a href="#Destinations" data-role="button" data-icon="" data-transition="">Destinations</a>
-		<a href="#Preferences" data-role="button" data-icon="" data-transition="">Preferences</a>
-		<a href="#Info" data-role="button" data-icon="" data-transition="">Info</a>
-	</div>
   </div>
   
    <div data-role="page" id="SelectedInterfacePage">
 	   <div class="ui-bar-a ui-header" data-role="header" id="header" data-backbtn="false"></div>
 	   <div data-role="content" id="selectedInterface"></div>
-
-	    <div id="interfaceFooter" data-role="footer" data-position="fixed" data-id="myfooter" class="ui-bar ftr">
-            <a href="#Interfaces"  data-icon="" data-transition="">Interfaces</a>
-            <a href="#Destinations" data-icon="" data-transition="">Destinations</a>
-            <a href="#Preferences"data-icon="" data-transition="">Preferences</a>
-            <a href="#Info" data-icon="" data-transition="">Info</a>
-        </div>
   </div>
 
-  <div style="display:block; position:fixed; top: 100px; left: 100px; width:50px; height:50px; background-color:#f00; z-index:100;" ontouchend="window.location.reload(true)"><h2>RELOAD</h2></div>
-  
+  <!--<div style="display:block; position:fixed; top: 100px; left: 100px; width:50px; height:50px; background-color:#f00; z-index:100;" ontouchend="window.location.reload(true)"><h2>RELOAD</h2></div>-->
+      
+  <div data-role="footer" data-id="foo1" data-position="fixed" class="ftr ui-bar-a ui-footer ui-footer-fixed ui-fixed-overlay" role="contentinfo" style=" border-top-width:0;bottom:0px">
+      <div data-role="navbar" class="ui-navbar ui-navbar-noicons" role="navigation">
+          <ul class="ui-navbar-noicons ui-grid-c"  style="border-top-width:0;">
+              <li class="ui-block-a" style=" border-top-width:0;"><a href="#Interfaces" class="ui-btn ui-btn-up-a" style=" border-top-width:0;" data-theme="a"><span class="ui-btn-inner"><span class="ui-btn-text" style="font-size:1em">Interfaces</span></span></a></li>
+              <li class="ui-block-b"><a href="#Destinations" data-theme="a" class="ui-btn ui-btn-up-a">
+                  <span class="ui-btn-inner" style="padding-left:0; padding-right:0;"><span class="ui-btn-text" >Destinations</span></span></a></li>
+              <li class="ui-block-b"><a href="#Preferences" data-theme="a" class="ui-btn ui-btn-up-a"><span class="ui-btn-inner" style="padding-left:0; padding-right:0;"><span class="ui-btn-text">Preferences</span></span></a></li>
+              <li class="ui-block-b"><a href="#Info" data-theme="a" class="ui-btn ui-btn-up-a"><span class="ui-btn-inner"><span class="ui-btn-text">Info</span></span></a></li>
+
+          </ul>
+      </div>
+  </div>
   </body>
 </html>

@@ -5,10 +5,11 @@ interfaceOrientation = "landscape";
 infoText = "The monome (monome.org) is an excellent hardware OSC controller that consists of a grid of toggle buttons whose status is decoupled from physical control. This means that whether or not an individual button is lit is determined by software interfacing with the monome, not whether or not a user is pressing a button. There are many interesting applications desgined to be run in conjunction with the monome; this emulation is designed to work with those applications. In order to use it you will need to make sure that the application knows the IP address and port of Control. Note that most monome apps receive on port 8000 and transmit to 8080.<br><br>Although this is an emulation of a 8x8 monome there is also a 8x16 (monome 128) interface available from the Control website. This 8x8 interface also contains a couple of sliders outputting to /slider1 and /slider2.<br><br> Control and its authors are not affiliated with (but have infinite respect for) the monome project.";
 
 whRatio = 2/3;
-
+PhoneGap.exec("OSCManager.setOSCReceivePort", 8080);
 window.oscPrefix = "/40h";
 
 function monomeInit() {
+    console.log("INIT");
 	var monome = window.monome;
 	if(monome.rows == 8 && monome.columns == 8) {
 		monome.numberOfUnits = 1;
@@ -23,6 +24,8 @@ window.monomeInit = monomeInit;
 
 function changeAddresses() {
 	var monome = window.monome;
+    console.log("changing addresses");
+    monome.address = window.oscPrefix + "/press";
 	
 	for(var i = 0; i < monome.children.length; i++) {
 		var btn = monome.children[i];
@@ -115,11 +118,12 @@ pages = [[
 	"columns":8,
 	"range":[0,1],
 	"mode":"momentary",
-	"color":"#666",
+	"color":"#f66",
 	"stroke":"#aaa",
 	"isLocal":true,
 	"requiresTouchDown":false,
-	"onvaluechange": "PhoneGap.exec(\'OSCManager.send\', this.address, \'iii\', this.row, this.column, this.value);",
+	"onvaluechange": "PhoneGap.exec(\'OSCManager.send\', this.address, \'iii\', this.lastChanged.row, this.lastChanged.column, this.lastChanged.value);",
+    "shouldUseCanvas":false,
 	"oninit": "window.monomeInit();",
 },
 {

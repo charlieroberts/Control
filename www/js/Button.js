@@ -100,6 +100,7 @@ function Button(ctx, props) {
      * @param {Object} event The event object containing the type of event, touch coordinates etc.	 
 	 */
 	this.event = function(event) {
+        //console.log("BUTTON EVENT " + event.type);
 		for (var j = 0; j < event.changedTouches.length; j++){
 			var touch = event.changedTouches.item(j);
 			breakCheck = false;

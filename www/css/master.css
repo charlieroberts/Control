@@ -10,73 +10,6 @@ body {
   border-top:1px solid #393939;
 }
 
-#info{
-  border: 1px solid #ffd324;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  clear:both;
-  margin:15px 6px 0;
-  width:295px;
-  padding:4px 0px 2px 10px;
-}
-
-#info h4{
-  font-size:.95em;
-  margin:0;
-  padding:0;
-}
-
-#stage.theme{
-  padding-top:3px;
-}
-
-/* Definition List */
-#Page1 > dl{
-	padding-top:10px;
-	clear:both;
-	margin:0;
-	list-style-type:none;
-	padding-left:10px;
-	overflow:auto;
-}
-
-#Page1 > dl > dt{
-	font-weight:bold;
-	float:left;
-	margin-left:5px;
-}
-
-#Page1 > dl > dd{
-	width:45px;
-	float:left;
-	color:#a87;
-	font-weight:bold;
-}
-
-/* Content Styling */
-/* Stage Buttons */
-div.btn, #stage.theme a.btn {
-	border: 1px solid #555;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
-	text-align:center;
-	display:block;
-	float:left;
-	background:#000;
-	width:150px;
-	color:#9ab;
-	font-size:1.1em;
-	text-decoration:none;
-	padding:1.2em 0;
-	margin:3px 0px 3px 5px;
-}
-
-#stage.theme a.btn.large{
-	width:308px;
-	height:200px;
-	padding:1.2em 0;
-}
-
 b { font-weight: bold; }
 
 #selectedInterface, #Interfaces, #Destinations, #Preferences, #Info {
@@ -99,12 +32,10 @@ li { color: #fff; }
 
 canvas { margin: 0; padding: 0;}
 
-h3 { font-weight: normal;}
+h3 { font-weight: normal !important;}
 
 #Info { overflow:scroll; height:85%}
-#Info #header {
-	margin-bottom:1em;
-}
+
 #Info p {
 	padding:0em 1em;
 	color:#ccc;
@@ -119,7 +50,6 @@ h3 { font-weight: normal;}
 	font-size:.7em;
 	color:#fff; 
 	-webkit-border-radius:4px; 
-	/*background-image:-webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #999), color-stop(0.02, #666), color-stop(1, #222)); */
 	background-image:-webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #333333), color-stop(0.05, #333333), color-stop(1, #000000));
 	top:.70em;
 	display:block;
@@ -127,9 +57,53 @@ h3 { font-weight: normal;}
 }
 .ftr {
 	font-size: .7em; 
-	padding:.5em .2em .5em .2em;
+	padding:.2em .2em .2em .2em;
 	width:100%;
 }
-.ftrButton {padding-top:.5em; width:4em; height:1.75em;}
+
 .edit { position:absolute; left:.5em;  width:4em; height:1.9em;  top:.925em;}
 .add  { position:absolute; right:.5em; font-weight:bold;width:3em; height:1.5em;	font-size:.9em; float:right;}
+
+#_footer {
+    border-width:0;
+    color-stop(0, 	#222222),
+    color-stop(1, 	#000000));
+    position:fixed; bottom:0px; width:100%; height:35px; display:block;
+}
+
+#_footer a {
+    padding: .5em;
+}
+
+ul li { font-size: 1em; }
+
+.destinationListItem {
+    height: 2em !important;
+    line-height: 2em !important;
+    width: 100%;
+    border-bottom: 1px solid #666;
+    font-size: 1em;
+    font-weight:normal;
+    padding:.5em 0 .5em 1em;
+}
+
+.destinationImage { 
+    position:absolute !important;
+    left:80% !important;    /* TODO: shouldn't this use right? Can't get it to work it and I'm worried it will cause problems at different resolutions / non-iOS */
+    width:2em;
+    height:2em;
+    margin-top:.5em;
+}
+
+.preferencesListItem {
+    width: 100%;
+    border-bottom: 1px solid #666;
+    font-size: 1em;
+    font-weight:normal;
+}
+
+/* jQuery overrides */
+.ui-btn-text   { text-overflow: clip; font-weight:normal; };
+.ui-btn-down-a { background-image:-webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #333333), color-stop(0.05, #333333), color-stop(1, #000000)); }
+.ui-btn-up-a   { background-image:-webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #333333), color-stop(0.05, #333333), color-stop(1, #000000)); }
+.ui-btn-inner  { border-top-width:0; border-left-width:0; border-right-width:1px; }

@@ -16,7 +16,7 @@
 	NSLog(@"loading default scripts");
 	NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
     // TODO: remove commenting before publishing
-	if([defaults objectForKey:@"Control"] == nil || ![[defaults objectForKey:@"Control"] isEqualToString:VERSION_]) {		
+	//if([defaults objectForKey:@"Control"] == nil || ![[defaults objectForKey:@"Control"] isEqualToString:VERSION_]) {		
 		NSArray * paths = [[NSBundle mainBundle] pathsForResourcesOfType:@"js" inDirectory:@"interfaces"];
 		for(int i = 0; i < [paths count]; i++) {
 			NSString *path = [paths objectAtIndex:i];
@@ -42,7 +42,7 @@
         //[webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:@"interfaceManager.createInterfaceListWithStoredInterfaces()" waitUntilDone:NO];
 
 		[defaults setObject:VERSION_ forKey:@"Control"];
-	}
+	//}
 }
 
 @end

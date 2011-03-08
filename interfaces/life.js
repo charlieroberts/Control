@@ -101,8 +101,8 @@ pages = [[
     "type": "MultiButton",
     "x": 0,
     "y": 0,
-    "rows": 11,
-    "columns": 11,
+    "rows": 20,
+    "columns": 20,
     "width": .985,
     "height": .64,
     "startingValue": 0,
@@ -118,6 +118,7 @@ pages = [[
     "channel": 2,
     "number": 0,
     "address": "/life",
+    "shouldUseCanvas":true,
     "requiresTouchDown": false,
 },
 {

@@ -1,4 +1,4 @@
-// TODO: Make Accelerometer, Gyro etc. also work as widgets even though they're not visible. A lot of code could be reused this way
+	// TODO: Make Accelerometer, Gyro etc. also work as widgets even though they're not visible. A lot of code could be reused this way
 function Widget(ctx, props) { // x, y, width, height, color, startingValue, stroke, protocol) {
 
 	if(ctx != null) {

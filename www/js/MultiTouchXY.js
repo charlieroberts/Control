@@ -160,10 +160,11 @@ function MultiTouchXY(ctx, props) {
                 touch.style.left = "0px";
                 inputX = 0;
             } else {
-                touch.style.left = this.width - (this.half * 2) + "px";
-                inputX = this.x - this.half * 2;
+                touch.style.left = this.width - (this.half * 2) - 2 + "px";
+                inputX = (this.x + this.width) - this.half * 2;
             }
         }
+        
         
         // adjust y?
         if(yTop > this.y && yBottom < this.y + this.height) {
@@ -174,7 +175,7 @@ function MultiTouchXY(ctx, props) {
                 touch.style.top = "0px";
                 inputY = 0;
             }else{
-                touch.style.top = this.height - (this.half * 2) + "px";
+                touch.style.top = this.height - (this.half * 2) - 2 + "px";
                 inputY = this.height - this.half * 2;
             }
         }

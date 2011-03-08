@@ -8,9 +8,24 @@ function InterfaceManager() {
         interfaceOrientation = null;
         constants = null;
         PhoneGap.exec("Defaults.loadDefaultScripts");
-		this.createInterfaceListWithStoredInterfaces();
-        //setTimeout("interfaceManager.createInterfaceListWithStoredInterfaces()", 1150);
-	}
+		//this.createInterfaceListWithStoredInterfaces();
+        setTimeout("interfaceManager.createInterfaceListWithStoredInterfaces()", 1000);
+        var paths = navigator.fileMgr.getRootPaths();
+        var reader = new FileReader();
+        reader.onload = this.win;
+        reader.onerror= this.fail;
+        console.log("path = " + paths[0]);
+        reader.readAsText("interfaces/djcut.js");
+    }
+         
+     this.win = function(evt) {
+         console.log("WIN" + evt.target.result);
+     }
+     
+     this.fail = function(evt) {
+         console.log("FAIL" + evt.target.error.code);
+     }
+    
 	
 	 this.promptForInterfaceDownload = function() {
 		var interfacesDiv = document.getElementById("Interfaces");
@@ -141,12 +156,13 @@ function InterfaceManager() {
 			var r = listArray[i];
 			//debug.log("key " + i + " :: " + r.key);
 			var item = document.createElement('li');
+            item.style.borderBottom = "1px solid #666";            
 			$('li').attr("data-icon","false");
 			//li.class = "
                 
 			var link = document.createElement('a');
 			link.style.color="#fff";
-			link.setAttribute("ontouchend", "console.log('BLAH'); setTimeout(function() { console.log('BLAH 2');interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "'); }, 500);C");
+			link.setAttribute("ontouchend", "setTimeout(function() { interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "'); }, 500);C");
 			link.setAttribute("href", "#SelectedInterfacePage");
 			//link.setAttribute("data-transition", "pop");
 			link.innerHTML = r.key;

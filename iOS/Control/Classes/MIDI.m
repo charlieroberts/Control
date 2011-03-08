@@ -51,6 +51,7 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 }
 
 
+
 @implementation MIDI
 @synthesize midiDict;
 - (PhoneGapCommand*) initWithWebView:(UIWebView*)theWebView {	
@@ -64,20 +65,60 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 					nil];
 		[self setWebView:theWebView];
 	}
+	NSLog(@"called MIDI");
 	me = self;
 	return self;
 }
 
+-(void)rescanForSources {
+    MIDIEndpointRef *sources;
+	CFStringRef pName;
 
-- (void)start:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
+    int i, j;
+    
+    ItemCount num_sources = MIDIGetNumberOfSources();
+	NSLog(@"number of sources found = %d", num_sources);
+    //sources = (MIDIEndpointRef *)malloc(sizeof(MIDIEndpointRef) * num_sources);
+    j = 0;
+    for (i = 0; i < num_sources; i++) {
+        MIDIEndpointRef source;
+        source = MIDIGetSource(i);
+		
+		MIDIObjectGetStringProperty(source, kMIDIPropertyName, &pName);
+		//NSLog(@"MIDI Object %@", (NSString *)pName);
+		NSString *ipString = [NSString stringWithFormat: @"destinationManager.addMIDIDestination(\"%@\");", (NSString *)pName];
+		NSLog(ipString);
+		[webView stringByEvaluatingJavaScriptFromString:ipString];
+	//	sources[j++] = source;
+    }
+}
+
+- (void) connect:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
+	NSString *midiIP = [arguments objectAtIndex:1];
+	int port = [[arguments objectAtIndex:2] intValue];
+	
+	host = [MIDINetworkHost hostWithName:@"Control" address:midiIP port:port];	
+	MIDINetworkConnection *connection = [MIDINetworkConnection connectionWithHost:host];
+	
+	BOOL connectTest = [session addConnection:connection];
+	
+	src = [session sourceEndpoint];
+	dst = [session destinationEndpoint];
+	MIDIPortConnectSource(inPort, src, NULL);
+	
+	if(shouldSend == NO) {
+		shouldSend = YES;
+		[NSThread detachNewThreadSelector:@selector(pollJavascriptStart:) toTarget:self withObject:nil];
+	}
+}
+
+- (void) start:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
 	session = [MIDINetworkSession defaultSession];
 	session.enabled = YES;
 	session.connectionPolicy = MIDINetworkConnectionPolicy_Anyone; // MIDINetworkConnectionPolicy_NoOne; // 
 	
-	NSLog([arguments description]);
-	
-	NSString *midiIP = [arguments objectAtIndex:0];
-	int port = [[arguments objectAtIndex:1] intValue];
+	//NSLog([arguments description]);
+	//[self rescanForSources];
 	
 	OSStatus err;
 	
@@ -94,19 +135,7 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 	err = MIDIOutputPortCreate(client, CFSTR("Output Port"), &outPort);
 	if(err != noErr) { NSLog(@"OUTPUT CREATE ERROR"); }
 	
-	host = [MIDINetworkHost hostWithName:@"Control" address:midiIP port:port];	
-	[host retain];
-	
-	MIDINetworkConnection *connection = [MIDINetworkConnection connectionWithHost:host];
-	
-	BOOL connectTest = [session addConnection:connection];
-	
-	src = [session sourceEndpoint];
-	dst = [session destinationEndpoint];
-	MIDIPortConnectSource(inPort, src, NULL);
-	
-	shouldSend = YES;
-	[NSThread detachNewThreadSelector:@selector(pollJavascriptStart:) toTarget:self withObject:nil];
+	//BOOL connectTest = [session addConnection:connection];
 }
 
 - (void) pollJavascriptStart:(id)obj {
@@ -243,7 +272,7 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 	if(client != nil) { MIDIClientDispose(client); }
 	if(outPort != nil) { MIDIPortDispose(outPort); }	
 
-	[host release];
+//	[host release];
 	[midiDict release];
 	[super dealloc];
 }

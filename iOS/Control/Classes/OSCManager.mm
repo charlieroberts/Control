@@ -9,11 +9,11 @@
 #import "OSCManager.h"
 #import "PhoneGapDelegate.h"
 
-#define OSC_RECEIVE_PORT 51000
+#define OSC_RECEIVE_PORT 8080
 #define OSC_POLLING_RATE .003
 #define OUTPUT_BUFFER_SIZE 1024
 
-OSCManager *me;
+OSCManager *_oscManager;
 
 class ExamplePacketListener : public osc::OscPacketListener {
 protected:
@@ -21,8 +21,8 @@ protected:
     virtual void ProcessMessage( const osc::ReceivedMessage& m, const IpEndpointName& remoteEndpoint ) {
 		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		NSString *oscAddress = [NSString stringWithUTF8String:m.AddressPattern()];
-		if([me.addresses objectForKey:oscAddress] != nil) {			
-			[me performSelector:NSSelectorFromString([me.addresses objectForKey:oscAddress]) withObject:[NSValue valueWithPointer:&m]];
+		if([_oscManager.addresses objectForKey:oscAddress] != nil) {			
+			[_oscManager performSelector:NSSelectorFromString([_oscManager.addresses objectForKey:oscAddress]) withObject:[NSValue valueWithPointer:&m]];
 		}else{
 			osc::ReceivedMessage::const_iterator arg = m.ArgumentsBegin();
 			
@@ -49,7 +49,7 @@ protected:
 			
 			[jsString appendString:@");"];
 			//NSLog(jsString);
-			[me.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsString waitUntilDone:NO];
+			[_oscManager.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsString waitUntilDone:NO];
 		}
 		[pool drain];
 	}
@@ -70,7 +70,7 @@ protected:
 		addresses = [[NSMutableDictionary alloc] initWithObjects:objects forKeys:keys];
 		
 	}
-	me = self;
+	_oscManager = self;
 	return self;
 }
 
@@ -78,7 +78,7 @@ protected:
 	//if(s != NULL) s->Break();
 	//delete(s);
 	
-	s = new UdpListeningReceiveSocket( IpEndpointName( IpEndpointName::ANY_ADDRESS, self.receivePort ),listener );
+	s = new UdpListeningReceiveSocket( IpEndpointName( IpEndpointName::ANY_ADDRESS, 8080 ),listener );
 	s->Run();
 }
 
@@ -136,7 +136,7 @@ protected:
 
 		NSString *jsString = [[NSString alloc] initWithFormat:@"destinationManager.addDestination('%@')", destination];
 		
-		[me.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsString waitUntilDone:NO];
+		[_oscManager.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsString waitUntilDone:NO];
 	}catch( osc::Exception& e ){
 		NSLog(@"an exception occurred");
 	}
@@ -248,7 +248,6 @@ protected:
 	delete(listener); 	
 	delete(destinationAddress);
 	delete(output);
-
 	[super dealloc];
 }
 

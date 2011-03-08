@@ -31,5 +31,5 @@
 - (void) pollJavascript:(id)obj;
 
 - (void) send:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
-
+- (void) rescanForSources;
 @end
