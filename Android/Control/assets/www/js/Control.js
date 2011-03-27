@@ -51,7 +51,7 @@ Control.prototype.showToolbar = function() {
 	}else{
 		window.plugins.nativeControls.showTabBar({"orientation":"landscape", "position":"bottom"});
 	}*/
-	console.log("oOEUBROUEBRONSnodnosd");
+	//console.log("oOEUBROUEBRONSnodnosd");
 	$(".ftr").css("visibility", "visible");
 		//$("#interfaceFooter").css("background-color", "#f00");
 	console.log("ok");
@@ -304,7 +304,7 @@ Control.prototype.event = function(event) {
 
 	for(var i = 0; i < control.pages[page].length; i++) {
 		var widget = control.pages[page][i];
-		//debug.log("widget event for " + widget.name);
+		console.log("widget event for " + widget.name + ": " + event);
 		widget.event(event);
 	}
 	
