@@ -196,25 +196,7 @@ function MultiTouchXY(ctx, props) {
 		if(!this.isLocal) this.output(touch);
 	}
 	
-	this.output = function(touch) {
-		var valueString = "";
-        if(_protocol == "OSC") {
-            valueString = "|" + this.address;
-            if (this.maxTouches > 1) {
-              valueString += "/" + touch.activeNumber;
-            }
-            valueString += ":" + this.xvalue + "," + this.yvalue;
-        }else if(_protocol == "MIDI") {
-            var xnum = this.midiNumber + (touch.activeNumber * 2) - 2;
-            var ynum = xnum + 1;
-				
-            valueString  = "|" + this.midiType + "," + (this.channel - 1) + "," + xnum + "," + Math.round(this.xvalue);
-            valueString += "|" + this.midiType + "," + (this.channel - 1) + "," + ynum + "," + Math.round(this.yvalue);
-        }
-		control.valuesString += valueString;
-
-	}
-	
+			
 	this.show = function() {
 		this.container.style.display = "block";
 		if(!this.isMomentary) {

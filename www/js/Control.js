@@ -359,6 +359,7 @@ Control.prototype.changeTab = function(tab) {
 }
 
 Control.prototype.changePage = function(newPage) {
+    console.log("CHANGING PAGE " + newPage);
 	if(typeof newPage === 'string') {
 		if(newPage === 'next') {
 		  newPage = this.currentPage + 1;

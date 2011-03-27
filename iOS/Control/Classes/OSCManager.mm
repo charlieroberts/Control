@@ -21,13 +21,15 @@ protected:
     virtual void ProcessMessage( const osc::ReceivedMessage& m, const IpEndpointName& remoteEndpoint ) {
 		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		NSString *oscAddress = [NSString stringWithUTF8String:m.AddressPattern()];
-		if([me.addresses objectForKey:oscAddress] != nil) {			
+        //NSLog(@"message received address = %@", oscAddress);
+        if([me.addresses objectForKey:oscAddress] != nil) {			
 			[me performSelector:NSSelectorFromString([me.addresses objectForKey:oscAddress]) withObject:[NSValue valueWithPointer:&m]];
 		}else{
 			osc::ReceivedMessage::const_iterator arg = m.ArgumentsBegin();
 			
+            // TODO: fix so null osc messages are OK
 			NSMutableString *jsString = [NSMutableString stringWithFormat:@"oscManager.processOSCMessage(\"%s\", \"%s\", ", m.AddressPattern(), m.TypeTags(), nil];
-
+            //NSLog(@"MSG:: %@" ,jsString);
 			const char * tags = m.TypeTags();
 
 			for(int i = 0; i < m.ArgumentCount(); i++) {
@@ -61,6 +63,7 @@ protected:
 - (PhoneGapCommand*) initWithWebView:(UIWebView*)theWebView {
 
 	if(self = (OSCManager *)[super initWithWebView:theWebView]) {
+        NSLog(@"started");
         shouldPoll = NO;
 		listener = new ExamplePacketListener();
 		[NSThread detachNewThreadSelector:@selector(pollJavascriptStart:) toTarget:self withObject:nil];
@@ -68,7 +71,8 @@ protected:
 		NSArray * keys = [NSArray arrayWithObjects:@"/pushInterface", @"/pushDestination", nil];
 		NSArray * objects = [NSArray arrayWithObjects:NSStringFromSelector(@selector(pushInterface:)), NSStringFromSelector(@selector(pushDestination:)), nil];
 		addresses = [[NSMutableDictionary alloc] initWithObjects:objects forKeys:keys];
-		
+		self.receivePort = 8080;
+		[NSThread detachNewThreadSelector:@selector(oscThread) toTarget:self withObject:nil];        
 	}
 	me = self;
 	return self;
@@ -84,7 +88,9 @@ protected:
 
 - (void)setOSCReceivePort:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
 	if([[arguments objectAtIndex:0] intValue] != self.receivePort) {
+
 		self.receivePort = [[arguments objectAtIndex:0] intValue];
+        NSLog(@"receivePort = %d", self.receivePort);
 		[NSThread detachNewThreadSelector:@selector(oscThread) toTarget:self withObject:nil];
 	}
 }
@@ -219,7 +225,7 @@ protected:
 
 - (void)send:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
 	char buffer[OUTPUT_BUFFER_SIZE];
-    osc::OutboundPacketStream p( buffer, OUTPUT_BUFFER_SIZE );		
+    osc::OutboundPacketStream p( buffer, OUTPUT_BUFFER_SIZE );	
 	p << osc::BeginBundleImmediate << osc::BeginMessage( [[arguments objectAtIndex:0] UTF8String] );
 	
 	NSString *typetags= [arguments objectAtIndex:1];

@@ -47,6 +47,8 @@
 	
 	
 	myIP = [self getIPAddress];
+    [webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"control.ip = \"%s\";", [myIP UTF8String]]];
+
 	[myIP retain];
 }
 
@@ -111,7 +113,7 @@
             char * ipaddress = inet_ntoa(socketAddress->sin_addr);
 			NSLog(@"bonjour address = %s", ipaddress);
             if(strcmp(ipaddress, "0.0.0.0") == 0 || strcmp(ipaddress, [myIP UTF8String]) == 0) { 
-                continue;
+                continue;   
             }
             port = ntohs(socketAddress->sin_port); // ntohs converts from network byte order to host byte order 
             BOOL isMIDI = ([[service type] isEqualToString:@"_apple-midi._udp."]);

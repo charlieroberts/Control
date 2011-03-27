@@ -43,9 +43,9 @@ OSCManager.prototype.processOSC = function(oscAddress, typetags, args) {
 	}
 	for(var i = 0; i < control.widgets.length; i++) {
 		var w = control.widgets[i];
-		debug.log("w.address = " + w.address + " :: address received = " + oscAddress);
+		//debug.log("w.address = " + w.address + " :: address received = " + oscAddress);
 		if(w.address == oscAddress) {
-			debug.log("setting !" + args[0]);
+		//	debug.log("setting !" + args[0]);
 			w.setValue(args[0], false);
 			break;
 		}else{
