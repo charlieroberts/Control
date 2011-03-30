@@ -262,7 +262,7 @@ Control.prototype.removeWidget = function(widgetID) {
 		this.refresh();
 	}
 }
-
+ 
 Control.prototype.refresh = function() {
 	//this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
