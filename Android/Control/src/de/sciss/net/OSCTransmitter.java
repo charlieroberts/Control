@@ -243,8 +243,10 @@ implements OSCChannel
 	public static OSCTransmitter newUsing( OSCPacketCodec c, String protocol, int port, boolean loopBack )
 	throws IOException
 	{
-		final InetSocketAddress localAddress = loopBack ? new InetSocketAddress( "127.0.0.1", port ) :
-														  new InetSocketAddress( InetAddress.getLocalHost(), port );
+      //XXX alex changed the InetSocketAddress to just take the port, works on android now
+      final InetSocketAddress localAddress = loopBack ? new InetSocketAddress( "127.0.0.1", port ) :
+         new InetSocketAddress( port );
+         //new InetSocketAddress( InetAddress.getLocalHost(), port );
 		return newUsing( c, protocol, localAddress );
 	}
 
