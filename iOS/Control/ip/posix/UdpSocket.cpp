@@ -27,7 +27,7 @@
 	CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 	WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-#include "ip/UdpSocket.h"
+#include "../UdpSocket.h"
 
 #include <vector>
 #include <algorithm>
@@ -48,8 +48,8 @@
 #include <sys/time.h>
 #include <netinet/in.h> // for sockaddr_in
 
-#include "ip/PacketListener.h"
-#include "ip/TimerListener.h"
+#include "../PacketListener.h"
+#include "../TimerListener.h"
 
 
 #if defined(__APPLE__) && !defined(_SOCKLEN_T)
