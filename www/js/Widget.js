@@ -40,7 +40,7 @@ function Widget(ctx, props) { // x, y, width, height, color, startingValue, stro
 			this.fillColor = props.fillColor || this.color;
 			this.stroke = props.stroke || this.color;
 			this.strokeColor = props.strokeColor || this.stroke;
-			this.backgroundColor = props.backgroundColor || "#000";
+			this.backgroundColor = props.backgroundColor || "rgba(0,0,0,0)";
 		}			
 		
 		this.activeTouches = new Array();

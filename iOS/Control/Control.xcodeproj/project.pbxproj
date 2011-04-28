@@ -62,7 +62,6 @@
 		CBDDF3D01300B9B10030E736 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBDDF3B81300B8960030E736 /* CoreMotion.framework */; };
 		CBDDF41F1300BF1E0030E736 /* www in Resources */ = {isa = PBXBuildFile; fileRef = 301BF56E109A69640062928A /* www */; };
 		CBDDF58A1300CB850030E736 /* NativeControls.m in Sources */ = {isa = PBXBuildFile; fileRef = CBDDF5891300CB850030E736 /* NativeControls.m */; };
-		CBDDF7381300D2730030E736 /* interfaces in Resources */ = {isa = PBXBuildFile; fileRef = CBDDF72E1300D2730030E736 /* interfaces */; };
 		CBDDF907130128720030E736 /* Device.m in Sources */ = {isa = PBXBuildFile; fileRef = CBDDF906130128720030E736 /* Device.m */; };
 		CBDDFBB71301F3CD0030E736 /* Default-Portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = CBDDFBB31301F3CD0030E736 /* Default-Portrait.png */; };
 		CBDDFBB81301F3CD0030E736 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = CBDDFBB41301F3CD0030E736 /* Default.png */; };
@@ -181,7 +180,6 @@
 		CBDDF3B81300B8960030E736 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		CBDDF5881300CB850030E736 /* NativeControls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NativeControls.h; sourceTree = "<group>"; };
 		CBDDF5891300CB850030E736 /* NativeControls.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NativeControls.m; sourceTree = "<group>"; };
-		CBDDF72E1300D2730030E736 /* interfaces */ = {isa = PBXFileReference; lastKnownFileType = folder; name = interfaces; path = ../../interfaces; sourceTree = SOURCE_ROOT; };
 		CBDDF905130128720030E736 /* Device.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Device.h; sourceTree = "<group>"; };
 		CBDDF906130128720030E736 /* Device.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Device.m; sourceTree = "<group>"; };
 		CBDDFBB31301F3CD0030E736 /* Default-Portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Portrait.png"; path = "../../resources/images/Default-Portrait.png"; sourceTree = SOURCE_ROOT; };
@@ -246,7 +244,6 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				CBDDF72E1300D2730030E736 /* interfaces */,
 				301BF56E109A69640062928A /* www */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				307C750510C5A3420062BCA9 /* Plugins */,
@@ -540,7 +537,6 @@
 				CBDDF41F1300BF1E0030E736 /* www in Resources */,
 				30E1352710E2C1420031B30D /* PhoneGap.plist in Resources */,
 				307D28A2123043360040C0FA /* PhoneGapBuildSettings.xcconfig in Resources */,
-				CBDDF7381300D2730030E736 /* interfaces in Resources */,
 				CBDDFBB71301F3CD0030E736 /* Default-Portrait.png in Resources */,
 				CBDDFBB81301F3CD0030E736 /* Default.png in Resources */,
 				CBDDFBB91301F3CD0030E736 /* Default@2x.png in Resources */,

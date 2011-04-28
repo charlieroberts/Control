@@ -51,6 +51,7 @@
 	<script type="text/javascript" src="js/ControlAccelerometer.js"></script>
 	<script type="text/javascript" src="js/ControlCompass.js"></script>
 	<script type="text/javascript" src="js/ControlGyro.js"></script>
+    
         
     <!--<script type="text/javascript" src="../../interfaces/test.js"></script>-->
         
@@ -78,6 +79,7 @@
 
 			interfaceManager = new InterfaceManager();
 			interfaceManager.init();
+            interfaceManager.loadScripts();
 
 			document.addEventListener('orientationChanged', control.onRotation, false);
 			

@@ -32,10 +32,12 @@ public class Control extends DroidGap
          try {
             //start client, binding to any available port
             c = OSCClient.newUsing(OSCClient.UDP);
-            c.setTarget( new InetSocketAddress( "10.0.0.3", 10001 ));
+            c.setTarget( new InetSocketAddress( "192.168.1.117", 10001 ));
             // open channel and (in the case of TCP) connect, then start listening for replies
             c.start();
             c.dumpOSC( OSCChannel.kDumpBoth, System.err );
+            System.err.println("SENDING OSC");
+
             c.send( new OSCMessage( "/test", new Object[] { "from Control!", new Integer( 42 )}));
          }
          catch( IOException e ) {

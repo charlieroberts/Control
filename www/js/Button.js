@@ -10,12 +10,12 @@
  * @param {Number} height The width for the widget, from 0.0 to 1.0
  * @param {String} color The color of the widget in HTML/CSS hexadecimal color format, ex: #ff00ff
  * @param {String} mode select between the following button behaviors:
-                        latch (outputs max when pressed or rolled onto, min when released NOT min when rolled off) 
-                        toggle (switches between outputting min and max on press)
-                        momentary (outputs max when pressed or rolled onto, outputs min when released or rolledOff)
-                        contact (outputs max on initial contact never outputs min)
-                        visualToggle (always outputs max but toggles visual state)
-                        
+ latch (outputs max when pressed or rolled onto, min when released NOT min when rolled off) 
+ toggle (switches between outputting min and max on press)
+ momentary (outputs max when pressed or rolled onto, outputs min when released or rolledOff)
+ contact (outputs max on initial contact never outputs min)
+ visualToggle (always outputs max but toggles visual state)
+ 
  * @param {Number} startingValue The original value for the widget
  * @param {String} ontouchstart JavaScript to be executed whenever the widget is first touched
  * @param {String} ontouchend JavaScript to be executed whenever a touch is lifted from the widget
@@ -23,24 +23,24 @@
  * @param {Number} min The value the button outputs when toggled off (only works if isMomentary = false)
  * @param {Number} max The value the button outputs when toggled on, or every time it's pressed if isMomentary = true
  * @param {Boolean} requiresTouchDown Button only activates if touchdown occurs on widget, if equal to true it will not
-                                      activate if a touch starts outside the button and rolls over it
+ activate if a touch starts outside the button and rolls over it
  */
-	
+
 function Button(ctx, props) {
 	this.__proto__ = new Widget(ctx,props);
-	
+    
 	this.mode = (typeof props.mode != "undefined") ? props.mode : "toggle";
     
 	this.widgetID = -1;
-	
+    
 	this.activeTouches = new Array();
-
+    
 	if(typeof props.requiresTouchDown == "undefined") {
 		this.requiresTouchDown = true;
 	}else{
 		this.requiresTouchDown = props.requiresTouchDown;
 	}
-	
+    
 	if(typeof props.label != "undefined") {
 		this.text = props.label;
 		this.label = {"name": this.name + "Label", "type": "Label", "bounds":[props.x, props.y, props.width, props.height], "color":this.strokeColor, "value":this.text, "size":props.labelSize || 12,};
@@ -50,16 +50,16 @@ function Button(ctx, props) {
 			eval("control.addWidget(" + _w.name + ", control.currentPage);"); // PROBLEM
 		else
 			eval("control.addConstantWidget(" + _w.name + ");"); // PROBLEM
-			
+        
 		this.label = _w;
 	}
-	
+    
 	this.yOffset = 0;
 	this.xOffset = 0;
-	
+    
 	/**
-	    fillDiv is the DIV tag representing the button in the DOM
-	*/
+     fillDiv is the DIV tag representing the button in the DOM
+     */
 	this.fillDiv   = document.createElement("div");
 	this.fillDiv.style.width = this.width - 2 + "px";
 	this.fillDiv.style.height = this.height - 2 + "px";	
@@ -68,12 +68,12 @@ function Button(ctx, props) {
 	this.fillDiv.style.top  = this.y + "px";
     //this.stroke = (typeof props.stroke != "undefined") ? props.stroke : "#fff";
 	this.fillDiv.style.border = "1px solid " + this.strokeColor;
-	
+    
 	this.ctx.appendChild(this.fillDiv);
     
 	/**
-	    The current value of the button
-	*/
+     The current value of the button
+     */
     if(props.mode == "visualToggle") this.visualToggleLit = (this.value == this.max);
     
     this.isLit = (this.value == this.max);
@@ -93,8 +93,8 @@ function Button(ctx, props) {
             eval(evalString);
         }
 	}
- 
-	
+    
+    
 	/**
 	 * The event handler for the widget
      * @param {Object} event The event object containing the type of event, touch coordinates etc.	 
@@ -135,7 +135,7 @@ function Button(ctx, props) {
                         //this.draw();
                         return;
 					}
-					
+                    
 					break;
 				case "touchmove":
 					var shouldChange = true;
@@ -146,7 +146,7 @@ function Button(ctx, props) {
 						for(var i = 0; i < l; i++) {
 							if(touch.identifier == this.activeTouches[i]) {
 								shouldChange = false;
-
+                                
 								if(isHit) {
 									touchFound = true;
 								}else{
@@ -165,7 +165,7 @@ function Button(ctx, props) {
                             shouldChange = true;
 						}
 					}
-
+                    
 					if(shouldChange && isHit && !this.requiresTouchDown) {
 						switch(this.mode){ 
                             case "toggle" :
@@ -205,14 +205,14 @@ function Button(ctx, props) {
                         this.draw();
                     }
 					break;
-				
+                    
 				case "touchend":
 					if(isHit || this.mode == "latch" || this.mode == "momentary") {
                         for(var i = 0; i < this.activeTouches.length; i++) {
                             if(touch.identifier == this.activeTouches[i]) {
                                 this.activeTouches.splice(i,1);	// remove touch ID from array
                                 breakCheck = true;
-
+                                
                                 if(this.mode == "latch" || this.mode == "momentary") {
                                     this.isLit = false;
                                     this.value = this.min;
@@ -220,7 +220,7 @@ function Button(ctx, props) {
                                     this.draw();
                                     this.output();
                                 }
-
+                                
                                 eval(this.ontouchend);
                                 //break;
                             }
@@ -228,14 +228,14 @@ function Button(ctx, props) {
 					}
 					break;
 			}
-        if(breakCheck) break;
+            if(breakCheck) break;
 		}    
 	}
     
     /**
 	 * Outputs the widget's value according to its protocol
 	 */ 
-		
+    
 	this.output = function() {
 		if(!this.isLocal && _protocol == "OSC") {
             var valueString = "|" + this.address;
@@ -246,11 +246,11 @@ function Button(ctx, props) {
             control.valuesString += valueString;
         }
 	}
-	
+    
     /**
 	 * Sets the value of the widget, outputs the value via the widget's protocol and redraws the widget.
 	 */ 
-	
+    
     this.setValue = function(newValue) {
         this.value = newValue;
         switch(this.mode){ 
@@ -279,17 +279,17 @@ function Button(ctx, props) {
 	this.show = function() {
 		this.fillDiv.style.display = "block";
 	}
-	
+    
 	/**
 	 * Hides the widget if it is visible. Normally called when switching "pages" in an interface
 	 */
 	this.hide = function() {
 		this.fillDiv.style.display = "none";
 	}
-	
+    
 	this.unload = function() {
 		this.ctx.removeChild(this.fillDiv);
 	}
-	
+    
 	return this;
 }

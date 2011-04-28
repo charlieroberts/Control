@@ -28,12 +28,10 @@ function MultiButton(ctx, props) {
 	this.shouldLabel = (typeof props.shouldLabel != "undefined") ? props.shouldLabel : false;
 	this.labelSize = props.labelSize || 12;
     
-    this.shouldUseCanvas = true;
+    this.shouldUseCanvas = false;
 
     this.touched = [];
-	
-	//debug.log("width = " + this.buttonWidthInPixels + " :: height = " + this.buttonHeightInPixels);
-    
+	    
 	this.requiresTouchDown = (typeof props.requiresTouchDown == "undefined") ? true : props.requiresTouchDown;
 
 	this.init = function() {
@@ -265,7 +263,6 @@ function MultiButton(ctx, props) {
             }  
         }
     }
-	// window.monome.setValue(buttonNumber, args[2], false);
 
 	this.setValue = function(buttonNumber, value) {
         if(!this.shouldUseCanvas) {
