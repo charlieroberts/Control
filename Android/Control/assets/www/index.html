@@ -84,9 +84,10 @@
 
 			*/
 
-
-			interfaceManager = new InterfaceManager();
+            interfaceManager = new InterfaceManager();
 			interfaceManager.init();
+            interfaceManager.loadScripts();
+
 
 			document.addEventListener('orientationChanged', control.onRotation, false);
 

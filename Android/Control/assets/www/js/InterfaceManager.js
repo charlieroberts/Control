@@ -1,3 +1,5 @@
+/* TODO: Defaults should only load if app is updated, otherwise they should stay deleted. Maybe have a button in preferences that reloads them??? */
+
 function InterfaceManager() {
 	this.init = function() {
 		this.selectedListItem = 0;
@@ -7,12 +9,41 @@ function InterfaceManager() {
         this.interfaceIP = null;
         interfaceOrientation = null;
         constants = null;
-        //PhoneGap.exec("Defaults.loadDefaultScripts");
-		this.createInterfaceListWithStoredInterfaces();
-        //setTimeout("interfaceManager.createInterfaceListWithStoredInterfaces()", 1150);
-	}
+        this.interfaceDefaults = [//"iphoneLandscapeMixer.js",
+                                  "djcut.js",
+                                  //"life.js",
+								  //"monome.js",
+								  "multibutton.js",
+								  "multiXY.js",
+								  //"sequencer.js",
+								  //"gyro.js",
+                                  ];
+    }
+     
+    this.loadScripts = function() {
+        control.ifCount = 0;
+        this.readFile(this.interfaceDefaults[control.ifCount]);
+    }
+    
+    this.readFile = function(filename) {
+		console.log("reading " + filename)
+        var fileref=document.createElement('script')
+        fileref.setAttribute("type","text/javascript");
+        fileref.setAttribute("src", "interfaces/" + filename);
+        document.getElementsByTagName('head')[0].appendChild(fileref);
+        
+        setTimeout(function() {
+            interfaceManager.saveInterface(window.interfaceString, false);
+            control.ifCount++;
+            if(control.ifCount <= interfaceManager.interfaceDefaults.length) {
+                interfaceManager.readFile(interfaceManager.interfaceDefaults[control.ifCount]);
+            }else{
+                interfaceManager.createInterfaceListWithStoredInterfaces();
+			}
+        }, 100);
+    }
 	
-	 this.promptForInterfaceDownload = function() {
+	this.promptForInterfaceDownload = function() {
 		var interfacesDiv = document.getElementById("Interfaces");
 		var promptDiv = document.createElement("div");
 		var input =	document.createElement("input");
@@ -67,8 +98,8 @@ function InterfaceManager() {
 		interfaceManager.myRequest = new XMLHttpRequest();    	
 		var loadedInterfaceName = null;
         interfaceManager.myRequest.onreadystatechange = function() {
-            if(interfaceManager.myRequest.readyState == interfaceManager.myRequest.DONE) {
-                //console.log(interfaceManager.myRequest.responseText);
+            if(interfaceManager.myRequest.readyState == myRequest.DONE) {
+                debug.log(interfaceManager.myRequest.responseText);
                 eval(interfaceManager.myRequest.responseText);
                 if(loadedInterfaceName != null) {
                     if(document.getElementById("promptDiv") != null) {
@@ -215,6 +246,7 @@ function InterfaceManager() {
 	this.saveInterface = function(interfaceJSON, shouldReloadList, ipAddress) {
         if(typeof ipAddress == "undefined") ipAddress = "";
 		var loadedInterfaceName = null;
+        //console.log(interfaceJSON);
 		eval(interfaceJSON);
         if(loadedInterfaceName != null) {
             //interfaceManager.interfaceFiles.remove(loadedInterfaceName, 
@@ -264,13 +296,14 @@ function InterfaceManager() {
     this.runInterface = function(json) {
         constants = null;
         pages = null;
+        //console.log(json);
         eval(json);
         this.currentInterfaceName = loadedInterfaceName;
         this.currentInterfaceJSON = json;
 		
 		if(typeof interfaceOrientation != "undefined") {
-			//console.log(interfaceOrientation);
-            //PhoneGap.exec("Device.setRotation", interfaceOrientation);
+			console.log(interfaceOrientation);
+            PhoneGap.exec("Device.setRotation", interfaceOrientation);
         }
         //if(control.orientation == 0 || control.orientation == 180) {
 		if(interfaceOrientation == "portrait") {
@@ -282,9 +315,7 @@ function InterfaceManager() {
         if(constants != null) {
             control.loadConstants(constants);
         }
-        console.log("before loading widgets");
         control.loadWidgets();
-		console.log("after loading widgets");
         if(this.currentTab != document.getElementById("selectedInterface")) {
             control.changeTab(document.getElementById("selectedInterface"));
 		}

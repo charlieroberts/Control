@@ -304,7 +304,7 @@ Control.prototype.event = function(event) {
 
 	for(var i = 0; i < control.pages[page].length; i++) {
 		var widget = control.pages[page][i];
-		console.log("widget event for " + widget.name + ": " + event);
+		//console.log("widget event for " + widget.name + ": " + event);
 		widget.event(event);
 	}
 	
