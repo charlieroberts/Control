@@ -84,7 +84,7 @@
 			destinationManager.init();
 
 			*/
-            _osc = new OSCPlugin();
+            _osc = new OSCManager();
             //_osc.send(function() { console.log("SUCCESS FOR REALZ"); }, function() {console.log("FAIL / SUCCESS!");});
             
             /*PhoneGap.exec(function() {console.log("success");},   //Callback which will be called when directory listing is successful
@@ -190,9 +190,9 @@
 	   <div class="ui-bar-a ui-header" data-role="header" id="header" data-backbtn="false"></div>
 	   <div data-role="content" id="selectedInterface"></div>
   </div>
-
-  <div style="display:block; position:fixed; top: 200px; left: 50px; width:100px; height:50px; background-color:#f00; z-index:100;" ontouchend="window.location.reload(true)"><h2>RELOAD</h2></div>               
-  <div style="display:block; position:fixed; top: 200px; left: 200px; width:100px; height:50px; background-color:#f00; z-index:100;" ontouchend="oscSend()"><h2>SEND OSC</h2></div>
+              
+  <div style="display:block; position:fixed; top: 200px; left: 200px; width:100px; height:50px; background-color:#f00; z-index:100;" ontouchend="oscSend()"><h2>OSC Send</h2></div>
+  <div style="display:block; position:fixed; top: 200px; left: 50px; width:100px; height:50px; background-color:#f00; z-index:100;" ontouchend="window.location.reload(true)"><h2>RELOAD</h2></div> --
       
   <div data-role="footer" data-id="foo1" data-position="fixed" class="ftr ui-bar-a ui-footer ui-footer-fixed ui-fixed-overlay" role="contentinfo" style=" border-top-width:0;bottom:0px; padding:0; margin:0">
       <div data-role="navbar" class="ui-navbar ui-navbar-noicons" role="navigation">

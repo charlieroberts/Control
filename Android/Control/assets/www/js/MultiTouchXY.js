@@ -200,11 +200,13 @@ function MultiTouchXY(ctx, props) {
 	this.output = function(touch) {
 		var valueString = "";
         if(_protocol == "OSC") {
-            valueString = "|" + this.address;
-            if (this.maxTouches > 1) {
-              valueString += "/" + touch.activeNumber;
-            }
-            valueString += ":" + this.xvalue + "," + this.yvalue;
+            // valueString = "|" + this.address;
+            // if (this.maxTouches > 1) {
+            //   valueString += "/" + touch.activeNumber;
+            // }
+            // valueString += ":" + this.xvalue + "," + this.yvalue;
+        	PhoneGap.exec(null, null, 'OSCManager', 'send', [this.address + "/" + touch.activeNumber, 'ff', this.xvalue, this.yvalue] );
+
         }else if(_protocol == "MIDI") {
             var xnum = this.midiNumber + (touch.activeNumber * 2) - 2;
             var ynum = xnum + 1;

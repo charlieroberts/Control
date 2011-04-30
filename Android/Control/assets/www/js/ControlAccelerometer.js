@@ -2,14 +2,13 @@
 
 function ControlAccelerometer(props) {
 	this.name = props.name;
-	var self = this;
 
 	this.x = 0;
 	this.y = 0;
 	this.z = 0;
 	
 	var watchID = null;
-	var delay = 1000;
+	this.delay = 1000;
 	var first = true;
 	
     this.hardwareMin = -9.81; // The documentation: http://docs.phonegap.com/phonegap_accelerometer_accelerometer.md.html
@@ -43,29 +42,30 @@ function ControlAccelerometer(props) {
 	    var z = acceleration.z;
         //console.log("x = " + x + " || y = " + y + " || z = " + z);
         
-        self.x = self.min + (((0 - self.hardwareMin) + x) / self.hardwareRange ) * self.userDefinedRange;
-		self.y = self.min + (((0 - self.hardwareMin) + y) / self.hardwareRange ) * self.userDefinedRange;
-		self.z = self.min + (((0 - self.hardwareMin) + z) / self.hardwareRange ) * self.userDefinedRange;
+        this.x = this.min + (((0 - this.hardwareMin) + x) / this.hardwareRange ) * this.userDefinedRange;
+		this.y = this.min + (((0 - this.hardwareMin) + y) / this.hardwareRange ) * this.userDefinedRange;
+		this.z = this.min + (((0 - this.hardwareMin) + z) / this.hardwareRange ) * this.userDefinedRange;
 		
         //debug.log("this.x = " + this.x + " || this.y = " + this.y + " || z = " + this.z);
 		if (first) {
-		    console.log("new values: " + x + ", " + y + ", " + z + "; calling " + self.onvaluechange + " with new accell: " + self.x + ", " + self.y + ", " + self.z);
+		    console.log("new values: " + x + ", " + y + ", " + z + "; calling " + this.onvaluechange + " with new accell: " + this.x + ", " + this.y + ", " + this.z);
 		    first = false;
 		}
-        if(typeof self.onvaluechange != "undefined") {
-			eval(self.onvaluechange);
+        if(typeof this.onvaluechange != "undefined") {
+			eval(this.onvaluechange);
 		}
         
-		if(!self.isLocal && _protocol == "OSC") {
-			var valueString = "|" + self.address;
-			valueString += ":" + self.x + "," + self.y + "," + self.z;
+		if(!this.isLocal && _protocol == "OSC") {
+			// var valueString = "|" + this.address;
+			// 		valueString += ":" + this.x + "," + this.y + "," + this.z;
+			// 		control.valuesString += valueString;
+	        PhoneGap.exec(null, null, 'OSCManager', 'send', [this.address, 'fff', this.value] );
+		}else if (!this.isLocal && _protocol == "MIDI") {
+			var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.x);			
 			control.valuesString += valueString;
-		}else if (!self.isLocal && _protocol == "MIDI") {
-			var valueString = "|" + self.midiType + "," + (self.channel - 1) + "," + self.midiNumber+ "," + Math.round(self.x);			
+			valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber+ 1) + "," + Math.round(this.y);			
 			control.valuesString += valueString;
-			valueString = "|" + self.midiType + "," + (self.channel - 1) + "," + (self.midiNumber+ 1) + "," + Math.round(self.y);			
-			control.valuesString += valueString;
-			valueString = "|" + self.midiType + "," + (self.channel - 1) + "," + (self.midiNumber+ 2) + "," + Math.round(self.z);			
+			valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber+ 2) + "," + Math.round(this.z);			
 			control.valuesString += valueString;	
 		}
 	}
@@ -73,16 +73,16 @@ function ControlAccelerometer(props) {
 	this.draw = function() {}
 
     function onSuccess(acceleration) {
-        self._onAccelUpdate(acceleration.x, acceleration.y, acceleration.z);
+        this._onAccelUpdate(acceleration.x, acceleration.y, acceleration.z);
     }		
 	
 	this.start = function() {
 		//PhoneGap.exec("CNTRL_Accelerometer.start", null);
 	    console.log("starting accelerometer");    
         var options = new Object();
-        options.frequency = delay;  //options.frequency is actually the period in milliseconds
+        options.frequency = this.delay;  //options.frequency is actually the period in milliseconds
         this.watchID = navigator.accelerometer.watchAcceleration(
-                self._onAccelUpdate, 
+                this._onAccelUpdate, 
                 function(ex) {
                     alert("accel fail (" + ex.name + ": " + ex.message + ")");
                 }, options);
@@ -102,8 +102,8 @@ function ControlAccelerometer(props) {
 		//debug.log("setting accelerometer updateRate " + rateInHz);
         //PhoneGap.exec("CNTRL_Accelerometer.setUpdateRate", rateInHz);
         this.unload();
-        delay = (1/rateInHz) * 1000;
-        console.log("Delay set to " + delay + " milliseconds.");
+        this.delay = (1/rateInHz) * 1000;
+        console.log("Delay set to " + this.delay + " milliseconds.");
         this.start();
     }
 	

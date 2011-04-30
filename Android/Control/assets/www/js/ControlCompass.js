@@ -18,7 +18,7 @@ function ControlCompass(props) {
 	this.watchID = null;
 	var delay = 1000;
 	var first = true;
-	var self = this;
+	var this = this;
 	
     this.hardwareMin = 0;
     this.hardwareMax = 360;
@@ -34,22 +34,24 @@ function ControlCompass(props) {
     this.userDefinedRange = this.max - this.min;
     
 	this._onCompassUpdate = function(_heading) {
-        self.value = self.min + (((0 - self.hardwareMin) + _heading) / self.hardwareRange ) * self.userDefinedRange;
+        this.value = this.min + (((0 - this.hardwareMin) + _heading) / this.hardwareRange ) * this.userDefinedRange;
         
-        if(!self.isLocal && _protocol == "OSC") {
-            var valueString = "|" + self.address;
-            valueString += ":" + self.value;
-            control.valuesString += valueString;
-        }else if (!self.isLocal && _protocol == "MIDI") {
-            var valueString = "|" + self.midiType + "," + (self.channel - 1) + "," + self.midiNumber+ "," + Math.round(self.value);
+        if(!this.isLocal && _protocol == "OSC") {
+            // var valueString = "|" + this.address;
+            // valueString += ":" + this.value;
+            // control.valuesString += valueString;
+        	PhoneGap.exec(null, null, 'OSCManager', 'send', [this.address, 'f', this.value] );
+
+        }else if (!this.isLocal && _protocol == "MIDI") {
+            var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.value);
             control.valuesString += valueString;
         }
         if (first) {
-            console.log("new heading:" + _heading + "; calling " + self.onvaluechange + " with new heading: " + self.value);
+            console.log("new heading:" + _heading + "; calling " + this.onvaluechange + " with new heading: " + this.value);
             first = false;
         }
-		if(self.onvaluechange != "undefined") {
-			eval(self.onvaluechange);
+		if(this.onvaluechange != "undefined") {
+			eval(this.onvaluechange);
 		}
 	}
 

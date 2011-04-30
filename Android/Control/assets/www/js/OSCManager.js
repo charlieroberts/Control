@@ -1,8 +1,32 @@
-function OSCManager() {
+var OSCManager = function() {
 	this.delegate = this;
 	
 	return this;
 }
+
+OSCManager.prototype.send = function(msg, successCallback, failureCallback) {
+
+    return PhoneGap.exec(successCallback,   //Callback which will be called when directory listing is successful
+    					failureCallback,    //Callback which will be called when directory listing encounters an error
+    					'OSCManager',  		//Telling PhoneGap that we want to run "OSC" Plugin
+    					'send',             //Telling the plugin, which action we want to perform
+    					msg);        		//Passing a list of arguments to the plugin, in this case this is the directory path
+};
+
+/**
+ * <ul>
+ * <li>Register the Directory Listing Javascript plugin.</li>
+ * <li>Also register native call which will be called when this plugin runs</li>
+ * </ul>
+ */
+PhoneGap.addConstructor(function() {
+	console.log("phonegap add constructor....");
+	//Register the javascript plugin with PhoneGap
+	PhoneGap.addPlugin('OSCManager', new OSCManager());
+	
+	//Register the native class of plugin with PhoneGap
+	PluginManager.addService("OSCManager","com.charlieroberts.Control.OSCManager");
+});
 
 OSCManager.prototype.processOSCMessage = function() {
 	var address = arguments[0];
