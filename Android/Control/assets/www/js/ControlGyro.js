@@ -57,7 +57,7 @@ function ControlGyro(props) {
             // var valueString = "|" + this.address;
             // valueString += ":" + this.xRotationRate + "," + this.yRotationRate + "," + this.zRotationRate + "," + this.pitch + "," + this.roll + "," + this.yaw;
             // control.valuesString += valueString;
-	        PhoneGap.exec(null, null, 'OSCManager', 'send', [this.address, 'ffffff', this.xRotationRate, this.yRotationRate, this.zRotationRate, this.pitch, this.roll, this.yaw] );
+	        PhoneGap.exec(null, null, 'OSCManager', 'sendOSC', [this.address, 'ffffff', this.xRotationRate, this.yRotationRate, this.zRotationRate, this.pitch, this.roll, this.yaw] );
         }else if (!this.isLocal && _protocol == "MIDI") {
 			var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.xRotationRate);			
 			control.valuesString += valueString;

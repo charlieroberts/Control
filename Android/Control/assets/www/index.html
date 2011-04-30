@@ -77,21 +77,12 @@
 					
             _protocol = "OSC";
 			/*
-			oscManager = new OSCManager();
 			midiManager = new MIDIManager();
-			
+						*/
 			destinationManager = new DestinationManager();
 			destinationManager.init();
 
-			*/
-            _osc = new OSCManager();
-            //_osc.send(function() { console.log("SUCCESS FOR REALZ"); }, function() {console.log("FAIL / SUCCESS!");});
-            
-            /*PhoneGap.exec(function() {console.log("success");},   //Callback which will be called when directory listing is successful
-    					function() {console.log("fail");},    //Callback which will be called when directory listing encounters an error
-    					'OSCPlugin',  		//Telling PhoneGap that we want to run "OSC" Plugin
-    					'send',             //Telling the plugin, which action we want to perform
-    					[]);        		//Passing a list of arguments to the plugin, in this case this is the directory path */
+			oscManager = new OSCManager();
     		
             interfaceManager = new InterfaceManager();
 			interfaceManager.init();
@@ -114,7 +105,7 @@
 			preferences.save({key:"autolock", shouldAutolock:autolock});
 		}
 		function oscSend() {
-            _osc.send(
+            oscManager.send(
                 ["/testing", "i", 42],
                 function() { console.log('SUCCESS FOR REALZ'); },
                 function() { console.log('FAIL / SUCCESS!');}
