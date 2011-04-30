@@ -24,7 +24,7 @@ public class Control extends DroidGap
          //super.loadUrl("http://192.168.1.6/~charlie/www/index.html");
          super.loadUrl("file:///android_asset/www/index.html");
 
-         final Object        sync = new Object();
+         /*final Object        sync = new Object();
          final OSCClient     c;
          final OSCBundle     bndl1, bndl2;
          final Integer       nodeID;
@@ -46,7 +46,7 @@ public class Control extends DroidGap
             StringWriter sw = new StringWriter();
             e.printStackTrace(new PrintWriter(sw));
             System.err.println( sw.toString());
-         }
+         }*/
 
       }
 }

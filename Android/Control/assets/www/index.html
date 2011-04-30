@@ -51,6 +51,7 @@
 	<script type="text/javascript" src="js/ControlAccelerometer.js"></script>
 	<script type="text/javascript" src="js/ControlCompass.js"></script>
 	<script type="text/javascript" src="js/ControlGyro.js"></script>
+    <script type="text/javascript" src="js/OSCPlugin.js"></script>
 	
     <script type="text/javascript" charset="utf-8">
 		var pages, control, interfaceScroller, destinationScroller, interfaceManager, destinationManager, _protocol;
@@ -83,7 +84,15 @@
 			destinationManager.init();
 
 			*/
-
+            _osc = new OSCPlugin();
+            //_osc.send(function() { console.log("SUCCESS FOR REALZ"); }, function() {console.log("FAIL / SUCCESS!");});
+            
+            /*PhoneGap.exec(function() {console.log("success");},   //Callback which will be called when directory listing is successful
+    					function() {console.log("fail");},    //Callback which will be called when directory listing encounters an error
+    					'OSCPlugin',  		//Telling PhoneGap that we want to run "OSC" Plugin
+    					'send',             //Telling the plugin, which action we want to perform
+    					[]);        		//Passing a list of arguments to the plugin, in this case this is the directory path */
+    		
             interfaceManager = new InterfaceManager();
 			interfaceManager.init();
             interfaceManager.loadScripts();
@@ -104,7 +113,13 @@
 			//PhoneGap.exec("Device.autolockToggle", autolock);
 			preferences.save({key:"autolock", shouldAutolock:autolock});
 		}
-		
+		function oscSend() {
+            _osc.send(
+                ["/testing", "i", 42],
+                function() { console.log('SUCCESS FOR REALZ'); },
+                function() { console.log('FAIL / SUCCESS!');}
+            );
+		}
 		function init() {
 			document.addEventListener('deviceready', startControl(), true);
 		}
@@ -176,7 +191,8 @@
 	   <div data-role="content" id="selectedInterface"></div>
   </div>
 
-  <div style="display:block; position:fixed; top: 100px; left: 100px; width:50px; height:50px; background-color:#f00; z-index:100;" ontouchend="window.location.reload(true)"><h2>RELOAD</h2></div>
+  <div style="display:block; position:fixed; top: 200px; left: 50px; width:100px; height:50px; background-color:#f00; z-index:100;" ontouchend="window.location.reload(true)"><h2>RELOAD</h2></div>               
+  <div style="display:block; position:fixed; top: 200px; left: 200px; width:100px; height:50px; background-color:#f00; z-index:100;" ontouchend="oscSend()"><h2>SEND OSC</h2></div>
       
   <div data-role="footer" data-id="foo1" data-position="fixed" class="ftr ui-bar-a ui-footer ui-footer-fixed ui-fixed-overlay" role="contentinfo" style=" border-top-width:0;bottom:0px; padding:0; margin:0">
       <div data-role="navbar" class="ui-navbar ui-navbar-noicons" role="navigation">
