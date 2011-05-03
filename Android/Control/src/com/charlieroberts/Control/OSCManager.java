@@ -19,6 +19,7 @@ import com.phonegap.api.PluginResult.Status;
 import de.sciss.net.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.io.StringWriter;
 import java.io.PrintWriter;
 
@@ -43,22 +44,51 @@ public class OSCManager extends Plugin {
 	public static final String OSC_SEND_ADDRESS = "192.168.1.8";
 	public final Object        sync = new Object();
 	public OSCClient c;
-
+	
+	public OSCManager() {
+		System.err.print("**************************** CONSTRUCTOR *************************************");
+	}
 	@Override
 	public PluginResult execute(String action, JSONArray data, String callbackId) {
 		PluginResult result = null;
 		try {
 			//Log.d("OSCManager", "building client");
 			if(c == null) { // TODO: wtf is a constructor or onload handler for these plugins?
-				c = OSCClient.newUsing(OSCClient.UDP);
+				c = OSCClient.newUsing(OSCClient.UDP, 10002);
 	            c.setTarget( new InetSocketAddress( OSC_SEND_ADDRESS, 10001 ));
 				c.start();
-	            //c.dumpOSC( OSCChannel.kDumpBoth, System.err );
+				c.addOSCListener( new OSCListener() {
+        			public void messageReceived( OSCMessage m, SocketAddress addr, long time ) {
+						System.err.print("msg received!");
+						String msg = "oscManager.processMessage(";
+						msg += m.getName() + ",";
+						String tt = "";
+						for(int i = 0; i < m.getArgCount(); i++) {
+							tt += "s";
+						}
+						msg += tt + ",";
+						for(int i = 0; i < m.getArgCount(); i++) {
+							msg += m.getArg(i).toString();
+							if(i != m.getArgCount() -1) msg += ",";
+						}
+						msg += ");";
+						System.err.println(msg);
+			        }
+			    });
+	            c.dumpOSC( OSCChannel.kDumpBoth, System.err );
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			System.err.println("Error creating / binding OSC client");
 		}
-		if (action.equals("sendOSC") && hasAddress) {
+		try {
+			synchronized( sync ) {
+            	sync.wait( 10000 );
+			}
+        } catch(InterruptedException e1 ) {
+	        e1.printStackTrace();
+    	}
+
+		if (action.equals("send") && hasAddress) {
 			//Log.d("OSCManager", "building message");
 			String address = "";
 			ArrayList<Object> values = new ArrayList<Object>();
@@ -90,8 +120,15 @@ public class OSCManager extends Plugin {
 	         }
 		}else if(action.equals("setIPAddressAndPort")){
 			try {
+				System.err.println("something");
 	            c.setTarget( new InetSocketAddress( data.getString(0), data.getInt(1) ));
 				hasAddress = true;
+			} catch (JSONException jsonEx) {
+				System.err.println("Error creating JSON from js message");
+			}
+		}else if(action.equals("setOSCReceivePort")){
+			try {
+				receivePort = data.getInt(0);
 			} catch (JSONException jsonEx) {
 				System.err.println("Error creating JSON from js message");
 			}

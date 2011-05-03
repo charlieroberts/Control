@@ -205,7 +205,7 @@ function MultiTouchXY(ctx, props) {
             //   valueString += "/" + touch.activeNumber;
             // }
             // valueString += ":" + this.xvalue + "," + this.yvalue;
-        	PhoneGap.exec(null, null, 'OSCManager', 'sendOSC', [this.address + "/" + touch.activeNumber, 'ff', this.xvalue, this.yvalue] );
+        	PhoneGap.exec(null, null, 'OSCManager', 'send', [this.address + "/" + touch.activeNumber, 'ff', this.xvalue, this.yvalue] );
 
         }else if(_protocol == "MIDI") {
             var xnum = this.midiNumber + (touch.activeNumber * 2) - 2;

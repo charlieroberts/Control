@@ -4,7 +4,7 @@ var OSCManager = function() {
 	return this;
 }
 
-OSCManager.prototype.send = function(msg, successCallback, failureCallback) {
+OSCManager.prototype.sendOSC = function(msg, successCallback, failureCallback) {
 
     return PhoneGap.exec(successCallback,   //Callback which will be called when directory listing is successful
     					failureCallback,    //Callback which will be called when directory listing encounters an error
@@ -91,7 +91,7 @@ OSCManager.prototype.processOSC = function(oscAddress, typetags, args) {
 	}
 }
 
-OSCManager.prototype.sendOSC = function() {	// NOTE: PhoneGap.exec('OSCManager.send') will be much more efficient than this for a large number of strings.
+/*OSCManager.prototype.sendOSC = function() {	// NOTE: PhoneGap.exec('OSCManager.send') will be much more efficient than this for a large number of strings.
 	if(_protocol == "OSC") {
 		var address = arguments[0];
 		var typetags = arguments[1];
@@ -110,4 +110,4 @@ OSCManager.prototype.sendOSC = function() {	// NOTE: PhoneGap.exec('OSCManager.s
 		}
 		eval(evalString);
 	}
-}
+}*/
