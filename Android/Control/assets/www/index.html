@@ -134,7 +134,7 @@
   
   <div data-role="page" id="Destinations" data-theme="a">
 		<div data-role="header" id="header" data-backbtn="false">
-			<a href="#" id="destinationsEditBtn"style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="destinationManager.editDestinationList()">Edit</a>		
+			<a href="#" id="destinationEditBtn"style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="destinationManager.editDestinationList()">Edit</a>		
 			<h1>Destinations</h1>
 			<a href="#" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-right ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="destinationManager.promptForIP(); console.log('pressed plus');">+</a>
 		</div>
@@ -182,8 +182,10 @@
 	   <div data-role="content" id="selectedInterface"></div>
   </div>
               
+  <!--
   <div style="display:block; position:fixed; top: 200px; left: 200px; width:100px; height:50px; background-color:#f00; z-index:100;" ontouchend="oscSend()"><h2>OSC Send</h2></div>
   <div style="display:block; position:fixed; top: 200px; left: 50px; width:100px; height:50px; background-color:#f00; z-index:100;" ontouchend="window.location.reload(true)"><h2>RELOAD</h2></div> --
+  -->
       
   <div data-role="footer" data-id="foo1" data-position="fixed" class="ftr ui-bar-a ui-footer ui-footer-fixed ui-fixed-overlay" role="contentinfo" style=" border-top-width:0;bottom:0px; padding:0; margin:0">
       <div data-role="navbar" class="ui-navbar ui-navbar-noicons" role="navigation">
