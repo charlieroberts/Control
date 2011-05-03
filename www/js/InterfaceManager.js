@@ -209,7 +209,7 @@ function InterfaceManager() {
 				var item = list.childNodes[i];
 				var deleteButton = document.createElement("div"); // -webkit-border-radius:10px;
 				deleteButton.setAttribute("style", "float:left; margin-right: 5px; position:relative; top:10px; border: #fff 2px solid; -webkit-border-radius:10px; width: 15px; height: 15px; background-color:#f00; color:#fff; font-weight:bold;");
-				deleteButton.innerHTML = "<img style='position:relative; top:-.5em; left:-.5em;' src='dash.png'>";
+				deleteButton.innerHTML = "<img style='position:relative; top:-.7em; left:-.65em;' src='images/dash.png'>";
 				deleteButton.setAttribute("ontouchend", "interfaceManager.removeInterface("+i+")");
 				item.insertBefore(deleteButton, item.firstChild);
 				item.setAttribute("ontouchend", null);		
