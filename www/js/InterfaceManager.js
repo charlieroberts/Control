@@ -173,12 +173,13 @@ function InterfaceManager() {
 			//debug.log("key " + i + " :: " + r.key);
 			var item = document.createElement('li');
             item.style.borderBottom = "1px solid #666";            
-			$('li').attr("data-icon","false");
+			//$('li').attr("data-icon","false");
+            item.setAttribute("ontouchend", null);
 			//li.class = "
                 
 			var link = document.createElement('a');
 			link.style.color="#fff";
-			link.setAttribute("ontouchend", "setTimeout(function() { interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "'); }, 500);C");
+			link.setAttribute("ontouchend", "console.log('"+r.key+"');interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "');");
 			link.setAttribute("href", "#SelectedInterfacePage");
 			//link.setAttribute("data-transition", "pop");
 			link.innerHTML = r.key;

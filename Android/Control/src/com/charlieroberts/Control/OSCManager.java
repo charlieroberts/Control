@@ -1,10 +1,10 @@
 /**
- * Example of Android PhoneGap Plugin
+ * PhoneGap plugin handling OSC communication in Control
  */
 package com.charlieroberts.Control;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.*;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,78 +16,53 @@ import com.phonegap.api.Plugin;
 import com.phonegap.api.PluginResult;
 import com.phonegap.api.PluginResult.Status;
 
-import de.sciss.net.*;
+//import de.sciss.net.*;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
+import java.net.*;
+import java.nio.channels.DatagramChannel;
+
+import com.illposed.osc.*;
+
 import java.io.StringWriter;
 import java.io.PrintWriter;
 
 public class OSCManager extends Plugin {
-	
-	/** List Action 
-		 BOOL shouldPoll;
-		ExamplePacketListener  * listener;
-		UdpListeningReceiveSocket * s;
-		NSMutableDictionary * addresses;
-	
-		IpEndpointName    * destinationAddress;
-		UdpTransmitSocket * output;
-		int receivePort;*/
-		
-	// TODO: does android need polling? how does the webview communicate with java?
 	/* THIS LOOKS NASTY
-	webview.loadUrl("javascript:(function() { document.getElementsByTagName('body')[0].style.color = 'red';})()");  
+    	webview.loadUrl("javascript:(function() { document.getElementsByTagName('body')[0].style.color = 'red';})()");  
 	*/
 	public boolean hasAddress = false; // send only after selecting ip address / port to send to
 	public int receivePort; 
-	public static final String OSC_SEND_ADDRESS = "192.168.1.8";
 	public final Object        sync = new Object();
-	public OSCClient c;
+	
+	public OSCPortIn receiver;
+	public OSCPortOut sender;
+	public OSCListener listener;
+	public String ipAddress;
 	
 	public OSCManager() {
-		System.err.print("**************************** CONSTRUCTOR *************************************");
-	}
-	@Override
-	public PluginResult execute(String action, JSONArray data, String callbackId) {
-		PluginResult result = null;
+		//getLocalIpAddress();
 		try {
-			//Log.d("OSCManager", "building client");
-			if(c == null) { // TODO: wtf is a constructor or onload handler for these plugins?
-				c = OSCClient.newUsing(OSCClient.UDP, 10002);
-	            c.setTarget( new InetSocketAddress( OSC_SEND_ADDRESS, 10001 ));
-				c.start();
-				c.addOSCListener( new OSCListener() {
-        			public void messageReceived( OSCMessage m, SocketAddress addr, long time ) {
-						System.err.print("msg received!");
-						String msg = "oscManager.processMessage(";
-						msg += m.getName() + ",";
-						String tt = "";
-						for(int i = 0; i < m.getArgCount(); i++) {
-							tt += "s";
-						}
-						msg += tt + ",";
-						for(int i = 0; i < m.getArgCount(); i++) {
-							msg += m.getArg(i).toString();
-							if(i != m.getArgCount() -1) msg += ",";
-						}
-						msg += ");";
-						System.err.println(msg);
-			        }
-			    });
-	            c.dumpOSC( OSCChannel.kDumpBoth, System.err );
-			}
+			Log.d("OSCManager", "building client");
+			//in = new OSCPortIn("10.0.2.15", 10005);
+			receiver = new OSCPortIn(8080);
+			listener = new OSCListener() {
+	        	public void acceptMessage(java.util.Date time, OSCMessage message) {
+        			System.out.println("Message received!");
+        		}
+        	};
+        	//System.out.println("adding listener");
+        	receiver.addListener("/test", listener);
+        	receiver.startListening();
+        	//System.out.println("starting listener");
+
 		} catch (Exception e) {
 			System.err.println("Error creating / binding OSC client");
 		}
-		try {
-			synchronized( sync ) {
-            	sync.wait( 10000 );
-			}
-        } catch(InterruptedException e1 ) {
-	        e1.printStackTrace();
-    	}
-
+	}
+	
+	@Override
+	public PluginResult execute(String action, JSONArray data, String callbackId) {
+		PluginResult result = null;
 		if (action.equals("send") && hasAddress) {
 			//Log.d("OSCManager", "building message");
 			String address = "";
@@ -96,20 +71,21 @@ public class OSCManager extends Plugin {
 			try {
 				address = data.getString(0);
 				for(int i = 2; i < data.length(); i++) {
-					values.add(data.get(i));
-					//Log.d("OSCManager", ""+data.get(i));
+				    if(Class.forName("java.lang.Double").isInstance(data.get(i))) { // doubles are returned from JSON instead of floatsbut not handled by the oscmsg class
+				        values.add( new Float(((Double)data.get(i)).doubleValue()) );
+				    }else{
+    					values.add( data.get(i) );
+    				}
+					//Log.d("OSCManager", ""+data.get(i).getClass().toString());
 				}
-			} catch (JSONException jsonEx) {
+			} catch (Exception e) {
 				System.err.println("Error creating JSON from js message");
 			}
 			
 			OSCMessage msg = new OSCMessage( address, values.toArray() );
 
          	try {
-	          	c.send(msg);
-
-				JSONObject oscInfo = new JSONObject();
-				result = new PluginResult(Status.OK, oscInfo);
+                sender.send(msg);
 	         }
 	         catch( IOException e ) {
 	            System.err.println("CRAP NetUtil osc sending isn't working!!!");
@@ -120,16 +96,19 @@ public class OSCManager extends Plugin {
 	         }
 		}else if(action.equals("setIPAddressAndPort")){
 			try {
+			    ipAddress = data.getString(0);
+				sender = new OSCPortOut( InetAddress.getByName(ipAddress), data.getInt(1) );
+                        
 				System.err.println("something");
-	            c.setTarget( new InetSocketAddress( data.getString(0), data.getInt(1) ));
+	            //c.setTarget( new InetSocketAddress( data.getString(0), data.getInt(1) ));
 				hasAddress = true;
-			} catch (JSONException jsonEx) {
+			} catch (Exception e) {
 				System.err.println("Error creating JSON from js message");
 			}
 		}else if(action.equals("setOSCReceivePort")){
 			try {
-				receivePort = data.getInt(0);
-			} catch (JSONException jsonEx) {
+			   	receiver = new OSCPortIn(data.getInt(0));
+			} catch (Exception e) {
 				System.err.println("Error creating JSON from js message");
 			}
 		}else{
@@ -137,42 +116,34 @@ public class OSCManager extends Plugin {
 		}
 		return result;
 	}
-	/*
-	@interface OSCManager : PhoneGapCommand {
-   
-	}
+	
+	public String getLocalIpAddress() {
+        try {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+                NetworkInterface intf = en.nextElement();
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                    InetAddress inetAddress = enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress()) {
+                        System.err.println(inetAddress.getHostAddress().toString());
+                    }
+                }
+            }
+        } catch (SocketException ex) {
+            System.err.println( "can't get ip" );
+        }
+        return null;
+    }
+/*
 
-@property (retain) NSMutableDictionary * addresses;
-@property (nonatomic) int receivePort;
-- (void)oscThread;
-- (void)pushInterface:(NSValue *)msgPointer;
-- (void)pushDestination:(NSValue *) msgPointer;
+- (void)pushInterface:(NSValue *)msgPointer;                                                    // NOT DONE
+- (void)pushDestination:(NSValue *) msgPointer;                                                 // NOT DONE
 
-- (void)setOSCReceivePort:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
-- (void)setIPAddressAndPort:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
-- (void)startReceiveThread:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
-- (void)send:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
-- (void)startPolling:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
-- (void)stopPolling:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
+- (void)setOSCReceivePort:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;    // DONE
+- (void)setIPAddressAndPort:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;  // DONE
+- (void)startReceiveThread:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;   // NOT NEEDED
+- (void)send:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;                 // DONE
+- (void)startPolling:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;         // NOT NEEDED
+- (void)stopPolling:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;          // NOT NEEDED
 */
 
-	/** Leave as reference for passing received OSC msgs into javascript
-
-	private JSONObject getOSC(File file) throws JSONException {
-		JSONObject fileInfo = new JSONObject();
-		fileInfo.put("filename", file.getName());
-		fileInfo.put("isdir", file.isDirectory());
-
-		if (file.isDirectory()) {
-			JSONArray children = new JSONArray();
-			fileInfo.put("children", children);
-			if (null != file.listFiles()) {
-				for (File child : file.listFiles()) {
-					children.put(getOSC(child));
-				}
-			}
-		}
-
-		return fileInfo;
-	}*/
 }
