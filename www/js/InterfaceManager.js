@@ -171,20 +171,31 @@ function InterfaceManager() {
 		for(var i = 0; i < listArray.length; i++) {
 			var r = listArray[i];
 			//debug.log("key " + i + " :: " + r.key);
+			/*var item = document.createElement('li');
+            item.style.borderBottom = "1px solid #666";
+            item.setAttribute("ontouchend", "console.log('"+r.key+"');interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "');");
+            item.innerHTML = r.key;
+            item.style.borderBottom = "1px solid #666";*/
+            //debug.log("key " + i + " :: " + r.key);
 			var item = document.createElement('li');
-            item.style.borderBottom = "1px solid #666";            
+            item.style.borderBottom = "1px solid #666";
+            item.setAttribute("ontouchend", "$.mobile.changePage('#SelectedInterfacePage'); console.log('"+r.key+"');interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "');");
+            item.innerHTML = r.key;
+            item.setAttribute("href", "#SelectedInterfacePage");
+   			list.appendChild(item);
+   
 			//$('li').attr("data-icon","false");
-            item.setAttribute("ontouchend", null);
+            //item.setAttribute("ontouchend", null);
 			//li.class = "
                 
-			var link = document.createElement('a');
+			/*var link = document.createElement('a');
 			link.style.color="#fff";
 			link.setAttribute("ontouchend", "console.log('"+r.key+"');interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "');");
 			link.setAttribute("href", "#SelectedInterfacePage");
 			//link.setAttribute("data-transition", "pop");
 			link.innerHTML = r.key;
 			
-			item.appendChild(link);
+			item.appendChild(link);*/
 			list.appendChild(item);
 			
 			

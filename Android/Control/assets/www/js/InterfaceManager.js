@@ -173,10 +173,15 @@ function InterfaceManager() {
 			//debug.log("key " + i + " :: " + r.key);
 			var item = document.createElement('li');
             item.style.borderBottom = "1px solid #666";
-            //li.ontouchend = null;           
-			//li.class = "
+            //debug.log("key " + i + " :: " + r.key);
+			var item = document.createElement('li');
+            item.style.borderBottom = "1px solid #666";
+            item.setAttribute("ontouchend", "$.mobile.changePage('#SelectedInterfacePage'); console.log('"+r.key+"');interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "');");
+            item.innerHTML = r.key;
+            item.setAttribute("href", "#SelectedInterfacePage");
+   			list.appendChild(item);
                 
-			var link = document.createElement('a');
+			/*var link = document.createElement('a');
 			link.style.color="#fff";
 			link.style.display = "block";
 			link.setAttribute("ontouchend", "setTimeout(function() { interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "'); }, 500);");
@@ -186,11 +191,8 @@ function InterfaceManager() {
 			//link.setAttribute("data-transition", "pop");
 			link.innerHTML = r.key;
 			
-			item.appendChild(link);
-			list.appendChild(item);
-			
-			
-			
+			item.appendChild(link);*/
+
 			//link.style.width = "100%";
 			//link.style.display = "block";
 			//link.style.backgroundColor = "#a33";
