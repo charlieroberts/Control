@@ -172,14 +172,17 @@ function InterfaceManager() {
 			var r = listArray[i];
 			//debug.log("key " + i + " :: " + r.key);
 			var item = document.createElement('li');
-            item.style.borderBottom = "1px solid #666";            
-			$('li').attr("data-icon","false");
+            item.style.borderBottom = "1px solid #666";
+            //li.ontouchend = null;           
 			//li.class = "
                 
 			var link = document.createElement('a');
 			link.style.color="#fff";
-			link.setAttribute("ontouchend", "setTimeout(function() { interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "'); }, 500);C");
+			link.style.display = "block";
+			link.setAttribute("ontouchend", "setTimeout(function() { interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "'); }, 500);");
 			link.setAttribute("href", "#SelectedInterfacePage");
+			link.style.width="75%";
+			link.style.height="100%";
 			//link.setAttribute("data-transition", "pop");
 			link.innerHTML = r.key;
 			
@@ -192,7 +195,8 @@ function InterfaceManager() {
 			//link.style.display = "block";
 			//link.style.backgroundColor = "#a33";
 		}
-		$('ul').listview('refresh');
+		$('li').attr("data-icon","false");
+    	$('ul').listview('refresh');
 		//interfaceScroller.refresh();
 		//setTimeout(function () { interfaceScroller.refresh(); }, 2550);
 	}
@@ -306,8 +310,11 @@ function InterfaceManager() {
             PhoneGap.exec("Device.setRotation", interfaceOrientation);
         }
         //if(control.orientation == 0 || control.orientation == 180) {
+        
+        var r = 320 / screen.width;
 		if(interfaceOrientation == "portrait") {
-            control.makePages(pages, screen.width, screen.height);
+            //control.makePages(pages, screen.width, screen.height);
+            control.makePages(pages, screen.width * r, screen.height * r);
         }else{
             control.makePages(pages, screen.height, screen.width);
         }

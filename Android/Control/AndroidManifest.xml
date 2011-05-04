@@ -2,11 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       android:versionName="1.1" android:versionCode="1" package="com.charlieroberts.Control">
     <supports-screens
-    	android:largeScreens="true"
-    	android:normalScreens="true"
+    	android:largeScreens="false"
+    	android:normalScreens="false"
     	android:smallScreens="true"
-    	android:resizeable="true"
-    	android:anyDensity="true"
+    	android:resizeable="false"
+    	android:anyDensity="false"
     	/>
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
