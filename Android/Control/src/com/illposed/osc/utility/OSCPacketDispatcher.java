@@ -69,10 +69,10 @@ public class OSCPacketDispatcher {
 			// this supports the OSC regexp facility, but it
 			// only works in JDK 1.4, so don't support it right now
 			// if (key.matches(message.getAddress())) {
-			if (key.equals(message.getAddress())) {
+			//if (key.equals(message.getAddress())) { // comment out to pass all messages up to any added listener
 				OSCListener listener = (OSCListener) addressToClassTable.get(key);
 				listener.acceptMessage(time, message);
-			}
+			//}
 		}
 	}
 }

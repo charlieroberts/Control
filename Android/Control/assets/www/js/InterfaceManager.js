@@ -9,12 +9,12 @@ function InterfaceManager() {
         this.interfaceIP = null;
         interfaceOrientation = null;
         constants = null;
-        this.interfaceDefaults = [//"iphoneLandscapeMixer.js",
-                                  "djcut.js",
+        this.interfaceDefaults = ["iphoneLandscapeMixer.js",
+                                  //"djcut.js",
                                   //"life.js",
 								  //"monome.js",
-								  "multibutton.js",
-								  "multiXY.js",
+								  //"multibutton.js",
+								  //"multiXY.js",
 								  //"sequencer.js",
 								  //"gyro.js",
                                   ];

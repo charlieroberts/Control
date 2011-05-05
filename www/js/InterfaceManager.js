@@ -175,7 +175,7 @@ function InterfaceManager() {
             item.style.borderBottom = "1px solid #666";
             item.setAttribute("ontouchend", "console.log('"+r.key+"');interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "');");
             item.innerHTML = r.key;
-            item.style.borderBottom = "1px solid #666";*/
+            item.style.borderBottom = "1px solid #666";*/   
             //debug.log("key " + i + " :: " + r.key);
 			var item = document.createElement('li');
             item.style.borderBottom = "1px solid #666";

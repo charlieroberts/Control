@@ -39,22 +39,46 @@ public class OSCManager extends Plugin {
 	public OSCListener listener;
 	public String ipAddress;
 	
+	public Class dd;
+	
 	public OSCManager() {
 		//getLocalIpAddress();
 		try {
-			Log.d("OSCManager", "building client");
-			//in = new OSCPortIn("10.0.2.15", 10005);
+    		Log.d("OSCManager", "building client");	
 			receiver = new OSCPortIn(8080);
 			listener = new OSCListener() {
 	        	public void acceptMessage(java.util.Date time, OSCMessage message) {
+	        	    Object[] args = message.getArguments();
         			System.out.println("Message received!");
+        			String jsString = "oscManager.processOSCMessage(";
+        			jsString = jsString + "\"" + message.getAddress() + "\", \"";
+        			
+        			StringBuffer typeTagString = new StringBuffer();
+        			StringBuffer argString = new StringBuffer();
+        			
+        			for(int i = 0; i < args.length; i++) {
+        			    Object arg = args[i];
+    			        if(arg instanceof java.lang.Float) {
+    			            typeTagString.append('f');
+    			            argString.append( ((Float)args[i]).floatValue() );
+    			        }else if(arg instanceof java.lang.Integer) {
+    			            typeTagString.append('i');
+    			            argString.append( ((Integer)args[i]).intValue() );
+    			        }else if(arg instanceof java.lang.String) {
+    			            typeTagString.append('s');
+    			            argString.append("\"");
+    			            argString.append( ((String)args[i]) );
+    			            argString.append("\"");    			            
+    			        }
+    			        if(i != args.length - 1) { argString.append(','); }
+        			}
+        			jsString = jsString + typeTagString + "\", " + argString + ");";
+        			System.out.println(jsString);
         		}
         	};
-        	//System.out.println("adding listener");
-        	receiver.addListener("/test", listener);
+        	
+        	receiver.addListener("/", listener);
         	receiver.startListening();
-        	//System.out.println("starting listener");
-
 		} catch (Exception e) {
 			System.err.println("Error creating / binding OSC client");
 		}
@@ -71,10 +95,11 @@ public class OSCManager extends Plugin {
 			try {
 				address = data.getString(0);
 				for(int i = 2; i < data.length(); i++) {
-				    if(Class.forName("java.lang.Double").isInstance(data.get(i))) { // doubles are returned from JSON instead of floatsbut not handled by the oscmsg class
-				        values.add( new Float(((Double)data.get(i)).doubleValue()) );
+				    Object obj = data.get(i);
+				    if(obj instanceof java.lang.Double) { // doubles are returned from JSON instead of floatsbut not handled by the oscmsg class
+				        values.add( new Float( ( (Double) obj ).doubleValue() ) );
 				    }else{
-    					values.add( data.get(i) );
+    					values.add( obj);
     				}
 					//Log.d("OSCManager", ""+data.get(i).getClass().toString());
 				}
