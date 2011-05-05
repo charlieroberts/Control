@@ -26,7 +26,7 @@ function InterfaceManager() {
     }
     
     this.readFile = function(filename) {
-		console.log("reading " + filename)
+		//console.log("reading " + filename)
         var fileref=document.createElement('script')
         fileref.setAttribute("type","text/javascript");
         fileref.setAttribute("src", "interfaces/" + filename);

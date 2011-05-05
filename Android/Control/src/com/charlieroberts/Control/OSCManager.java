@@ -50,7 +50,7 @@ public class OSCManager extends Plugin {
 	        	public void acceptMessage(java.util.Date time, OSCMessage message) {
 	        	    Object[] args = message.getArguments();
         			System.out.println("Message received!");
-        			String jsString = "oscManager.processOSCMessage(";
+        			String jsString = "javascript:oscManager.processOSCMessage(";
         			jsString = jsString + "\"" + message.getAddress() + "\", \"";
         			
         			StringBuffer typeTagString = new StringBuffer();
@@ -73,12 +73,13 @@ public class OSCManager extends Plugin {
     			        if(i != args.length - 1) { argString.append(','); }
         			}
         			jsString = jsString + typeTagString + "\", " + argString + ");";
+        			webView.loadUrl(jsString);
         			System.out.println(jsString);
         		}
         	};
         	
         	receiver.addListener("/", listener);
-        	receiver.startListening();
+        	receiver.startListening();  
 		} catch (Exception e) {
 			System.err.println("Error creating / binding OSC client");
 		}
