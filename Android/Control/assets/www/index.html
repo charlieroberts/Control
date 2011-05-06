@@ -39,6 +39,8 @@
     <script type="text/javascript" src="js/PreferencesManager.js"></script>
     <script type="text/javascript" src="js/OSCManager.js"></script>     
     <script type="text/javascript" src="js/MIDIManager.js"></script>        
+    <script type="text/javascript" src="js/Bonjour.js"></script>        
+    
     
     <script type="text/javascript" src="js/Widget.js"></script>
     <script type="text/javascript" src="js/Slider.js"></script>
@@ -88,7 +90,10 @@
             
             oscManager = new OSCManager();
             oscManager.startup();
-
+            
+            bonjour = new Bonjour();
+            bonjour.startup();
+            
             document.addEventListener('orientationChanged', control.onRotation, false);
 
             //PhoneGap.exec("Device.setRotation", "portrait");

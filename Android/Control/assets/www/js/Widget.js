@@ -131,9 +131,9 @@ Widget.prototype.output = function() {
         //var valueString = "|" + this.address;
         //valueString += ":" + this.value;
         //control.valuesString += valueString;
-        console.log("OUTPUTTING");
-        console.log(this.address + " || " + this.value);
-        PhoneGap.exec(null, null, 'OSCManager', 'sendOSC', [this.address, 'f', this.value] );
+        //console.log("OUTPUTTING");
+        //console.log(this.address + " || " + this.value);
+        PhoneGap.exec(null, null, 'OSCManager', 'send', [this.address, 'f', this.value] );
 
     }else if (!this.isLocal && _protocol == "MIDI") {
         var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.value);
