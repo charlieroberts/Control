@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>currentDocument</key>
-	<string>interfaceTest.json</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -229,14 +227,6 @@
 	<key>openDocuments</key>
 	<array>
 		<string>index.html</string>
-		<string>master.css</string>
-		<string>Control.js</string>
-		<string>MultiTouchXY.js</string>
-		<string>interfaceTest.json</string>
-		<string>Label.js</string>
-		<string>Slider.js</string>
-		<string>Button.js</string>
-		<string>Widget.js</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>

@@ -18,7 +18,7 @@ function ControlCompass(props) {
 	this.watchID = null;
 	var delay = 1000;
 	var first = true;
-	var this = this;
+	//var this = this;
 	
     this.hardwareMin = 0;
     this.hardwareMax = 360;

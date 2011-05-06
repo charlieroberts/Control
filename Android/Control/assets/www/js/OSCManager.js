@@ -1,8 +1,11 @@
 var OSCManager = function() {
 	this.delegate = this;
-	
 	return this;
-}
+};
+
+OSCManager.prototype.startup = function() {
+	setTimeout(function() {    PhoneGap.exec(null, null, 'OSCManager', 'startOSCListener', []) }, 2500)
+};
 
 OSCManager.prototype.sendOSC = function(msg, successCallback, failureCallback) {
 
