@@ -20,7 +20,9 @@ function Control() {
     /*PhoneGap.exec("OSCManager.startReceiveThread");
 	PhoneGap.exec("CNTRL_Accelerometer.setUpdateRate", 50);
 	PhoneGap.exec("Gyro.setUpdateRate", 50);	*/
-	this.changeTab(this.currentTab);
+	//this.changeTab(this.currentTab);
+	//$.mobile.changePage('#SelectedInterfacePage');
+
 	this.isAddingConstants = false;
 	return this;
 }

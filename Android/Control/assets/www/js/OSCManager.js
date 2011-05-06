@@ -13,12 +13,6 @@ OSCManager.prototype.sendOSC = function(msg, successCallback, failureCallback) {
     					msg);        		//Passing a list of arguments to the plugin, in this case this is the directory path
 };
 
-/**
- * <ul>
- * <li>Register the Directory Listing Javascript plugin.</li>
- * <li>Also register native call which will be called when this plugin runs</li>
- * </ul>
- */
 PhoneGap.addConstructor(function() {
 	console.log("phonegap add constructor....");
 	//Register the javascript plugin with PhoneGap

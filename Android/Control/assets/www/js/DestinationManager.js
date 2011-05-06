@@ -252,7 +252,6 @@ function DestinationManager() {
 	this.removeDestination = function (itemNumber) {
 		var listItem = document.getElementById('destinationList').childNodes[itemNumber];
 		var jsonKey = listItem.childNodes[1].innerHTML;
-		console.log("removing "+ jsonKey);
 		document.getElementById('destinationList').removeChild(listItem);
 		destinationManager.destinations.remove(jsonKey);
 	}

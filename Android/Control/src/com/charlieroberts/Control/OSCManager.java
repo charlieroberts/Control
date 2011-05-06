@@ -50,31 +50,38 @@ public class OSCManager extends Plugin {
 	        	public void acceptMessage(java.util.Date time, OSCMessage message) {
 	        	    Object[] args = message.getArguments();
         			System.out.println("Message received!");
-        			String jsString = "javascript:oscManager.processOSCMessage(";
-        			jsString = jsString + "\"" + message.getAddress() + "\", \"";
+        			if(message.getAddress().equals("/pushInterface")) {
+        			    //[jsStringStart replaceOccurrencesOfString:@"\n" withString:@"" options:1 range:NSMakeRange(0, [jsStringStart length])]; // will not work with newlines present
+                        String js = "javascript:interfaceManager.pushInterface('" + ((String)message.getArguments()[0]).replace('\n', ' ') + "')"; // remove line breaks
+                        System.out.println(js);
+                        webView.loadUrl(js);
+        			}else{
+        			    String jsString = "javascript:oscManager.processOSCMessage(";
+            			jsString = jsString + "\"" + message.getAddress() + "\", \"";
         			
-        			StringBuffer typeTagString = new StringBuffer();
-        			StringBuffer argString = new StringBuffer();
+            			StringBuffer typeTagString = new StringBuffer();
+            			StringBuffer argString = new StringBuffer();
         			
-        			for(int i = 0; i < args.length; i++) {
-        			    Object arg = args[i];
-    			        if(arg instanceof java.lang.Float) {
-    			            typeTagString.append('f');
-    			            argString.append( ((Float)args[i]).floatValue() );
-    			        }else if(arg instanceof java.lang.Integer) {
-    			            typeTagString.append('i');
-    			            argString.append( ((Integer)args[i]).intValue() );
-    			        }else if(arg instanceof java.lang.String) {
-    			            typeTagString.append('s');
-    			            argString.append("\"");
-    			            argString.append( ((String)args[i]) );
-    			            argString.append("\"");    			            
-    			        }
-    			        if(i != args.length - 1) { argString.append(','); }
-        			}
-        			jsString = jsString + typeTagString + "\", " + argString + ");";
-        			webView.loadUrl(jsString);
-        			System.out.println(jsString);
+            			for(int i = 0; i < args.length; i++) {
+            			    Object arg = args[i];
+        			        if(arg instanceof java.lang.Float) {
+        			            typeTagString.append('f');
+        			            argString.append( ((Float)args[i]).floatValue() );
+        			        }else if(arg instanceof java.lang.Integer) {
+        			            typeTagString.append('i');
+        			            argString.append( ((Integer)args[i]).intValue() );
+        			        }else if(arg instanceof java.lang.String) {
+        			            typeTagString.append('s');
+        			            argString.append("\"");
+        			            argString.append( ((String)args[i]) );
+        			            argString.append("\"");    			            
+        			        }
+        			        if(i != args.length - 1) { argString.append(','); }
+            			}
+            			jsString = jsString + typeTagString + "\", " + argString + ");";
+            			webView.loadUrl(jsString);
+            			System.out.println(jsString);
+            		}
         		}
         	};
         	

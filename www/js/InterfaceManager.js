@@ -298,10 +298,12 @@ function InterfaceManager() {
 	}
 	
 	this.removeInterface = function (itemNumber) {
-		var listItem = document.getElementById('interfaceList').childNodes[itemNumber];
-		var jsonKey = listItem.childNodes[1].innerHTML;
-        var newKey = jsonKey.replace(" (reload)", "");
-		document.getElementById('interfaceList').removeChild(listItem);
+        var listItem = $('#interfaceList > li:eq(' + itemNumber +')');
+        var arr = listItem.html().split("</div>");
+		var newKey = arr[1];
+        console.log(newKey);
+		listItem.remove();
+        $('#interfaceList').listview('refresh');
 		interfaceManager.interfaceFiles.remove(newKey);
 	}
     

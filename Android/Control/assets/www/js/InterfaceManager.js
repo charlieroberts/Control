@@ -1,5 +1,5 @@
 /* TODO: Defaults should only load if app is updated, otherwise they should stay deleted. Maybe have a button in preferences that reloads them??? */
-
+/* TODO: Need android plugin that allows forcing rotation of device */
 function InterfaceManager() {
 	this.init = function() {
 		this.selectedListItem = 0;
@@ -9,38 +9,46 @@ function InterfaceManager() {
         this.interfaceIP = null;
         interfaceOrientation = null;
         constants = null;
-        this.interfaceDefaults = ["iphoneLandscapeMixer.js",
-                                  //"djcut.js",
+        this.interfaceDefaults = [//"iphoneLandscapeMixer.js",
+                                  "djcut.js",
                                   //"life.js",
 								  //"monome.js",
 								  //"multibutton.js",
-								  //"multiXY.js",
+								  "multiXY.js",
 								  //"sequencer.js",
 								  //"gyro.js",
                                   ];
+        $('#interfaceList').listview();
     }
      
     this.loadScripts = function() {
         control.ifCount = 0;
+        console.log("READING " + this.interfaceDefaults[control.ifCount]);
         this.readFile(this.interfaceDefaults[control.ifCount]);
     }
     
     this.readFile = function(filename) {
-		//console.log("reading " + filename)
-        var fileref=document.createElement('script')
-        fileref.setAttribute("type","text/javascript");
-        fileref.setAttribute("src", "interfaces/" + filename);
-        document.getElementsByTagName('head')[0].appendChild(fileref);
+		console.log("reading " + filename)
+		if(typeof filename != "undefined") {
+            var fileref=document.createElement('script')
+            fileref.setAttribute("type","text/javascript");
+            fileref.setAttribute("src", "interfaces/" + filename);
+            document.getElementsByTagName('head')[0].appendChild(fileref);
+        }
         
         setTimeout(function() {
+            //console.log(window.interfaceString);
             interfaceManager.saveInterface(window.interfaceString, false);
             control.ifCount++;
-            if(control.ifCount <= interfaceManager.interfaceDefaults.length) {
+            if(control.ifCount < interfaceManager.interfaceDefaults.length) {
                 interfaceManager.readFile(interfaceManager.interfaceDefaults[control.ifCount]);
+                //$('#interfaceList').listview('refresh');
+
             }else{
-                interfaceManager.createInterfaceListWithStoredInterfaces();
+                $('#interfaceList').listview('refresh');
+                //interfaceManager.createInterfaceListWithStoredInterfaces();
 			}
-        }, 100);
+        }, 200);
     }
 	
 	this.promptForInterfaceDownload = function() {
@@ -135,31 +143,13 @@ function InterfaceManager() {
     
     this.createInterfaceListWithStoredInterfaces = function() {
 		var list = document.getElementById('interfaceList');
-		//list.innerHTML = "";
+		
 		if ( list.hasChildNodes() ) {
 			while ( list.childNodes.length >= 1 ) {
 				list.removeChild( list.firstChild ); 
 			} 
 		}
 		
-		//interfaceManager.interfaceFiles.all('count++');
-		/*interfaceManager.interfaceFiles.each(
-			function(r){
-				debug.log("interface item = " + r.key);
-				var item = document.createElement('li');
-                
-				var link = document.createElement('a');
-                link.setAttribute("ontouchend", "interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "');");
-                link.innerHTML = "blahafhhasa";
-                
-				item.appendChild(link);
-			    list.appendChild(item);
-				
-				link.style.width = "100%";
-				link.style.display = "block";
-				link.style.backgroundColor = "#a33";
-			}
-		);*/
 		interfaceManager.interfaceFiles.all(function(r) { interfaceManager.createInterfaceListWithArray(r); });
 	}
 	
@@ -171,36 +161,18 @@ function InterfaceManager() {
 		for(var i = 0; i < listArray.length; i++) {
 			var r = listArray[i];
 			//debug.log("key " + i + " :: " + r.key);
-			var item = document.createElement('li');
-            item.style.borderBottom = "1px solid #666";
             //debug.log("key " + i + " :: " + r.key);
 			var item = document.createElement('li');
-            item.style.borderBottom = "1px solid #666";
             item.setAttribute("ontouchend", "$.mobile.changePage('#SelectedInterfacePage'); console.log('"+r.key+"');interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "');");
+            item.style.borderBottom = "1px solid #666";
+            item.style.fontWeight = "normal";
             item.innerHTML = r.key;
             item.setAttribute("href", "#SelectedInterfacePage");
    			list.appendChild(item);
-                
-			/*var link = document.createElement('a');
-			link.style.color="#fff";
-			link.style.display = "block";
-			link.setAttribute("ontouchend", "setTimeout(function() { interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "'); }, 500);");
-			link.setAttribute("href", "#SelectedInterfacePage");
-			link.style.width="75%";
-			link.style.height="100%";
-			//link.setAttribute("data-transition", "pop");
-			link.innerHTML = r.key;
-			
-			item.appendChild(link);*/
-
-			//link.style.width = "100%";
-			//link.style.display = "block";
-			//link.style.backgroundColor = "#a33";
 		}
 		$('li').attr("data-icon","false");
-    	$('ul').listview('refresh');
-		//interfaceScroller.refresh();
-		//setTimeout(function () { interfaceScroller.refresh(); }, 2550);
+    	//$('#interfaceList').listview();
+        $('#interfaceList').listview('refresh');
 	}
 
 	this.editInterfaceList = function() {
@@ -214,7 +186,7 @@ function InterfaceManager() {
 			for(var i = 0; i < list.childNodes.length; i++) {
 				var item = list.childNodes[i];
 				var deleteButton = document.createElement("div"); // -webkit-border-radius:10px;
-				deleteButton.setAttribute("style", "float:left; margin-right: 5px; position:relative; top:10px; border: #fff 2px solid; -webkit-border-radius:10px; width: 15px; height: 15px; background-color:#f00; color:#fff; font-weight:bold;");
+				deleteButton.setAttribute("style", "float:left; margin-right: 5px; position:relative; border: #fff 2px solid; -webkit-border-radius:10px; width: 15px; height: 15px; background-color:#f00; color:#fff; font-weight:bold;");
 				deleteButton.innerHTML = "<img style='position:relative; top:-.7em; left:-.65em;' src='images/dash.png'>";
 				deleteButton.setAttribute("ontouchend", "interfaceManager.removeInterface("+i+")");
 				item.insertBefore(deleteButton, item.firstChild);
@@ -255,15 +227,23 @@ function InterfaceManager() {
         //console.log(interfaceJSON);
 		eval(interfaceJSON);
         if(loadedInterfaceName != null) {
-            //interfaceManager.interfaceFiles.remove(loadedInterfaceName, 
-                interfaceManager.interfaceFiles.save( {key:loadedInterfaceName, json:interfaceJSON, address:ipAddress},
-                                                       function(r) {
-                                                            if(shouldReloadList) 
-                                                                interfaceManager.createInterfaceListWithStoredInterfaces();
-                                                       }
-                )
-            //);
+            interfaceManager.interfaceFiles.save( {key:loadedInterfaceName, json:interfaceJSON, address:ipAddress},
+                                                   function(r) {
+                                                        if(shouldReloadList) 
+                                                            interfaceManager.createInterfaceListWithStoredInterfaces();
+                                                   }
+            )
         }
+
+        var item = document.createElement('li');
+        item.style.borderBottom = "1px solid #666";
+        item.style.fontWeight = "normal";    
+        item.setAttribute("ontouchend", "$.mobile.changePage('#SelectedInterfacePage'); interfaceManager.highlight("+ $('#interfaceList li').size() +");interfaceManager.selectInterfaceFromList('" + loadedInterfaceName + "');");
+        item.innerHTML = loadedInterfaceName;
+        $('#interfaceList').append(item); 
+        
+        if(shouldReloadList)
+            $('#interfaceList').listview('refresh');
 	}
 	
 	this.pushInterfaceWithDestination = function(interfaceJSON, nameOfSender, newDestination) {
@@ -285,17 +265,19 @@ function InterfaceManager() {
        
         if(confirm("An interface is being pushed to you. Do you accept it?")) {
             var loadedInterfaceName = null;
-            this.saveInterface(interfaceJSON, false);
+            this.saveInterface(interfaceJSON, true);
             interfaceManager.runInterface(interfaceJSON);
+            
         }
 
 	}
 	
 	this.removeInterface = function (itemNumber) {
-		var listItem = document.getElementById('interfaceList').childNodes[itemNumber];
-		var jsonKey = listItem.childNodes[1].innerHTML;
-        var newKey = jsonKey.replace(" (reload)", "");
-		document.getElementById('interfaceList').removeChild(listItem);
+        var listItem = $('#interfaceList > li:eq(' + itemNumber +')');
+        var arr = listItem.html().split("</div>");
+		var newKey = arr[1];
+		listItem.remove();
+        $('#interfaceList').listview('refresh');
 		interfaceManager.interfaceFiles.remove(newKey);
 	}
     
@@ -306,13 +288,11 @@ function InterfaceManager() {
         eval(json);
         this.currentInterfaceName = loadedInterfaceName;
         this.currentInterfaceJSON = json;
-		
 		if(typeof interfaceOrientation != "undefined") {
 			console.log(interfaceOrientation);
-            PhoneGap.exec("Device.setRotation", interfaceOrientation);
+            //PhoneGap.exec("Device.setRotation", interfaceOrientation);
         }
         //if(control.orientation == 0 || control.orientation == 180) {
-        
         var r = 320 / screen.width;
 		if(interfaceOrientation == "portrait") {
             //control.makePages(pages, screen.width, screen.height);
@@ -320,13 +300,14 @@ function InterfaceManager() {
         }else{
             control.makePages(pages, screen.height, screen.width);
         }
-
         if(constants != null) {
             control.loadConstants(constants);
         }
         control.loadWidgets();
         if(this.currentTab != document.getElementById("selectedInterface")) {
-            control.changeTab(document.getElementById("selectedInterface"));
+            $.mobile.changePage('#SelectedInterfacePage');
+            control.tabBarHidden = true;
+    		control.hideToolbar();
 		}
     }
 	
