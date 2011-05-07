@@ -34,8 +34,6 @@ import javax.jmdns.ServiceInfo;
 import android.app.Activity;
 import android.os.Bundle;
 
-
-
 public class Bonjour extends Plugin {
     private String type = "_osc._udp.local.";
 	JmDNS jmdns;
@@ -44,17 +42,22 @@ public class Bonjour extends Plugin {
 	public Bonjour() {
 	    try{
                 jmdns = JmDNS.create();
-    		    System.out.println("CREATED ********************************************");                
                 jmdns.addServiceListener(type, listener = new ServiceListener() {
                     @Override
                     public void serviceResolved(ServiceEvent ev) {
                         System.out.println("Service resolved: "
                                  + ev.getInfo().getQualifiedName()
                                  + " port:" + ev.getInfo().getPort());
+                        String jsString = "javascript:destinationManager.addDestination('" + ev.getInfo().getHostAddress() + "'," + ev.getInfo().getPort() + ", 0, 0);";
+                        System.out.println(jsString);
+                        webView.loadUrl(jsString);
                     }
                     @Override
                     public void serviceRemoved(ServiceEvent ev) {
                         System.out.println("Service removed: " + ev.getName());
+                        String jsString = "javascript:destinationManager.removeDestinationWithIPAndPort('" + ev.getInfo().getHostAddress() + "'," + ev.getInfo().getPort() + ");";
+                        System.out.println(jsString);
+                        webView.loadUrl(jsString);
                     }
                     @Override
                     public void serviceAdded(ServiceEvent event) {
@@ -63,7 +66,7 @@ public class Bonjour extends Plugin {
                         jmdns.requestServiceInfo(event.getType(), event.getName(), 1);
                     }
                 });
-    		    System.out.println("ADDED LISTENER ********************************************");                
+                
             }catch(Exception e) {
                 System.out.println("error starting Bonjour");
             }
@@ -76,34 +79,13 @@ public class Bonjour extends Plugin {
 		if (action.equals("start")) {
 		    System.out.println("STARTING ********************************************");
 		    
-            /*android.net.wifi.WifiManager wifi = (android.net.wifi.WifiManager) getSystemService(android.content.Context.WIFI_SERVICE);
-	        lock = wifi.createMulticastLock("HeeereDnssdLock");
-            lock.setReferenceCounted(true);
-            lock.acquire();
-            
-		    try {
-                jmdns = JmDNS.create();
-    		    System.out.println("CREATED ********************************************");                
-                jmdns.addServiceListener(type, listener = new ServiceListener() {
-                    public void serviceResolved(ServiceEvent ev) {
-                        System.out.println("OSIHOAUISODNAS:DNASOIUDNAIUBFNOASINDA:ISONDPAOUDNFAPUSNFPOAUSNFOPSNID");
-                        System.out.println("Service resolved: "
-                                 + ev.getInfo().getQualifiedName()
-                                 + " port:" + ev.getInfo().getPort());
-                    }
-                    public void serviceRemoved(ServiceEvent ev) {
-                        System.out.println("Service removed: " + ev.getName());
-                    }
-                    public void serviceAdded(ServiceEvent event) {
-                        // Required to force serviceResolved to be called again
-                        // (after the first search)
-                        jmdns.requestServiceInfo(event.getType(), event.getName(), 1);
-                    }
-                });
-    		    System.out.println("ADDED LISTENER ********************************************");                
-            }catch(Exception e) {
-                System.out.println("error starting Bonjour");
-            }*/
+            ServiceInfo[] infos = jmdns.list("_osc._udp.local.");
+            for (int i = 0; i < infos.length; i++) {
+                String jsString = "javascript:destinationManager.addDestination('" + infos[i].getHostAddress() + "'," + infos[i].getPort() + ", 0, 0);";
+                System.out.println(jsString);
+                webView.loadUrl(jsString);
+                System.out.println("after sending to js");
+            }
 	    }
 		return result;
 	}

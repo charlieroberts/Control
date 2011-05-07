@@ -9,7 +9,7 @@ function DestinationManager() {
 		this.bonjourDestinations = new Array();
 		//PhoneGap.exec("Bonjour.start", null);
 		//setTimeout(function() { window.destinationManager.createDestinationList(); }, 1000);
-        window.destinationManager.createDestinationList();        
+        //window.destinationManager.createDestinationList();        
 
 	}
 	
@@ -22,9 +22,9 @@ function DestinationManager() {
 		}
 	}
 	
-	this.removeDestination = function(ip, port) {
+	/*this.removeDestination = function(ip, port) {
 		console.log("destinationmanager removing " + ip + " : " + port);
-	}
+	}*/
 	this.pushDestination = function(newDestination) {
 		var segments = newDestination.split(":");
 		this.addDestination(segments[0], segments[1], false, false);
@@ -34,6 +34,7 @@ function DestinationManager() {
 	// TODO: change to add Bonjour destination. Make all midi in add MIDI destination.
 	
 	this.addDestination = function(address, port, isBonjour, isMIDI, isHardware) {
+	    console.log("ADDING " + address);
 		for(var i = 0; i < this.destinationsSynch.length; i++) {
 			var destCheck = this.destinationsSynch[i];
 			if(address == destCheck.ip && port == destCheck.port) return;
@@ -248,6 +249,21 @@ function DestinationManager() {
 		}
 	}
 	
+	this.removeDestinationWithIPAndPort = function(ip, port) {
+	    //var listItem = document.getElementById('destinationList').childNodes[itemNumber];
+
+	    for(var i = 0; i < this.destinationsSynch.length; i++) {
+			var destCheck = this.destinationsSynch[i];
+			if(ip == destCheck.ip && port == destCheck.port) {
+			    destinationManager.destinations.remove(ip + ":" + port);
+			    console.log("removing " + i + " :: " + ip + port);
+            	document.getElementById('destinationList').removeChild(i);
+		        this.destinationsSynch.splice(i, 1);		    
+			    //this.removeDestination(i);
+			    return;
+			}
+		}
+	}
 	
 	this.removeDestination = function (itemNumber) {
 		var listItem = document.getElementById('destinationList').childNodes[itemNumber];
