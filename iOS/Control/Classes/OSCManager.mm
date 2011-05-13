@@ -169,18 +169,18 @@ protected:
 
 
 - (void) pollJavascriptStart:(id)obj {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	//NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	while(shouldPoll) {
 		[self performSelectorOnMainThread:@selector(pollJavascript:) withObject:nil waitUntilDone:NO];
 		[NSThread sleepForTimeInterval:OSC_POLLING_RATE];
 	}
 	
-	[pool drain];
+	//[pool drain];
 }
 
 // form is objectName:paramNumber,val1,val2,val3|objectName:paramNumber,val1,val2,val3|objectName:paramNumber,val1,val2,val3
 - (void) pollJavascript:(id)obj {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	//NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
 	NSString *cmdString = [webView stringByEvaluatingJavaScriptFromString:@"control.getValues()"];
 	if([cmdString length] == 0) return;
@@ -214,7 +214,8 @@ protected:
 	p << osc::EndBundle;
 	output->Send(p.Data(), p.Size());
 	
-	[pool drain];
+//	[pool drain];
+//  [pool release];
 }
 
 - (void)send:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
