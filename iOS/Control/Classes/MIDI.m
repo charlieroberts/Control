@@ -139,19 +139,19 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 }
 
 - (void) pollJavascriptStart:(id)obj {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	//NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	while(1) {
 		[self performSelectorOnMainThread:@selector(pollJavascript:) withObject:nil waitUntilDone:NO];
 		[NSThread sleepForTimeInterval:MIDI_POLLING_RATE];
 	}
 	
-	[pool drain];
+	//[pool drain];
 }
 
 // form is objectName:paramNumber,val1,val2,val3|objectName:paramNumber,val1,val2,val3|objectName:paramNumber,val1,val2,val3
 // form should be |type,channel,val1, ?val2|
 - (void) _pollJavascript:(id)obj {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	//NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSString *cmdString = [webView stringByEvaluatingJavaScriptFromString:@"control.getValues()"];
 	
 	if(![cmdString isEqualToString:@""] && cmdString != nil) {
@@ -196,7 +196,7 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 		MIDISend(outPort, dst, &myList);
 		//NSLog(@"after sending");	*/	
 	}
-	[pool drain];
+	//[pool drain];
 }
 
 - (void) pollJavascript:(id)obj {
