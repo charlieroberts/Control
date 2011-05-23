@@ -24,8 +24,8 @@ function Widget(ctx, props) { // x, y, width, height, color, startingValue, stro
 		this.height = Math.round(parseFloat(control.deviceHeight) * props.height);
 		if(typeof props.x == "undefined") props.x = 0;
 		if(typeof props.y == "undefined") props.y = 0;		
-		this.x = Math.round(parseFloat(control.deviceWidth) * props.x);
-		this.y = Math.round(parseFloat(control.deviceHeight) * props.y);
+		this.x = Math.round(parseFloat(control.deviceWidth) * props.x) + .5;
+		this.y = Math.round(parseFloat(control.deviceHeight) * props.y) + .5;
 		
 		//console.log("x = " + props.x + " :: y = " + props.y + " :: width = " + props.width + " :: height = " + props.height);
 
@@ -36,11 +36,11 @@ function Widget(ctx, props) { // x, y, width, height, color, startingValue, stro
 			this.strokeColor = props.colors[2];
 			this.stroke = this.strokeColor;
 		}else{
-			this.color =  props.color || "#fff";
+			this.color =  props.color || "#ffffff";
 			this.fillColor = props.fillColor || this.color;
 			this.stroke = props.stroke || this.color;
 			this.strokeColor = props.strokeColor || this.stroke;
-			this.backgroundColor = props.backgroundColor || "rgba(0,0,0,0)";
+			this.backgroundColor = props.backgroundColor || "rgba(0,0,0,255)";
 		}			
 		
 		this.activeTouches = new Array();

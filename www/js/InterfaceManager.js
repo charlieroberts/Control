@@ -9,14 +9,14 @@ function InterfaceManager() {
         this.interfaceIP = null;
         interfaceOrientation = null;
         constants = null;
-        this.interfaceDefaults = ["iphoneLandscapeMixer.js",
+        this.interfaceDefaults = [/*"iphoneLandscapeMixer.js",
                                   "djcut.js",
                                   "life.js",
 								  "monome.js",
 								  "multibutton.js",
 								  "multiXY.js",
 								  "sequencer.js",
-								  "gyro.js",
+								  "gyro.js",*/
                                   ];
     }
      
@@ -95,11 +95,13 @@ function InterfaceManager() {
 	}
 	
 	this.downloadInterface = function(ipAddress) { // EVENT --- CANNOT REFER TO THIS, MUST USE INTERFACE MANAGER
+        console.log("downloading...");
 		interfaceManager.myRequest = new XMLHttpRequest();    	
 		var loadedInterfaceName = null;
         interfaceManager.myRequest.onreadystatechange = function() {
-            if(interfaceManager.myRequest.readyState == myRequest.DONE) {
-                debug.log(interfaceManager.myRequest.responseText);
+            console.log("downloading..." + interfaceManager.myRequest.readyState );
+            if(interfaceManager.myRequest.readyState == 4) {
+                console.log(interfaceManager.myRequest.responseText);
                 eval(interfaceManager.myRequest.responseText);
                 if(loadedInterfaceName != null) {
                     if(document.getElementById("promptDiv") != null) {

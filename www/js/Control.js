@@ -25,21 +25,35 @@ function Control() {
 }
 
 Control.prototype.makePages = function(_pages,width, height) {
-	console.log('making pages');
 	pages = _pages;
 	this.deviceWidth = width;
 	this.deviceHeight = height;
-	interfaceDiv.innerHTML = "";
+
+    this.canvas = document.getElementById('canvas');
+    this.ctx = this.canvas.getContext("2d");;
+    
+    this.canvas.setAttribute('width',  width);
+    this.canvas.setAttribute('height', height)
+    $("#canvas").css({margin:0, top:0, left:0, position:"absolute"});
+    
+    //this.ctx.fillStyle = "rgb(200,0,0)";
+    //this.ctx.fillRect (0, 0, width, height);
+    
+    
+	/*interfaceDiv.innerHTML = "";
 	interfaceDiv.style.width = this.deviceWidth + "px";
-	interfaceDiv.style.height = this.deviceHeight + "px";	
-	interfaceDiv.style.position = "absolute";
-	interfaceDiv.style.display = "block";
-	interfaceDiv.style.left = "0px";
-	interfaceDiv.style.top = "0px";	
+	interfaceDiv.style.height = this.deviceHeight + "px";
+    interfaceDiv.style.display = "block";
+    interfaceDiv.style.left = "0px";
+    interfaceDiv.style.top = "0px";		
+    */
 	interfaceDiv.addEventListener('touchend', control.event, false);
 	interfaceDiv.addEventListener('touchstart', control.event, false);
 	interfaceDiv.addEventListener('touchmove', control.event, false);
 	interfaceDiv.addEventListener('touchmove', preventBehavior, false);
+
+    
+
 }
 
 Control.prototype.showToolbar = function() {
@@ -50,7 +64,6 @@ Control.prototype.showToolbar = function() {
 	}else{
 		window.plugins.nativeControls.showTabBar({"orientation":"landscape", "position":"bottom"});
 	}*/
-	console.log("oOEUBROUEBRONSnodnosd");
 	$(".ftr").css("visibility", "visible");
 		//$("#interfaceFooter").css("background-color", "#f00");
 	console.log("ok");
@@ -109,6 +122,7 @@ Control.prototype.setWidgetValueWithMIDIMessage = function(midiType, midiChannel
 }
 
 Control.prototype.unloadWidgets = function() {
+    console.log("unloading widgets");
 	for(var page = 0; page < control.pages.length; page++) {
 		for(var j = 0; j < control.pages[page].length; j++) {
 			var widget = control.pages[page][j];
@@ -149,7 +163,7 @@ Control.prototype.makeWidget = function(w) {
 	var _w;
 	//debug.log("start " + w.type);
 	if(w.type != "Accelerometer" && w.type != "Compass" && w.type != "Gyro") {
-		_w = eval(w.name + " = new " + w.type + "(interfaceDiv,w);");
+		_w = eval(w.name + " = new " + w.type + "(interfaceDiv,w,this.ctx);");
 	
 		if(_w.init != null) { 
 			_w.init();
@@ -209,7 +223,7 @@ Control.prototype.getValues = function() {
 			str += "|";
 		}
 	}
-	return str;
+	return str; 
 	*/
 	return control.valuesString;
 }
@@ -278,7 +292,7 @@ Control.prototype.refresh = function() {
 }
 
 Control.prototype.onRotation = function(event) {
-	console.log("onrotation " + event.orientation);
+	//console.log("onrotation " + event.orientation);
 
 	control.orientation = event.orientation;
 	
@@ -319,6 +333,7 @@ Control.prototype.drawWidgetsOnPage = function(page) {
 }
 
 Control.prototype.changeTab = function(tab) {
+    console.log("changing tab");
     var oldTab = this.currentTab;
 	this.currentPage = 0;
 

@@ -1,7 +1,8 @@
 // TODO: Allow Canvas drawing instead of individual children... for large numbers of children this gets too slow.
 
 function MultiButton(ctx, props) {
-	this.ctx = ctx;
+//	this.ctx = ctx;
+    this.ctx = arguments[2];
 	this.widthInPercentage  = props.width || props.bounds[2];
 	this.heightInPercentage = props.height || props.bounds[3];
 
@@ -28,7 +29,7 @@ function MultiButton(ctx, props) {
 	this.shouldLabel = (typeof props.shouldLabel != "undefined") ? props.shouldLabel : false;
 	this.labelSize = props.labelSize || 12;
     
-    this.shouldUseCanvas = false;
+    this.shouldUseCanvas = true;
 
     this.touched = [];
 	    
@@ -79,16 +80,16 @@ function MultiButton(ctx, props) {
                 }						
             }
         }else{
-            this.canvas = document.createElement('canvas');
-            this.canvas.style.border = this.stroke + " 1px solid";
-            this.canvas.style.top = this.y;
-            this.canvas.style.left = this.x;
-            this.canvas.width = parseInt(this.width);
+//            this.canvas = document.createElement('canvas');
+//            this.canvas.style.border = this.stroke + " 1px solid";
+//            this.canvas.style.top = this.y;
+//            this.canvas.style.left = this.x;
+//            this.canvas.width = parseInt(this.width);
             
             //console.log("width = " + this.canvas.width + " height = " + this.canvas.height);
-            this.canvas.height = parseInt(this.height);
-            this.canvasCtx = this.canvas.getContext('2d');
-            this.ctx.appendChild(this.canvas);
+            //this.canvas.height = parseInt(this.height);
+            this.canvasCtx = this.ctx;
+            //this.ctx.appendChild(this.canvas);
             for(var i = 0; i < this.rows; i++) {                
                 for(var j = 0; j < this.columns; j++) {
                     this.children.push( {
@@ -122,8 +123,8 @@ function MultiButton(ctx, props) {
         //console.log("drawing button " + buttonNumber + " value :: " + this.children[buttonNumber].value);
         var row = Math.floor(buttonNumber / this.columns);
         var col = buttonNumber % this.columns;
-        var _y = this.buttonHeightInPixels * row;
-        var _x = this.buttonWidthInPixels * col;
+        var _y = this.y + this.buttonHeightInPixels * row;
+        var _x = this.x + this.buttonWidthInPixels * col;
         
         this.canvasCtx.fillStyle = (this.children[buttonNumber].value == this.max) ? this.fillColor : this.backgroundColor;
         this.canvasCtx.strokeStyle = this.stroke;
