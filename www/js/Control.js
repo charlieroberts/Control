@@ -295,6 +295,7 @@ Control.prototype.onRotation = function(event) {
 	//console.log("onrotation " + event.orientation);
 
 	control.orientation = event.orientation;
+    console.log("after rotation");
 	
 	/*if(loadedInterfaceName != null) {
 		//control.unloadWidgets();

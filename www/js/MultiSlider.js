@@ -1,43 +1,44 @@
 function MultiSlider(ctx, props) {//x, y, width, height, color, stroke, min, max, startingValue, ontouchstart, ontouchmove, ontouchend, protocol, address, isVertical, numberOfSliders) { 
-	this.ctx = ctx;
+	//this.ctx = ctx;
+    this.ctx = arguments[2];
 	// MUST BE BEFORE WIDGET INIT
-	this.widthInPercentage  = props.width  || props.bounds[2];
-	this.heightInPercentage = props.height || props.bounds[3];
+    this.widthInPercentage  = props.width  || props.bounds[2];
+    this.heightInPercentage = props.height || props.bounds[3];
 	
-	this.__proto__ = new Widget(ctx,props);
+    this.__proto__ = new Widget(ctx,props);
 		
-	this.numberOfSliders   = (typeof props.numberOfSliders   != "undefined") ? props.numberOfSliders   : 4;
+    this.numberOfSliders   = (typeof props.numberOfSliders   != "undefined") ? props.numberOfSliders   : 4;
     this.requiresTouchDown = (typeof props.requiresTouchDown != "undefined") ? props.requiresTouchDown : false;
-	this.children = [];
+    this.children = [];
 
-	this.origX = props.x;
-	this.origY = props.y;
+    this.origX = props.x;
+    this.origY = props.y;
 	
-	this.isVertical = (typeof props.isVertical != "undefined") ? props.isVertical : true;
+    this.isVertical = (typeof props.isVertical != "undefined") ? props.isVertical : true;
 	
-	this.init = function() {
+    this.init = function() {
 		var sliderWidth, sliderHeight;
 		var pixelWidth = 1 / control.deviceWidth;
 		var pixelHeight = 1 / control.deviceHeight;
 		if(this.isVertical) {
-			sliderWidth =  this.widthInPercentage / this.numberOfSliders + pixelWidth;
+			sliderWidth =  this.widthInPercentage / this.numberOfSliders;// + pixelWidth;
 			sliderHeight = this.heightInPercentage;
 		}else{
-			sliderHeight = this.heightInPercentage / this.numberOfSliders + pixelHeight;
+			sliderHeight = this.heightInPercentage / this.numberOfSliders;// + pixelHeight;
 			sliderWidth =  this.widthInPercentage;
 		}
 		for(var i = 0; i < this.numberOfSliders; i++) {
 			var _x, _y, _width, _height;
 			
 			if(this.isVertical) {
-				_x = sliderWidth * i - (i * pixelWidth);
+				_x = sliderWidth * i;// - (i * pixelWidth);
 				//if(i != 0) _x -= pixelWidth;
 				_y = 0;
 				_width = sliderWidth;// - (pixelWidth * 1);
 				_height = sliderHeight;
 			}else{
 				_x = 0;
-				_y = sliderHeight * i - (i * pixelHeight);
+				_y = sliderHeight * i;// - (i * pixelHeight);
 				_height = sliderHeight;
 				_width  = sliderWidth;				
 			}
@@ -66,7 +67,7 @@ function MultiSlider(ctx, props) {//x, y, width, height, color, stroke, min, max
 				"channel":this.channel,
 			};
 			
-			var _w = new Slider(this.ctx, newProps);
+			var _w = new Slider(this.ctx, newProps, this.ctx);
 			_w.address = this.address + "/" + i;
 			_w.midiNumber = this.midiNumber+ i;
 			_w.childID = i;

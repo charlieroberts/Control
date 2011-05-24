@@ -30,8 +30,8 @@
 
     <!-- Font support for iPhone canvas. For more fonts go here: http://typeface.neocracy.org/fonts.html 
     Google code project: http://code.google.com/p/canvas-text/ 
-    <script type="text/javascript" src="canvas.text.js?reimplement=true"></script>
-    <script type="text/javascript" src="faces/helvetiker_regular.typeface.js"></script>-->
+    <script type="text/javascript" src="js/canvas.text.js?reimplement=true"></script>
+    <script type="text/javascript" src="js/faces/helvetiker_regular.typeface.js"></script>-->
 	
 	<script type="text/javascript" src="js/Control.js"></script>
 	<script type="text/javascript" src="js/InterfaceManager.js"></script>
@@ -111,7 +111,10 @@
 		<div class="ui-bar-a  ui-header " data-role="header" id="header" data-backbtn="false">
 			<a href="#" id="interfaceEditBtn" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="interfaceManager.editInterfaceList()">Edit</a>
 			<h1 class="ui-title">Interfaces</h1>
-			<a href="#" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-right ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="interfaceManager.promptForInterfaceDownload()">+</a>
+            <div style="display:inline; position:absolute; top:.5em; right:.75em;">
+			<a href="#" data-role="button" data-icon="plus" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="interfaceManager.createInterfaceListWithStoredInterfaces()"><img src="css/images/refresh.png"></img></a>            
+			<a href="#" data-role="button" data-icon="plus" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="interfaceManager.promptForInterfaceDownload()"><img src="css/images/add.png"></img></a>
+            </div>
 		</div>
 		
 		<div data-role="content">
@@ -170,7 +173,9 @@
   
    <div data-role="page" id="SelectedInterfacePage">
 	   <div class="ui-bar-a ui-header" data-role="header" id="header" data-backbtn="false"></div>
-	   <div data-role="content" id="selectedInterface"></div>
+	   <div data-role="content" id="selectedInterface">
+           <canvas id="canvas"></canvas>
+       </div>
   </div>
 
   <!--<div style="display:block; position:fixed; top: 100px; left: 100px; width:50px; height:50px; background-color:#f00; z-index:100;" ontouchend="window.location.reload(true)"><h2>RELOAD</h2></div>-->
@@ -178,11 +183,26 @@
   <div data-role="footer" data-id="foo1" data-position="fixed" class="ftr ui-bar-a ui-footer ui-footer-fixed ui-fixed-overlay" role="contentinfo" style=" border-top-width:0;bottom:0px">
       <div data-role="navbar" class="ui-navbar ui-navbar-noicons" role="navigation">
           <ul class="ui-navbar-noicons ui-grid-c"  style="border-top-width:0;">
-              <li class="ui-block-a" style=" border-top-width:0;"><a href="#Interfaces" class="ui-btn ui-btn-up-a" style=" border-top-width:0;" data-theme="a"><span class="ui-btn-inner"><span class="ui-btn-text" style="font-size:1em">Interfaces</span></span></a></li>
-              <li class="ui-block-b"><a href="#Destinations" data-theme="a" class="ui-btn ui-btn-up-a">
-                  <span class="ui-btn-inner" style="padding-left:0; padding-right:0;"><span class="ui-btn-text" >Destinations</span></span></a></li>
-              <li class="ui-block-b"><a href="#Preferences" data-theme="a" class="ui-btn ui-btn-up-a"><span class="ui-btn-inner" style="padding-left:0; padding-right:0;"><span class="ui-btn-text">Preferences</span></span></a></li>
-              <li class="ui-block-b"><a href="#Info" data-theme="a" class="ui-btn ui-btn-up-a"><span class="ui-btn-inner"><span class="ui-btn-text">Info</span></span></a></li>
+              <li class="ui-block-a" style=" border-top-width:0;">
+                  <a href="#Interfaces" ontouchend="control.changeTab(document.getElementById('Interfaces'))" class="ui-btn ui-btn-up-a" style=" border-top-width:0;" data-theme="a">
+                      <span class="ui-btn-inner"><span class="ui-btn-text" style="font-size:1em">Interfaces</span></span>
+                  </a>
+              </li>
+              <li class="ui-block-b">
+                  <a href="#Destinations" ontouchend="control.changeTab(document.getElementById('Destinations'))" data-theme="a" class="ui-btn ui-btn-up-a">
+                      <span class="ui-btn-inner" style="padding-left:0; padding-right:0;"><span class="ui-btn-text" >Destinations</span></span>
+                  </a>
+              </li>
+              <li class="ui-block-b">
+                  <a href="#Preferences" ontouchend="control.changeTab(document.getElementById('Preferences'))" data-theme="a" class="ui-btn ui-btn-up-a">
+                      <span class="ui-btn-inner" style="padding-left:0; padding-right:0;"><span class="ui-btn-text">Preferences</span></span>
+                  </a>
+              </li>
+              <li class="ui-block-b">
+                  <a href="#Info" ontouchend="control.changeTab(document.getElementById('Info'))" data-theme="a" class="ui-btn ui-btn-up-a">
+                      <span class="ui-btn-inner"><span class="ui-btn-text">Info</span></span>
+                  </a>
+              </li>
 
           </ul>
       </div>
