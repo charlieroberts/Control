@@ -1,6 +1,6 @@
 function Slider(ctx, props) {
-	//this.ctx = ctx;
-	this.ctx = arguments[2];
+	this.ctx = ctx;
+	//this.ctx = arguments[2];
 	this.__proto__ = new Widget(ctx,props);
 	
 	this.isVertical =  (typeof props.isVertical != "undefined") ? props.isVertical : false;
@@ -9,7 +9,7 @@ function Slider(ctx, props) {
 	
 	this.isXFader = (typeof props.isXFader != "undefined") ? props.isXFader : false;
 	
-	this.shouldUseCanvas = true; //(typeof props.shouldUseCanvas != "undefined") ? props.shouldUseCanvas : false;
+	this.shouldUseCanvas = (typeof props.shouldUseCanvas != "undefined") ? props.shouldUseCanvas : false;
 	
 	this.fillDiv = null;
 	this.strokeDiv = null;
@@ -41,7 +41,7 @@ function Slider(ctx, props) {
 		this.strokeDiv.style.backgroundColor = this.backgroundColor;
 		this.ctx.appendChild(this.strokeDiv);						// THIS LINE IS IMPORTANT!!!!
 	}else{
-		/*this.canvas = document.createElement('canvas');
+		this.canvas = document.createElement('canvas');
 		this.canvas.width = this.width;						// DO NOT USE STYLES TO RESIZE CANVAS OBJECT
 		this.canvas.height = this.height;					// DO NOT USE STYLES TO RESIZE CANVAS OBJECT
 		this.ctx.appendChild(this.canvas);
@@ -51,7 +51,7 @@ function Slider(ctx, props) {
 		this.canvas.style.left = this.x + "px";
 		this.canvas.style.position = "absolute";
 
-		this.canvasCtx = this.canvas.getContext('2d');*/
+		this.canvasCtx = this.canvas.getContext('2d');
         
 	}
 	
@@ -145,6 +145,7 @@ function Slider(ctx, props) {
 				if(!this.isXFader) {
 					this.fillDiv.style.width = ((this.width - 1) * percent) + "px";
 				}else{
+					this.fillDiv.style.left = (this.x  + (percent * (this.width - this.xFaderWidth))) + "px";
 				}
 			}else{
 				this.fillDiv.style.height = Math.ceil(((this.height - 2) * percent )) + "px";
@@ -174,33 +175,33 @@ function Slider(ctx, props) {
 	}
 	
 	this.show = function() {
+        if(!this.shouldUseCanvas) {
+            this.fillDiv.style.display = "block";
+            this.strokeDiv.style.display = "block";
+        }else{
+            this.canvas.style.display = "block";
+        }
         this.draw();
-		/*if(!this.shouldUseCanvas) {
-			this.fillDiv.style.display = "block";
-			this.strokeDiv.style.display = "block";
-		}else{
-			this.canvas.style.display = "block";
-		}*/
 	}
 	
 	this.hide = function() {
-        this.ctx.clearRect(this.x,this.y,this.width,this.height);
-//		if(!this.shouldUseCanvas) {
-//			this.fillDiv.style.display = "none";
-//			this.strokeDiv.style.display = "none";
-//		}else{
-//			this.canvas.style.display = "none";
-//		}
+        //this.ctx.clearRect(this.x,this.y,this.width,this.height);
+		if(!this.shouldUseCanvas) {
+			this.fillDiv.style.display = "none";
+			this.strokeDiv.style.display = "none";
+		}else{
+			this.canvas.style.display = "none";
+		}
 	}
 	
 	this.unload = function() {
-        this.ctx.clearRect(this.x,this.y,this.width,this.height);
-//		if(!this.shouldUseCanvas) {
-//			this.ctx.removeChild(this.fillDiv);
-//			this.ctx.removeChild(this.strokeDiv);		
-//		}else{
-//			this.ctx.removeChild(this.canvas);
-//		}
+//        this.ctx.clearRect(this.x,this.y,this.width,this.height);
+		if(!this.shouldUseCanvas) {
+			this.ctx.removeChild(this.fillDiv);
+			this.ctx.removeChild(this.strokeDiv);		
+		}else{
+			this.ctx.removeChild(this.canvas);
+		}
 	}
 	
 	return this; 

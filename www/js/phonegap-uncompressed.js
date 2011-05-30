@@ -129,7 +129,7 @@ PhoneGap.addConstructor = function(func) {
 				{
 					if (typeof(debug['log']) == 'function')
 					{
-						debug.log("Failed to run constructor: " + debug.processMessage(e));
+						console.log("Failed to run constructor: " + debug.processMessage(e));
 					}
 					else
 					{

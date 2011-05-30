@@ -52,6 +52,7 @@ function MultiTouchXY(ctx, props) {
         touch.style.top  = yPos + "px";
         touch.style.color = this.strokeColor;
         touch.style.backgroundColor = this.fillColor;
+        touch.style.textShadow = "none";
 		touch.id = (this.isMomentary) ? id : gNOT_ACTIVE;
 		touch.childID = touch.id;
 		touch.isActive = (this.isMomentary);
@@ -149,7 +150,7 @@ function MultiTouchXY(ctx, props) {
         var yTop    = inputY - this.half;
         var yBottom = inputY + this.half;
         
-		//debug.log("x touch = " + inputX + " :: xLeft = " + xLeft + " :: xRight = " + xRight + " :: x = " + this.x + " :: width = " + this.width);
+		//console.log("x touch = " + inputX + " :: xLeft = " + xLeft + " :: xRight = " + xRight + " :: x = " + this.x + " :: width = " + this.width);
 
         // adjust x?
         if(xLeft > this.x && xRight < this.x + this.width) {

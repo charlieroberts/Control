@@ -31,13 +31,13 @@ function ControlAccelerometer(props) {
 	this.onvaluechange = (typeof props.onvaluechange != "undefined") ? props.onvaluechange : null;
     
 	this._onAccelUpdate = function(x,y,z) {
-        //debug.log("x = " + x + " || y = " + y + " || z = " + z);
+        //console.log("x = " + x + " || y = " + y + " || z = " + z);
         
         this.x = this.min + (((0 - this.hardwareMin) + x) / this.hardwareRange ) * this.userDefinedRange;
 		this.y = this.min + (((0 - this.hardwareMin) + y) / this.hardwareRange ) * this.userDefinedRange;
 		this.z = this.min + (((0 - this.hardwareMin) + z) / this.hardwareRange ) * this.userDefinedRange;
 		
-        //debug.log("this.x = " + this.x + " || this.y = " + this.y + " || z = " + this.z);
+        //console.log("this.x = " + this.x + " || this.y = " + this.y + " || z = " + this.z);
         if(typeof this.onvaluechange != "undefined") {
 			eval(this.onvaluechange);
 		}
@@ -68,7 +68,7 @@ function ControlAccelerometer(props) {
 	}
     
     this.setUpdateRate = function(rateInHz) {
-		//debug.log("setting accelerometer updateRate " + rateInHz);
+		//console.log("setting accelerometer updateRate " + rateInHz);
         PhoneGap.exec("CNTRL_Accelerometer.setUpdateRate", rateInHz);
     }
 	

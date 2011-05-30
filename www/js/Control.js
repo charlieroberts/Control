@@ -28,13 +28,15 @@ Control.prototype.makePages = function(_pages,width, height) {
 	pages = _pages;
 	this.deviceWidth = width;
 	this.deviceHeight = height;
-
-    this.canvas = document.getElementById('canvas');
-    this.ctx = this.canvas.getContext("2d");;
-    
-    this.canvas.setAttribute('width',  width);
-    this.canvas.setAttribute('height', height)
-    $("#canvas").css({margin:0, top:0, left:0, position:"absolute"});
+    this.ctx = null;
+//    {   // main cavas
+//        this.canvas = document.getElementById('canvas');
+//        this.ctx = this.canvas.getContext("2d");;
+//        
+//        this.canvas.setAttribute('width',  width);
+//        this.canvas.setAttribute('height', height)
+//        $("#canvas").css({margin:0, top:0, left:0, position:"absolute"});
+//    }
     
     //this.ctx.fillStyle = "rgb(200,0,0)";
     //this.ctx.fillRect (0, 0, width, height);
@@ -66,7 +68,6 @@ Control.prototype.showToolbar = function() {
 	}*/
 	$(".ftr").css("visibility", "visible");
 		//$("#interfaceFooter").css("background-color", "#f00");
-	console.log("ok");
 	//window.plugins.nativeControls.showTabBar({"position":"bottom"});	
 }
 
@@ -77,9 +78,7 @@ Control.prototype.hideToolbar = function() {
 	//console.log($("#interfaceFooter"));
 	//console.log("oOEUBROUEBRONSnodnosd");
 
-	$(".ftr").css("visibility", "hidden");
-	
-	console.log("after");
+	$(".ftr").css("visibility", "hidden");	
 }
 
 Control.prototype.setWidgetValueWithMIDIMessage = function(midiType, midiChannel, midiNumber, value) {
@@ -122,7 +121,6 @@ Control.prototype.setWidgetValueWithMIDIMessage = function(midiType, midiChannel
 }
 
 Control.prototype.unloadWidgets = function() {
-    console.log("unloading widgets");
 	for(var page = 0; page < control.pages.length; page++) {
 		for(var j = 0; j < control.pages[page].length; j++) {
 			var widget = control.pages[page][j];
@@ -161,10 +159,9 @@ Control.prototype.loadConstants = function(_constants) {
 	
 Control.prototype.makeWidget = function(w) {
 	var _w;
-	//debug.log("start " + w.type);
 	if(w.type != "Accelerometer" && w.type != "Compass" && w.type != "Gyro") {
-		_w = eval(w.name + " = new " + w.type + "(interfaceDiv,w,this.ctx);");
-	
+		_w = eval(w.name + " = new " + w.type + "(interfaceDiv,w);");
+//		_w = eval(w.name + " = new " + w.type + "(interfaceDiv,w,this.ctx);");  
 		if(_w.init != null) { 
 			_w.init();
 		}
@@ -186,7 +183,6 @@ Control.prototype.makeWidget = function(w) {
 	}
 	_w.widgetID = this.widgetCount++;
 	_w.name = w.name;
-	
 	return _w;
 }
 
@@ -282,7 +278,7 @@ Control.prototype.refresh = function() {
 
 	for(i in control.widgets) {
 		widget = control.widgets[i];
-		//debug.log("widget " + widget.widgetID + " not redrawing");
+		//console.log("widget " + widget.widgetID + " not redrawing");
 	  
 		//if(widget.shouldDraw) {
 			widget.draw();
@@ -292,10 +288,9 @@ Control.prototype.refresh = function() {
 }
 
 Control.prototype.onRotation = function(event) {
-	//console.log("onrotation " + event.orientation);
+	console.log("onrotation " + event.orientation);
 
 	control.orientation = event.orientation;
-    console.log("after rotation");
 	
 	/*if(loadedInterfaceName != null) {
 		//control.unloadWidgets();
@@ -313,10 +308,11 @@ Control.prototype.onRotation = function(event) {
 Control.prototype.event = function(event) {
   // REMEMBER : IN EVENT METHODS TRIGGERED FROM THE WEBVIEW "THIS" REFERS TO THE HTML OBJECT THAT GENERATED THE EVENT
 	var page = control.currentPage;
-	//debug.log("length = " + control.pages[page].length);
+    
+	//console.log("length = " + control.pages[page].length);
 	for(var i = 0; i < control.pages[page].length; i++) {
 		var widget = control.pages[page][i];
-		//debug.log("widget event for " + widget.name);
+		//console.log("widget event for " + widget.name);
 		widget.event(event);
 	}
 	
@@ -334,7 +330,6 @@ Control.prototype.drawWidgetsOnPage = function(page) {
 }
 
 Control.prototype.changeTab = function(tab) {
-    console.log("changing tab");
     var oldTab = this.currentTab;
 	this.currentPage = 0;
 
@@ -371,7 +366,7 @@ Control.prototype.changeTab = function(tab) {
 			
             /*for(var i = 0; i < this.pages[this.currentPage].length; i++) {
                 var w = this.pages[this.currentPage][i];
-                debug.log("hiding");
+                console.log("hiding");
                 w.hide();
             }
             document.getElementById("selectedInterface").style.display = "none";*/
@@ -404,7 +399,7 @@ Control.prototype.changePage = function(newPage) {
 
 		for(var i = 0; i < this.pages[this.currentPage].length; i++) {
 			var w = this.pages[this.currentPage][i];
-			//debug.log("name: " + w.name + " || page : " + this.currentPage);
+			//console.log("name: " + w.name + " || page : " + this.currentPage);
 			if(typeof w.show != "undefined")							
 				w.show();
 			if(typeof w.draw != "undefined")				

@@ -12,7 +12,20 @@ function DestinationManager() {
         window.destinationManager.createDestinationList();        
 
 	}
+    
+    this.refreshList = function() {
+        console.log("refresh start");
+        this.clearList();
+        this.destinationsSynch = [];
+        PhoneGap.exec("Bonjour.browse", null);
+        window.destinationManager.createDestinationList();        
+        console.log("refresh end");
+    }
 	
+    this.clearList = function() {
+        $("#destinationList").empty();
+    }
+    
 	this.setIPAndPort = function() {
 		if(ipaddress != null) {
 			destinationManager.ipaddress = ipaddress;
@@ -188,7 +201,7 @@ function DestinationManager() {
 	this.inputEnd = function() { 
 		var ipAddress = document.getElementById('ipField').value;
 		var port = document.getElementById('portField').value;	
-		//debug.log("ipaddress = " + ipAddress + " :: port = " + port);
+		//console.log("ipaddress = " + ipAddress + " :: port = " + port);
 		document.getElementById("Destinations").removeChild(document.getElementById("promptDiv"));
 		var keyString = ipAddress + ":" + port;
 		destinationManager.destinations.save({key:keyString, ip:""+ipAddress, port:port}, 
@@ -202,16 +215,16 @@ function DestinationManager() {
 	this.createDestinationList = function() {
 		this.destinations.each( function(r){ destinationManager.addDestination(r.ip, r.port, false, false); } );
 
-		/*debug.log("creating destination list");
+		/*console.log("creating destination list");
 		var list = document.getElementById('destinationList');
 		list.innerHTML = "";
 		for(var i = 0; i < this.bonjourDestinations.length; i++) {
 			
 			var destination = this.bonjourDestinations[i];
-			debug.log("destination = " + destination);
+			console.log("destination = " + destination);
 			this.addDestination(destination[0],destination[1], true);
 		}
-		destinationManager.destinations.each( function(r){ debug.log("key = " + r.key); destinationManager.addDestination(r.key, false); } );
+		destinationManager.destinations.each( function(r){ console.log("key = " + r.key); destinationManager.addDestination(r.key, false); } );
 		*/
 	}
 	

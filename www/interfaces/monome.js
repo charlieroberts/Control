@@ -123,7 +123,7 @@ pages = [[\
 	\"isLocal\":true,\
 	\"requiresTouchDown\":false,\
 	\"onvaluechange\": \"PhoneGap.exec(\'OSCManager.send\', this.address, \'iii\', this.lastChanged.row, this.lastChanged.column, this.lastChanged.value);\",\
-    \"shouldUseCanvas\":false,\
+    \"shouldUseCanvas\":true,\
 	\"oninit\": \"window.monomeInit();\",\
 },\
 {\

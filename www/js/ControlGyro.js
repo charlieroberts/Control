@@ -90,7 +90,7 @@ function ControlGyro(props) {
 	}
     
     this.setUpdateRate = function(rateInHz) {
-		//debug.log("setting gyro rate " + r	ateInHz);
+		//console.log("setting gyro rate " + r	ateInHz);
         PhoneGap.exec("Gyro.setUpdateRate", rateInHz);
     }
 	    

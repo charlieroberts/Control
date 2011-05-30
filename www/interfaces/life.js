@@ -118,7 +118,7 @@ pages = [[\
     \"channel\": 2,\
     \"number\": 0,\
     \"address\": \"/life\",\
-    \"shouldUseCanvas\":true,\
+    \"shouldUseCanvas\":false,\
     \"requiresTouchDown\": false,\
 },\
 {\
@@ -159,7 +159,7 @@ pages = [[\
     \"min\": 0,\
     \"max\": 1,\
 	\"isLocal\": true,\
-    \"ontouchstart\": \"if(this.value == this.max) { debug.log(\'RUN\');control.timeout = setTimeout(control.life, control.lifeSpeed); } else { clearTimeout(control.timeout); }\"\
+    \"ontouchstart\": \"if(this.value == this.max) { console.log(\'RUN\');control.timeout = setTimeout(control.life, control.lifeSpeed); } else { clearTimeout(control.timeout); }\"\
 },\
 {\
     \"name\": \"startLabel\",\

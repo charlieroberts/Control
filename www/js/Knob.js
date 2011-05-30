@@ -139,7 +139,7 @@ function Knob(ctx,props) {
 		if (this.rotationValue > 1) this.rotationValue = 1;
 		if (this.rotationValue < 0) this.rotationValue = 0;
 		
-		//debug.log("rotationValue = " + this.rotationValue);
+		//console.log("rotationValue = " + this.rotationValue);
 		this.lastPosition = yinput;
 		
 		var range  = this.max - this.min;

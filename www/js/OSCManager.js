@@ -9,7 +9,7 @@ OSCManager.prototype.processOSCMessage = function() {
 	var typetags = arguments[1];
 	var args = [];
 	
-	//debug.log(address + " : : " + typetags);
+	//console.log(address + " : : " + typetags);
 	for(var i = 2; i < arguments.length; i++) {
 		args[i - 2] = arguments[i];
 	}
@@ -43,9 +43,9 @@ OSCManager.prototype.processOSC = function(oscAddress, typetags, args) {
 	}
 	for(var i = 0; i < control.widgets.length; i++) {
 		var w = control.widgets[i];
-		debug.log("w.address = " + w.address + " :: address received = " + oscAddress);
+		console.log("w.address = " + w.address + " :: address received = " + oscAddress);
 		if(w.address == oscAddress) {
-			debug.log("setting !" + args[0]);
+			console.log("setting !" + args[0]);
 			w.setValue(args[0], false);
 			break;
 		}else{

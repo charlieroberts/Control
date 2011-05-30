@@ -1,8 +1,8 @@
 // TODO: Allow Canvas drawing instead of individual children... for large numbers of children this gets too slow.
 
 function MultiButton(ctx, props) {
-//	this.ctx = ctx;
-    this.ctx = arguments[2];
+	this.ctx = ctx;
+    //this.ctx = arguments[2];
 	this.widthInPercentage  = props.width || props.bounds[2];
 	this.heightInPercentage = props.height || props.bounds[3];
 
@@ -10,7 +10,7 @@ function MultiButton(ctx, props) {
 	this.children = new Array();
 	
 	this.__proto__ = new Widget(ctx,props);
-
+    
 	this.origX = props.x;
 	this.origY = props.y;
 	
@@ -29,11 +29,11 @@ function MultiButton(ctx, props) {
 	this.shouldLabel = (typeof props.shouldLabel != "undefined") ? props.shouldLabel : false;
 	this.labelSize = props.labelSize || 12;
     
-    this.shouldUseCanvas = true;
+    this.shouldUseCanvas = (typeof props.shouldUseCanvas == "undefined") ? false : props.shouldUseCanvas;
 
     this.touched = [];
 	    
-	this.requiresTouchDown = (typeof props.requiresTouchDown == "undefined") ? true : props.requiresTouchDown;
+	this.requiresTouchDown = (typeof props.requiresTouchDown == "undefined") ? false : props.requiresTouchDown;
 
 	this.init = function() {
         if(!this.shouldUseCanvas) {
@@ -80,16 +80,17 @@ function MultiButton(ctx, props) {
                 }						
             }
         }else{
-//            this.canvas = document.createElement('canvas');
-//            this.canvas.style.border = this.stroke + " 1px solid";
-//            this.canvas.style.top = this.y;
-//            this.canvas.style.left = this.x;
-//            this.canvas.width = parseInt(this.width);
+            this.canvas = document.createElement('canvas');
+            this.canvas.style.border = this.stroke + " 1px solid";
+            this.canvas.style.top = 0;
+            this.canvas.style.left = this.x;
+            this.canvas.style.position = "absolute";
+            this.canvas.width = parseInt(this.width);
             
             //console.log("width = " + this.canvas.width + " height = " + this.canvas.height);
-            //this.canvas.height = parseInt(this.height);
-            this.canvasCtx = this.ctx;
-            //this.ctx.appendChild(this.canvas);
+            this.canvas.height = parseInt(this.height);
+            this.canvasCtx = this.canvas.getContext('2d');;
+            this.ctx.appendChild(this.canvas);
             for(var i = 0; i < this.rows; i++) {                
                 for(var j = 0; j < this.columns; j++) {
                     this.children.push( {
@@ -159,109 +160,134 @@ function MultiButton(ctx, props) {
     // been rolled off of.
     
 	this.event = function(event) {
-		if(event.type == "touchstart") {
-			for (var j = 0; j < event.changedTouches.length; j++){
-                var touch = event.changedTouches.item(j);
-                if(this.hitTest(touch.pageX, touch.pageY)) {
+        if(this.shouldUseCanvas == false) {
+            if(event.type == "touchstart") {
+                for (var j = 0; j < event.changedTouches.length; j++){
+                    var touch = event.changedTouches.item(j);
+                    
                     var colNumber = Math.floor((touch.pageX - this.x) / this.buttonWidthInPixels);
-                    //if(colNumber < 0 || colNumber > this.columns) return;
+                    if(colNumber < 0 || colNumber > this.columns) return;
+                    
+                    var rowNumber = Math.floor((touch.pageY - this.y) / this.buttonHeightInPixels);
+                    if(rowNumber < 0 || rowNumber > this.rows) return;
+                    
+                    var buttonNumber = (rowNumber * this.columns) + colNumber;
+                    
+                    if(this.children[buttonNumber] != null && typeof this.children[buttonNumber] != "undefined")
+                        this.children[buttonNumber].event(event);
+                }
+            }else{
+                for(var i = 0; i < this.children.length; i++) {
+                    var _w = this.children[i];
+                    _w.event(event);
+                }
+            }
+        }else{
+        
+            if(event.type == "touchstart") {
+                for (var j = 0; j < event.changedTouches.length; j++){
+                    var touch = event.changedTouches.item(j);
+                    if(this.hitTest(touch.pageX, touch.pageY)) {
+                        var colNumber = Math.floor((touch.pageX - this.x) / this.buttonWidthInPixels);
+                        //if(colNumber < 0 || colNumber > this.columns) return;
+                        if(colNumber > this.columns - 1) colNumber = this.columns - 1;
+                        
+                        var rowNumber = Math.floor((touch.pageY - this.y) / this.buttonHeightInPixels);
+                        if(rowNumber < 0 || rowNumber > this.rows) return;
+                        
+                        var buttonNumber = (rowNumber * this.columns) + colNumber;
+                        var shouldSend = true;
+                        
+                        if(this.shouldUseCanvas) {
+                            var btn = this.children[buttonNumber];
+                            btn.touches.push(touch.identifier);
+                            if(btn.value != this.max) this.setValue(buttonNumber, this.max);
+                            this.touched.push(btn);
+                            //TODO: handle visual toggle ????
+                        }else{
+                            this.children[buttonNumber].event(event);
+                        }
+                    }
+                }
+            }else if (event.type == "touchend"){
+                //console.log("touched.length = " + this.touched.length);
+                if(!this.shouldUseCanvas) {
+    //                for(var i = 0; i < this.touched.length; i++) {
+                    for(var i = 0; i < this.children.length; i++) {                    
+                        var _w = this.children[i];
+                        _w.event(event);
+                    }
+                    return;
+                }else{
+                    for (var j = 0; j < event.changedTouches.length; j++){
+                        var touch = event.changedTouches.item(j);
+                        for(var i = 0; i < this.touched.length; i++) {
+                            var btn = this.touched[i];
+                            for(var k = 0; k < btn.touches.length; k++) {
+                                if(btn.touches[k] == touch.identifier) {
+                                    btn.touches.splice(k, 1);
+                                    if(btn.touches.length <= 0) {
+                                        this.setValue(btn.buttonNumber, this.min);
+                                        this.touched.splice(i,1);
+                                    }
+                                }
+                            }                        
+                        }
+                    }
+                }   
+            }else{ // touchmove
+                for (var j = 0; j < event.changedTouches.length; j++){
+                    var touch = event.changedTouches.item(j);
+                    var colNumber = Math.floor((touch.pageX - this.x) / this.buttonWidthInPixels);
                     if(colNumber > this.columns - 1) colNumber = this.columns - 1;
                     
                     var rowNumber = Math.floor((touch.pageY - this.y) / this.buttonHeightInPixels);
                     if(rowNumber < 0 || rowNumber > this.rows) return;
                     
                     var buttonNumber = (rowNumber * this.columns) + colNumber;
-                    var shouldSend = true;
                     
-                    if(this.shouldUseCanvas) {
-                        var btn = this.children[buttonNumber];
-                        btn.touches.push(touch.identifier);
-                        if(btn.value != this.max) this.setValue(buttonNumber, this.max);
-                        this.touched.push(btn);
-                        //TODO: handle visual toggle ????
-                    }else{
-                        this.children[buttonNumber].event(event);
-                    }
-                }
-            }
-		}else if (event.type == "touchend"){
-            //console.log("touched.length = " + this.touched.length);
-            if(!this.shouldUseCanvas) {
-//                for(var i = 0; i < this.touched.length; i++) {
-                for(var i = 0; i < this.children.length; i++) {                    
-                    var _w = this.children[i];
-                    _w.event(event);
-                }
-                return;
-            }else{
-                for (var j = 0; j < event.changedTouches.length; j++){
-                    var touch = event.changedTouches.item(j);
-                    for(var i = 0; i < this.touched.length; i++) {
-                        var btn = this.touched[i];
-                        for(var k = 0; k < btn.touches.length; k++) {
-                            if(btn.touches[k] == touch.identifier) {
-                                btn.touches.splice(k, 1);
-                                if(btn.touches.length <= 0) {
-                                    this.setValue(btn.buttonNumber, this.min);
-                                    this.touched.splice(i,1);
-                                }
-                            }
-                        }                        
-                    }
-                }
-            }   
-		}else{ // touchmove
-            for (var j = 0; j < event.changedTouches.length; j++){
-				var touch = event.changedTouches.item(j);
-                var colNumber = Math.floor((touch.pageX - this.x) / this.buttonWidthInPixels);
-                if(colNumber > this.columns - 1) colNumber = this.columns - 1;
-                
-                var rowNumber = Math.floor((touch.pageY - this.y) / this.buttonHeightInPixels);
-                if(rowNumber < 0 || rowNumber > this.rows) return;
-                
-                var buttonNumber = (rowNumber * this.columns) + colNumber;
-                
-                if(this.children[buttonNumber] != null && typeof this.children[buttonNumber] != "undefined") {
-                    var shouldCreateNewTouchOnButton = true;
-                    for(var i = 0; i < this.touched.length; i++) {
-                        if(this.touched[i].buttonNumber == buttonNumber) {shouldCreateNewTouchOnButton = false; break;}   // touch already entered, still on button
-                    }
-                                                                              // touch not newly entered, processing for currently lit buttons
-                    
-                    for(var i = 0; i < this.touched.length; i++) {
-                        var prevTouchedButton = this.touched[i];
-                        if(!this.shouldUseCanvas) {
-                            var _w = this.children[prevTouchedButton.buttonNumber];
-                            _w.event(event);
-                            if(_w.value != _w.max) this.touched.splice(i,1);   
-                        }else{
-                            // see if button is not hit but contains touch
-                            if(buttonNumber != prevTouchedButton.buttonNumber) {                // if the button current touched != the button we're checking against
-                                for(var k = 0; k < prevTouchedButton.touches.length; k++) {     // loop through all the touches that have touched the button we're checking
-                                    if(prevTouchedButton.touches[k] == touch.identifier) {      // if the current touch was once touching the button we're checking but no longer is...
-                                        prevTouchedButton.touches.splice(k,1);                  // ... remove the current touch from the button we're checking
-                                        if(prevTouchedButton.touches.length <= 0) {             // ... if the button we're checking has no other touches assigned to it
-                                            this.touched.splice(i,1);                           // remove it from the array of touched buttons
-                                            if(prevTouchedButton.value != this.min) {           // and set the value to this.min if it isn't already
-                                                this.setValue(prevTouchedButton.buttonNumber, this.min);
+                    if(this.children[buttonNumber] != null && typeof this.children[buttonNumber] != "undefined") {
+                        var shouldCreateNewTouchOnButton = true;
+                        for(var i = 0; i < this.touched.length; i++) {
+                            if(this.touched[i].buttonNumber == buttonNumber) {shouldCreateNewTouchOnButton = false; break;}   // touch already entered, still on button
+                        }
+                                                                                  // touch not newly entered, processing for currently lit buttons
+                        
+                        for(var i = 0; i < this.touched.length; i++) {
+                            var prevTouchedButton = this.touched[i];
+                            if(!this.shouldUseCanvas) {
+                                var _w = this.children[prevTouchedButton.buttonNumber];
+                                _w.event(event);
+                                if(_w.value != _w.max) this.touched.splice(i,1);   
+                            }else{
+                                // see if button is not hit but contains touch
+                                if(buttonNumber != prevTouchedButton.buttonNumber) {                // if the button current touched != the button we're checking against
+                                    for(var k = 0; k < prevTouchedButton.touches.length; k++) {     // loop through all the touches that have touched the button we're checking
+                                        if(prevTouchedButton.touches[k] == touch.identifier) {      // if the current touch was once touching the button we're checking but no longer is...
+                                            prevTouchedButton.touches.splice(k,1);                  // ... remove the current touch from the button we're checking
+                                            if(prevTouchedButton.touches.length <= 0) {             // ... if the button we're checking has no other touches assigned to it
+                                                this.touched.splice(i,1);                           // remove it from the array of touched buttons
+                                                if(prevTouchedButton.value != this.min) {           // and set the value to this.min if it isn't already
+                                                    this.setValue(prevTouchedButton.buttonNumber, this.min);
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-                    if(shouldCreateNewTouchOnButton && this.hitTest(touch.pageX, touch.pageY)) { // touch not entered, newly on button
-                        this.touched.push( this.children[buttonNumber] );
-                        if(!this.shouldUseCanvas) {
-                            this.children[buttonNumber].event(event);
-                        }else{
-                            this.children[buttonNumber].touches.push(touch.identifier);
-                            this.setValue(buttonNumber, this.max);
+                        if(shouldCreateNewTouchOnButton && this.hitTest(touch.pageX, touch.pageY)) { // touch not entered, newly on button
+                            this.touched.push( this.children[buttonNumber] );
+                            if(!this.shouldUseCanvas) {
+                                this.children[buttonNumber].event(event);
+                            }else{
+                                this.children[buttonNumber].touches.push(touch.identifier);
+                                this.setValue(buttonNumber, this.max);
+                            }
                         }
                     }
-                }
-            }  
+                }  
+            }
         }
     }
 

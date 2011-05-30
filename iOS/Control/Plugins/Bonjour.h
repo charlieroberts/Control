@@ -34,5 +34,6 @@
 - (void)start:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
 - (void)stop:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
 - (NSString *)getIPAddress;
+- (void) browse:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
 
 @end

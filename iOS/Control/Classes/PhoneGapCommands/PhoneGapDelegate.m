@@ -43,8 +43,7 @@
 	return @"www";
 }
 
-+ (NSString*) startPage
-{
++ (NSString*) startPage {
 	return @"index.html";
 	//return @"http://127.0.0.1/~charlie/www/index.html";
 	//return @"http://192.168.1.3/~charlie/www/index.html";

@@ -1,6 +1,6 @@
 function Button(ctx, props) {
     this.__proto__ = new Widget(ctx, props);
-    this.ctx = arguments[2];
+    this.ctx = ctx;
     this.mode = (typeof props.mode != "undefined") ? props.mode: "toggle";
     
     this.widgetID = -1;
@@ -18,15 +18,33 @@ function Button(ctx, props) {
     if (typeof props.label != "undefined") {
         this.text = props.label;
         this.labelSize = props.labelSize || 12;
-        /*this.label = {"name": this.name + "Label", "type": "Label", "bounds":[props.x, props.y, props.width, props.height], "color":this.strokeColor, "value":this.text, "size":props.labelSize || 12,};
-         var _w = control.makeWidget(this.label);
-         control.widgets.push(_w);
-         if(!control.isAddingConstants)
-         eval("control.addWidget(" + _w.name + ", control.currentPage);"); // PROBLEM
-         else
-         eval("control.addConstantWidget(" + _w.name + ");"); // PROBLEM
-         
-         this.label = _w;*/
+        {   //remove for canvas
+
+            this.label = {"name": this.name + "Label", "type": "Label", "bounds":[props.x, props.y, props.width, props.height], "color":this.strokeColor, "value":this.text, "size":props.labelSize || 12,};
+                        
+            var _w = control.makeWidget(this.label);
+            control.widgets.push(_w);
+            if(!control.isAddingConstants)
+                eval("control.addWidget(" + _w.name + ", control.currentPage);"); // PROBLEM
+            else
+                eval("control.addConstantWidget(" + _w.name + ");"); // PROBLEM
+            
+            this.label = _w;
+            this.label.label.style.backgroundColor = "rgba(0,0,0,0)";
+            //this.label.label.style.zIndex = 100;
+        }
+    }
+    
+    {   // remove for canvas
+        this.fillDiv   = document.createElement("div");
+        this.fillDiv.style.width = this.width - 2 + "px";
+        this.fillDiv.style.height = this.height - 2 + "px";	
+        this.fillDiv.style.position = "absolute";
+        this.fillDiv.style.left = this.x + "px";
+        this.fillDiv.style.top  = this.y + "px";
+        this.fillDiv.style.border = "1px solid " + this.strokeColor;
+        
+        this.ctx.appendChild(this.fillDiv);
     }
     
     this.yOffset = 0;
@@ -42,26 +60,38 @@ function Button(ctx, props) {
     this.draw = function() {
         //console.log("drawing " + this.value );
         //this.ctx.clearRect(this.x, this.y, this.width, this.height);
-        if (this.mode != "contact") {
-            this.ctx.fillStyle = (this.isLit) ? this.fillColor: this.backgroundColor;
-            this.ctx.fillRect(this.x, this.y, this.width, this.height);
-        } else {
-            
-            this.ctx.fillStyle = this.fillColor;
-            this.ctx.fillRect(this.x, this.y, this.width, this.height);
-            var str = "gButton" + parseInt(Math.random() * 10000);
-            eval(str + " = this;");
-            
-            var evalString = 'setTimeout(function() {'+str+'.ctx.fillStyle =' + str + '.backgroundColor;'+str+'.ctx.fillRect('+str+'.x, '+str+'.y, '+str+'.width, '+str+'.height);' + str + '.drawLabel();'+str+'.ctx.lineWidth = 1; '+str+'.ctx.strokeStyle = '+str+'.color; '+str+'.ctx.strokeRect('+str+'.x, '+str+'.y, '+str+'.width, '+str+'.height);}, 50);';
-            //var evalString = 'setTimeout(function() {' + str + '.contactOn = false;' + str + '.draw();}, 50);';
-            //console.log(evalString);
-            eval(evalString);
+        {   // remove for canvas
+            if(this.mode != "contact") {
+                this.fillDiv.style.backgroundColor = (this.isLit) ? this.fillColor : this.backgroundColor;
+            } else {
+                this.fillDiv.style.backgroundColor = this.fillColor;
+                var str = "gButton"+parseInt(Math.random()*10000);
+                eval(str + " = this;");
+                var evalString = 'setTimeout(function() {'+str+'.fillDiv.style.backgroundColor=' + str + '.backgroundColor;}, 50)';
+                eval(evalString);
+            }
         }
         
-        this.drawLabel();
-        this.ctx.lineWidth = 1;
-        this.ctx.strokeStyle = this.color;
-        this.ctx.strokeRect(this.x, this.y, this.width, this.height);
+//        if (this.mode != "contact") {
+//            this.ctx.fillStyle = (this.isLit) ? this.fillColor: this.backgroundColor;
+//            this.ctx.fillRect(this.x, this.y, this.width, this.height);
+//        } else {
+//            
+//            this.ctx.fillStyle = this.fillColor;
+//            this.ctx.fillRect(this.x, this.y, this.width, this.height);
+//            var str = "gButton" + parseInt(Math.random() * 10000);
+//            eval(str + " = this;");
+//            
+//            var evalString = 'setTimeout(function() {'+str+'.ctx.fillStyle =' + str + '.backgroundColor;'+str+'.ctx.fillRect('+str+'.x, '+str+'.y, '+str+'.width, '+str+'.height);' + str + '.drawLabel();'+str+'.ctx.lineWidth = 1; '+str+'.ctx.strokeStyle = '+str+'.color; '+str+'.ctx.strokeRect('+str+'.x, '+str+'.y, '+str+'.width, '+str+'.height);}, 50);';
+//            //var evalString = 'setTimeout(function() {' + str + '.contactOn = false;' + str + '.draw();}, 50);';
+//            //console.log(evalString);
+//            eval(evalString);
+//        }
+//        
+//        this.drawLabel();
+//        this.ctx.lineWidth = 1;
+//        this.ctx.strokeStyle = this.color;
+//        this.ctx.strokeRect(this.x, this.y, this.width, this.height);
     }
     
     this.drawLabel = function() {
@@ -87,11 +117,12 @@ function Button(ctx, props) {
             var touch = event.changedTouches.item(j);
             breakCheck = false;
             var isHit = this.hitTest(touch.pageX, touch.pageY);
-            //if(isHit) debug.log("button " + this.name + " is hit");
+            if(isHit) console.log("button " + this.name + " is hit");
             //if(!isHit && this.mode == "contact") return; // needed for moving on and off of !requiresTouchDown button without releasing touch
             var newValue;
             switch (event.type) {
                 case "touchstart":
+                    console.log("INSIDE TOUCH START");
                     if (isHit) {
                         this.xOffset = (touch.pageX - this.x) / (this.width - this.x);
                         this.yOffset = (touch.pageY - this.y) / (this.height - this.y);
@@ -109,11 +140,13 @@ function Button(ctx, props) {
                                 newValue = this.max;
                                 break;
                             case "contact":
+                                console.log("INSIDE CONTACT");
                                 this.contactOn = true;
                                 newValue = this.max;
                                 break;
                         }
                         this.setValue(newValue);
+                        console.log("ONTOUCHSTART");
                         eval(this.ontouchstart);
                         //this.output();
                         //this.draw();
@@ -251,6 +284,7 @@ function Button(ctx, props) {
                 break;
         }
         
+        //this.label.draw();
         this.draw();
         if (! (arguments[1] === false))
             eval(this.onvaluechange);
@@ -263,23 +297,23 @@ function Button(ctx, props) {
 	 * Reveals the widget if it is hidden. Normally called when switching "pages" in an interface
 	 */
     this.show = function() {
-        this.draw();
-        //this.fillDiv.style.display = "block";
+        //this.draw();
+        this.fillDiv.style.display = "block";
     }
     
     /**
 	 * Hides the widget if it is visible. Normally called when switching "pages" in an interface
 	 */
     this.hide = function() {
-        this.ctx.clearRect(this.x, this.y, this.width, this.height);
+        //this.ctx.clearRect(this.x, this.y, this.width, this.height);
         
-        //this.fillDiv.style.display = "none";
+        this.fillDiv.style.display = "none";
     }
     
     this.unload = function() {
-        this.ctx.clearRect(this.x, this.y, this.width, this.height);
+        //this.ctx.clearRect(this.x, this.y, this.width, this.height);
         
-        //this.ctx.removeChild(this.fillDiv);
+        this.ctx.removeChild(this.fillDiv);
     }
     
     return this;

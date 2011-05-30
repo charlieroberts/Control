@@ -35,28 +35,46 @@
     netService.delegate = self;
     [netService publish];
 	
-	self.browser = [[NSNetServiceBrowser new] autorelease];
+	self.browser = [NSNetServiceBrowser new];
     self.browser.delegate = self;
 	
-	self.midiBrowser = [[NSNetServiceBrowser new] autorelease];
+	self.midiBrowser = [NSNetServiceBrowser new];
     self.midiBrowser.delegate = self;
 	
     self.isConnected = NO;
+	
+    [self browse:nil withDict:nil];
+}
+
+- (void) browse:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options { 
+    NSLog(@"called");
+    self.browser = [NSNetServiceBrowser new];
+    self.browser.delegate = self;
+	
+	self.midiBrowser = [NSNetServiceBrowser new];
+    self.midiBrowser.delegate = self;
+
+    
     [self.browser searchForServicesOfType:@"_osc._udp." inDomain:@""];
 	[self.midiBrowser searchForServicesOfType:@"_apple-midi._udp." inDomain:@""];
-	
-	
+	NSLog(@"after browser starting");
+    if(myIP != nil) [myIP release];
+    
 	myIP = [self getIPAddress];
-	[myIP retain];
+    [myIP retain];
+    
+    NSString *ipstring = [NSString stringWithFormat:@"control.ipAddress = '%@';", myIP];
+    
+    [webView stringByEvaluatingJavaScriptFromString:ipstring];    
 }
 
 - (void)stop:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options { }
 
 #pragma mark Net Service Browser Delegate Methods
 -(void)netServiceBrowser:(NSNetServiceBrowser *)aBrowser didFindService:(NSNetService *)aService moreComing:(BOOL)more {
+    NSLog(@"found something");
 	[services addObject:aService];
 
-	//NSLog([aService description]);
 	NSNetService *remoteService = aService;
     remoteService.delegate = self;
     [remoteService resolveWithTimeout:0];
@@ -116,7 +134,7 @@
             port = ntohs(socketAddress->sin_port); // ntohs converts from network byte order to host byte order 
             BOOL isMIDI = ([[service type] isEqualToString:@"_apple-midi._udp."]);
             NSString *ipString = [NSString stringWithFormat: @"destinationManager.addDestination(\"%s\", %d, %d, %d);", inet_ntoa(socketAddress->sin_addr), port, !isMIDI, isMIDI];
-
+            NSLog(ipString);
             [webView stringByEvaluatingJavaScriptFromString:ipString];
         }
     } @catch(NSException *e) { NSLog(@"error resolving bonjour address"); }

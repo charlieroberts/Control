@@ -3,60 +3,72 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>index.html</string>
+	<string>js/MultiButton.js</string>
 	<key>documents</key>
 	<array>
 		<dict>
 			<key>filename</key>
 			<string>index.html</string>
 			<key>lastUsed</key>
-			<date>2011-05-06T19:41:39Z</date>
+			<date>2011-05-07T02:09:13Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>js/Button.js</string>
-			<key>selected</key>
-			<true/>
+			<key>lastUsed</key>
+			<date>2011-05-24T18:07:49Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>js/Control.js</string>
-			<key>selected</key>
-			<true/>
+			<key>lastUsed</key>
+			<date>2011-05-24T19:12:10Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>js/DestinationManager.js</string>
-			<key>selected</key>
-			<true/>
+			<key>lastUsed</key>
+			<date>2011-05-24T18:03:53Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>js/InterfaceManager.js</string>
-			<key>selected</key>
-			<true/>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>js/OSCManager.js</string>
-			<key>selected</key>
-			<true/>
+			<key>lastUsed</key>
+			<date>2011-05-06T20:23:36Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>js/Slider.js</string>
-			<key>selected</key>
-			<true/>
+			<key>lastUsed</key>
+			<date>2011-05-24T20:35:02Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>js/Widget.js</string>
+			<key>lastUsed</key>
+			<date>2011-05-06T20:22:06Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>js/Label.js</string>
+			<key>lastUsed</key>
+			<date>2011-05-24T19:57:56Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>js/MultiButton.js</string>
+			<key>lastUsed</key>
+			<date>2011-05-24T20:35:02Z</date>
 			<key>selected</key>
 			<true/>
 		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
-	<integer>114</integer>
+	<integer>192</integer>
 	<key>metaData</key>
 	<dict>
 		<key>index.html</key>
@@ -64,23 +76,223 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>36</integer>
+				<integer>12</integer>
 				<key>line</key>
-				<integer>91</integer>
+				<integer>95</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>54</integer>
+		</dict>
+		<key>js/Button.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>9</integer>
+				<key>line</key>
+				<integer>93</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>244</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>8</integer>
+				<key>line</key>
+				<integer>84</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>9</integer>
+				<key>line</key>
+				<integer>93</integer>
+			</dict>
+		</dict>
+		<key>js/Control.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>15</integer>
+				<key>line</key>
+				<integer>18</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>18</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>19</integer>
+			</dict>
+		</dict>
+		<key>js/DestinationManager.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>57</integer>
+				<key>line</key>
+				<integer>258</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>120</integer>
+		</dict>
+		<key>js/Label.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>34</integer>
+				<key>line</key>
+				<integer>17</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>1</integer>
+				<key>line</key>
+				<integer>12</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>34</integer>
+				<key>line</key>
+				<integer>17</integer>
+			</dict>
+		</dict>
+		<key>js/MultiButton.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>100</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>66</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>5</integer>
+				<key>line</key>
+				<integer>122</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>100</integer>
+			</dict>
+		</dict>
+		<key>js/OSCManager.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>96</integer>
+				<key>line</key>
+				<integer>6</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
+		<key>js/Slider.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>5</integer>
+				<key>line</key>
+				<integer>143</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>116</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>5</integer>
+				<key>line</key>
+				<integer>141</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>5</integer>
+				<key>line</key>
+				<integer>143</integer>
+			</dict>
+		</dict>
+		<key>js/Widget.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>10</integer>
+				<key>line</key>
+				<integer>134</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>101</integer>
+		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
 		<string>index.html</string>
+		<string>js/DestinationManager.js</string>
+		<string>js/Button.js</string>
+		<string>js/Control.js</string>
+		<string>js/Label.js</string>
+		<string>js/Slider.js</string>
+		<string>js/MultiButton.js</string>
+		<string>js/Widget.js</string>
+		<string>js/OSCManager.js</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{864, 20}, {1148, 878}}</string>
+	<string>{{593, 139}, {1471, 889}}</string>
 </dict>
 </plist>

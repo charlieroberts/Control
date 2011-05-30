@@ -1,6 +1,6 @@
 function MultiSlider(ctx, props) {//x, y, width, height, color, stroke, min, max, startingValue, ontouchstart, ontouchmove, ontouchend, protocol, address, isVertical, numberOfSliders) { 
-	//this.ctx = ctx;
-    this.ctx = arguments[2];
+	this.ctx = ctx;
+    //this.ctx = arguments[2];
 	// MUST BE BEFORE WIDGET INIT
     this.widthInPercentage  = props.width  || props.bounds[2];
     this.heightInPercentage = props.height || props.bounds[3];

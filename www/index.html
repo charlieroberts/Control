@@ -9,16 +9,19 @@
 	
 	<link rel="stylesheet" href="css/jquery.mobile-1.0a3.css" />
     <link rel="stylesheet" href="css/master.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <!--<link rel="stylesheet" href="css/jquery.mobile.scrollview.css" />-->
+
 	<!--<link rel="stylesheet" href="css/iscroll.css" type="text/css" media="screen" charset="utf-8">-->
 
-	
     <script type="text/javascript" charset="utf-8" src="js/phonegap-uncompressed.js"></script>
 	<script type="text/javascript" charset="utf-8" src="js/NativeControls.js"></script>
 	
 	<!-- jQuery -->
 	<script src="js/jquery-1.5.js"></script>
 	<script src="js/jquery.mobile-1.0a3.js"></script>
-
+    <script src="js/jquery.easing.1.3.js"></script>
+    <!--<script src="js/jquery.mobile.scrollview.js"></script>
+    <script src="js/scrollview.js"></script>-->
 	
 	<!-- iScroll: scrolling table views for webkit interface: http://cubiq.org/iscroll -->
 	<!--<script type="text/javascript" src="js/iscroll.js"></script>-->
@@ -51,8 +54,7 @@
 	<script type="text/javascript" src="js/ControlAccelerometer.js"></script>
 	<script type="text/javascript" src="js/ControlCompass.js"></script>
 	<script type="text/javascript" src="js/ControlGyro.js"></script>
-    
-        
+
     <!--<script type="text/javascript" src="../../interfaces/test.js"></script>-->
         
     <script type="text/javascript" charset="utf-8">
@@ -61,7 +63,6 @@
 			e.preventDefault(); 
 		};
         
-		console.log("something");
 		PhoneGap.addConstructor(function(){
 			document.addEventListener("touchmove", preventBehavior, false); // prevents webkit from scrolling DNR
             //console.log("interface name = *******" + window.loadedInterfaceName);
@@ -71,8 +72,8 @@
 
             _protocol = "OSC";
 			//console.setLevel(8);
-			oscManager = new OSCManager();
-			midiManager = new MIDIManager();
+			oscManager  = new OSCManager();
+			//midiManager = new MIDIManager();
 			
 			destinationManager = new DestinationManager();
 			destinationManager.init();
@@ -87,7 +88,7 @@
 			//destinationScroller = new iScroll('destinationScroller');
 			//preferencesScroller = new iScroll('preferencesScroller');
 			
-			PhoneGap.exec("Device.setRotation", "portrait");
+			//PhoneGap.exec("Device.setRotation", "portrait");
 			
 			preferencesManager = new PreferencesManager();
 			console.log("end of constructor");
@@ -104,7 +105,7 @@
     </script>
   </head>
   
-  <body id="stage" style="background-color:#000; -webkit-user-select: none;"  onload="document.addEventListener('touchmove', preventBehavior, false);" class="theme"> 
+  <body id="stage" style="background-color:#000; -webkit-user-select: none;" class="theme"> 
   
 
   <div data-role="page" id="Interfaces" data-theme="a">
@@ -112,8 +113,8 @@
 			<a href="#" id="interfaceEditBtn" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="interfaceManager.editInterfaceList()">Edit</a>
 			<h1 class="ui-title">Interfaces</h1>
             <div style="display:inline; position:absolute; top:.5em; right:.75em;">
-			<a href="#" data-role="button" data-icon="plus" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="interfaceManager.createInterfaceListWithStoredInterfaces()"><img src="css/images/refresh.png"></img></a>            
-			<a href="#" data-role="button" data-icon="plus" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="interfaceManager.promptForInterfaceDownload()"><img src="css/images/add.png"></img></a>
+                <a href="#" data-role="button" data-icon="plus" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="interfaceManager.createInterfaceListWithStoredInterfaces()"><img src="css/images/refresh.png"></img></a>            
+                <a href="#" data-role="button" data-icon="plus" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="interfaceManager.promptForInterfaceDownload()"><img src="css/images/add.png"></img></a>
             </div>
 		</div>
 		
@@ -123,10 +124,13 @@
 	</div>
   
   <div data-role="page" id="Destinations" data-theme="a">
-		<div data-role="header" id="header" data-backbtn="false">
-			<a href="#" id="destinationEditBtn"style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="destinationManager.editDestinationList()">Edit</a>		
-			<h1>Destinations</h1>
-			<a href="#" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-right ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="destinationManager.promptForIP()">+</a>
+		<div class="ui-bar-a  ui-header" data-role="header" id="header" data-backbtn="false">
+			<a href="#" id="destinationEditBtn" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="destinationManager.editDestinationList()">Edit</a>		
+			<h1 class="ui-title">Destinations</h1>
+            <div style="display:inline; position:absolute; top:.5em; right:.75em;">
+                <a href="#" data-role="button" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="destinationManager.refreshList()"><img src="css/images/refresh.png"></img></a>            
+                <a href="#" data-role="button" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="destinationManager.promptForIP()"><img src="css/images/add.png"></img></a>
+            </div>
 		</div>
 		<div data-role="content">
             <ul id="destinationList" data-role="listview" data-theme="g"></ul>
@@ -139,7 +143,7 @@
         <ul id="preferencesList" data-role="listview" data-theme="g">
             <li class="preferencesListItem"><a id="autolockToggle" href="#" ontouchend="preferencesManager.autolockToggle()">Turn Autolock <b>On</b></a></li>
             <li class="preferencesListItem">OSC Receive Port : 
-                <form id="oscForm" style="display:inline;" onsubmit="console.log('NEORIB');portField.blur(); preferencesManager.changePort(portField.value);">
+                <form id="oscForm" style="display:inline;" onsubmit="portField.blur(); preferencesManager.changePort(portField.value);">
                     <input style="display:inline; width:150px;" type="number" id="receivePortSelector" name="portField" value="8080" onchange="">
                 </form>
             </li>
@@ -152,29 +156,30 @@
 		<h1>Info</h1>
 	</div>
 	
-	<div data-role="content">
+      <div>
+        <!--<div style="height:2000px" data-scroll="true">-->
 	    <p>Control v1.2 is an application enabling configurable control surfaces for mobile devices. For more information, interfaces, tutorials and references please visit
-    	<a href="http://www.charlie-roberts.com/Control">the Control website</a>.
+    	the Control website (http://www.charlie-roberts.com/Control).
     	</p>
     	<p>
-    	Control was created and is maintained by <a href="http://www.charlie-roberts.com">Charlie Roberts</a>, with additional contributions by <a href="www.thepersistentbeat.com">Greg Shear</a> 
-    	and <a href="http://www.create.ucsb.edu/~matt/">Matt Wright</a>. Control was partially realized as a research project for the <a href="http://allosphere.ucsb.edu">AlloSphere Research Group</a>.
+    	Control was created and is maintained by Charlie Roberts, with additional contributions by Greg Shear
+    	and Matt Wright. Control was partially realized as a research project for the AlloSphere Research Group.
     	</p>
 
     	<p>Control is built using the following open source projects (thank you!):</p>
     	<ul>
-    		<li><a href="http://www.phonegap.com">PhoneGap</a> - an API for developing cross-platform mobile applications</li>
-    		<li><a href="http://cubiq.org/iscroll">iScroll</a> - scrolling table views for WebKit interfaces</li>
-    		<li><a href="http://brianleroux.github.com/lawnchair/">Lawnchair</a> - cross-platform persistent storage of JSON information</li>
-    		<li><a href="http://www.audiomulch.com/~rossb/code/oscpack/">oscpack</a> - cross-platform OSC library.
+    		<li style="margin-bottom:.5em"><b>PhoneGap</b> http://www.phonegap.com</li>
+    		<li style="margin-bottom:.5em"><b>jQuery Mobile</b> http://jquerymobile.com</li>
+    		<li style="margin-bottom:.5em"><b>Lawnchair</b> http://brianleroux.github.com/lawnchair/</li>
+    		<li><b>oscpack</b> http://www.audiomulch.com/~rossb/code/oscpack/</li>
     	</ul>
+        </div>
 	</div>
   </div>
   
    <div data-role="page" id="SelectedInterfacePage">
-	   <div class="ui-bar-a ui-header" data-role="header" id="header" data-backbtn="false"></div>
-	   <div data-role="content" id="selectedInterface">
-           <canvas id="canvas"></canvas>
+	   <div id="selectedInterface">
+           <!--<canvas id="canvas"></canvas>-->
        </div>
   </div>
 

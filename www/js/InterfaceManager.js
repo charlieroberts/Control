@@ -9,14 +9,14 @@ function InterfaceManager() {
         this.interfaceIP = null;
         interfaceOrientation = null;
         constants = null;
-        this.interfaceDefaults = [/*"iphoneLandscapeMixer.js",
+        this.interfaceDefaults = ["iphoneLandscapeMixer.js",
                                   "djcut.js",
                                   "life.js",
 								  "monome.js",
 								  "multibutton.js",
 								  "multiXY.js",
 								  "sequencer.js",
-								  "gyro.js",*/
+								  "gyro.js",
                                   ];
     }
      
@@ -147,7 +147,7 @@ function InterfaceManager() {
 		//interfaceManager.interfaceFiles.all('count++');
 		/*interfaceManager.interfaceFiles.each(
 			function(r){
-				debug.log("interface item = " + r.key);
+				console.log("interface item = " + r.key);
 				var item = document.createElement('li');
                 
 				var link = document.createElement('a');
@@ -167,23 +167,26 @@ function InterfaceManager() {
 	
 	this.createInterfaceListWithArray = function(listArray) {
 		var list = document.getElementById('interfaceList');
-//		debug.log(listArray);
+//		console.log(listArray);
 		var count = 0;
 
 		for(var i = 0; i < listArray.length; i++) {
 			var r = listArray[i];
-			//debug.log("key " + i + " :: " + r.key);
+			//console.log("key " + i + " :: " + r.key);
 			/*var item = document.createElement('li');
             item.style.borderBottom = "1px solid #666";
             item.setAttribute("ontouchend", "console.log('"+r.key+"');interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "');");
             item.innerHTML = r.key;
             item.style.borderBottom = "1px solid #666";*/   
-            //debug.log("key " + i + " :: " + r.key);
+            //console.log("key " + i + " :: " + r.key);
 			var item = document.createElement('li');
             item.style.borderBottom = "1px solid #666";
+            item.style.fontWeight = "normal";
             item.setAttribute("ontouchend", "$.mobile.changePage('#SelectedInterfacePage'); console.log('"+r.key+"');interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "');");
             item.innerHTML = r.key;
-            item.setAttribute("href", "#SelectedInterfacePage");
+            $(item).addClass('destinationListItem');
+            $(item).addClass('interfaceListItem');
+
    			list.appendChild(item);
    
 			//$('li').attr("data-icon","false");
@@ -222,7 +225,7 @@ function InterfaceManager() {
 			for(var i = 0; i < list.childNodes.length; i++) {
 				var item = list.childNodes[i];
 				var deleteButton = document.createElement("div"); // -webkit-border-radius:10px;
-				deleteButton.setAttribute("style", "float:left; margin-right: 5px; position:relative; top:10px; border: #fff 2px solid; -webkit-border-radius:10px; width: 15px; height: 15px; background-color:#f00; color:#fff; font-weight:bold;");
+				deleteButton.setAttribute("style", "float:left; margin-right: 5px; position:relative; top:0px; border: #fff 2px solid; -webkit-border-radius:10px; width: 15px; height: 15px; background-color:#f00; color:#fff; font-weight:bold;");
 				deleteButton.innerHTML = "<img style='position:relative; top:-.7em; left:-.65em;' src='images/dash.png'>";
 				deleteButton.setAttribute("ontouchend", "interfaceManager.removeInterface("+i+")");
 				item.insertBefore(deleteButton, item.firstChild);
