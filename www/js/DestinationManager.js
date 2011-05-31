@@ -14,12 +14,11 @@ function DestinationManager() {
 	}
     
     this.refreshList = function() {
-        console.log("refresh start");
         this.clearList();
         this.destinationsSynch = [];
         PhoneGap.exec("Bonjour.browse", null);
+        
         window.destinationManager.createDestinationList();        
-        console.log("refresh end");
     }
 	
     this.clearList = function() {
@@ -86,6 +85,7 @@ function DestinationManager() {
 
         $(item).append(innerDiv);        
 		list.appendChild(item);
+        $(list).listview('refresh');
 	}
 	
 	this.addMIDIDestination = function(destName) {
@@ -214,18 +214,6 @@ function DestinationManager() {
 	
 	this.createDestinationList = function() {
 		this.destinations.each( function(r){ destinationManager.addDestination(r.ip, r.port, false, false); } );
-
-		/*console.log("creating destination list");
-		var list = document.getElementById('destinationList');
-		list.innerHTML = "";
-		for(var i = 0; i < this.bonjourDestinations.length; i++) {
-			
-			var destination = this.bonjourDestinations[i];
-			console.log("destination = " + destination);
-			this.addDestination(destination[0],destination[1], true);
-		}
-		destinationManager.destinations.each( function(r){ console.log("key = " + r.key); destinationManager.addDestination(r.key, false); } );
-		*/
 	}
 	
 	this.editDestinationList = function() {

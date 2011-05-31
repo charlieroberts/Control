@@ -198,15 +198,10 @@ function MultiButton(ctx, props) {
                         var buttonNumber = (rowNumber * this.columns) + colNumber;
                         var shouldSend = true;
                         
-                        if(this.shouldUseCanvas) {
-                            var btn = this.children[buttonNumber];
-                            btn.touches.push(touch.identifier);
-                            if(btn.value != this.max) this.setValue(buttonNumber, this.max);
-                            this.touched.push(btn);
-                            //TODO: handle visual toggle ????
-                        }else{
-                            this.children[buttonNumber].event(event);
-                        }
+                        var btn = this.children[buttonNumber];
+                        btn.touches.push(touch.identifier);
+                            /*if(btn.value != this.max)*/ this.setValue(buttonNumber, this.max);
+                        this.touched.push(btn);
                     }
                 }
             }else if (event.type == "touchend"){
@@ -319,6 +314,25 @@ function MultiButton(ctx, props) {
             this.ctx.removeChild(this.canvas);
         }
 	}
-		
+    
+    this.show = function() {
+        if(!this.shouldUseCanvas) {
+            for(var i = 0; i < this.children.length; i++) {
+                this.children[i].show();
+            }
+        }else{
+            $(this.canvas).show();
+        }
+    }
+	
+    this.hide = function() {
+        if(!this.shouldUseCanvas) {
+            for(var i = 0; i < this.children.length; i++) {
+                this.children[i].hide();
+            }
+        }else{
+            $(this.canvas).hide();
+        }
+    }
 	return this;
 }

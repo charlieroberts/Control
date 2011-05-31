@@ -62,7 +62,7 @@ function MultiTouchXY(ctx, props) {
 		
 		this.children.push(touch);
 		touch.activeNumber = this.children.length;
-        touch.innerHTML = touch.activeNumber;    
+        $(touch).text(touch.activeNumber);    
 		this.container.appendChild(touch);
 		//this.changeValue(touch, xPos, yPos);
 	}

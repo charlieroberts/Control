@@ -136,50 +136,18 @@ function InterfaceManager() {
 	}
     
     this.createInterfaceListWithStoredInterfaces = function() {
-		var list = document.getElementById('interfaceList');
-		//list.innerHTML = "";
-		if ( list.hasChildNodes() ) {
-			while ( list.childNodes.length >= 1 ) {
-				list.removeChild( list.firstChild ); 
-			} 
-		}
-		
-		//interfaceManager.interfaceFiles.all('count++');
-		/*interfaceManager.interfaceFiles.each(
-			function(r){
-				console.log("interface item = " + r.key);
-				var item = document.createElement('li');
-                
-				var link = document.createElement('a');
-                link.setAttribute("ontouchend", "interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "');");
-                link.innerHTML = "blahafhhasa";
-                
-				item.appendChild(link);
-			    list.appendChild(item);
-				
-				link.style.width = "100%";
-				link.style.display = "block";
-				link.style.backgroundColor = "#a33";
-			}
-		);*/
+		$('#interfaceList').empty();
 		interfaceManager.interfaceFiles.all(function(r) { interfaceManager.createInterfaceListWithArray(r); });
 	}
 	
 	this.createInterfaceListWithArray = function(listArray) {
 		var list = document.getElementById('interfaceList');
-//		console.log(listArray);
 		var count = 0;
 
 		for(var i = 0; i < listArray.length; i++) {
 			var r = listArray[i];
-			//console.log("key " + i + " :: " + r.key);
-			/*var item = document.createElement('li');
-            item.style.borderBottom = "1px solid #666";
-            item.setAttribute("ontouchend", "console.log('"+r.key+"');interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "');");
-            item.innerHTML = r.key;
-            item.style.borderBottom = "1px solid #666";*/   
-            //console.log("key " + i + " :: " + r.key);
 			var item = document.createElement('li');
+            
             item.style.borderBottom = "1px solid #666";
             item.style.fontWeight = "normal";
             item.setAttribute("ontouchend", "$.mobile.changePage('#SelectedInterfacePage'); console.log('"+r.key+"');interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "');");
@@ -188,30 +156,8 @@ function InterfaceManager() {
             $(item).addClass('interfaceListItem');
 
    			list.appendChild(item);
-   
-			//$('li').attr("data-icon","false");
-            //item.setAttribute("ontouchend", null);
-			//li.class = "
-                
-			/*var link = document.createElement('a');
-			link.style.color="#fff";
-			link.setAttribute("ontouchend", "console.log('"+r.key+"');interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "');");
-			link.setAttribute("href", "#SelectedInterfacePage");
-			//link.setAttribute("data-transition", "pop");
-			link.innerHTML = r.key;
-			
-			item.appendChild(link);*/
-			list.appendChild(item);
-			
-			
-			
-			//link.style.width = "100%";
-			//link.style.display = "block";
-			//link.style.backgroundColor = "#a33";
 		}
-		$('ul').listview('refresh');
-		//interfaceScroller.refresh();
-		//setTimeout(function () { interfaceScroller.refresh(); }, 2550);
+		$(list).listview('refresh');
 	}
 
 	this.editInterfaceList = function() {
@@ -306,10 +252,10 @@ function InterfaceManager() {
         var listItem = $('#interfaceList > li:eq(' + itemNumber +')');
         var arr = listItem.html().split("</div>");
 		var newKey = arr[1];
-        console.log(newKey);
+        interfaceManager.interfaceFiles.remove(newKey);        
+        //console.log("removing " + newKey);
 		listItem.remove();
         $('#interfaceList').listview('refresh');
-		interfaceManager.interfaceFiles.remove(newKey);
 	}
     
     this.runInterface = function(json) {

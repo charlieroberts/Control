@@ -24,6 +24,8 @@
 	
 	NSString *myIP;
 	int count;
+    
+    BOOL isPublishing;
 }
 
 @property (assign) BOOL isConnected;
@@ -31,9 +33,12 @@
 @property (readwrite, retain) NSMutableArray *services;
 @property (readwrite, retain) NSNetService *connectedService;
 
-- (void)start:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
-- (void)stop:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
-- (NSString *)getIPAddress;
-- (void) browse:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
 
+- (NSString *) getIPAddress;
+
+- (void) browse:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
+- (void) publishService:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
+- (void) getMyIP:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
+- (void) start:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
+- (void) stop:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
 @end

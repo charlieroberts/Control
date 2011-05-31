@@ -30,7 +30,9 @@ function Button(ctx, props) {
                 eval("control.addConstantWidget(" + _w.name + ");"); // PROBLEM
             
             this.label = _w;
-            this.label.label.style.backgroundColor = "rgba(0,0,0,0)";
+            //this.label.label.style.backgroundColor = "rgba(255,0,0,1)";
+            //this.label.show();
+            //this.label.draw();
             //this.label.label.style.zIndex = 100;
         }
     }
@@ -70,6 +72,7 @@ function Button(ctx, props) {
                 var evalString = 'setTimeout(function() {'+str+'.fillDiv.style.backgroundColor=' + str + '.backgroundColor;}, 50)';
                 eval(evalString);
             }
+            if(this.label != null) this.label.draw();
         }
         
 //        if (this.mode != "contact") {
@@ -117,12 +120,11 @@ function Button(ctx, props) {
             var touch = event.changedTouches.item(j);
             breakCheck = false;
             var isHit = this.hitTest(touch.pageX, touch.pageY);
-            if(isHit) console.log("button " + this.name + " is hit");
+            //if(isHit) console.log("button " + this.name + " is hit");
             //if(!isHit && this.mode == "contact") return; // needed for moving on and off of !requiresTouchDown button without releasing touch
             var newValue;
             switch (event.type) {
                 case "touchstart":
-                    console.log("INSIDE TOUCH START");
                     if (isHit) {
                         this.xOffset = (touch.pageX - this.x) / (this.width - this.x);
                         this.yOffset = (touch.pageY - this.y) / (this.height - this.y);
@@ -140,13 +142,11 @@ function Button(ctx, props) {
                                 newValue = this.max;
                                 break;
                             case "contact":
-                                console.log("INSIDE CONTACT");
                                 this.contactOn = true;
                                 newValue = this.max;
                                 break;
                         }
                         this.setValue(newValue);
-                        console.log("ONTOUCHSTART");
                         eval(this.ontouchstart);
                         //this.output();
                         //this.draw();

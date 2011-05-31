@@ -30,10 +30,7 @@
 }
 
 - (void)start:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
-	netService = [[NSNetService alloc] initWithDomain:@"local." type:@"_osc._udp." 
-												 name:@"Control" port:8080];
-    netService.delegate = self;
-    [netService publish];
+    [self publishService:nil withDict:nil];
 	
 	self.browser = [NSNetServiceBrowser new];
     self.browser.delegate = self;
@@ -44,10 +41,37 @@
     self.isConnected = NO;
 	
     [self browse:nil withDict:nil];
+    [self getMyIP:nil withDict:nil];
 }
 
+- (void)getMyIP:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
+    if(myIP != nil) [myIP release];
+    
+	myIP = [self getIPAddress];
+    [myIP retain];
+    
+    NSString *ipstring = [NSString stringWithFormat:@"control.ipAddress = '%@';", myIP];
+    
+    [webView stringByEvaluatingJavaScriptFromString:ipstring];
+}
+
+- (void)publishService:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
+    if(netService != nil) {
+        [netService stop];
+        [netService release];
+    }
+    netService = [[NSNetService alloc] initWithDomain:@"local." type:@"_osc._udp." 
+												 name:@"" port:8080];
+    netService.delegate = self;
+    isPublishing = YES;
+    [netService publish];
+}
+       
+- (void)netServiceDidStop:(NSNetService *)sender {
+    isPublishing = NO;
+}
+       
 - (void) browse:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options { 
-    NSLog(@"called");
     self.browser = [NSNetServiceBrowser new];
     self.browser.delegate = self;
 	
@@ -56,16 +80,7 @@
 
     
     [self.browser searchForServicesOfType:@"_osc._udp." inDomain:@""];
-	[self.midiBrowser searchForServicesOfType:@"_apple-midi._udp." inDomain:@""];
-	NSLog(@"after browser starting");
-    if(myIP != nil) [myIP release];
-    
-	myIP = [self getIPAddress];
-    [myIP retain];
-    
-    NSString *ipstring = [NSString stringWithFormat:@"control.ipAddress = '%@';", myIP];
-    
-    [webView stringByEvaluatingJavaScriptFromString:ipstring];    
+	[self.midiBrowser searchForServicesOfType:@"_apple-midi._udp." inDomain:@""];      
 }
 
 - (void)stop:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options { }
@@ -82,6 +97,7 @@
 
 -(void)netServiceBrowser:(NSNetServiceBrowser *)aBrowser didRemoveService:(NSNetService *)aService moreComing:(BOOL)more {
 	/*NSLog(@"REMOVING");
+    
     //[services removeObject:aService];
 	NSLog([aService description]);
 	NSArray *addresses = aService.addresses;
@@ -109,7 +125,7 @@
         }
     } @catch(NSException *e) { NSLog(@"error resolving bonjour address"); }
 	NSLog(@"after for loop");
-    if ( aService == self.connectedService ) self.isConnected = NO;*/	
+    //if ( aService == self.connectedService ) self.isConnected = NO;*/	
 }
 
 -(void)netServiceDidResolveAddress:(NSNetService *)service {

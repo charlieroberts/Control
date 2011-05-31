@@ -117,9 +117,11 @@ pages = [[\
 	\"rows\":8,\
 	\"columns\":8,\
 	\"range\":[0,1],\
+	\"midiRange\":[0,127],\
 	\"mode\":\"momentary\",\
 	\"color\":\"#f66\",\
 	\"stroke\":\"#aaa\",\
+	\"backgroundColor\":\"#000\",\
 	\"isLocal\":true,\
 	\"requiresTouchDown\":false,\
 	\"onvaluechange\": \"PhoneGap.exec(\'OSCManager.send\', this.address, \'iii\', this.lastChanged.row, this.lastChanged.column, this.lastChanged.value);\",\
