@@ -2,20 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>AutoRotate</key>
+	<true/>
 	<key>DetectPhoneNumber</key>
 	<false/>
-	<key>TopActivityIndicator</key>
-	<string>gray</string>
-	<key>EnableLocation</key>
-	<true/>
 	<key>EnableAcceleration</key>
 	<true/>
-	<key>AutoRotate</key>
-	<false/>
-	<key>StartOrientation</key>
-	<string>portrait</string>
-	<key>RotateOrientation</key>
-	<string>portrait</string>
+	<key>EnableLocation</key>
+	<true/>
+	<key>TopActivityIndicator</key>
+	<string>gray</string>
 	<key>UIControls</key>
 	<dict>
 		<key>TabBarSettings</key>

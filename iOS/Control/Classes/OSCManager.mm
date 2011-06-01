@@ -25,7 +25,7 @@ protected:
 			[_oscManager performSelector:NSSelectorFromString([_oscManager.addresses objectForKey:oscAddress]) withObject:[NSValue valueWithPointer:&m]];
 		}else{
 			osc::ReceivedMessage::const_iterator arg = m.ArgumentsBegin();
-			
+			//NSLog(@"%s %d", m.AddressPattern(), m.ArgumentCount());
 			NSMutableString *jsString = [NSMutableString stringWithFormat:@"oscManager.processOSCMessage(\"%s\", \"%s\", ", m.AddressPattern(), m.TypeTags(), nil];
 
 			const char * tags = m.TypeTags();
@@ -48,7 +48,6 @@ protected:
 			}
 			
 			[jsString appendString:@");"];
-			//NSLog(jsString);
 			[_oscManager.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsString waitUntilDone:NO];
 		}
 		[pool drain];
@@ -65,25 +64,28 @@ protected:
 		listener = new ExamplePacketListener();
 		[NSThread detachNewThreadSelector:@selector(pollJavascriptStart:) toTarget:self withObject:nil];
 		
-		NSArray * keys = [NSArray arrayWithObjects:@"/pushInterface", @"/pushDestination", nil];
-		NSArray * objects = [NSArray arrayWithObjects:NSStringFromSelector(@selector(pushInterface:)), NSStringFromSelector(@selector(pushDestination:)), nil];
-		addresses = [[NSMutableDictionary alloc] initWithObjects:objects forKeys:keys];
-		
+		NSArray * keys = [NSArray arrayWithObjects:@"/pushInterface", @"/pushDestination", @"/control/pushInterface", @"/control/pushDestination", nil];
+		NSArray * objects = [NSArray arrayWithObjects:NSStringFromSelector(@selector(pushInterface:)), NSStringFromSelector(@selector(pushDestination:)), NSStringFromSelector(@selector(pushInterface:)), NSStringFromSelector(@selector(pushDestination:)), nil];
+		addresses = [[NSMutableDictionary alloc] initWithObjects:objects forKeys:keys];		
 	}
 	_oscManager = self;
 	return self;
 }
 
-- (void)oscThread {
-	//if(s != NULL) s->Break();
-	//delete(s);
-	
-	s = new UdpListeningReceiveSocket( IpEndpointName( IpEndpointName::ANY_ADDRESS, 8080 ),listener );
-	s->Run();
+- (void)oscThread {	
+	s = new UdpListeningReceiveSocket( IpEndpointName( IpEndpointName::ANY_ADDRESS, self.receivePort ),listener );
+	s->RunUntilSigInt();
 }
 
 - (void)setOSCReceivePort:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
+    //NSLog(@"CALLED %d %d", self.receivePort, [[arguments objectAtIndex:0] intValue]);
 	if([[arguments objectAtIndex:0] intValue] != self.receivePort) {
+        if (s != NULL) {
+            //NSLog(@"deleting socket");
+            s->AsynchronousBreak();
+            //delete(s);   // causes error for some reason...
+        }
+        //NSLog(@"started with %d",[[arguments objectAtIndex:0] intValue]);
 		self.receivePort = [[arguments objectAtIndex:0] intValue];
 		[NSThread detachNewThreadSelector:@selector(oscThread) toTarget:self withObject:nil];
 	}
@@ -134,8 +136,8 @@ protected:
 		args >> a1 >> osc::EndMessage;
 		NSString *destination = [[NSString alloc] initWithCString:a1 encoding:1];
 
-		NSString *jsString = [[NSString alloc] initWithFormat:@"destinationManager.addDestination('%@')", destination];
-		
+		NSString *jsString = [[NSString alloc] initWithFormat:@"destinationManager.pushDestination('%@')", destination];
+		NSLog(jsString);
 		[_oscManager.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsString waitUntilDone:NO];
 	}catch( osc::Exception& e ){
 		NSLog(@"an exception occurred");

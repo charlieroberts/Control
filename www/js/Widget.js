@@ -93,6 +93,13 @@ function Widget(ctx, props) { // x, y, width, height, color, startingValue, stro
 	return this;
 }
 
+Widget.prototype.setRange = function(min, max) {
+    this.min = min;
+    this.max = max;
+    
+    this.setValue(this.value);
+}
+
 Widget.prototype.hitTest = function(x,y) { 
 	if(x >= this.x && x < this.x + this.width) {
 		if(y >= this.y && y < this.y + this.height) {  

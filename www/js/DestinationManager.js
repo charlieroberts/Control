@@ -40,7 +40,8 @@ function DestinationManager() {
 
 	this.pushDestination = function(newDestination) {
 		var segments = newDestination.split(":");
-		this.addDestination(segments[0], segments[1], false, false);
+        this.selectIPAddressAndPort(segments[0], segments[1]);
+		this.addDestination(segments[0], segments[1], false, false, false);
 		this.selectPushedDestination(segments[0], segments[1]);
 	}
 	
@@ -51,7 +52,6 @@ function DestinationManager() {
 			var destCheck = this.destinationsSynch[i];
 			if(address == destCheck.ip && port == destCheck.port) return;
 		}
-        
 		this.destinationsSynch.push({ip:address, port:port});
 		if(isBonjour) destinationManager.bonjourDestinations.push([address, port]);
         
@@ -60,7 +60,7 @@ function DestinationManager() {
         $(item).addClass('destinationListItem');
 
 		//console.log("address: " + address + " | port : " + port + " | isBonjour | " + isBonjour);
-        
+
 		if(!isMIDI) 
 			item.setAttribute("ontouchend", "destinationManager.highlight(" + list.childNodes.length + "); _protocol='OSC'; destinationManager.selectIPAddressAndPort('" + address + "'," + port + ");");		
 		else if(!isHardware)
@@ -68,10 +68,11 @@ function DestinationManager() {
 		else
 			//item.setAttribute("ontouchend", "destinationManager.highlight(" + list.childNodes.length + "); _protocol='MIDI';destinationManager.selectHardwareMIDI('" + address + ");");
             item.setAttribute("ontouchend", "destinationManager.highlight(" + list.childNodes.length + "); _protocol='MIDI';destinationManager.selectMIDIIPAddressAndPort('" + address + "'," + port + ");");	
-		
+
         var innerDiv = document.createElement('div');
         $(innerDiv).css('display', 'inline');
         $(innerDiv).append(document.createTextNode("" + address + ":" + port));
+
 		if(isBonjour || isMIDI) {
             var _img = document.createElement('img');
             $(_img).addClass('destinationImage');
@@ -85,7 +86,8 @@ function DestinationManager() {
 
         $(item).append(innerDiv);        
 		list.appendChild(item);
-        $(list).listview('refresh');
+
+        $('#destinationList').listview('refresh');        
 	}
 	
 	this.addMIDIDestination = function(destName) {
@@ -108,10 +110,12 @@ function DestinationManager() {
     * takes a recently pushed destination (pushed via OSC), highlights it and mimics its selection 
     */
     this.selectPushedDestination = function(address, port) {
+        console.log("selecting");
         var list = document.getElementById('destinationList');
         destinationManager.highlight(list.childNodes.length - 1);
         _protocol = "OSC";
         destinationManager.selectIPAddressAndPort(address, port);
+        console.log("selected");        
     }
 	
 	this.selectMIDIIPAddressAndPort = function(address,port) {

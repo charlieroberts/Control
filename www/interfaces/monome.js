@@ -2,14 +2,13 @@ interfaceString = "loadedInterfaceName = \"Monome Emulation\";\
 \
 interfaceOrientation = \"landscape\";\
 \
-infoText = \"The monome (monome.org) is an excellent hardware OSC controller that consists of a grid of toggle buttons whose status is decoupled from physical control. This means that whether or not an individual button is lit is determined by software interfacing with the monome, not whether or not a user is pressing a button. There are many interesting applications desgined to be run in conjunction with the monome; this emulation is designed to work with those applications. In order to use it you will need to make sure that the application knows the IP address and port of Control. Note that most monome apps receive on port 8000 and transmit to 8080.<br><br>Although this is an emulation of a 8x8 monome there is also a 8x16 (monome 128) interface available from the Control website. This 8x8 interface also contains a couple of sliders outputting to /slider1 and /slider2.<br><br> Control and its authors are not affiliated with (but have infinite respect for) the monome project.\";\
+infoText = \"The monome (monome.org) is an excellent hardware OSC controller that consists of a grid of toggle buttons whose status is decoupled from physical control. This means that whether or not an individual button is lit is determined by software interfacing with the monome, not whether or not a user is pressing a button. There are many interesting applications desgined to be run in conjunction with the monome; this emulation is designed to work with those applications. In order to use it you will need to make sure that the application knows the IP address and port of Control. Note that most monome apps receive on port 8000 and transmit to 8080.<br><br>Although this is an emulation of a 8x8 monome there is also a 8x16 (monome 128) interface available from the Control website. This 8x8 interface also contains a couple of sliders outputting to /slider1 and /slider2.<br><br> Control and its authors are not affiliated with (but have infinite respect for) the monome project. For detailed instructions on using this interface, visit the Control website.\";\
 \
 whRatio = 2/3;\
-window.oscPrefix = \"/40h\";\
+\
+window.oscPrefix = \"/mlr\";\
 \
 function monomeInit() {\
-	PhoneGap.exec(\"OSCManager.setOSCReceivePort\", 8080);\
-    console.log(\"INIT\");\
 	var monome = window.monome;\
 	if(monome.rows == 8 && monome.columns == 8) {\
 		monome.numberOfUnits = 1;\
@@ -22,19 +21,18 @@ function monomeInit() {\
 }\
 window.monomeInit = monomeInit;\
 \
-function changeAddresses() {\
+function changeAddress() {\
 	var monome = window.monome;\
-    console.log(\"changing addresses\");\
-    monome.address = window.oscPrefix + \"/press\";\
 	\
 	for(var i = 0; i < monome.children.length; i++) {\
 		var btn = monome.children[i];\
 		btn.row = Math.floor(i / monome.columns);\
 		btn.column = i % monome.columns;\
 		btn.address = window.oscPrefix + \"/press\";\
-	}	\
+	}\
+	monome.address = window.oscPrefix + \"/press\";\
 };\
-window.changeAddresses = changeAddresses;\
+window.changeAddresses = changeAddress;\
 \
 function lightRow(row, unit, value) {\
 	var monome = window.monome;\
@@ -49,14 +47,12 @@ function lightRow(row, unit, value) {\
 	}\
 };\
 window.lightRow = lightRow;\
-\
-window.oscDelegate = {\
+window.oscManager.delegate = {\
 	processOSC : function(oscAddress, typetags, args) {\
-		console.log(\"msgs! \" + oscAddress);\
 		var monome = window.monome;\
 		switch(oscAddress) {\
 			case window.oscPrefix + \"/led\" :\
-				var buttonNumber = args[0] * monome.columns + args[1];\
+				var buttonNumber = args[1] * monome.columns + args[0];\
 				if(buttonNumber >= 0 && buttonNumber < (monome.rows * monome.columns)) {\
 					monome.setValue(buttonNumber, args[2], false);\
 				}\
@@ -100,14 +96,15 @@ window.oscDelegate = {\
 				}\
 				break;\
 			case \"/sys/prefix\":\
+                console.log('prefix change');\
 				window.oscPrefix = args[0];\
 				window.changeAddresses();\
+				window.prefixLabel.setValue(window.oscPrefix);\
 			default:\
 				break;\
 		}\
 	},\
 };\
-oscManager.delegate = window.oscDelegate;\
 \
 pages = [[\
 {\
@@ -117,15 +114,14 @@ pages = [[\
 	\"rows\":8,\
 	\"columns\":8,\
 	\"range\":[0,1],\
-	\"midiRange\":[0,127],\
 	\"mode\":\"momentary\",\
-	\"color\":\"#f66\",\
+    \"backgroundColor\":\"#000\",\
+	\"color\":\"#666\",\
 	\"stroke\":\"#aaa\",\
-	\"backgroundColor\":\"#000\",\
 	\"isLocal\":true,\
 	\"requiresTouchDown\":false,\
-	\"onvaluechange\": \"PhoneGap.exec(\'OSCManager.send\', this.address, \'iii\', this.lastChanged.row, this.lastChanged.column, this.lastChanged.value);\",\
-    \"shouldUseCanvas\":true,\
+	\"onvaluechange\": \"oscManager.sendOSC(this.lastChanged.address, 'iii', this.lastChanged.column, this.lastChanged.row, this.lastChanged.value);\",\
+	\"shouldUseCanvas\":true,\
 	\"oninit\": \"window.monomeInit();\",\
 },\
 {\
@@ -144,17 +140,6 @@ pages = [[\
 	\"bounds\": [.875, .2, .1, .8],\
 	\"isVertical\": true,\
 },\
-/*{\
-    \"name\": \"refresh\",\
-    \"type\": \"Button\",\
-	\"bounds\": [.7,.9,.1,.1],\
-	\"label\": \"refresh\",\
-    \"isLocal\": true,\
-    \"mode\": \"contact\",\
-    \"ontouchstart\": \"interfaceManager.refreshInterface()\",\
-    \"stroke\": \"#aaa\",\
-},*/\
-\
 {\
     \"name\": \"tabButton\",\
     \"type\": \"Button\",\

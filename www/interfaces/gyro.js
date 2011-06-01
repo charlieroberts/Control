@@ -1,40 +1,12 @@
-interfaceString = "loadedInterfaceName = \"Gyro, Accelerometer, Compass\";\
+interfaceString = "loadedInterfaceName = \"Gyro + Accelerometer\";\
 \
 interfaceOrientation = \"portrait\";\
 \
 whRatio = 2 / 3;\
 \
-infoText = \"This page shows off features of the Gyroscope (iPhone 4 and newest iPod Touch only) and the Accelerometer (all iOS and Android devices). Core Motion is a framework created by Apple that applies signal processing to the Gyro and Accelerometer readings to give more stable indications of pitch and roll. It also provides a usable yaw (orientation) value which changes as you change directions holding the phone. Unlike the compass, this yaw value is not affected by tilting the device. Although not present in this interface, you can also use the gyro widget to measure raw rotational rate on 3-axis (iPhone 4 and newest iPod Touch only).<br><br>You can set the update rate of the accelerometer and the gyro using the sliders provided here. The Core Motion values are sent to /gyro, the Accelerometer values are sent to /accelerometer and the compass heading to /compass. For MIDI, the gyro goes to CC 0, 1 and 2, the accelerometer to CC 3, 4 and 5.\";\
+infoText = \"This page shows off features of the Gyroscope (iPhone 4 and newest iPod Touch only) and the Accelerometer (all iOS devices). Core Motion is a framework created by Apple that applies signal processing to the Gyro and Accelerometer readings to give more stable indications of pitch and roll. It also provides a usable yaw (orientation) value which changes as you change directions holding the phone. Unlike the compass, this yaw value is not affected by tilting the device. Although not present in this interface, you can also use the gyro widget to measure raw rotational rate on 3-axis (iPhone 4 and newest iPod Touch only).<br><br>You can set the update rate of the accelerometer and the gyro using the sliders provided here. The Core Motion values are sent to /gyro, the Accelerometer values are sent to /accelerometer. For MIDI, the gyro goes to CC 0, 1 and 2, the accelerometer to CC 3, 4 and 5.\";\
 \
 pages = [[\
-\
-{\
-    \"name\": \"compassHeading\",\
-    \"type\": \"Slider\",\
-    \"x\": 0,\
-    \"y\": .75,\
-    \"width\": .99,\
-    \"height\": .075,\
-    \"isLocal\": true,\
-    \"min\": 0,\
-    \"max\": 360,\
-    \"startingValue\": 0,\
-    \"ontouchstart\":\"\",\
-    \"ontouchmove\":\"\",\
-    \"ontouchend\":\"\",\
-},\
-{\
-    \"name\": \"compassHeadingLabel\",\
-    \"type\": \"Label\",\
-    \"x\": .0,\
-    \"y\": .81,\
-    \"width\": 1,\
-    \"height\": .1,\
-    \"color\": \"#ffffff\",\
-    \"value\": \"Heading\",\
-    \"align\": \"left\",\
-},\
-\
 {\
     \"name\": \"gyroLabel\",\
     \"type\": \"Label\",\
@@ -88,101 +60,6 @@ pages = [[\
     \"width\": .99,\
     \"height\": .15,\
 	\"isLocal\":true,\
-	\"ontouchstart\":\"\",\
-    \"ontouchmove\":\"\",\
-    \"ontouchend\":\"\",\
-},\
-\
-\
-{\
-    \"name\": \"accSliders\",\
-    \"type\": \"MultiSlider\",\
-    \"numberOfSliders\": 3,\
-    \"x\": .0,\
-    \"y\": .42,\
-    \"min\":0,\
-    \"max\":127,\
-    \"midiNumber\":3,\
-    \"isVertical\": true,\
-    \"width\": .99,\
-    \"height\": .15,\
-    \"isLocal\":true,\
-    \"ontouchstart\":\"\",\
-    \"ontouchmove\":\"\",\
-    \"ontouchend\":\"\",\
-},\
-\
-{\
-    \"name\": \"com\",\
-    \"type\": \"Compass\",\
-    \"min\":0,\
-    \"max\":360,\
-    \"updateRate\":10,\
-    \"midiNumber\": 0,\
-    \"isLocal\":false,\
-    \"onvaluechange\": \"compassHeading.changeValue(self.value);\",\
-    \"address\":\"/compass\",\
-},\
-\
-{\
-    \"name\": \"acc\",\
-    \"type\": \"Accelerometer\",\
-    \"min\":0,\
-    \"max\":127,\
-    \"updateRate\":10,\
-    \"midiNumber\": 0,\
-    \"isLocal\":false,\
-    \"onvaluechange\": \"accSliders.setSequentialValues(self.x, self.y, self.z);\",\
-    \"address\":\"/accelerometer\",\
-},\
-\
-{\
-    \"name\": \"accSpeedLabel\",\
-    \"type\": \"Label\",\
-    \"x\": .0,\
-    \"y\": .675,\
-    \"width\": 1,\
-    \"height\": .1,\
-    \"color\": \"#ffffff\",\
-    \"value\": \"Update Rate : 10Hz\",\
-    \"align\": \"left\",\
-},\
-\
-{\
-    \"name\": \"accelerometerSpeed\",\
-    \"type\": \"Slider\",\
-    \"x\": 0,\
-    \"y\": .6,\
-    \"width\": .99,\
-    \"height\": .075,\
-    \"isLocal\": true,\
-    \"min\": 1,\
-    \"max\": 100,\
-    \"startingValue\": 10,\
-    \"ontouchend\": \"accSpeedLabel.changeValue(\'Update Rate : \' + (Math.round(this.value*10) / 10) +\'Hz\'); acc.setUpdateRate(this.value); \",\
-},\
-\
-{\
-    \"name\": \"gyro\",\
-    \"type\": \"Gyro\",\
-    \"min\":0,\
-    \"max\":127,\
-    \"midiNumber\":3,\
-    \"updateRate\":10,\
-    \"isLocal\":false,\
-    \"onvaluechange\": \"gyroSliders.setSequentialValues(this.pitch, this.roll, this.yaw);\",\
-},\
-\
-{\
-    \"name\": \"gyroSpeedLabel\",\
-    \"type\": \"Label\",\
-    \"x\": 0,\
-    \"y\": .325,\
-    \"width\": .8,\
-    \"height\": .1,\
-    \"color\": \"#ffffff\",\
-    \"value\": \"Update Rate : 10Hz\",\
-    \"align\": \"left\",\
 },\
 \
 {\
@@ -200,10 +77,22 @@ pages = [[\
 },\
 \
 {\
+    \"name\": \"gyroSpeedLabel\",\
+    \"type\": \"Label\",\
+    \"x\": 0,\
+    \"y\": .325,\
+    \"width\": .8,\
+    \"height\": .1,\
+    \"color\": \"#ffffff\",\
+    \"value\": \"Update Rate : 10Hz\",\
+	\"align\": \"left\",\
+},\
+\
+{\
     \"name\": \"accLabel\",\
     \"type\": \"Label\",\
     \"x\": 0,\
-    \"y\": .375,\
+    \"y\": .45,\
     \"width\": .2,\
     \"height\": .05,\
     \"color\": \"#ffffff\",\
@@ -214,7 +103,7 @@ pages = [[\
     \"name\": \"xAccLabel\",\
     \"type\": \"Label\",\
     \"x\": .0,\
-    \"y\": .42,\
+    \"y\": .65,\
     \"width\": .33,\
     \"height\": .05,\
     \"color\": \"#ffffff\",\
@@ -224,7 +113,7 @@ pages = [[\
     \"name\": \"yAccLabel\",\
     \"type\": \"Label\",\
     \"x\": .33,\
-    \"y\": .42,\
+    \"y\": .65,\
     \"width\": .33,\
     \"height\": .05,\
     \"color\": \"#ffffff\",\
@@ -234,13 +123,51 @@ pages = [[\
     \"name\": \"zAccLabel\",\
     \"type\": \"Label\",\
     \"x\": .66,\
-    \"y\": .42,\
+    \"y\": .65,\
     \"width\": .33,\
     \"height\": .05,\
     \"color\": \"#ffffff\",\
     \"value\": \"zAcc\",\
 },\
 \
+{\
+    \"name\": \"accSliders\",\
+    \"type\": \"MultiSlider\",\
+    \"numberOfSliders\": 3,\
+    \"x\": .0,\
+    \"y\": .5,\
+	\"min\":0,\
+	\"max\":127,\
+	\"midiNumber\":3,\
+    \"isVertical\": true,\
+    \"width\": .99,\
+    \"height\": .15,\
+	\"isLocal\":true,\
+},\
+{\
+    \"name\": \"accelerometerSpeed\",\
+    \"type\": \"Slider\",\
+    \"x\": 0,\
+    \"y\": .725,\
+    \"width\": .99,\
+    \"height\": .075,\
+    \"isLocal\": true,\
+    \"min\": 1,\
+    \"max\": 100,\
+    \"startingValue\": 10,\
+    \"ontouchend\": \"accSpeedLabel.changeValue(\'Update Rate : \' + (Math.round(this.value*10) / 10) +\'Hz\'); acc.setUpdateRate(this.value); \",\
+},\
+{\
+    \"name\": \"accSpeedLabel\",\
+    \"type\": \"Label\",\
+    \"x\": .0,\
+    \"y\": .775,\
+    \"width\": 1,\
+    \"height\": .1,\
+    \"color\": \"#ffffff\",\
+    \"value\": \"Update Rate : 10Hz\",\
+	\"align\": \"left\",\
+},\
 {\
     \"name\": \"tabButton\",\
     \"type\": \"Button\",\
@@ -292,6 +219,28 @@ pages = [[\
     \"value\": \"info\",\
 },\
 \
+{\
+    \"name\": \"acc\",\
+    \"type\": \"Accelerometer\",\
+	\"min\":0,\
+	\"max\":127,\
+	\"updateRate\":10,\
+	\"midiNumber\": 0,\
+	\"isLocal\":false,\
+    \"onvaluechange\": \"accSliders.setSequentialValues(this.x, this.y, this.z);\",\
+	\"address\":\"/accelerometer\",\
+},\
+\
+{\
+    \"name\": \"gyro\",\
+    \"type\": \"Gyro\",\
+	\"min\":0,\
+	\"max\":127,\
+	\"midiNumber\":3,\
+	\"updateRate\":10,\
+	\"isLocal\":false,\
+    \"onvaluechange\": \"gyroSliders.setSequentialValues(this.pitch, this.roll, this.yaw);\",\
+},\
 \
 ],\
 \

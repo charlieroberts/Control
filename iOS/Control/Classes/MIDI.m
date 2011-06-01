@@ -65,7 +65,6 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 					nil];
 		[self setWebView:theWebView];
 	}
-	NSLog(@"called MIDI");
 	me = self;
 	return self;
 }
@@ -77,7 +76,7 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
     int i, j;
     
     ItemCount num_sources = MIDIGetNumberOfSources();
-	NSLog(@"number of sources found = %d", num_sources);
+	//NSLog(@"number of sources found = %d", num_sources);
     //sources = (MIDIEndpointRef *)malloc(sizeof(MIDIEndpointRef) * num_sources);
     j = 0;
     for (i = 0; i < num_sources; i++) {
@@ -87,7 +86,7 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 		MIDIObjectGetStringProperty(source, kMIDIPropertyName, &pName);
 		//NSLog(@"MIDI Object %@", (NSString *)pName);
 		NSString *ipString = [NSString stringWithFormat: @"destinationManager.addMIDIDestination(\"%@\");", (NSString *)pName];
-		NSLog(ipString);
+		//NSLog(ipString);
 		[webView stringByEvaluatingJavaScriptFromString:ipString];
 	//	sources[j++] = source;
     }
@@ -97,6 +96,7 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 	NSString *midiIP = [arguments objectAtIndex:1];
 	int port = [[arguments objectAtIndex:2] intValue];
 	
+    //NSLog(@"ip = %@, port = %d", midiIP, port);
 	host = [MIDINetworkHost hostWithName:@"Control" address:midiIP port:port];	
 	MIDINetworkConnection *connection = [MIDINetworkConnection connectionWithHost:host];
 	

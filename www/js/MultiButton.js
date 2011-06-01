@@ -285,7 +285,19 @@ function MultiButton(ctx, props) {
             }
         }
     }
-
+    this.setColors = function(newColors) {
+        this.backgroundColor = newColors[0];
+        this.fillColor = newColors[1];
+        this.strokeColor = newColors[2];
+        
+        if(!this.shouldUseCanvas) {
+            for(var i = 0; i < this.children.length; i++) {
+                this.children[i].setColors(newColors);
+            }
+        }else{
+            this.draw();
+        }
+    }
 	this.setValue = function(buttonNumber, value) {
         if(!this.shouldUseCanvas) {
             var _w = this.children[buttonNumber];
@@ -304,7 +316,7 @@ function MultiButton(ctx, props) {
             this.drawButton(buttonNumber);
         }
 	}
-	
+    
 	this.unload = function() {
         if(!this.shouldUseCanvas) {
             for(var i = 0; i < this.children.length; i++) {

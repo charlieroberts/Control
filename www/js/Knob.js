@@ -101,7 +101,34 @@ function Knob(ctx,props) {
 			this.canvasCtx.fill();
         }
 	}
+    
+    this.setColors = function(newColors) {
+        this.backgroundColor = newColors[0];
+        this.fillColor = newColors[1];
+        this.strokeColor = newColors[2];
+        
+        this.draw();
+    }
 	
+    this.setBounds = function(newBounds) {
+        this.width = Math.round(newBounds[2] * control.deviceWidth);
+        this.height = Math.round(newBounds[3] * control.deviceHeight);
+        this.x = Math.round(newBounds[0] * control.deviceWidth);
+        this.y = Math.round(newBounds[1] * control.deviceHeight);
+        
+        this.canvas.width = this.width;						// DO NOT USE STYLES TO RESIZE CANVAS OBJECT
+        this.canvas.height = this.width;					// DO NOT USE STYLES TO RESIZE CANVAS OBJECT
+        this.canvas.style.top = this.y + "px";
+        this.canvas.style.left = this.x + "px";
+        
+        if(control.orientation == 0 || control.orientation == 180) {
+            this.radius =  Math.round(this.width / 2);
+        }else{
+            this.radius =  Math.round(this.height / 2);
+        }
+        this.draw();
+    }
+
 	this.event = function(event) {
 		touch = event.changedTouches.item(0);
 		

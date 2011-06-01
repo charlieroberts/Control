@@ -2,8 +2,8 @@
 
 function Control() {
 	this.widgetCount = 0;
-	this.contexts = new Array();
-	this.pages = new Array();
+	this.pages = [];
+    this.constants = [];
 	this.currentPage = 0;
 	this.deviceWidth = null;
 	this.deviceHeight = null;
@@ -56,6 +56,26 @@ Control.prototype.makePages = function(_pages,width, height) {
 
     
 
+}
+
+Control.prototype.removeWidgetWithName = function(widgetName) {
+	for(var i=0; i < this.widgets.length; i++) {
+		var widget = this.widgets[i];
+		if(widget.name == widgetName) {
+			this.widgets.splice(i,1);
+			widget.unload();
+			break;
+		}
+	}
+}
+
+Control.prototype.getWidgetWithName = function(widgetName) {
+    for(var i=0; i < this.widgets.length; i++) {
+		var widget = this.widgets[i];
+		if(widget.name == widgetName) {
+            return widget;
+		}
+	}
 }
 
 Control.prototype.showToolbar = function() {
@@ -194,6 +214,7 @@ Control.prototype.loadWidgets = function() {
 	for(this.currentPage = 0; this.currentPage < pages.length; this.currentPage++) {
 		this.pages.push(new Array());
         var page = pages[this.currentPage];
+
 		for(var i=0; i < page.length; i++) {
 			var w = page[i];
 			var _w = this.makeWidget(w);
@@ -201,6 +222,7 @@ Control.prototype.loadWidgets = function() {
 			eval("this.addWidget(" + w.name + ", this.currentPage);"); // PROBLEM
 		}
 	}
+
 	this.currentPage = oldCurrentPage;
 }
 
@@ -288,7 +310,7 @@ Control.prototype.refresh = function() {
 }
 
 Control.prototype.onRotation = function(event) {
-	console.log("onrotation " + event.orientation);
+	//console.log("onrotation " + event.orientation);
 
 	control.orientation = event.orientation;
 	
@@ -337,7 +359,7 @@ Control.prototype.changeTab = function(tab) {
     this.currentTab = tab;
     
     //this.currentTab.style.display = "block";    
-    
+
 	if(this.currentTab.id == "selectedInterface") {
 		this.tabBarHidden = true;
 		control.hideToolbar();
@@ -376,6 +398,7 @@ Control.prototype.changeTab = function(tab) {
         //interfaceManager.createInterfaceListWithStoredInterfaces();
     }
 	
+    console.log("tab changed");
 	
 }
 

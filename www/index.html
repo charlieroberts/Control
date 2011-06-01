@@ -73,7 +73,7 @@
             _protocol = "OSC";
 			//console.setLevel(8);
 			oscManager  = new OSCManager();
-			//midiManager = new MIDIManager();
+			midiManager = new MIDIManager();
 			
 			destinationManager = new DestinationManager();
 			destinationManager.init();
@@ -141,11 +141,12 @@
 	<div data-role="header" id="header" data-backbtn="false"><h1>Preferences</h1></div>
 	<div data-role="content">
         <ul id="preferencesList" data-role="listview" data-theme="g">
-            <li class="preferencesListItem"><a id="autolockToggle" href="#" ontouchend="preferencesManager.autolockToggle()">Turn Autolock <b>On</b></a></li>
+            <li data-icon="false" class="preferencesListItem"><a id="autolockToggle" href="#" ontouchend="preferencesManager.autolockToggle()">Turn Autolock <b>On</b></a></li>
             <li class="preferencesListItem">OSC Receive Port : 
-                <form id="oscForm" style="display:inline;" onsubmit="portField.blur(); preferencesManager.changePort(portField.value);">
-                    <input style="display:inline; width:150px;" type="number" id="receivePortSelector" name="portField" value="8080" onchange="">
-                </form>
+                <input id="portField" style="display:inline; width:150px;" type="number" id="receivePortSelector" name="portField" value="8080" onchange="portField.blur();preferencesManager.changePort(portField.value);console.log('EVENT SUBMIT');">
+                <!--<form id="oscForm" style="display:inline;" onsubmit="console.log('SUBMIT');portField.blur(); preferencesManager.changePort(portField.value);">
+                    
+                </form>-->
             </li>
         </ul>
 	</div>
@@ -158,7 +159,7 @@
 	
       <div>
         <!--<div style="height:2000px" data-scroll="true">-->
-	    <p>Control v1.2 is an application enabling configurable control surfaces for mobile devices. For more information, interfaces, tutorials and references please visit
+	    <p>Control v1.3 is an application enabling configurable control surfaces for mobile devices. For more information, interfaces, tutorials and references please visit
     	the Control website (http://www.charlie-roberts.com/Control).
     	</p>
     	<p>
@@ -166,7 +167,7 @@
     	and Matt Wright. Control was partially realized as a research project for the AlloSphere Research Group.
     	</p>
 
-    	<p>Control is built using the following open source projects (thank you!):</p>
+    	<p>Control is open source and was built using the following open source projects (thank you!):</p>
     	<ul>
     		<li style="margin-bottom:.5em"><b>PhoneGap</b> http://www.phonegap.com</li>
     		<li style="margin-bottom:.5em"><b>jQuery Mobile</b> http://jquerymobile.com</li>
@@ -189,22 +190,22 @@
       <div data-role="navbar" class="ui-navbar ui-navbar-noicons" role="navigation">
           <ul class="ui-navbar-noicons ui-grid-c"  style="border-top-width:0;">
               <li class="ui-block-a" style=" border-top-width:0;">
-                  <a href="#Interfaces" ontouchend="control.changeTab(document.getElementById('Interfaces'))" class="ui-btn ui-btn-up-a" style=" border-top-width:0;" data-theme="a">
+                  <a href="#Interfaces" ontouchstart="control.changeTab(document.getElementById('Interfaces'));$.mobile.changePage('#Interfaces');" class="ui-btn ui-btn-up-a" style=" border-top-width:0;" data-theme="a">
                       <span class="ui-btn-inner"><span class="ui-btn-text" style="font-size:1em">Interfaces</span></span>
                   </a>
               </li>
               <li class="ui-block-b">
-                  <a href="#Destinations" ontouchend="control.changeTab(document.getElementById('Destinations'))" data-theme="a" class="ui-btn ui-btn-up-a">
+                  <a href="#Destinations" ontouchstart="control.changeTab(document.getElementById('Destinations'));$.mobile.changePage('#Destinations');" data-theme="a" class="ui-btn ui-btn-up-a">
                       <span class="ui-btn-inner" style="padding-left:0; padding-right:0;"><span class="ui-btn-text" >Destinations</span></span>
                   </a>
               </li>
               <li class="ui-block-b">
-                  <a href="#Preferences" ontouchend="control.changeTab(document.getElementById('Preferences'))" data-theme="a" class="ui-btn ui-btn-up-a">
+                  <a href="#Preferences" ontouchstart="control.changeTab(document.getElementById('Preferences'))[$.mobile.changePage('#Preferences');" data-theme="a" class="ui-btn ui-btn-up-a">
                       <span class="ui-btn-inner" style="padding-left:0; padding-right:0;"><span class="ui-btn-text">Preferences</span></span>
                   </a>
               </li>
               <li class="ui-block-b">
-                  <a href="#Info" ontouchend="control.changeTab(document.getElementById('Info'))" data-theme="a" class="ui-btn ui-btn-up-a">
+                  <a href="#Info" ontouchstart="control.changeTab(document.getElementById('Info'));$.mobile.changePage('#Info');" data-theme="a" class="ui-btn ui-btn-up-a">
                       <span class="ui-btn-inner"><span class="ui-btn-text">Info</span></span>
                   </a>
               </li>

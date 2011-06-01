@@ -106,6 +106,16 @@ function MultiSlider(ctx, props) {//x, y, width, height, color, stroke, min, max
 			}
 		}
     }
+    
+    this.setColors = function(newColors) {
+        this.backgroundColor = newColors[0];
+        this.fillColor = newColors[1];
+        this.strokeColor = newColors[2];
+        
+        for(var i = 0; i < this.children.length; i++) {
+            this.children[i].setColors(newColors);
+        }
+    }
 	
 	this.setValue = function(sliderNumber, value) {
 		var _w = this.children[sliderNumber];

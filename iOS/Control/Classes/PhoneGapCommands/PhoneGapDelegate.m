@@ -145,6 +145,8 @@ static NSString *gapVersion;
 	// read from UISupportedInterfaceOrientations (or UISupportedInterfaceOrientations~iPad, if its iPad) from -Info.plist
 	NSArray* supportedOrientations = [self parseInterfaceOrientations:
 											   [[[NSBundle mainBundle] infoDictionary] objectForKey:@"UISupportedInterfaceOrientations"]];
+    
+    NSLog(@"supported %@", supportedOrientations);
     // read from PhoneGap.plist in the app bundle
 	NSDictionary *temp = [[self class] getBundlePlist:@"PhoneGap"];
     settings = [[NSDictionary alloc] initWithDictionary:temp];
@@ -253,7 +255,7 @@ static NSString *gapVersion;
 	 * imageView - is the Default loading screen, it stay up until the app and UIWebView (WebKit) has completly loaded.
 	 * You can change this image by swapping out the Default.png file within the resource folder.
 	 */
-	UIImage* image = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Default" ofType:@"png"]];
+	UIImage* image = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"black" ofType:@"png"]];
 	imageView = [[UIImageView alloc] initWithImage:image];
 	[image release];
 	

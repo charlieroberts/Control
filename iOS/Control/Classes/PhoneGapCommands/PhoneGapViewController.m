@@ -16,6 +16,9 @@
 - (id) init {
     if (self = [super init]) {
 		// do other init here
+        NSLog(@"VIEW CONTROLLER INIT");
+        rotateOrientation = @"portrait";
+        [rotateOrientation retain];
 	}
 	
 	return self;
@@ -23,18 +26,20 @@
 
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
+    NSLog(@"interfaceOrientation = %d %@", (interfaceOrientation == UIDeviceOrientationPortraitUpsideDown), rotateOrientation);
     if (autoRotate == YES) {
         return YES;
     } else {
         if ([rotateOrientation isEqualToString:@"portrait"]) {
-            return (interfaceOrientation == UIInterfaceOrientationPortrait);
+            if (interfaceOrientation == UIDeviceOrientationPortraitUpsideDown) return YES;
+            return (interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIDeviceOrientationPortraitUpsideDown);
         } else if ([rotateOrientation isEqualToString:@"landscape"]) {
             return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
         } else {
             return NO;
         }
     }
-	
+
 	return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft ||
 			interfaceOrientation == UIInterfaceOrientationLandscapeRight);
 }

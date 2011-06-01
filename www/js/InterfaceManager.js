@@ -17,6 +17,7 @@ function InterfaceManager() {
 								  "multiXY.js",
 								  "sequencer.js",
 								  "gyro.js",
+                                  "spacetime.js",
                                   ];
     }
      
@@ -150,7 +151,7 @@ function InterfaceManager() {
             
             item.style.borderBottom = "1px solid #666";
             item.style.fontWeight = "normal";
-            item.setAttribute("ontouchend", "$.mobile.changePage('#SelectedInterfacePage'); console.log('"+r.key+"');interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "');");
+            item.setAttribute("ontouchend", "$.mobile.changePage('#SelectedInterfacePage');interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "');");
             item.innerHTML = r.key;
             $(item).addClass('destinationListItem');
             $(item).addClass('interfaceListItem');
@@ -259,10 +260,13 @@ function InterfaceManager() {
 	}
     
     this.runInterface = function(json) {
+		control.unloadWidgets();
         constants = null;
         pages = null;
         //console.log(json);
         eval(json);
+        
+        oscManager.delegate = oscManager;
         this.currentInterfaceName = loadedInterfaceName;
         this.currentInterfaceJSON = json;
 		
@@ -281,9 +285,9 @@ function InterfaceManager() {
             control.loadConstants(constants);
         }
         control.loadWidgets();
-        if(this.currentTab != document.getElementById("selectedInterface")) {
+        //if(this.currentTab != document.getElementById("selectedInterface")) {
             control.changeTab(document.getElementById("selectedInterface"));
-		}
+		//}
     }
 	
 	this.selectInterfaceFromList = function(interfaceName) {

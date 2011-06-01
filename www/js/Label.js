@@ -4,6 +4,7 @@ function Label(ctx, props) { //x, y, width, height, color, value, size, align) {
 	this.size = (typeof props.size != "undefined") ? props.size : 12;
 
 	this.value = props.value;
+    if(typeof this.value == "undefined") this.value = "";
 	this.widgetID = -1;
     
     this.name = props.name;
@@ -20,11 +21,21 @@ function Label(ctx, props) { //x, y, width, height, color, value, size, align) {
     //this.label.innerHTML = this.value;        
     this.ctx.appendChild(this.label);
     
+    
+    
 	this.draw = function() {
         //console.log("draw " + this.name);
 		this.changeValue(this.value);
 	}
     
+    this.setColors = function(newColors) {
+        this.backgroundColor = newColors[0];
+        this.fillColor = newColors[1];
+        this.strokeColor = newColors[2];
+        
+        this.label.style.color = this.fillColor;
+        this.label.style.backgroundColor = this.backgroundColor;
+    }
 //    this.draw = function() {
 //        this.ctx.fillStyle = this.strokeColor;
 //        this.ctx.textBaseline = 'middle';
@@ -37,13 +48,27 @@ function Label(ctx, props) { //x, y, width, height, color, value, size, align) {
 
 	this.changeValue = function(x) {
         this.value = x;
-        $(this.label).text(this.value);
+        //$(this.label).text(this.value);
+        this.label.innerHTML = this.value;
 	}
 	
 	this.setValue = function(x) {
 		this.changeValue(x);
 	}
-
+    
+    this.setBounds = function(newBounds) {
+        this.width = Math.round(newBounds[2] * control.deviceWidth);
+        this.height = Math.round(newBounds[3] * control.deviceHeight);
+        this.x = Math.round(newBounds[0] * control.deviceWidth);
+        this.y = Math.round(newBounds[1] * control.deviceHeight);
+        
+        this.label.style.width  = this.width;						// DO NOT USE STYLES TO RESIZE CANVAS OBJECT
+        this.label.style.height = this.width;					// DO NOT USE STYLES TO RESIZE CANVAS OBJECT
+        this.label.style.top  = (this.y - this.size) + "px";
+        this.label.style.left = this.x + "px";
+        
+        this.label.style.lineHeight = (this.verticalCenter) ? this.height + "px" : (this.size + 2) + "px";        
+    }
 	this.output = function() {
 	//control.send("/msg", "i", this.value);
 	}

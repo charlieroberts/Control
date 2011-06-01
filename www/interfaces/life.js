@@ -101,8 +101,8 @@ pages = [[\
     \"type\": \"MultiButton\",\
     \"x\": 0,\
     \"y\": 0,\
-    \"rows\": 20,\
-    \"columns\": 20,\
+    \"rows\": 11,\
+    \"columns\": 11,\
     \"width\": .985,\
     \"height\": .64,\
     \"startingValue\": 0,\

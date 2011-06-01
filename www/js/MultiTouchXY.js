@@ -1,5 +1,5 @@
 gNOT_ACTIVE = -10000;
-    
+// TODO: touches don't adjust position when range is set via osc
 function MultiTouchXY(ctx, props) {
 	this.__proto__ = new Widget(ctx,props);
 	
@@ -181,23 +181,68 @@ function MultiTouchXY(ctx, props) {
             }
         }
 		
-        var xpercentage = (inputX - (this.x )) / (this.width  - this.half * 2);
-        var ypercentage = (inputY - (this.y )) / (this.height - this.half * 2);
+        touch.xpercentage = (inputX - (this.x )) / (this.width  - this.half * 2);
+        touch.ypercentage = (inputY - (this.y )) / (this.height - this.half * 2);
+        
+        if(touch.xpercentage < 0) touch.xpercentage = 0; // needed to account for the - this.half * 2 above TODO: NOT PRECISE ON EDGES, SHOULD FIX
+        if(touch.ypercentage < 0) touch.ypercentage = 0;
         
         var range = this.max - this.min;
         
 		if(_protocol != "MIDI") {
-			this.xvalue = this.min + (xpercentage * range);
-			this.yvalue = this.min + (ypercentage * range);
+			this.xvalue = this.min + (touch.xpercentage * range);
+			this.yvalue = this.min + (touch.ypercentage * range);
 		}else{
-			this.xvalue = Math.round(this.min + (xpercentage * range));
-			this.yvalue = Math.round(this.min + (ypercentage * range));
+			this.xvalue = Math.round(this.min + (touch.xpercentage * range));
+			this.yvalue = Math.round(this.min + (touch.ypercentage * range));
 		}
         
 		if(this.onvaluechange != null) eval(this.onvaluechange);
 		if(!this.isLocal) this.output(touch);
 	}
+    
+    this.setColors = function(newColors) {
+        this.backgroundColor = newColors[0];
+        this.fillColor = newColors[1];
+        this.strokeColor = newColors[2];
+        
+        this.container.style.backgroundColor = this.backgroundColor;
+        
+        for(var i = 0; i < this.children.length; i++) {
+			var touch = this.children[i];
+            touch.style.color = this.strokeColor;
+            touch.style.backgroundColor = this.fillColor;
+            touch.style.border = this.strokeColor + " solid 1px";
+        }
+    }
+    
+    this.setBounds = function(newBounds) {
+        this.width = Math.round(newBounds[2] * control.deviceWidth);
+        this.height = Math.round(newBounds[3] * control.deviceHeight);
+        this.x = Math.round(newBounds[0] * control.deviceWidth);
+        this.y = Math.round(newBounds[1] * control.deviceHeight);
+        
+        this.container.style.width  = this.width - 2 + "px";
+        this.container.style.height = this.height - 2 + "px";
+        this.container.style.left = this.x  + "px";
+        this.container.style.top  = this.y  + "px";
+        
+        if(typeof this.label != "undefined") {
+            this.label.setBounds(newBounds);
+        }
+    }
 	
+//    this.setRange = function(min, max) {
+//        this.min = min;
+//        this.max = max;
+//        
+//        for(var i = 0; i < this.maxTouches; i++) {
+//            var touch = this.children[i];
+//            touch.style.left = ( touch.xpercentage * parseInt(this.container.style.width ) ) + "px";
+//            touch.style.top  = ( touch.ypercentage * parseInt(this.container.style.height) ) + "px";
+//        }
+//
+//    }
 	this.output = function(touch) {
 		var valueString = "";
         if(_protocol == "OSC") {
@@ -241,7 +286,7 @@ function MultiTouchXY(ctx, props) {
 		var xPercentageOfRange = (xValue - (this.min )) / (this.max - this.min);
 		var yPercentageOfRange = (yValue - (this.min )) / (this.max - this.min);
 		
-		var touch = this.children[touchNumber];
+		var touch = this.children[touchNumber - 1];
 		touch.style.left = ( xPercentageOfRange * parseInt(this.container.style.width ) ) + "px";
 		touch.style.top  = ( yPercentageOfRange * parseInt(this.container.style.height) ) + "px";
 	}

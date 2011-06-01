@@ -173,6 +173,43 @@ function Slider(ctx, props) {
 			this.ctx.strokeRect(this.x,this.y, this.width, this.height);
 		}
 	}
+    
+    this.setColors = function(newColors) {
+        this.backgroundColor = newColors[0];
+        this.fillColor = newColors[1];
+        this.strokeColor = newColors[2];
+        
+        this.fillDiv.style.backgroundColor = this.fillColor;
+        this.strokeDiv.style.border = "1px solid" + this.strokeColor;
+		this.strokeDiv.style.backgroundColor = this.backgroundColor;
+    }
+
+    this.setBounds = function(newBounds) {
+        this.width = Math.round(newBounds[2] * control.deviceWidth);
+        this.height = Math.round(newBounds[3] * control.deviceHeight);
+        this.x = Math.round(newBounds[0] * control.deviceWidth);
+        this.y = Math.round(newBounds[1] * control.deviceHeight);
+        
+        this.fillDiv.style.width  = this.width - 2 + "px";
+        this.fillDiv.style.height = this.height - 2 + "px";
+        this.fillDiv.style.left = this.x + 1 + "px";
+        this.fillDiv.style.top  = this.y + 1 + "px";
+        
+        this.strokeDiv.style.width  = this.width - 2 + "px";
+        this.strokeDiv.style.height = this.height - 2 + "px";
+        this.strokeDiv.style.left = this.x  + "px";
+        this.strokeDiv.style.top  = this.y + "px";
+        
+        if(this.isXFader) {
+            this.xFaderWidth = 50;
+            if(!this.shouldUseCanvas) {
+                this.fillDiv.style.width = this.xFaderWidth + "px";
+                this.fillDiv.style.left = (this.x + (this.value * this.width)) + 1 + "px";
+            }
+        }
+        
+        this.draw();
+    }
 	
 	this.show = function() {
         if(!this.shouldUseCanvas) {
