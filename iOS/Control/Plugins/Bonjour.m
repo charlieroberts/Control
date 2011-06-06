@@ -50,8 +50,8 @@
 	myIP = [self getIPAddress];
     [myIP retain];
     
-    NSString *ipstring = [NSString stringWithFormat:@"control.ipAddress = '%@';", myIP];
-    
+    NSString *ipstring = [NSString stringWithFormat:@"window.ipAddress = '%@';", myIP]; // for some reason control.ipAddress doesn't work, maybe control isn't instantiated yet?
+    NSLog(ipstring);
     [webView stringByEvaluatingJavaScriptFromString:ipstring];
 }
 

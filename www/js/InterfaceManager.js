@@ -216,6 +216,7 @@ function InterfaceManager() {
             //interfaceManager.interfaceFiles.remove(loadedInterfaceName, 
                 interfaceManager.interfaceFiles.save( {key:loadedInterfaceName, json:interfaceJSON, address:ipAddress},
                                                        function(r) {
+                                                             //console.log("interface saved");
                                                             if(shouldReloadList) 
                                                                 interfaceManager.createInterfaceListWithStoredInterfaces();
                                                        }
@@ -243,8 +244,9 @@ function InterfaceManager() {
        
         if(confirm("An interface is being pushed to you. Do you accept it?")) {
             var loadedInterfaceName = null;
-            this.saveInterface(interfaceJSON, false);
             interfaceManager.runInterface(interfaceJSON);
+            this.saveInterface(interfaceJSON, false);
+
         }
 
 	}
@@ -264,9 +266,10 @@ function InterfaceManager() {
         constants = null;
         pages = null;
         //console.log(json);
+        oscManager.delegate = oscManager;
+
         eval(json);
         
-        oscManager.delegate = oscManager;
         this.currentInterfaceName = loadedInterfaceName;
         this.currentInterfaceJSON = json;
 		
@@ -285,9 +288,10 @@ function InterfaceManager() {
             control.loadConstants(constants);
         }
         control.loadWidgets();
-        //if(this.currentTab != document.getElementById("selectedInterface")) {
+        if(this.currentTab != document.getElementById("selectedInterface")) {
             control.changeTab(document.getElementById("selectedInterface"));
-		//}
+            $.mobile.changePage('#SelectedInterfacePage');
+		}
     }
 	
 	this.selectInterfaceFromList = function(interfaceName) {
