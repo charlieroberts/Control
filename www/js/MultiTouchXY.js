@@ -13,6 +13,8 @@ function MultiTouchXY(ctx, props) {
 	this.isMomentary = (typeof props.isMomentary == "undefined") ? true : props.isMomentary;
 	
 	this.container = document.createElement('div');
+	$(this.container).addClass('widget multiTouchXY');
+
 	this.container.style.position = "absolute";
 	this.container.style.display = "block";
 	this.container.style.width  = this.width  - 2 + "px";
@@ -37,6 +39,8 @@ function MultiTouchXY(ctx, props) {
 	
 	this.addTouch = function(xPos, yPos, id) {
 		var touch = document.createElement('div');
+		//XXX should this be a widget or some sort of widget child?
+		$(touch).addClass('widget touch');
 		
 		touch.style.display = "block";
 		touch.style.position = "absolute";

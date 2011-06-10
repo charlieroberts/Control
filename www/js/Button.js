@@ -39,6 +39,8 @@ function Button(ctx, props) {
     
     {   // remove for canvas
         this.fillDiv   = document.createElement("div");
+		  $(this.fillDiv).addClass('widget button');
+
         this.fillDiv.style.width = this.width - 2 + "px";
         this.fillDiv.style.height = this.height - 2 + "px";	
         this.fillDiv.style.position = "absolute";

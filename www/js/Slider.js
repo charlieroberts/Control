@@ -20,6 +20,9 @@ function Slider(ctx, props) {
 	this.pixelHeight = 1 / control.deviceHeight;
 	if(!this.shouldUseCanvas) {
 		this.fillDiv   = document.createElement("div");
+		$(this.fillDiv).addClass('widget slider');
+
+
 		this.fillDiv.style.width = this.width - 2 + "px";
 		this.fillDiv.style.height = this.height - 2 + "px";
 		this.fillDiv.style.position = "absolute";
@@ -31,6 +34,9 @@ function Slider(ctx, props) {
 		this.ctx.appendChild(this.fillDiv);							// THIS LINE IS IMPORTANT!!!!
 		
 		this.strokeDiv   = document.createElement("div");
+		//XXX should this be a widget or some sort of widget child?
+		$(this.strokeDiv).addClass('widget slider_stroke');
+
 		this.strokeDiv.style.width = this.width - 2 + "px";
 		this.strokeDiv.style.height = this.height - 2 + "px";
 		this.strokeDiv.style.position = "absolute";
@@ -42,6 +48,8 @@ function Slider(ctx, props) {
 		this.ctx.appendChild(this.strokeDiv);						// THIS LINE IS IMPORTANT!!!!
 	}else{
 		this.canvas = document.createElement('canvas');
+		$(this.canvas).addClass('widget slider');
+
 		this.canvas.width = this.width;						// DO NOT USE STYLES TO RESIZE CANVAS OBJECT
 		this.canvas.height = this.height;					// DO NOT USE STYLES TO RESIZE CANVAS OBJECT
 		this.ctx.appendChild(this.canvas);

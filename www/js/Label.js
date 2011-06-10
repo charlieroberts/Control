@@ -11,6 +11,8 @@ function Label(ctx, props) { //x, y, width, height, color, value, size, align) {
     this.labelSize = props.labelSize || 12;
 
     this.label = document.createElement("h3");
+	 $(this.label).addClass('widget label');
+
     this.align = (typeof props.align != "undefined") ? props.align : "center";
     this.verticalCenter = (typeof props.verticalCenter != "undefined") ? props.verticalCenter : true;
     
