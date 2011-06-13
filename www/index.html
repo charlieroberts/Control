@@ -2,22 +2,22 @@
 <html>
   <head>
     <title>Control</title>
-
+    <!-- somehow this seems to work for both platforms... voodoo. -->
     <meta name="viewport" content="width=320; user-scalable=no" />
     <meta name="apple-mobile-web-app-capable" content="yes" />  
-    <!--
     <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, target-densitydpi=device-dpi" />
-    -->
+    
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     
     <link rel="stylesheet" href="css/jquery.mobile-1.0a3.css" />
     <link rel="stylesheet" href="css/master.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    
+    <script type="text/javascript" charset="utf-8" src="js/phonegap-uncompressed.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/keyevent.js"></script>        
     <!--<link rel="stylesheet" href="css/jquery.mobile.scrollview.css" />-->
 
     <!--<link rel="stylesheet" href="css/iscroll.css" type="text/css" media="screen" charset="utf-8">-->
 
-    <script type="text/javascript" charset="utf-8" src="js/phonegap-uncompressed.js"></script>
-    
     <!--<script type="text/javascript" charset="utf-8" src="js/NativeControls.js"></script>-->
     <!-- on android
     <script type="text/javascript" charset="utf-8" src="js/keyevent.js"></script>
@@ -71,6 +71,11 @@
         };
         
         PhoneGap.addConstructor(function(){
+            init();
+        });
+        
+        function init() {
+            console.log("CONSTRUCTOR");
             document.addEventListener("touchmove", preventBehavior, false); // prevents webkit from scrolling DNR
             //console.log("interface name = *******" + window.loadedInterfaceName);
             // console.log("window.TEST.pages = " + window.TEST.pages);
@@ -99,20 +104,20 @@
             
             preferencesManager = new PreferencesManager();
             console.log("end of constructor");
-        });
+        }
         
         function autolockToggle() {
             var autolockToggleLink = document.getElementById("autolockToggle");
             autolock = !autolock;
             (!autolock) ? autolockToggleLink.innerHTML = "Turn Autolock <b>Off</b>" : autolockToggleLink.innerHTML = "Turn Autolock <b>On</b>";         
-            PhoneGap.exec("Device.autolockToggle", autolock);
+            if(device.platform == 'iPhone') PhoneGap.exec("Device.autolockToggle", autolock);
             preferences.save({key:"autolock", shouldAutolock:autolock});
         }
 
     </script>
   </head>
   
-  <body id="stage" style="background-color:#000; -webkit-user-select: none;" class="theme"> 
+  <body id="stage" onload="init();control.init();" style="background-color:#000; -webkit-user-select: none;" class="theme"> 
   
 
   <div data-role="page" id="Interfaces" data-theme="a">

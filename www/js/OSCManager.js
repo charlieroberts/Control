@@ -1,6 +1,5 @@
 function OSCManager() {
 	this.delegate = this;
-	
 	return this;
 }
 
@@ -70,7 +69,7 @@ OSCManager.prototype.processOSCMessage = function() {
 	for(var i = 2; i < arguments.length; i++) {
 		args[i - 2] = arguments[i];
 	}
-    
+
 	this.delegate.processOSC(address, typetags, args);
 }	
 
@@ -144,3 +143,4 @@ OSCManager.prototype.sendOSC = function() {	// NOTE: PhoneGap.exec('OSCManager.s
 		eval(evalString);
 	}
 }
+

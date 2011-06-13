@@ -1,6 +1,7 @@
 //TODO: this.widgets should hold ALL widgets, including constants. this.constants and this.pages can be used to keep them separated.
 
 function Control() {
+    console.log("CONTROL INIT START")
 	this.widgetCount = 0;
 	this.pages = [];
     this.constants = [];
@@ -9,19 +10,30 @@ function Control() {
 	this.deviceHeight = null;
 	this.values = [];
 	this.valuesString = "";
+    console.log("CONTROL INIT 1")	
 	this.currentTab = document.getElementById("Interfaces");
 	this.tabBarHidden = false;
 	this.orientation = 0;
 	acc = null;
 	compass = null;
 	gyro = null;
+    console.log("CONTROL INIT 2")	
 	interfaceDiv = document.getElementById("selectedInterface");
-    PhoneGap.exec("OSCManager.startReceiveThread");
-	PhoneGap.exec("CNTRL_Accelerometer.setUpdateRate", 50);
-	PhoneGap.exec("Gyro.setUpdateRate", 50);	
+    console.log("CONTROL INIT 3")	
+	
+    console.log("CONTROL INIT 4")    
 	this.changeTab(this.currentTab);
 	this.isAddingConstants = false;
+    console.log("CONTROL INIT 5")	
 	return this;
+}
+
+Control.prototype.init = function() {
+    if(device.platform == 'iPhone') {
+        PhoneGap.exec("OSCManager.startReceiveThread");
+	    PhoneGap.exec("CNTRL_Accelerometer.setUpdateRate", 50);
+	    PhoneGap.exec("Gyro.setUpdateRate", 50);	
+    }
 }
 
 Control.prototype.makePages = function(_pages,width, height) {
@@ -372,7 +384,7 @@ Control.prototype.changeTab = function(tab) {
 	  if(oldTab.id == "selectedInterface") {
 		control.unloadWidgets();
 		//window.plugins.nativeControls.hideTabBar(false);
-		PhoneGap.exec("Device.setRotation", "portrait");
+		if(device.platform == 'iPhone') PhoneGap.exec("Device.setRotation", "portrait");
 		//window.plugins.nativeControls.showTabBar({"orientation":"portrait",  "position":"bottom"});
 	  }
     }
