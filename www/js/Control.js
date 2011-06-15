@@ -79,6 +79,25 @@ Control.prototype.removeWidgetWithName = function(widgetName) {
 			break;
 		}
 	}
+    for(var page = 0; page < control.pages.length; page++) {
+		for(var j = 0; j < control.pages[page].length; j++) {
+			var widget = control.pages[page][j];
+			if(widget.name == widgetName) {
+                console.log("widget found!");
+                control.pages[page].splice(j,1);
+                widget = null;
+			}
+		}
+	}
+	
+	for(var i = 0; i < control.constants.length; i++) {
+		var widget = control.constants[i];
+		if(typeof widget.name == widgetName) {
+			control.constants.splice(i,1);
+            widget = null;
+		}
+	}
+    
 }
 
 Control.prototype.getWidgetWithName = function(widgetName) {
