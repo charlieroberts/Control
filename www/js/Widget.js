@@ -135,10 +135,10 @@ Widget.prototype.setValueNoOutput = function(newValue) {
 
 Widget.prototype.output = function() {
     if(!this.isLocal && _protocol == "OSC") {
-        /*var valueString = "|" + this.address;
+        var valueString = "|" + this.address;
         valueString += ":" + this.value;
-        control.valuesString += valueString;*/
-        PhoneGap.exec('OSCManager.send', this.address, 'f', this.value);
+        control.valuesString += valueString;
+        //PhoneGap.exec('OSCManager.send', this.address, 'f', this.value);
     }else if (!this.isLocal && _protocol == "MIDI") {
         var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.value);
         control.valuesString += valueString;
