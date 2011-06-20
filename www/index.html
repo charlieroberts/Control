@@ -4,9 +4,10 @@
     <title>Control</title>
     <!-- somehow this seems to work for both platforms... voodoo. -->
     <meta name="viewport" content="width=320; user-scalable=no" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />  
-    <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, target-densitydpi=device-dpi" />
-    
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- the line below is needed for Android but screws things up on iOS ... -->
+    <!--<meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, target-densitydpi=device-dpi" />-->
+
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     
     <link rel="stylesheet" href="css/jquery.mobile-1.0a3.css" />
@@ -81,7 +82,11 @@
             // console.log("window.TEST.pages = " + window.TEST.pages);
 
             control = new Control();
-
+            
+            interfaceManager = new InterfaceManager();
+            interfaceManager.init();
+            interfaceManager.loadScripts();
+            
             _protocol = "OSC";
             //console.setLevel(8);
             oscManager  = new OSCManager();
@@ -90,9 +95,7 @@
             destinationManager = new DestinationManager();
             destinationManager.init();
 
-            interfaceManager = new InterfaceManager();
-            interfaceManager.init();
-            interfaceManager.loadScripts();
+
 
             document.addEventListener('orientationChanged', control.onRotation, false);
             
@@ -100,7 +103,7 @@
             //destinationScroller = new iScroll('destinationScroller');
             //preferencesScroller = new iScroll('preferencesScroller');
             
-            //PhoneGap.exec("Device.setRotation", "portrait");
+            //  PhoneGap.exec("Device.setRotation", "portrait");
             
             preferencesManager = new PreferencesManager();
             console.log("end of constructor");
@@ -172,7 +175,7 @@
       <div>
         <!--<div style="height:2000px" data-scroll="true">-->
          <!-- TODO in javascript, update the app version -->
-        <p>Control <span id='app-version'>v1.3-git</span> is an application enabling configurable control surfaces for mobile devices. For more information, interfaces, tutorials and references please visit
+        <p>Control <span id='app-version'>v1.31</span> is an application enabling configurable control surfaces for mobile devices. For more information, interfaces, tutorials and references please visit
         the Control website (http://www.charlie-roberts.com/Control).
         </p>
         <p>
@@ -186,9 +189,9 @@
             <li style="margin-bottom:.5em"><b>jQuery Mobile</b> http://jquerymobile.com</li>
             <li style="margin-bottom:.5em"><b>Lawnchair</b> http://brianleroux.github.com/lawnchair/</li>
             <li><b>oscpack</b> http://www.audiomulch.com/~rossb/code/oscpack/</li>
-            <!-- TODO figure out which one to use and use that only -->
+            <!-- TODO figure out which one to use and use that only
             <li><b>NetUtil</b> http://www.sciss.de/netutil/</li>
-            <li><b>JavaOSC</b> http://www.illposed.com/software/javaosc.html</li>
+            <li><b>JavaOSC</b> http://www.illposed.com/software/javaosc.html</li>-->
         </ul>
     </div>
 </div>

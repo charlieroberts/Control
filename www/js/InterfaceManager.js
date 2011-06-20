@@ -19,11 +19,29 @@ function InterfaceManager() {
 								  "gyro.js",
                                   "spacetime.js",
                                   ];
+        window.shouldReadFiles = true;
+        window.isLoadingInterfaces = false; // stops database calls from being executed twice, for some reason "get" returns two values.
     }
      
     this.loadScripts = function() {
-        control.ifCount = 0;
-        this.readFile(this.interfaceDefaults[control.ifCount]);
+        this.shouldLoadInterfaces = new Lawnchair('shouldLoadInterfaces');
+        console.log("LOADING");
+        window.setTimeout(function() {  // needs a timeout for the Lawnchair database to be initialized... ARGGGGHHHH
+            interfaceManager.shouldLoadInterfaces.get("shouldLoad", function(r) { 
+                    if(r != null)
+                        window.shouldReadFiles = false; // this means that Control has been launched before, so we should load the interfaces into the database
+
+                    if(window.shouldReadFiles) {
+                        control.ifCount = 0;
+                        interfaceManager.shouldLoadInterfaces.save({key:"shouldLoad", sl:true});
+                        interfaceManager.readFile(interfaceManager.interfaceDefaults[control.ifCount]);
+                    }else{
+                        interfaceManager.createInterfaceListWithStoredInterfaces();
+                    }
+                    window.isLoadingInterfaces = true;
+                }
+            } )
+        }, 250 );
     }
     
     this.readFile = function(filename) {
@@ -139,6 +157,7 @@ function InterfaceManager() {
     this.createInterfaceListWithStoredInterfaces = function() {
 		$('#interfaceList').empty();
 		interfaceManager.interfaceFiles.all(function(r) { interfaceManager.createInterfaceListWithArray(r); });
+        window.isLoadingInterfaces = false;
 	}
 	
 	this.createInterfaceListWithArray = function(listArray) {
@@ -265,9 +284,10 @@ function InterfaceManager() {
 		control.unloadWidgets();
         constants = null;
         pages = null;
-        //console.log(json);
+                
         oscManager.delegate = oscManager;
-
+        midiManager.delegate = midiManager;
+        
         eval(json);
         
         this.currentInterfaceName = loadedInterfaceName;

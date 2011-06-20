@@ -1,7 +1,6 @@
 //TODO: this.widgets should hold ALL widgets, including constants. this.constants and this.pages can be used to keep them separated.
 
 function Control() {
-    console.log("CONTROL INIT START")
 	this.widgetCount = 0;
 	this.pages = [];
     this.constants = [];
@@ -10,30 +9,24 @@ function Control() {
 	this.deviceHeight = null;
 	this.values = [];
 	this.valuesString = "";
-    console.log("CONTROL INIT 1")	
 	this.currentTab = document.getElementById("Interfaces");
 	this.tabBarHidden = false;
 	this.orientation = 0;
 	acc = null;
 	compass = null;
 	gyro = null;
-    console.log("CONTROL INIT 2")	
 	interfaceDiv = document.getElementById("selectedInterface");
-    console.log("CONTROL INIT 3")	
-	
-    console.log("CONTROL INIT 4")    
 	this.changeTab(this.currentTab);
 	this.isAddingConstants = false;
-    console.log("CONTROL INIT 5")	
 	return this;
 }
 
 Control.prototype.init = function() {
-    if(device.platform == 'iPhone') {
+    //if(device.platform == 'iPhone') {
         PhoneGap.exec("OSCManager.startReceiveThread");
 	    PhoneGap.exec("CNTRL_Accelerometer.setUpdateRate", 50);
 	    PhoneGap.exec("Gyro.setUpdateRate", 50);	
-    }
+    //}
 }
 
 Control.prototype.makePages = function(_pages,width, height) {
@@ -41,7 +34,7 @@ Control.prototype.makePages = function(_pages,width, height) {
 	this.deviceWidth = width;
 	this.deviceHeight = height;
     this.ctx = null;
-//    {   // main cavas
+//    {   // main canvas
 //        this.canvas = document.getElementById('canvas');
 //        this.ctx = this.canvas.getContext("2d");;
 //        
@@ -111,15 +104,7 @@ Control.prototype.getWidgetWithName = function(widgetName) {
 
 Control.prototype.showToolbar = function() {
 	this.tabBarHidden = false;
-	//window.uicontrols.showTabBar();
-	/*if(this.orientation == 0 || this.orientation == 180) {
-		window.plugins.nativeControls.showTabBar({"orientation":"portrait",  "position":"bottom"});
-	}else{
-		window.plugins.nativeControls.showTabBar({"orientation":"landscape", "position":"bottom"});
-	}*/
 	$(".ftr").css("visibility", "visible");
-		//$("#interfaceFooter").css("background-color", "#f00");
-	//window.plugins.nativeControls.showTabBar({"position":"bottom"});	
 }
 
 Control.prototype.hideToolbar = function() {
@@ -257,29 +242,9 @@ Control.prototype.loadWidgets = function() {
 	this.currentPage = oldCurrentPage;
 }
 
-Control.prototype.getValues = function() {
-	/*var str = "";
-	for(var i = 0; i < this.values.length; i++) {
-		var _widgetOutputs = this.values[i];
-		str += this.widgets[i].address + ":"; // TODO: This needs to be abstracted somehow to accomodate wireless MIDI
-		for(var j = 0; j < _widgetOutputs.length; j++) {
-			str += _widgetOutputs[j];
-			if(j != _widgetOutputs.length - 1) {
-				str += ",";
-			}
-		}
-		if(i != this.values.length - 1) {
-			str += "|";
-		}
-	}
-	return str; 
-	*/
-	return control.valuesString;
-}
+Control.prototype.getValues = function() { return control.valuesString; }
 
-Control.prototype.clearValuesString = function() {
-	control.valuesString = "";
-}
+Control.prototype.clearValuesString = function() { control.valuesString = ""; }
 
 Control.prototype.addConstantWidget = function(widget) {
 	if(widget.show != null)
@@ -340,22 +305,7 @@ Control.prototype.refresh = function() {
 	}
 }
 
-Control.prototype.onRotation = function(event) {
-	//console.log("onrotation " + event.orientation);
-
-	control.orientation = event.orientation;
-	
-	/*if(loadedInterfaceName != null) {
-		//control.unloadWidgets();
-		if(event.orientation == 0 || event.orientation == 180) {
-			control.makePages(pages, screen.width, screen.height);
-		}else{
-			control.makePages(pages, screen.height, screen.width);
-		}
-		//control.loadConstants(constants);
-		//control.loadWidgets();	// LOAD WIDGETS IS THE PROBLEM	
-	}*/
-}
+Control.prototype.onRotation = function(event) { control.orientation = event.orientation; }
 
 
 Control.prototype.event = function(event) {
@@ -386,51 +336,25 @@ Control.prototype.changeTab = function(tab) {
     var oldTab = this.currentTab;
 	this.currentPage = 0;
 
-    //this.currentTab.style.display = "none";
     this.currentTab = tab;
     
-    //this.currentTab.style.display = "block";    
-
 	if(this.currentTab.id == "selectedInterface") {
 		this.tabBarHidden = true;
 		control.hideToolbar();
     }else{
-      //document.getElementById("selectedInterface").style.display = "none";
       if(this.tabBarHidden) {
         this.tabBarHidden = false;	  
         control.showToolbar();
       }
 	  if(oldTab.id == "selectedInterface") {
 		control.unloadWidgets();
-		//window.plugins.nativeControls.hideTabBar(false);
-		if(device.platform == 'iPhone') PhoneGap.exec("Device.setRotation", "portrait");
+		//if(device.platform == 'iPhone') 
+          PhoneGap.exec("Device.setRotation", "portrait");
 		//window.plugins.nativeControls.showTabBar({"orientation":"portrait",  "position":"bottom"});
 	  }
     }
     
-    //TODO : make it work to change from landscape selected interface to portrait main menus
-	
-    if(typeof oldTab != "undefined") {
-        if(oldTab.id == "selectedInterface" && this.currentTab.id != "selectedInterface") {
-		
-            //var interface = document.getElementById("selectedInterface");
-            //document.removeChild(interface);
-	//		setTimeout(function() { PhoneGap.exec("Device.setRotation", "portrait"); }, 500);
-			
-            /*for(var i = 0; i < this.pages[this.currentPage].length; i++) {
-                var w = this.pages[this.currentPage][i];
-                console.log("hiding");
-                w.hide();
-            }
-            document.getElementById("selectedInterface").style.display = "none";*/
-        }
-    }
-    if(this.currentTab.id == "Interfaces") {
-        //interfaceManager.createInterfaceListWithStoredInterfaces();
-    }
-	
-    console.log("tab changed");
-	
+    //TODO : make it work to change from landscape selected interface to portrait main menus	
 }
 
 Control.prototype.changePage = function(newPage) {
