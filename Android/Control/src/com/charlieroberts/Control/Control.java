@@ -32,6 +32,12 @@ public class Control extends DroidGap
          super.loadUrl("file:///android_asset/www/index.html");
          super.appView.setWebChromeClient(new EclairClient2(this));
          
+         // TODO: the line below seems to create better multitouch, but it also makes some errant calls every once in a while...
+         // touch events are generated at random somehow. But I think the behavior is better with it on than with it off.
+         // when off, multiple touchdown events only work if there is a drag in between them for whatever reason. 
+         super.appView.getSettings().setBuiltInZoomControls(true); //Enable Multitouch if supported by ROM
+         //super.appView.getSettings().setSupportZoom(false);
+         
          handler.postDelayed(new Runnable() {
             public void run() {
                 setUp();

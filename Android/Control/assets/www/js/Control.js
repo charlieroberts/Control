@@ -54,10 +54,10 @@ Control.prototype.makePages = function(_pages,width, height) {
     interfaceDiv.style.left = "0px";
     interfaceDiv.style.top = "0px";		
     */
-	interfaceDiv.addEventListener('touchend', control.event, false);
-	interfaceDiv.addEventListener('touchstart', control.event, false);
-	interfaceDiv.addEventListener('touchmove', control.event, false);
-	interfaceDiv.addEventListener('touchmove', preventBehavior, false);
+	document.addEventListener('touchend', control.event, true);
+	document.addEventListener('touchstart', control.event, true);
+	document.addEventListener('touchmove', control.event, true);
+	//document.addEventListener('touchmove', preventBehavior, false);
 
     
 
@@ -307,11 +307,15 @@ Control.prototype.refresh = function() {
 
 Control.prototype.onRotation = function(event) { control.orientation = event.orientation; }
 
-
+// multitouch works when a drag has occurred after the each touchdown. It doesn't work if touchdowns occur back to back with nothing in between
 Control.prototype.event = function(event) {
   // REMEMBER : IN EVENT METHODS TRIGGERED FROM THE WEBVIEW "THIS" REFERS TO THE HTML OBJECT THAT GENERATED THE EVENT
 	var page = control.currentPage;
     
+    for (var j = 0; j < event.changedTouches.length; j++) {
+		var touch = event.changedTouches.item(j);
+		console.log("touch id:: " + touch.identifier + " || x = " + touch.pageX + " || y = " + touch.pageY);
+	}
 	//console.log("length = " + control.pages[page].length);
 	for(var i = 0; i < control.pages[page].length; i++) {
 		var widget = control.pages[page][i];

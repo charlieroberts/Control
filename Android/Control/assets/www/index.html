@@ -68,6 +68,7 @@
     <script type="text/javascript" charset="utf-8">
         var pages, control, interfaceScroller, destinationScroller, interfaceManager, destinationManager, _protocol;
         function preventBehavior(e) { // prevent scrolling
+            e.stopPropagation();
             e.preventDefault(); 
         };
         
@@ -75,8 +76,7 @@
             init();
         });
         
-        function init() {
-            console.log("CONSTRUCTOR");
+        function init() {   
             document.addEventListener("touchmove", preventBehavior, false); // prevents webkit from scrolling DNR
             //console.log("interface name = *******" + window.loadedInterfaceName);
             // console.log("window.TEST.pages = " + window.TEST.pages);
@@ -94,8 +94,6 @@
             
             destinationManager = new DestinationManager();
             destinationManager.init();
-
-
 
             document.addEventListener('orientationChanged', control.onRotation, false);
             
