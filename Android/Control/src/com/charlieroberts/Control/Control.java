@@ -29,21 +29,8 @@ public class Control extends DroidGap
          getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN ); 
          getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); 
 
-         //super.loadUrl("http://192.168.1.5/~charlie/www/index.html");\
          super.loadUrl("file:///android_asset/www/index.html");
          super.appView.setWebChromeClient(new EclairClient2(this));
-         // super.appView.setWebChromeClient(new WebChromeClient() {
-         //    public void onExceededDatabaseQuota(String url, String databaseIdentifier, long currentQuota, long estimatedSize, long totalUsedQuota, WebStorage.QuotaUpdater quotaUpdater) {
-         //        quotaUpdater.updateQuota(100000);
-         //    };
-         //    @Override
-         //    public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-         //        Log.d(1, message);
-         //        result.confirm();
-         //        return true;
-         //    };
-         // 
-         // });
          
          handler.postDelayed(new Runnable() {
             public void run() {
@@ -59,8 +46,9 @@ public class Control extends DroidGap
          lock.setReferenceCounted(true);
          lock.acquire();
       }
-      
-public class EclairClient2 extends GapClient {
+ 
+// this overrides the EclarClient class in DroidGap.java (part of the phonegap.jar to give more memory to the web database. This is needed for storing interface files.    
+    public class EclairClient2 extends GapClient {
 
     	private String TAG = "PhoneGapLog";
     	private long MAX_QUOTA = 10000 * 1024 * 1024;
