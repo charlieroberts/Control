@@ -28,6 +28,7 @@ function InterfaceManager() {
         console.log("LOADING");
         window.setTimeout(function() {  // needs a timeout for the Lawnchair database to be initialized... ARGGGGHHHH
             interfaceManager.shouldLoadInterfaces.get("shouldLoad", function(r) { 
+                if(!window.isLoadingInterfaces) {
                     if(r != null)
                         window.shouldReadFiles = false; // this means that Control has been launched before, so we should load the interfaces into the database
 

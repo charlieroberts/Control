@@ -11,7 +11,6 @@ var WebkitSQLiteAdaptor = function(options) {
 	this.init(options);
 };
 
-
 WebkitSQLiteAdaptor.prototype = {
 	init:function(options) {
 		var that = this;
