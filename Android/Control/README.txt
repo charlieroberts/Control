@@ -7,8 +7,11 @@ Get started with Eclipse
 4. point to this folder
 5. select highest build target (you should have 2.2 installed)
 6. finish
-7. right click on libs/phonegap.jar and add to build path
-8. Run as Android Project
+7a. If you get errors with Phonegap, right click on libs/phonegap.jar and add to build path
+7b. If you get errors concerning jmdns, right click on libs/jmdns.jar and add to build path
+8. If you get an error like "In Bonjour.java: The method serviceResolved(ServiceEvent) of type new ServiceListener(){} must override a superclass method", the Java version has to manually be set to 1.6 in the project preferences when importing the repo's project: 
+   With Eclipse Galileo you go to Eclipse -> Preferences menu item, then select Java and Compiler in the dialog. Now it still may show compiler compliance level at 1.6, yet you still see this problem. So now select the link "Configure Project Specific Settings..." and in there you'll see the project is set to 1.5, now change this to 1.6.
+9. Run as Android Project
 
 Get started with the command line
 ===
