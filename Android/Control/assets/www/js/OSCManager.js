@@ -10,7 +10,6 @@ OSCManager.prototype.startup = function() {
 };
 
 OSCManager.prototype.sendOSC = function(msg, successCallback, failureCallback) {
-    console.log("Sending...");
     return PhoneGap.exec(successCallback,   //Callback which will be called when directory listing is successful
     					failureCallback,    //Callback which will be called when directory listing encounters an error
     					'OSCManager',  		//Telling PhoneGap that we want to run "OSC" Plugin

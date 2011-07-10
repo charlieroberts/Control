@@ -22,11 +22,12 @@ function InterfaceManager() {
                                 ];
         window.shouldReadFiles = true;
         window.isLoadingInterfaces = false; // stops database calls from being executed twice, for some reason "get" returns two values.
+        this.loadScripts();
     }
      
     this.loadScripts = function() {
         this.shouldLoadInterfaces = new Lawnchair('shouldLoadInterfaces');
-        console.log("LOADING");
+        console.log("LOADING ******************************************************************");
         window.setTimeout(function() {  // needs a timeout for the Lawnchair database to be initialized... ARGGGGHHHH
             interfaceManager.shouldLoadInterfaces.get("shouldLoad", function(r) { 
                 console.log("inside should load");
@@ -298,7 +299,7 @@ function InterfaceManager() {
 		
 		if(typeof interfaceOrientation != "undefined") {
 			console.log(interfaceOrientation);
-            PhoneGap.exec("Device.setRotation", interfaceOrientation);
+            PhoneGap.exec(null, null, "DeviceFeatures", "setRotation", [interfaceOrientation]);
         }
         //if(control.orientation == 0 || control.orientation == 180) {
 		if(interfaceOrientation == "portrait") {

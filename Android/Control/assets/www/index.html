@@ -91,13 +91,14 @@
                 
             _protocol = "OSC";
             
-            midiManager = new MIDIManager();
+            //midiManager = new MIDIManager();
                 
+            interfaceManager = new InterfaceManager();
+            interfaceManager.init();
+            
             destinationManager = new DestinationManager();
             destinationManager.init();
             
-            interfaceManager = new InterfaceManager();
-            interfaceManager.init();
             //interfaceManager.loadScripts();
             
             oscManager = new OSCManager();
@@ -122,7 +123,7 @@
             var autolockToggleLink = document.getElementById("autolockToggle");
             autolock = !autolock;
             (!autolock) ? autolockToggleLink.innerHTML = "Turn Autolock <b>Off</b>" : autolockToggleLink.innerHTML = "Turn Autolock <b>On</b>";         
-            if(device.platform == 'iPhone') PhoneGap.exec("Device.autolockToggle", autolock);
+            if(device.platform == 'iPhone') PhoneGap.exec(null, null, "DeviceFeatures", "autolockToggle", [autolock]);
             preferences.save({key:"autolock", shouldAutolock:autolock});
         }
 
