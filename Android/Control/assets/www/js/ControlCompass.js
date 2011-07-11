@@ -39,7 +39,7 @@ function ControlCompass(props) {
         if(!compass.isLocal && _protocol == "OSC") {
             // var valueString = "|" + this.address;
             // valueString += ":" + this.value;
-            // control.valuesString += valueString;
+                // control.valuesString += valueString;
         	PhoneGap.exec(null, null, 'OSCManager', 'send', [compass.address, 'f', compass.value] );
         }else if (!compass.isLocal && _protocol == "MIDI") {
             var valueString = "|" + compass.midiType + "," + (compass.channel - 1) + "," + compass.midiNumber+ "," + Math.round(compass.value);

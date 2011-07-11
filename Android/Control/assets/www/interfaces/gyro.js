@@ -224,10 +224,10 @@ pages = [[\
     \"type\": \"Accelerometer\",\
 	\"min\":0,\
 	\"max\":127,\
-	\"updateRate\":10,\
+	\"updateRate\":1,\
 	\"midiNumber\": 0,\
 	\"isLocal\":false,\
-    \"onvaluechange\": \"accSliders.setSequentialValues(this.x, this.y, this.z);\",\
+    \"onvaluechange\": \"accSliders.setSequentialValues(acc.x, acc.y, acc.z);\",\
 	\"address\":\"/accelerometer\",\
 },\
 \
