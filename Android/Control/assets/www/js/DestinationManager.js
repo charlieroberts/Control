@@ -7,7 +7,7 @@ function DestinationManager() {
 		this.midiDestinations = [];
 		this.ipaddress = null;
 		this.bonjourDestinations = new Array();
-		PhoneGap.exec("Bonjour.start", null);
+		PhoneGap.exec(null, null, "Bonjour", "start", null);
 		//setTimeout(function() { window.destinationManager.createDestinationList(); }, 1000);
         window.destinationManager.createDestinationList();        
 
@@ -16,7 +16,7 @@ function DestinationManager() {
     this.refreshList = function() {
         this.clearList();
         this.destinationsSynch = [];
-        PhoneGap.exec("Bonjour.browse", null);
+        PhoneGap.exec(null, null, "Bonjour", "browse", []);
         
         window.destinationManager.createDestinationList();        
     }
@@ -33,7 +33,7 @@ function DestinationManager() {
 			//PhoneGap.exec("OSCManager.setIPAddressAndPort", ipaddress, 10000);
 		}
 	}
-	
+		
 	this.removeDestination = function(ip, port) {
 		console.log("destinationmanager removing " + ip + " : " + port);
 	}
@@ -121,20 +121,21 @@ function DestinationManager() {
 	this.selectMIDIIPAddressAndPort = function(address,port) {
 		this.ipaddress = address;
 		this.port = port;
-		PhoneGap.exec("MIDI.connect", 1, this.ipaddress, this.port);
-        PhoneGap.exec("OSCManager.stopPolling");
+		PhoneGap.exec(null, null, "MIDI", "connect", [1, this.ipaddress, this.port]);
+        PhoneGap.exec(null, null, "OSCManager" , "stopPolling");
 	}
 	
 	this.selectIPAddress = function(address) {
 		this.ipaddress = address;
-		PhoneGap.exec("OSCManager.setIPAddressAndPort", this.ipaddress, "12000");
+		PhoneGap.exec(null, null,"OSCManager", "setIPAddressAndPort", [this.ipaddress, "12000"]);
 	}
 	
 	this.selectIPAddressAndPort = function(address, port) {
         console.log("selecting ip and port");
 		this.ipaddress = address;
 		this.port = port;
-		PhoneGap.exec("OSCManager.setIPAddressAndPort", this.ipaddress, this.port);
+        // PhoneGap.exec("OSCManager.setIPAddressAndPort", this.ipaddress, this.port);
+    	PhoneGap.exec(null, null, 'OSCManager', 'setIPAddressAndPort', [this.ipaddress, this.port]);
 	}
 	
 	this.promptForIP = function() { // TODO: NO ABSOLUTE PIXEL VALUES. SHEESH.

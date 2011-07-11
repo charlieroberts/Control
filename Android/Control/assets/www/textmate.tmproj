@@ -2,183 +2,111 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>currentDocument</key>
+	<string>js/DestinationManager.js</string>
 	<key>documents</key>
 	<array>
 		<dict>
 			<key>filename</key>
-			<string>Control.js</string>
+			<string>js/Control.js</string>
 			<key>lastUsed</key>
-			<date>2010-06-05T00:32:55Z</date>
-		</dict>
-		<dict>
-			<key>filename</key>
-			<string>Button.js</string>
-			<key>lastUsed</key>
-			<date>2010-06-05T00:32:19Z</date>
-		</dict>
-		<dict>
-			<key>filename</key>
-			<string>Slider.js</string>
-			<key>lastUsed</key>
-			<date>2010-06-05T00:26:51Z</date>
-		</dict>
-		<dict>
-			<key>filename</key>
-			<string>interfaceTest.json</string>
-			<key>lastUsed</key>
-			<date>2010-06-09T19:43:31Z</date>
-			<key>selected</key>
-			<true/>
+			<date>2011-07-05T18:14:04Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>index.html</string>
 			<key>lastUsed</key>
-			<date>2010-06-03T22:32:37Z</date>
+			<date>2011-07-09T00:27:05Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
-			<string>Widget.js</string>
+			<string>js/OSCManager.js</string>
 			<key>lastUsed</key>
-			<date>2010-06-04T23:17:26Z</date>
+			<date>2011-07-05T19:33:57Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
-			<string>MultiTouchXY.js</string>
+			<string>js/Bonjour.js</string>
 			<key>lastUsed</key>
-			<date>2010-06-05T00:32:54Z</date>
+			<date>2011-07-05T19:33:59Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
-			<string>Label.js</string>
+			<string>js/Widget.js</string>
 			<key>lastUsed</key>
-			<date>2010-06-02T22:05:51Z</date>
+			<date>2011-07-05T19:34:02Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
-			<string>master.css</string>
+			<string>js/DestinationManager.js</string>
 			<key>lastUsed</key>
-			<date>2010-06-04T22:45:20Z</date>
+			<date>2011-07-09T00:27:05Z</date>
+			<key>selected</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>js/InterfaceManager.js</string>
+			<key>lastUsed</key>
+			<date>2011-07-05T19:36:37Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>js/PreferencesManager.js</string>
+			<key>lastUsed</key>
+			<date>2011-07-05T20:05:10Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>../../src/com/charlieroberts/Control/Bonjour.java</string>
+			<key>lastUsed</key>
+			<date>2011-07-05T18:08:45Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>../../src/com/charlieroberts/Control/Control.java</string>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>../../src/com/charlieroberts/Control/DeviceFeatures.java</string>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>../../src/com/charlieroberts/Control/OSCManager.java</string>
 		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
-	<integer>114</integer>
+	<integer>233</integer>
 	<key>metaData</key>
 	<dict>
-		<key>Button.js</key>
+		<key>../../src/com/charlieroberts/Control/Bonjour.java</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>41</integer>
+				<integer>35</integer>
 				<key>line</key>
-				<integer>4</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>4</integer>
-		</dict>
-		<key>Control.js</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>27</integer>
-				<key>line</key>
-				<integer>19</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>3</integer>
-		</dict>
-		<key>Label.js</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>2</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
-		<key>MultiTouchXY.js</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>27</integer>
-				<key>line</key>
-				<integer>138</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>99</integer>
-		</dict>
-		<key>Slider.js</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>165</integer>
+				<integer>77</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>126</integer>
+			<integer>53</integer>
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
 				<integer>42</integer>
 				<key>line</key>
-				<integer>170</integer>
+				<integer>77</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>35</integer>
 				<key>line</key>
-				<integer>165</integer>
-			</dict>
-		</dict>
-		<key>Widget.js</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>25</integer>
-				<key>line</key>
-				<integer>7</integer>
-			</dict>
-			<key>columnSelection</key>
-			<false/>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>7</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>8</integer>
+				<integer>77</integer>
 			</dict>
 		</dict>
 		<key>index.html</key>
@@ -186,47 +114,209 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>36</integer>
+				<integer>12</integer>
 				<key>line</key>
-				<integer>91</integer>
+				<integer>100</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>interfaceTest.json</key>
+		<key>js/Bonjour.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>32</integer>
+				<integer>38</integer>
 				<key>line</key>
-				<integer>207</integer>
+				<integer>6</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>127</integer>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>25</integer>
+				<key>line</key>
+				<integer>6</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>38</integer>
+				<key>line</key>
+				<integer>6</integer>
+			</dict>
 		</dict>
-		<key>master.css</key>
+		<key>js/Control.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>1</integer>
+				<integer>23</integer>
 				<key>line</key>
-				<integer>76</integer>
+				<integer>355</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>326</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>10</integer>
+				<key>line</key>
+				<integer>355</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>23</integer>
+				<key>line</key>
+				<integer>355</integer>
+			</dict>
+		</dict>
+		<key>js/DestinationManager.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>18</integer>
+				<key>line</key>
+				<integer>137</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>96</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>5</integer>
+				<key>line</key>
+				<integer>137</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>18</integer>
+				<key>line</key>
+				<integer>137</integer>
+			</dict>
+		</dict>
+		<key>js/InterfaceManager.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>93</integer>
+				<key>line</key>
+				<integer>300</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>59</integer>
+			<integer>271</integer>
+		</dict>
+		<key>js/OSCManager.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>28</integer>
+				<key>line</key>
+				<integer>149</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>112</integer>
+		</dict>
+		<key>js/PreferencesManager.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>22</integer>
+				<key>line</key>
+				<integer>27</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>4</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>23</integer>
+				<key>line</key>
+				<integer>27</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>22</integer>
+				<key>line</key>
+				<integer>27</integer>
+			</dict>
+		</dict>
+		<key>js/Widget.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>23</integer>
+				<key>line</key>
+				<integer>143</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>89</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>10</integer>
+				<key>line</key>
+				<integer>143</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>23</integer>
+				<key>line</key>
+				<integer>143</integer>
+			</dict>
 		</dict>
 	</dict>
+	<key>openDocuments</key>
+	<array>
+		<string>index.html</string>
+		<string>js/DestinationManager.js</string>
+		<string>js/InterfaceManager.js</string>
+		<string>js/PreferencesManager.js</string>
+		<string>js/Control.js</string>
+		<string>js/Bonjour.js</string>
+		<string>js/Widget.js</string>
+		<string>../../src/com/charlieroberts/Control/Bonjour.java</string>
+		<string>js/OSCManager.js</string>
+	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{288, 0}, {1148, 878}}</string>
+	<string>{{94, 0}, {1304, 1028}}</string>
 </dict>
 </plist>

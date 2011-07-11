@@ -7,8 +7,7 @@ import android.view.WindowManager;
 import android.webkit.*;
 import android.content.Context;
 
-
-import de.sciss.net.*;
+// import de.sciss.net.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.io.StringWriter;

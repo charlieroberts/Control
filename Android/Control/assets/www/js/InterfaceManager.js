@@ -7,7 +7,6 @@ function InterfaceManager() {
         this.currentInterfaceName = null;
         this.currentInterfaceJSON = null;
         this.interfaceIP = null;
-        interfaceOrientation = null;
         constants = null;
         this.interfaceDefaults = [
                                 "multiXY.js",
@@ -22,11 +21,28 @@ function InterfaceManager() {
                                 ];
         window.shouldReadFiles = true;
         window.isLoadingInterfaces = false; // stops database calls from being executed twice, for some reason "get" returns two values.
+        this.loadScripts();
     }
-     
+    this.rotationSet = function() {
+        // console.log("********************************************** ORIENTATION = " + control.orientationString);
+        console.log("********************************************** width = " + screen.width + " || height = " + screen.height);
+            control.makePages(pages, screen.width, screen.height);
+        //}else{
+        //    control.makePages(pages, screen.height, screen.width);
+        //}
+
+        if(constants != null) {
+            control.loadConstants(constants);
+        }
+        control.loadWidgets();
+        if(this.currentTab != document.getElementById("selectedInterface")) {
+            control.changeTab(document.getElementById("selectedInterface"));
+            $.mobile.changePage('#SelectedInterfacePage');
+		}
+    }
     this.loadScripts = function() {
         this.shouldLoadInterfaces = new Lawnchair('shouldLoadInterfaces');
-        console.log("LOADING");
+        console.log("LOADING ******************************************************************");
         window.setTimeout(function() {  // needs a timeout for the Lawnchair database to be initialized... ARGGGGHHHH
             interfaceManager.shouldLoadInterfaces.get("shouldLoad", function(r) { 
                 console.log("inside should load");
@@ -297,24 +313,25 @@ function InterfaceManager() {
         this.currentInterfaceJSON = json;
 		
 		if(typeof interfaceOrientation != "undefined") {
-			console.log(interfaceOrientation);
-            PhoneGap.exec("Device.setRotation", interfaceOrientation);
+            control.orientationString = interfaceOrientation;
+			console.log("ROTATING ****************************" + interfaceOrientation);
+            PhoneGap.exec(null, null, "DeviceFeatures", "setOrientation", [interfaceOrientation]);
         }
         //if(control.orientation == 0 || control.orientation == 180) {
-		if(interfaceOrientation == "portrait") {
-            control.makePages(pages, screen.width, screen.height);
-        }else{
-            control.makePages(pages, screen.height, screen.width);
-        }
-
-        if(constants != null) {
-            control.loadConstants(constants);
-        }
-        control.loadWidgets();
-        if(this.currentTab != document.getElementById("selectedInterface")) {
-            control.changeTab(document.getElementById("selectedInterface"));
-            $.mobile.changePage('#SelectedInterfacePage');
-		}
+		// if(interfaceOrientation == "portrait") {
+		//             control.makePages(pages, screen.width, screen.height);
+		//         }else{
+		//             control.makePages(pages, screen.height, screen.width);
+		//         }
+		// 
+		//         if(constants != null) {
+		//             control.loadConstants(constants);
+		//         }
+		//         control.loadWidgets();
+		//         if(this.currentTab != document.getElementById("selectedInterface")) {
+		//             control.changeTab(document.getElementById("selectedInterface"));
+		//             $.mobile.changePage('#SelectedInterfacePage');
+		//        }
     }
 	
 	this.selectInterfaceFromList = function(interfaceName) {

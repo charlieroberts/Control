@@ -45,9 +45,7 @@ public class Bonjour extends Plugin {
                 jmdns.addServiceListener(type, listener = new ServiceListener() {
                     @Override
                     public void serviceResolved(ServiceEvent ev) {
-                        System.out.println("Service resolved: "
-                                 + ev.getInfo().getQualifiedName()
-                                 + " port:" + ev.getInfo().getPort());
+                        System.out.println("Service resolved: " + ev.getInfo().getQualifiedName() + " port:" + ev.getInfo().getPort());
                         String jsString = "javascript:destinationManager.addDestination('" + ev.getInfo().getHostAddress() + "'," + ev.getInfo().getPort() + ", 0, 0);";
                         System.out.println(jsString);
                         webView.loadUrl(jsString);
@@ -74,10 +72,10 @@ public class Bonjour extends Plugin {
 	@Override
 	public PluginResult execute(String action, JSONArray data, String callbackId) {
 	    //Log.d("OSCManager", "executing something " + action);	
-		System.out.println("EXECUTING ********************************************");
+		System.out.println("EXECUTING BONJOUR ********************************************");
 		PluginResult result = null;
-		if (action.equals("start")) {
-		    System.out.println("STARTING ********************************************");
+		if (action.equals("start") || action.equals("browse")) {
+		    System.out.println("STARTING BONJOUR ********************************************");
 		    
             ServiceInfo[] infos = jmdns.list("_osc._udp.local.");
             for (int i = 0; i < infos.length; i++) {
@@ -106,17 +104,4 @@ public class Bonjour extends Plugin {
         }
         return null;
     }
-/*
-
-- (void)pushInterface:(NSValue *)msgPointer;                                                    // DONE
-- (void)pushDestination:(NSValue *) msgPointer;                                                 // NOT DONE
-
-- (void)setOSCReceivePort:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;    // DONE
-- (void)setIPAddressAndPort:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;  // DONE
-- (void)startReceiveThread:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;   // NOT NEEDED
-- (void)send:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;                 // DONE
-- (void)startPolling:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;         // NOT NEEDED
-- (void)stopPolling:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;          // NOT NEEDED
-*/
-
 }

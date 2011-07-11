@@ -12,6 +12,9 @@ function Control() {
 	this.currentTab = document.getElementById("Interfaces");
 	this.tabBarHidden = false;
 	this.orientation = 0;
+ 	this.orientationString = "portrait";
+ 	this.width = screen.width;
+ 	this.height = screen.height;
 	acc = null;
 	compass = null;
 	gyro = null;
@@ -23,9 +26,9 @@ function Control() {
 
 Control.prototype.init = function() {
     //if(device.platform == 'iPhone') {
-        PhoneGap.exec("OSCManager.startReceiveThread");
-	    PhoneGap.exec("CNTRL_Accelerometer.setUpdateRate", 50);
-	    PhoneGap.exec("Gyro.setUpdateRate", 50);	
+        PhoneGap.exec(null, null, "OSCManager", "startReceiveThread", null);
+	    //PhoneGap.exec("CNTRL_Accelerometer.setUpdateRate", 50);
+	    //PhoneGap.exec("Gyro.setUpdateRate", 50);	
     //}
 }
 
@@ -314,7 +317,7 @@ Control.prototype.event = function(event) {
     
     for (var j = 0; j < event.changedTouches.length; j++) {
 		var touch = event.changedTouches.item(j);
-		console.log("touch id:: " + touch.identifier + " || x = " + touch.pageX + " || y = " + touch.pageY);
+        // console.log("touch id:: " + touch.identifier + " || x = " + touch.pageX + " || y = " + touch.pageY);
 	}
 	//console.log("length = " + control.pages[page].length);
 	for(var i = 0; i < control.pages[page].length; i++) {

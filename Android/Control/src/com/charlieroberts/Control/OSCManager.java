@@ -108,7 +108,7 @@ public class OSCManager extends Plugin {
 				for(int i = 2; i < data.length(); i++) {
 				    Object obj = data.get(i);
 				    if(obj instanceof java.lang.Double) { // doubles are returned from JSON instead of floatsbut not handled by the oscmsg class
-				        System.out.println("got a double");
+				        //System.out.println("got a double");
 				        values.add( new Float( ( (Double) obj ).doubleValue() ) );
 				    }else{
     					values.add( obj);
@@ -135,9 +135,6 @@ public class OSCManager extends Plugin {
 			try {
 			    ipAddress = data.getString(0);
 				sender = new OSCPortOut( InetAddress.getByName(ipAddress), data.getInt(1) );
-                        
-				System.err.println("something");
-	            //c.setTarget( new InetSocketAddress( data.getString(0), data.getInt(1) ));
 				hasAddress = true;
 			} catch (Exception e) {
 				System.err.println("Error creating JSON from js message");

@@ -8,7 +8,7 @@ function PreferencesManager() {
         var autolockToggleLink = document.getElementById("autolockToggle");
         autolock = !autolock;
         (!autolock) ? autolockToggleLink.innerHTML = "Turn Autolock <b>Off</b>": autolockToggleLink.innerHTML = "Turn Autolock <b>On</b>";
-        PhoneGap.exec("Device.autolockToggle", autolock);
+        PhoneGap.exec(null, null, "Device", "autolockToggle", [autolock]);
         preferences.save({
             key: "autolock",
             shouldAutolock: autolock
@@ -17,7 +17,7 @@ function PreferencesManager() {
 
     this.changePort = function(newPort) {
         console.log("changing port");
-        PhoneGap.exec("OSCManager.setOSCReceivePort", parseInt(newPort));
+        PhoneGap.exec(null, null, "OSCManager", "setOSCReceivePort", [parseInt(newPort)]);
         this.oscport = parseInt(newPort);
         preferences.save({
             key: "OSCReceivePort",
@@ -34,7 +34,7 @@ function PreferencesManager() {
         }
         var autolockToggleLink = document.getElementById("autolockToggle");
         (!autolock) ? autolockToggleLink.innerHTML = "Turn Autolock <b>Off</b>": autolockToggleLink.innerHTML = "Turn Autolock <b>On</b>";
-        PhoneGap.exec("Device.autolockToggle", autolock);
+        PhoneGap.exec(null, null, "Device", "autolockToggle", [autolock]);
         setTimeout(function() {
             if (!autolock)
             $("#autolockToggle").innerHTML = "Turn Autolock <b>Off</b>";
@@ -66,7 +66,7 @@ function PreferencesManager() {
 
     window.oscport = this.oscport;
     setTimeout(function() {
-        PhoneGap.exec("OSCManager.setOSCReceivePort", parseInt(window.oscport));
+        PhoneGap.exec(null, null, "OSCManager", "setOSCReceivePort", [parseInt(window.oscport)]);
     },
     500);
     return this;

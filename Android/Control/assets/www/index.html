@@ -2,10 +2,7 @@
 <html>
   <head>
     <title>Control</title>
-    <!-- somehow this seems to work for both platforms... voodoo. -->
-    <meta name="viewport" content="width=320; user-scalable=no" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <!-- the line below is needed for Android but screws things up on iOS ... -->
+
     <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, target-densitydpi=device-dpi" />
 
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
@@ -13,7 +10,7 @@
     <link rel="stylesheet" href="css/jquery.mobile-1.0a3.css" />
     <link rel="stylesheet" href="css/master.css" type="text/css" media="screen" title="no title" charset="utf-8">
     
-    <script type="text/javascript" charset="utf-8" src="js/phonegap-uncompressed.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/phonegap.0.9.4.js"></script>
     <script type="text/javascript" charset="utf-8" src="js/keyevent.js"></script>        
     <!--<link rel="stylesheet" href="css/jquery.mobile.scrollview.css" />-->
 
@@ -44,6 +41,8 @@
     <script type="text/javascript" src="js/canvas.text.js?reimplement=true"></script>
     <script type="text/javascript" src="js/faces/helvetiker_regular.typeface.js"></script>-->
     
+    <script type="text/javascript" src="js/Bonjour.js"></script>
+    <script type="text/javascript" src="js/DeviceFeatures.js"></script>    
     <script type="text/javascript" src="js/Control.js"></script>
     <script type="text/javascript" src="js/InterfaceManager.js"></script>
     <script type="text/javascript" src="js/DestinationManager.js"></script>
@@ -66,7 +65,7 @@
     <!--<script type="text/javascript" src="../../interfaces/test.js"></script>-->
         
     <script type="text/javascript" charset="utf-8">
-        var pages, control, interfaceScroller, destinationScroller, interfaceManager, destinationManager, _protocol;
+        var pages, control, interfaceScroller, destinationScroller, interfaceManager, destinationManager, features, _protocol;
         function preventBehavior(e) { // prevent scrolling
             e.stopPropagation();
             e.preventDefault(); 
@@ -81,21 +80,35 @@
             //console.log("interface name = *******" + window.loadedInterfaceName);
             // console.log("window.TEST.pages = " + window.TEST.pages);
 
-            control = new Control();
+            document.addEventListener('menuKeyDown', function(){
+                if (control.tabBarHidden)
+                    control.showToolbar();
+                else
+                    control.hideToolbar();
+            });    
             
+            control = new Control();
+                
+            _protocol = "OSC";
+            
+            midiManager = new MIDIManager();
+                
             interfaceManager = new InterfaceManager();
             interfaceManager.init();
-            interfaceManager.loadScripts();
-            
-            _protocol = "OSC";
-            //console.setLevel(8);
-            oscManager  = new OSCManager();
-            midiManager = new MIDIManager();
             
             destinationManager = new DestinationManager();
             destinationManager.init();
-
-            document.addEventListener('orientationChanged', control.onRotation, false);
+            
+            //interfaceManager.loadScripts();
+            
+            oscManager = new OSCManager();
+            oscManager.startup();
+            
+            bonjour = new Bonjour();
+            bonjour.startup();
+            
+            features = new DeviceFeatures();
+            //document.addEventListener('orientationChanged', control.onRotation, false);
             
             //interfaceScroller   = new iScroll('interfaceScroller');
             //destinationScroller = new iScroll('destinationScroller');
@@ -111,7 +124,7 @@
             var autolockToggleLink = document.getElementById("autolockToggle");
             autolock = !autolock;
             (!autolock) ? autolockToggleLink.innerHTML = "Turn Autolock <b>Off</b>" : autolockToggleLink.innerHTML = "Turn Autolock <b>On</b>";         
-            if(device.platform == 'iPhone') PhoneGap.exec("Device.autolockToggle", autolock);
+            if(device.platform == 'iPhone') PhoneGap.exec(null, null, "DeviceFeatures", "autolockToggle", [autolock]);
             preferences.save({key:"autolock", shouldAutolock:autolock});
         }
 
