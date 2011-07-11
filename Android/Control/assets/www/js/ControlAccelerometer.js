@@ -66,7 +66,6 @@ function ControlAccelerometer(props) {
 			// var valueString = "|" + this.address;
 			// valueString += ":" + this.x + "," + this.y + "," + this.z;
 			// control.valuesString += valueString;
-			console.log("acc");
 	        PhoneGap.exec(null, null, 'OSCManager', 'send', [acc.address, 'fff', acc.x, acc.y, acc.z] );
 		}else if (!this.isLocal && _protocol == "MIDI") {
             // var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.x);          
