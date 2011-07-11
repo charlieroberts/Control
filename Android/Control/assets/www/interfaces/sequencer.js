@@ -71,7 +71,7 @@ constants = [\
 {\
     \"name\": \"info\",\
     \"type\": \"Button\",\
-    \"x\": .85, \"y\": .8,\
+    \"x\": .85, \"y\": .75,\
     \"width\": .145, \"height\": .1,\
     \"startingValue\": 0,\
     \"isLocal\": true,\
@@ -82,7 +82,7 @@ constants = [\
 {\
     \"name\": \"infoLabel\",\
     \"type\": \"Label\",\
-    \"x\": .85, \"y\": .8,\
+    \"x\": .85, \"y\": .75,\
     \"width\": .145, \"height\": .1,\
     \"isLocal\": true,\
     \"value\": \"info\",\
@@ -90,7 +90,7 @@ constants = [\
 {\
     \"name\": \"tabButton\",\
     \"type\": \"Button\",\
-    \"x\": .85, \"y\": .9,\
+    \"x\": .85, \"y\": .85,\
     \"width\": .145, \"height\": .095,\
     \"mode\": \"toggle\",\
     \"isLocal\": true,\
@@ -101,7 +101,7 @@ constants = [\
 {\
     \"name\": \"tabButtonLabel\",\
     \"type\": \"Label\",\
-    \"x\": .85, \"y\": .9,\
+    \"x\": .85, \"y\": .85,\
     \"width\": .145, \"height\": .1,\
     \"value\": \"menu\",\
 },\
@@ -111,7 +111,7 @@ constants = [\
 	\"name\": \"grid\",\
 	\"type\": \"MultiButton\",\
 	\"x\": .1, \"y\":.445,\
-	\"width\": 1.10  * whRatio, \"height\": .55,\
+	\"width\": 1.10  * whRatio, \"height\": .47,\
 	\"rows\": 8, \"columns\": 16,\
 	\"stroke\": \"#999\",\
 	\"color\": \"#666\",\
@@ -133,53 +133,53 @@ constants = [\
 \
 { \
 	\"name\": \"C4\", \"type\":\"Label\",\
-	\"x\":0, \"y\": 1 - (.55 / 8),\
-	\"width\":.1, \"height\":.55 / 8,\
+	\"x\":0, \"y\": .915 - (.47 / 8),\
+	\"width\":.1, \"height\":.47 / 8,\
 	\"value\": \"C4\",\
 },\
 { \
 	\"name\": \"D4\", \"type\":\"Label\",\
-	\"x\":0, \"y\": 1 - ((.55 / 8) * 2),\
-	\"width\":.1, \"height\":.55 / 8,\
+	\"x\":0, \"y\": .915 - ((.47 / 8) * 2),\
+	\"width\":.1, \"height\":.47 / 8,\
 	\"value\": \"D4\",\
 },\
 \
 { \
 	\"name\": \"E4\", \"type\":\"Label\",\
-	\"x\":0, \"y\": 1 - ((.55 / 8) * 3),\
-	\"width\":.1, \"height\":.55 / 8,\
+	\"x\":0, \"y\": .915 - ((.47 / 8) * 3),\
+	\"width\":.1, \"height\":.47 / 8,\
 	\"value\": \"E4\",\
 },\
 { \
 	\"name\": \"F4\", \"type\":\"Label\",\
-	\"x\":0, \"y\": 1 - ((.55 / 8) * 4),\
-	\"width\":.1, \"height\":.55 / 8,\
+	\"x\":0, \"y\": .915 - ((.47 / 8) * 4),\
+	\"width\":.1, \"height\":.47 / 8,\
 	\"value\": \"F4\",\
 },\
 \
 { \
 	\"name\": \"G4\", \"type\":\"Label\",\
-	\"x\":0, \"y\": 1 - ((.55 / 8) * 5),\
-	\"width\":.1, \"height\":.55 / 8,\
+	\"x\":0, \"y\": .915 - ((.47 / 8) * 5),\
+	\"width\":.1, \"height\":.47 / 8,\
 	\"value\": \"G4\",\
 },\
 \
 { \
 	\"name\": \"A4\", \"type\":\"Label\",\
-	\"x\":0, \"y\": 1 - ((.55 / 8) * 6),\
-	\"width\":.1, \"height\":.55 / 8,\
+	\"x\":0, \"y\": .915 - ((.47 / 8) * 6),\
+	\"width\":.1, \"height\":.47 / 8,\
 	\"value\": \"A4\",\
 },\
 { \
 	\"name\": \"B4\", \"type\":\"Label\",\
-	\"x\":0, \"y\": 1 - ((.55 / 8) * 7),\
-	\"width\":.1, \"height\":.55 / 8,\
+	\"x\":0, \"y\": .915 - ((.47 / 8) * 7),\
+	\"width\":.1, \"height\":.47 / 8,\
 	\"value\": \"B4\",\
 },\
 { \
 	\"name\": \"C5\", \"type\":\"Label\",\
-	\"x\":0, \"y\": 1 - ((.55 / 8) * 8),\
-	\"width\":.1, \"height\":.55 / 8,\
+	\"x\":0, \"y\": .915 - ((.47 / 8) * 8),\
+	\"width\":.1, \"height\":.47 / 8,\
 	\"value\": \"C5\",\
 },\
 \
@@ -212,7 +212,7 @@ constants = [\
     \"name\": \"start\",\
     \"type\": \"Button\",\
     \"x\": .85, \"y\": .65,\
-    \"width\": .145, \"height\": .125,\
+    \"width\": .145, \"height\": .1,\
     \"startingValue\": 0,\
     \"isLocal\": true,\
     \"mode\": \"toggle\",\
@@ -224,7 +224,7 @@ constants = [\
     \"name\": \"startLabel\",\
     \"type\": \"Label\",\
     \"x\": .85, \"y\": .65,\
-    \"width\": .145, \"height\": .125,\
+    \"width\": .145, \"height\": .1,\
 	\"value\": \"run\",\
 },\
 \

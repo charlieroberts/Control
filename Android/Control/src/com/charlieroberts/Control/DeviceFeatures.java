@@ -54,7 +54,7 @@ public class DeviceFeatures extends Plugin {
         		else
         		    this.ctx.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // | ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);    
     		    
-                String jsString = "javascript:destinationManager.rotationSet();";
+                String jsString = "javascript:window.interfaceManager.rotationSet();";
                 System.out.println(jsString);
                 webView.loadUrl(jsString);
                 System.out.println("after sending to js");

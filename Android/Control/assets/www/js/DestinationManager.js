@@ -33,9 +33,7 @@ function DestinationManager() {
 			//PhoneGap.exec("OSCManager.setIPAddressAndPort", ipaddress, 10000);
 		}
 	}
-	
-	this.rotationSet = function() {}
-	
+		
 	this.removeDestination = function(ip, port) {
 		console.log("destinationmanager removing " + ip + " : " + port);
 	}

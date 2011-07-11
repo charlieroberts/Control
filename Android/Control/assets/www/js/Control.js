@@ -12,6 +12,9 @@ function Control() {
 	this.currentTab = document.getElementById("Interfaces");
 	this.tabBarHidden = false;
 	this.orientation = 0;
+ 	this.orientationString = "portrait";
+ 	this.width = screen.width;
+ 	this.height = screen.height;
 	acc = null;
 	compass = null;
 	gyro = null;
