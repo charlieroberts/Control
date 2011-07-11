@@ -34,22 +34,21 @@ function ControlCompass(props) {
     this.userDefinedRange = this.max - this.min;
     
 	this._onCompassUpdate = function(_heading) {
-        this.value = this.min + (((0 - this.hardwareMin) + _heading) / this.hardwareRange ) * this.userDefinedRange;
+        compass.value = compass.min + (((0 - compass.hardwareMin) + _heading) / compass.hardwareRange ) * compass.userDefinedRange;
         
-        if(!this.isLocal && _protocol == "OSC") {
+        if(!compass.isLocal && _protocol == "OSC") {
             // var valueString = "|" + this.address;
             // valueString += ":" + this.value;
             // control.valuesString += valueString;
-        	PhoneGap.exec(null, null, 'OSCManager', 'send', [this.address, 'f', this.value] );
-
-        }else if (!this.isLocal && _protocol == "MIDI") {
-            var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.value);
+        	PhoneGap.exec(null, null, 'OSCManager', 'send', [compass.address, 'f', compass.value] );
+        }else if (!compass.isLocal && _protocol == "MIDI") {
+            var valueString = "|" + compass.midiType + "," + (compass.channel - 1) + "," + compass.midiNumber+ "," + Math.round(compass.value);
             control.valuesString += valueString;
         }
-        if (first) {
-            console.log("new heading:" + _heading + "; calling " + this.onvaluechange + " with new heading: " + this.value);
-            first = false;
-        }
+        // if (first) {
+        //             console.log("new heading:" + _heading + "; calling " + this.onvaluechange + " with new heading: " + this.value);
+        //             first = false;
+        //         }
 		if(this.onvaluechange != "undefined") {
 			eval(this.onvaluechange);
 		}

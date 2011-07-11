@@ -231,16 +231,6 @@ pages = [[\
 	\"address\":\"/accelerometer\",\
 },\
 \
-{\
-    \"name\": \"gyro\",\
-    \"type\": \"Gyro\",\
-	\"min\":0,\
-	\"max\":127,\
-	\"midiNumber\":3,\
-	\"updateRate\":10,\
-	\"isLocal\":false,\
-    \"onvaluechange\": \"gyroSliders.setSequentialValues(this.pitch, this.roll, this.yaw);\",\
-},\
 \
 ],\
 \
