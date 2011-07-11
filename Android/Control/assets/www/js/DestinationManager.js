@@ -34,6 +34,8 @@ function DestinationManager() {
 		}
 	}
 	
+	this.rotationSet = function() {}
+	
 	this.removeDestination = function(ip, port) {
 		console.log("destinationmanager removing " + ip + " : " + port);
 	}

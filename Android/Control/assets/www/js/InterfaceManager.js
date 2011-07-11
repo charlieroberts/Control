@@ -298,8 +298,8 @@ function InterfaceManager() {
         this.currentInterfaceJSON = json;
 		
 		if(typeof interfaceOrientation != "undefined") {
-			console.log(interfaceOrientation);
-            PhoneGap.exec(null, null, "DeviceFeatures", "setRotation", [interfaceOrientation]);
+			console.log("ROTATING ****************************" + interfaceOrientation);
+            PhoneGap.exec(null, null, "DeviceFeatures", "setOrientation", [interfaceOrientation]);
         }
         //if(control.orientation == 0 || control.orientation == 180) {
 		if(interfaceOrientation == "portrait") {

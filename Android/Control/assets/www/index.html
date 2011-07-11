@@ -65,7 +65,7 @@
     <!--<script type="text/javascript" src="../../interfaces/test.js"></script>-->
         
     <script type="text/javascript" charset="utf-8">
-        var pages, control, interfaceScroller, destinationScroller, interfaceManager, destinationManager, _protocol;
+        var pages, control, interfaceScroller, destinationScroller, interfaceManager, destinationManager, features, _protocol;
         function preventBehavior(e) { // prevent scrolling
             e.stopPropagation();
             e.preventDefault(); 
@@ -91,7 +91,7 @@
                 
             _protocol = "OSC";
             
-            //midiManager = new MIDIManager();
+            midiManager = new MIDIManager();
                 
             interfaceManager = new InterfaceManager();
             interfaceManager.init();
@@ -106,7 +106,8 @@
             
             bonjour = new Bonjour();
             bonjour.startup();
-
+            
+            features = new DeviceFeatures();
             //document.addEventListener('orientationChanged', control.onRotation, false);
             
             //interfaceScroller   = new iScroll('interfaceScroller');

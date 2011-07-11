@@ -40,16 +40,28 @@ public class DeviceFeatures extends Plugin {
 	@Override
 	public PluginResult execute(String action, JSONArray data, String callbackId) {
 	    //Log.d("OSCManager", "executing something " + action);	
-		System.out.println("Rotating device");
-		PluginResult result = null;
-		if (action.equals("setOrientation")) {
-		    System.out.println("STARTING ********************************************");
-		    this.ctx.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // | ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            String jsString = "javascript:destinationManager.rotationSet();";
-            System.out.println(jsString);
-            webView.loadUrl(jsString);
-            System.out.println("after sending to js");
-	    }
+	    String orientation;
+    	PluginResult result = null;
+	    
+	    try {
+    	    orientation = data.getString(0);
+
+    		System.out.println("Rotating device");
+    		if (action.equals("setOrientation")) {
+    		    System.out.println("STARTING ********************************************");
+    		    if(orientation.equals("landscape"))
+        		    this.ctx.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // | ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        		else
+        		    this.ctx.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // | ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);    
+    		    
+                String jsString = "javascript:destinationManager.rotationSet();";
+                System.out.println(jsString);
+                webView.loadUrl(jsString);
+                System.out.println("after sending to js");
+    	    }
+	    }catch (Exception e) {
+    	    System.out.println("couldn't get orientation from javascript runtime");
+    	}
 		return result;
 	}
 /*
