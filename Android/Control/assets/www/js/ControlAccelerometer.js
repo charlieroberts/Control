@@ -11,7 +11,7 @@ function ControlAccelerometer(props) {
 	this.delay = 1000;
 	var first = true;
 	
-    this.hardwareMin = -9.81; // The documentation: http://docs.phonegap.com/phonegap_accelerometer_accelerometer.md.html
+    this.hardwareMin = -9.81; //    
     this.hardwareMax = 9.81;  // says that the range is [0, 1]. But, it seems more like [-1G, 1G]
     this.hardwareRange = this.hardwareMax - this.hardwareMin;
     
@@ -31,42 +31,48 @@ function ControlAccelerometer(props) {
 	this.midiNumber = (typeof props.midiNumber != "undefined") ? props.midiNumber : 0;
 	
 	this.address = (typeof props.address != "undefined") ? props.address : "/" + this.name;
-	
-	console.log("setting onvaluechange to: " + props.onvaluechange);
+    console.log("**********************************  ACCELEROMETER INIT");
+	//console.log("setting onvaluechange to: " + props.onvaluechange);
 	this.onvaluechange = (typeof props.onvaluechange != "undefined") ? props.onvaluechange : null;
-    console.log("set onvaluechange to: " + this.onvaluechange);
+    //console.log("set onvaluechange to: " + this.onvaluechange);
     
 	this._onAccelUpdate = function(acceleration) {
 	    var x = acceleration.x;
 	    var y = acceleration.y;
 	    var z = acceleration.z;
         //console.log("x = " + x + " || y = " + y + " || z = " + z);
+        //console.log("hr : " + acc.hardwareRange + "|| udr : " + acc.userDefinedRange);
         
-        this.x = this.min + (((0 - this.hardwareMin) + x) / this.hardwareRange ) * this.userDefinedRange;
-		this.y = this.min + (((0 - this.hardwareMin) + y) / this.hardwareRange ) * this.userDefinedRange;
-		this.z = this.min + (((0 - this.hardwareMin) + z) / this.hardwareRange ) * this.userDefinedRange;
+        // cannot use this inside the callback... ugh    
+        acc.x = acc.min + (((0 - acc.hardwareMin) + x) / acc.hardwareRange ) * acc.userDefinedRange;
+		acc.y = acc.min + (((0 - acc.hardwareMin) + y) / acc.hardwareRange ) * acc.userDefinedRange;
+		acc.z = acc.min + (((0 - acc.hardwareMin) + z) / acc.hardwareRange ) * acc.userDefinedRange;
 		
-        //debug.log("this.x = " + this.x + " || this.y = " + this.y + " || z = " + this.z);
-		if (first) {
-		    console.log("new values: " + x + ", " + y + ", " + z + "; calling " + this.onvaluechange + " with new accell: " + this.x + ", " + this.y + ", " + this.z);
-		    first = false;
-		}
-        if(typeof this.onvaluechange != "undefined") {
-			eval(this.onvaluechange);
+		if (acc.x < acc.min) acc.x = acc.min; if (acc.x > acc.max) acc.x = acc.max;
+		if (acc.y < acc.min) acc.y = acc.min; if (acc.y > acc.max) acc.y = acc.max;
+		if (acc.z < acc.min) acc.z = acc.min; if (acc.z > acc.max) acc.z = acc.max;				
+		
+        //console.log("this.x = " + acc.x + " || this.y = " + acc.y + " || z = " + acc.z);
+	    // if (first) {
+	    //      //console.log("new values: " + x + ", " + y + ", " + z + "; calling " + this.onvaluechange + " with new accell: " + this.x + ", " + this.y + ", " + this.z);
+	    //      first = false;
+	    //  }
+        if(typeof acc.onvaluechange != "undefined") {
+			eval(acc.onvaluechange);
 		}
         
-		if(!this.isLocal && _protocol == "OSC") {
+		if(!acc.isLocal && _protocol == "OSC") {
 			// var valueString = "|" + this.address;
-			// 		valueString += ":" + this.x + "," + this.y + "," + this.z;
-			// 		control.valuesString += valueString;
-	        PhoneGap.exec(null, null, 'OSCManager', 'send', [this.address, 'fff', this.value] );
+			// valueString += ":" + this.x + "," + this.y + "," + this.z;
+			// control.valuesString += valueString;
+	        PhoneGap.exec(null, null, 'OSCManager', 'send', [acc.address, 'fff', acc.x, acc.y, acc.z] );
 		}else if (!this.isLocal && _protocol == "MIDI") {
-			var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.x);			
-			control.valuesString += valueString;
-			valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber+ 1) + "," + Math.round(this.y);			
-			control.valuesString += valueString;
-			valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber+ 2) + "," + Math.round(this.z);			
-			control.valuesString += valueString;	
+            // var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.x);          
+            // control.valuesString += valueString;
+            // valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber+ 1) + "," + Math.round(this.y);            
+            // control.valuesString += valueString;
+            // valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber+ 2) + "," + Math.round(this.z);            
+            // control.valuesString += valueString; 
 		}
 	}
 	
@@ -78,7 +84,7 @@ function ControlAccelerometer(props) {
 	
 	this.start = function() {
 		//PhoneGap.exec("CNTRL_Accelerometer.start", null);
-	    console.log("starting accelerometer");    
+	    console.log("********************************* STARTING ACC");    
         var options = new Object();
         options.frequency = this.delay;  //options.frequency is actually the period in milliseconds
         this.watchID = navigator.accelerometer.watchAcceleration(
@@ -99,6 +105,7 @@ function ControlAccelerometer(props) {
 	}
     
     this.setUpdateRate = function(rateInHz) {
+        console.log("********************************* SETTING UPDATE RATE");    
 		//debug.log("setting accelerometer updateRate " + rateInHz);
         //PhoneGap.exec("CNTRL_Accelerometer.setUpdateRate", rateInHz);
         this.unload();
