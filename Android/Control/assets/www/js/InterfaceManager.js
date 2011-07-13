@@ -23,23 +23,6 @@ function InterfaceManager() {
         window.isLoadingInterfaces = false; // stops database calls from being executed twice, for some reason "get" returns two values.
         this.loadScripts();
     }
-    this.rotationSet = function() {
-        // console.log("********************************************** ORIENTATION = " + control.orientationString);
-        console.log("********************************************** width = " + screen.width + " || height = " + screen.height);
-            control.makePages(pages, screen.width, screen.height);
-        //}else{
-        //    control.makePages(pages, screen.height, screen.width);
-        //}
-
-        if(constants != null) {
-            control.loadConstants(constants);
-        }
-        control.loadWidgets();
-        if(this.currentTab != document.getElementById("selectedInterface")) {
-            control.changeTab(document.getElementById("selectedInterface"));
-            $.mobile.changePage('#SelectedInterfacePage');
-		}
-    }
     this.loadScripts = function() {
         this.shouldLoadInterfaces = new Lawnchair('shouldLoadInterfaces');
         console.log("LOADING ******************************************************************");
@@ -64,7 +47,6 @@ function InterfaceManager() {
     }
     
     this.readFile = function(filename) {
-		console.log("reading " + filename)
         var fileref=document.createElement('script')
         fileref.setAttribute("type","text/javascript");
         fileref.setAttribute("src", "interfaces/" + filename);
@@ -80,7 +62,23 @@ function InterfaceManager() {
 			}
         }, 100);
     }
-	
+	 this.rotationSet = function() {
+        // console.log("********************************************** ORIENTATION = " + control.orientationString);
+        //console.log("********************************************** width = " + screen.width + " || height = " + screen.height);
+            control.makePages(pages, screen.width, screen.height);
+        //}else{
+        //    control.makePages(pages, screen.height, screen.width);
+        //}
+
+        if(constants != null) {
+            control.loadConstants(constants);
+        }
+        control.loadWidgets();
+        if(this.currentTab != document.getElementById("selectedInterface")) {
+            control.changeTab(document.getElementById("selectedInterface"));
+            $.mobile.changePage('#SelectedInterfacePage');
+		}
+    }
 	this.promptForInterfaceDownload = function() {
 		var interfacesDiv = document.getElementById("Interfaces");
 		var promptDiv = document.createElement("div");

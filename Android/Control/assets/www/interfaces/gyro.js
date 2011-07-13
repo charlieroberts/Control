@@ -80,64 +80,13 @@ pages = [[\
     \"name\": \"accSpeedLabel\",\
     \"type\": \"Label\",\
     \"x\": .0,\
-    \"y\": .32  5,\
+    \"y\": .32,\
     \"width\": 1,\
     \"height\": .1,\
     \"color\": \"#ffffff\",\
     \"value\": \"Update Rate : 10Hz\",\
 	\"align\": \"left\",\
 },\
-{\
-    \"name\": \"tabButton\",\
-    \"type\": \"Button\",\
-    \"x\": .8,\
-    \"y\": .85,\
-    \"width\": .19,\
-    \"height\": .15 * whRatio,\
-    \"mode\": \"toggle\",\
-    \"color\": \"#333333\",\
-    \"stroke\": \"#aaaaaa\",\
-    \"isLocal\": true,\
-	\"ontouchstart\": \"if(this.value == this.max) { control.showToolbar(); } else { control.hideToolbar(); }\",\
-},\
-\
-{\
-    \"name\": \"tabButtonLabel\",\
-    \"type\": \"Label\",\
-    \"x\": .8,\
-    \"y\": .85,\
-    \"width\": .19,\
-    \"height\": .15 * whRatio,\
-    \"mode\": \"contact\",\
-    \"isLocal\": true,\
-    \"value\": \"menu\",\
-},\
-\
-{\
-    \"name\": \"infoButton\",\
-    \"type\": \"Button\",\
-    \"x\": .6,\
-    \"y\": .85,\
-    \"width\": .2,\
-    \"height\": .15 * whRatio,\
-    \"mode\": \"contact\",\
-    \"color\": \"#333333\",\
-    \"stroke\": \"#aaaaaa\",\
-    \"midiType\": \"noteon\",\
-    \"isLocal\": true,\
-    \"ontouchstart\": \"control.changePage(1);\",\
-},\
-{\
-    \"name\": \"infoButtonLabel\",\
-    \"type\": \"Label\",\
-    \"x\": .6,\
-    \"y\": .85,\
-    \"width\": .2,\
-    \"height\": .15 * whRatio,\
-    \"color\": \"#fff\",\
-    \"value\": \"info\",\
-},\
-\
 {\
     \"name\": \"acc\",\
     \"type\": \"Accelerometer\",\
