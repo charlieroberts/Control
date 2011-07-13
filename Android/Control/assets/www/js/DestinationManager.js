@@ -7,7 +7,7 @@ function DestinationManager() {
 		this.midiDestinations = [];
 		this.ipaddress = null;
 		this.bonjourDestinations = new Array();
-		PhoneGap.exec(null, null, "Bonjour", "start", null);
+		//PhoneGap.exec(null, null, "Bonjour", "start", null);
 		//setTimeout(function() { window.destinationManager.createDestinationList(); }, 1000);
         window.destinationManager.createDestinationList();        
 

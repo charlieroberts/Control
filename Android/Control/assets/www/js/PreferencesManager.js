@@ -45,29 +45,33 @@ function PreferencesManager() {
     });
 
     preferences.get("OSCReceivePort",
-    function(r) {
-        var oscport;                    
-        oscport = 8080;
+       function(r) {
+           var oscport;                    
+           oscport = 8080;
+           shouldChange = false;
+           if (typeof r == "undefined" && r != null) {
+               if(typeof r.oscPort != "undefined") {
+                   if(r.oscPort != oscport) {
+                       oscport = r.oscPort;
+                       shouldChange = true;
+                   }
+               }
+           }
+           if(shouldChange) {
+               window.preferencesManager.changePort(oscport);
 
-        if (typeof r == "undefined" && r != null) {
-            if(typeof r.oscPort != "undefined")
-                oscport = r.oscPort;
-        }
-
-        window.preferencesManager.changePort(oscport);
-        setTimeout(function() {
-            this.oscport = oscport;
-            console.log("setting preference text");
-            //PhoneGap.exec("OSCManager.setOSCReceivePort", parseInt(oscport));
-            $('#portField').val(this.oscport);
-        },
-        250);
-    });
-
-    window.oscport = this.oscport;
-    setTimeout(function() {
-        PhoneGap.exec(null, null, "OSCManager", "setOSCReceivePort", [parseInt(window.oscport)]);
-    },
-    500);
+               this.oscport = oscport;
+               console.log("setting preference text");
+               //PhoneGap.exec("OSCManager.setOSCReceivePort", parseInt(oscport));
+               $('#portField').val(this.oscport);
+            }
+       }
+    );
+    
+    // window.oscport = this.oscport;
+    // setTimeout(function() {
+    //     PhoneGap.exec(null, null, "OSCManager", "setOSCReceivePort", [parseInt(window.oscport)]);
+    // },
+    // 500);
     return this;
 }

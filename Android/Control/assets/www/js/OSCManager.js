@@ -1,12 +1,11 @@
 var OSCManager = function() {
 	this.delegate = this;
-	console.log("creating osc manager");
 	return this;
 };
 
 OSCManager.prototype.startup = function() {
-    console.log("starting osc");
-	setTimeout(function() {    PhoneGap.exec(null, null, 'OSCManager', 'startOSCListener', []) }, 2500)
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! STARTING OSC");
+    PhoneGap.exec(null, null, 'OSCManager', 'startOSCListener', []);
 };
 
 OSCManager.prototype.sendOSC = function(msg, successCallback, failureCallback) {

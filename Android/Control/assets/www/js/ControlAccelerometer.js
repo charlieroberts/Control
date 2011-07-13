@@ -101,10 +101,10 @@ function ControlAccelerometer(props) {
 	this.unload = function() {
 	    console.log("stopping accelerometer");
 		//PhoneGap.exec("CNTRL_Accelerometer.stop");
-	      if (this.watchID) {
-	            navigator.accelerometer.clearWatch(this.watchID);
-	            this.watchID = null;
-	      }	    
+	    if (this.watchID) {
+	        navigator.accelerometer.clearWatch(this.watchID);
+	        this.watchID = null;
+	    }	    
 	}
     
     this.setUpdateRate = function(rateInHz) {
@@ -113,15 +113,8 @@ function ControlAccelerometer(props) {
         //PhoneGap.exec("CNTRL_Accelerometer.setUpdateRate", rateInHz);
         this.unload();
         this.delay = (1/rateInHz) * 1000;
-        console.log("Delay set to " + this.delay + " milliseconds.");
         this.start();
     }
-	
-	if(typeof props.updateRate != "undefined") {
-		this.setUpdateRate(props.updateRate);
-	}else{
-		this.setUpdateRate(10);
-	}
 	
 	return this;
 }

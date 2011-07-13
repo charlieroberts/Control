@@ -46,18 +46,18 @@ public class DeviceFeatures extends Plugin {
 	    try {
     	    orientation = data.getString(0);
 
-    		System.out.println("Rotating device");
+    		//System.out.println("Rotating device");
     		if (action.equals("setOrientation")) {
-    		    System.out.println("STARTING ********************************************");
+    		    System.out.println("ROTATION STARTING " + orientation + " ********************************************");
     		    if(orientation.equals("landscape"))
         		    this.ctx.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // | ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         		else
         		    this.ctx.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // | ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);    
     		    
                 String jsString = "javascript:window.interfaceManager.rotationSet();";
-                System.out.println(jsString);
+                //System.out.println(jsString);
                 webView.loadUrl(jsString);
-                System.out.println("after sending to js");
+                //System.out.println("after sending to js");
     	    }
 	    }catch (Exception e) {
     	    System.out.println("couldn't get orientation from javascript runtime");

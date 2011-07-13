@@ -43,9 +43,8 @@ public class OSCManager extends Plugin {
 	
 	@Override
 	public PluginResult execute(String action, JSONArray data, String callbackId) {
-	    //Log.d("OSCManager", "executing something " + action);	
-
 		PluginResult result = null;
+		
 		if (action.equals("startOSCListener") && receiver == null) {
 		    try {
     		    Log.d("OSCManager", "building client");	
@@ -53,7 +52,7 @@ public class OSCManager extends Plugin {
     			listener = new OSCListener() {
     	        	public void acceptMessage(java.util.Date time, OSCMessage message) {
     	        	    Object[] args = message.getArguments();
-            			System.out.println("Message received!");
+            			//System.out.println("Message received!");
             			if(message.getAddress().equals("/pushInterface")) {
             			    //[jsStringStart replaceOccurrencesOfString:@"\n" withString:@"" options:1 range:NSMakeRange(0, [jsStringStart length])]; // will not work with newlines present
                             String js = "javascript:interfaceManager.pushInterface('" + ((String)args[0]).replace('\n', ' ') + "')"; // remove line breaks
@@ -62,7 +61,7 @@ public class OSCManager extends Plugin {
             			}else if(message.getAddress().equals("/pushDestination")) {
             			    //		NSString *jsString = [[NSString alloc] initWithFormat:@"destinationManager.addDestination('%@')", destination];
             			    String js = "javascript:destinationManager.pushDestination('" + (String)args[0] + "')";
-            			    System.out.println(js);
+            			    //System.out.println(js);
             			    webView.loadUrl(js);
             			}else{
             			    String jsString = "javascript:oscManager.processOSCMessage(";
@@ -89,12 +88,13 @@ public class OSCManager extends Plugin {
                 			}
                 			jsString = jsString + typeTagString + "\", " + argString + ");";
                 			webView.loadUrl(jsString);
-                			System.out.println(jsString);
+                			//System.out.println(jsString);
                 		}
             		}
             	};
             	receiver.addListener("/", listener);
-            	receiver.startListening();  
+            	receiver.startListening(); 
+            	Log.d("OSCManager", "finished setting up OSC receiver and now listening");
     		} catch (Exception e) {
     			System.err.println("Error creating / binding OSC client");
     		}
@@ -142,6 +142,8 @@ public class OSCManager extends Plugin {
 		}else if(action.equals("setOSCReceivePort")){
 			try {
 			   	receiver = new OSCPortIn(data.getInt(0));
+			   	receiver.addListener("/", listener);
+			   	System.err.println("MADE NEW PORT WHICH WAS " + data.getInt(0));
 			} catch (Exception e) {
 				System.err.println("Error creating JSON from js message");
 			}

@@ -485,7 +485,7 @@ PhoneGap.callbackStatus = {
  * @param {String[]} [args]     Zero or more arguments to pass to the method
  */
 PhoneGap.exec = function(success, fail, service, action, args) {
-    //console.log(args);
+    //console.log(service + " || " + action + " || " + args);
     try {
         var callbackId = service + PhoneGap.callbackId++;
         if (success || fail) {

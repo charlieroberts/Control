@@ -26,7 +26,7 @@ function Control() {
 
 Control.prototype.init = function() {
     //if(device.platform == 'iPhone') {
-        PhoneGap.exec(null, null, "OSCManager", "startReceiveThread", null);
+        //PhoneGap.exec(null, null, "OSCManager", "startReceiveThread", []);
 	    //PhoneGap.exec("CNTRL_Accelerometer.setUpdateRate", 50);
 	    //PhoneGap.exec("Gyro.setUpdateRate", 50);	
     //}
@@ -356,7 +356,7 @@ Control.prototype.changeTab = function(tab) {
 	  if(oldTab.id == "selectedInterface") {
 		control.unloadWidgets();
 		//if(device.platform == 'iPhone') 
-          PhoneGap.exec("Device.setRotation", "portrait");
+          PhoneGap.exec(null,null,"DeviceFeatures","setOrientation", ["portrait"]);
 		//window.plugins.nativeControls.showTabBar({"orientation":"portrait",  "position":"bottom"});
 	  }
     }

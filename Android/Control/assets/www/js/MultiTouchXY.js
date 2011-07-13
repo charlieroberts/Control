@@ -98,10 +98,11 @@ function MultiTouchXY(ctx, props) {
 				}
 			}
 		}
-		touchFound.id = id;
-		touchFound.isActive = true;
-		if(touchFound != null)
+		if(touchFound != null) {
+    		touchFound.id = id;
+    		touchFound.isActive = true;
 			this.changeValue(touchFound, xPos, yPos);
+    	}
 	}
 	
 	this.event = function(event) {
@@ -248,21 +249,22 @@ function MultiTouchXY(ctx, props) {
 //
 //    }
 	this.output = function(touch) {
-		var valueString = "";
-        if(_protocol == "OSC") {
-            valueString = "|" + this.address;
-            if (this.maxTouches > 1) {
-              valueString += "/" + touch.activeNumber;
-            }
-            valueString += ":" + this.xvalue + "," + this.yvalue;
-        }else if(_protocol == "MIDI") {
-            var xnum = this.midiNumber + (touch.activeNumber * 2) - 2;
-            var ynum = xnum + 1;
-				
-            valueString  = "|" + this.midiType + "," + (this.channel - 1) + "," + xnum + "," + Math.round(this.xvalue);
-            valueString += "|" + this.midiType + "," + (this.channel - 1) + "," + ynum + "," + Math.round(this.yvalue);
-        }
-		control.valuesString += valueString;
+		//var valueString = "";
+        //if(_protocol == "OSC") {
+            // valueString = "|" + this.address;
+            //            if (this.maxTouches > 1) {
+            //              valueString += "/" + touch.activeNumber;
+            //            }
+            //            valueString += ":" + this.xvalue + "," + this.yvalue;
+	        PhoneGap.exec(null, null, 'OSCManager', 'send', [this.address + "/" + touch.activeNumber, 'ff', this.xvalue, this.yvalue] );
+        // }else if(_protocol == "MIDI") {
+        //             var xnum = this.midiNumber + (touch.activeNumber * 2) - 2;
+        //             var ynum = xnum + 1;
+        //              
+        //             valueString  = "|" + this.midiType + "," + (this.channel - 1) + "," + xnum + "," + Math.round(this.xvalue);
+        //             valueString += "|" + this.midiType + "," + (this.channel - 1) + "," + ynum + "," + Math.round(this.yvalue);
+        //         }
+		//control.valuesString += valueString;
 
 	}
 	
