@@ -357,7 +357,7 @@ Control.prototype.changeTab = function(tab) {
 	  if(oldTab.id == "selectedInterface") {
 		control.unloadWidgets();
 		//if(device.platform == 'iPhone') 
-          PhoneGap.exec(null,null,"DeviceFeatures","setOrientation", ["portrait"]);
+          PhoneGap.exec(null,null,"DeviceFeatures","setOrientation2", ["portrait"]);
 		//window.plugins.nativeControls.showTabBar({"orientation":"portrait",  "position":"bottom"});
 	  }
     }
