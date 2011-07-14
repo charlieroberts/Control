@@ -62,18 +62,15 @@ function InterfaceManager() {
 			}
         }, 100);
     }
-	 this.rotationSet = function() {
-        // console.log("********************************************** ORIENTATION = " + control.orientationString);
-        //console.log("********************************************** width = " + screen.width + " || height = " + screen.height);
-            control.makePages(pages, screen.width, screen.height);
-        //}else{
-        //    control.makePages(pages, screen.height, screen.width);
-        //}
-
+	this.rotationSet = function() {
+        control.makePages(pages, screen.width, screen.height);
+        
         if(constants != null) {
             control.loadConstants(constants);
         }
+        
         control.loadWidgets();
+        
         if(this.currentTab != document.getElementById("selectedInterface")) {
             control.changeTab(document.getElementById("selectedInterface"));
             $.mobile.changePage('#SelectedInterfacePage');
@@ -344,5 +341,4 @@ function InterfaceManager() {
 		
 	return this;
 }
-
 
