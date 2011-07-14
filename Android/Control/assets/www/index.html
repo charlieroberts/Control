@@ -3,7 +3,7 @@
   <head>
     <title>Control</title>
 
-    <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, target-densitydpi=device-dpi" />
+    <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, target-densitydpi=med-dpi" />
 
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     
@@ -72,9 +72,10 @@
         };
         
         PhoneGap.addConstructor(function(){
+            console.log("init constructor");
             init();
         });
-        
+        console.log("ARGGGGGH");
         function init() {   
             document.addEventListener("touchmove", preventBehavior, false); // prevents webkit from scrolling DNR
             //console.log("interface name = *******" + window.loadedInterfaceName);
@@ -87,14 +88,17 @@
                     control.hideToolbar();
             });    
             
+            console.log("before control");
             control = new Control();
                 
             _protocol = "OSC";
             
             midiManager = new MIDIManager();
-                
+            console.log("after MIDI Manager");
             interfaceManager = new InterfaceManager();
+            console.log("after creating interfaceManager");
             interfaceManager.init();
+            console.log("after interfaceManager init");
             
             destinationManager = new DestinationManager();
             destinationManager.init();

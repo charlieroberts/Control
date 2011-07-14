@@ -40,28 +40,41 @@ public class DeviceFeatures extends Plugin {
 	@Override
 	public PluginResult execute(String action, JSONArray data, String callbackId) {
 	    //Log.d("OSCManager", "executing something " + action);	
-	    String orientation;
     	PluginResult result = null;
-	    
-	    try {
-    	    orientation = data.getString(0);
 
-    		//System.out.println("Rotating device");
-    		if (action.equals("setOrientation")) {
-    		    System.out.println("ROTATION STARTING " + orientation + " ********************************************");
-    		    if(orientation.equals("landscape"))
-        		    this.ctx.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // | ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        		else
-        		    this.ctx.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // | ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);    
+	    if (action.equals("setOrientation")) {
+	        String orientation;
+	    
+    	    try {
+        	    orientation = data.getString(0);
+
+        		//System.out.println("Rotating device");
+        		if (action.equals("setOrientation")) {
+        		    System.out.println("ROTATION STARTING " + orientation + " ********************************************");
+        		    if(orientation.equals("landscape"))
+            		    this.ctx.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // | ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            		else
+            		    this.ctx.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // | ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);    
     		    
-                String jsString = "javascript:window.interfaceManager.rotationSet();";
-                //System.out.println(jsString);
-                webView.loadUrl(jsString);
-                //System.out.println("after sending to js");
-    	    }
-	    }catch (Exception e) {
-    	    System.out.println("couldn't get orientation from javascript runtime");
-    	}
+                    String jsString = "javascript:window.interfaceManager.rotationSet();";
+                    //System.out.println(jsString);
+                    webView.loadUrl(jsString);
+                    //System.out.println("after sending to js");
+        	    }
+    	    }catch (Exception e) {
+        	    System.out.println("couldn't get orientation from javascript runtime");
+        	}
+        }else if(action.equals("print")){
+            try{
+                System.out.println(data.getString(0));
+            }catch (Exception e) {
+                System.out.println("failed to print");
+            }
+        }else{
+            System.out.println("***************************** SCALE IS " + webView.getScale());
+            String jsString = "javascript:window.interfaceManager.scale = " + webView.getScale() + ";";
+            webView.loadUrl(jsString);
+        }
 		return result;
 	}
 /*

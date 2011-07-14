@@ -7,6 +7,7 @@ body {
   line-height:1.5em;
   margin:0;
   padding:0;
+  border-size:0;
   border-top:1px solid #393939;
   text-shadow:none !important;
 }
@@ -21,6 +22,9 @@ b { font-weight: bold; }
   width:100%;
   /*overflow:hidden;*/
   background-color:#000;
+  margin:0;
+  padding:0;
+  border-size:0;
   /*display:none;*/
   /*-webkit-transition: height .2s linear;*/
 }
@@ -29,7 +33,11 @@ b { font-weight: bold; }
 
 li { color: #fff; }
 
-#selectedInterface { background-color:#000; }
+#selectedInterface { 
+    background-color:#000;
+    height:100% !important;
+    width:100%  !important; 
+}
 
 canvas { margin: 0; padding: 0;}
 
