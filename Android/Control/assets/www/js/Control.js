@@ -21,7 +21,6 @@ function Control() {
 	interfaceDiv = document.getElementById("selectedInterface");
 	this.changeTab(this.currentTab);
 	this.isAddingConstants = false;
-	console.log("CONTROL CREATED");
 	return this;
 }
 
@@ -80,7 +79,6 @@ Control.prototype.removeWidgetWithName = function(widgetName) {
 		for(var j = 0; j < control.pages[page].length; j++) {
 			var widget = control.pages[page][j];
 			if(widget.name == widgetName) {
-                console.log("widget found!");
                 control.pages[page].splice(j,1);
                 widget = null;
 			}

@@ -4,7 +4,9 @@ function InterfaceManager() {
     this.init = function() {
         console.log("INTERFACE MANAGER INIT");
         this.selectedListItem = 0;
-        this.interfaceFiles = new Lawnchair('interfaceFiles');
+        //this.interfaceFiles = new Lawnchair('interfaceFiles');
+        //if (!localStorage.interfaceFiles)       localStorage.interfaceFiles = JSON.stringify([]);
+        //if (!localStorage.shouldLoadInterfaces) localStorage.shouldLoadInterfaces = JSON.stringify(true);
         this.currentInterfaceName = null;
         this.currentInterfaceJSON = null;
         this.interfaceIP = null;
@@ -23,39 +25,68 @@ function InterfaceManager() {
         window.shouldReadFiles = true;
         window.isLoadingInterfaces = false;
         // stops database calls from being executed twice, for some reason "get" returns two values.
+        control.ifCount = 0;
         this.loadScripts();
+        this.loadedInterfaces = [];
+
     }
+    
     this.loadScripts = function() {
-        this.shouldLoadInterfaces = new Lawnchair('shouldLoadInterfaces');
-        console.log("LOADING ******************************************************************");
+        PhoneGap.exec(null, null, "DeviceFeatures", "print", ["LOADING ******************************************************************"]);
+        
+        var fileref = document.createElement('script')
+        fileref.setAttribute("type", "text/javascript");
+        fileref.setAttribute("src", "interfaces/" + this.interfaceDefaults[control.ifCount]);
+        document.getElementsByTagName('head')[0].appendChild(fileref);
+            
         window.setTimeout(function() {
-            // needs a timeout for the Lawnchair database to be initialized... ARGGGGHHHH
-            interfaceManager.shouldLoadInterfaces.get("shouldLoad",
-            function(r) {
-                console.log("inside should load");
-                if (!window.isLoadingInterfaces) {
-                    if (r != null)
-                    window.shouldReadFiles = true;
-                    // this means that Control has been launched before, so we should load the interfaces into the database
-                    if (window.shouldReadFiles) {
-                        control.ifCount = 0;
-                        interfaceManager.shouldLoadInterfaces.save({
-                            key: "shouldLoad",
-                            sl: true
-                        });
-                        interfaceManager.readFile(interfaceManager.interfaceDefaults[control.ifCount]);
-                    } else {
-                        interfaceManager.createInterfaceListWithStoredInterfaces();
-                    }
-                    window.isLoadingInterfaces = true;
-                }
-            })
-        },
-        250);
+            if(control.ifCount < interfaceManager.interfaceDefaults.length) {
+                eval(window.interfaceString);
+                //PhoneGap.exec(null, null, "DeviceFeatures", "print", ["ARHAIRH" + window.interfaceString]);
+                PhoneGap.exec(null, null, "DeviceFeatures", "print", [loadedInterfaceName]);                
+                
+                interfaceManager.loadedInterfaces[control.ifCount] = {'name':loadedInterfaceName, 'json':window.interfaceString};
+                control.ifCount++;
+                interfaceManager.loadScripts();
+            }else{
+                interfaceManager.createInterfaceListWithArray(interfaceManager.loadedInterfaces);
+                localStorage.interfaceFiles = JSON.stringify(interfaceManager.loadedInterfaces);
+            }
+        }, 350);
     }
+        
+        // PhoneGap.exec(null, null, "DeviceFeatures", "print", ["LOADING ******************************************************************"]);
+        //        
+        //        window.setTimeout(function() {
+        //            // needs a timeout for the Lawnchair database to be initialized... ARGGGGHHHH
+        //            //interfaceManager.shouldLoadInterfaces.get("shouldLoad",
+        //            //function(r) {
+        //                PhoneGap.exec(null, null, "DeviceFeatures", "print", ["INSIDE SHOULD LOAD"]);
+        //                if (!window.isLoadingInterfaces) {
+        //                    //if (r != null)
+        //                    window.shouldReadFiles = true;
+        //                    // this means that Control has been launched before, so we should load the interfaces into the database
+        //                    if (window.shouldReadFiles) {
+        //                        control.ifCount = 0;
+        //                        // interfaceManager.shouldLoadInterfaces.save({
+        //                        //                             key: "shouldLoad",
+        //                        //                             sl: true
+        //                        //                         });
+        //                        interfaceManager.readFile(interfaceManager.interfaceDefaults[control.ifCount]);
+        //                    } else {
+        //                        interfaceManager.createInterfaceListWithStoredInterfaces();
+        //                    }
+        //                    window.isLoadingInterfaces = true;
+        //                }
+        //            //})
+        //        },
+        //        3000);
+        //        PhoneGap.exec(null, null, "DeviceFeatures", "print", ["AFTER LOADING ******************************************************************"]);
+        
+    //}
 
     this.readFile = function(filename) {
-        console.log("LOADING " + filename);
+        PhoneGap.exec(null, null, "DeviceFeatures", "print", ["LOADING " + filename]);
         var fileref = document.createElement('script')
         fileref.setAttribute("type", "text/javascript");
         fileref.setAttribute("src", "interfaces/" + filename);
@@ -64,13 +95,13 @@ function InterfaceManager() {
         setTimeout(function() {
             interfaceManager.saveInterface(window.interfaceString, false);
             control.ifCount++;
-            if (control.ifCount <= interfaceManager.interfaceDefaults.length) {
+            if (control.ifCount < interfaceManager.interfaceDefaults.length) {
                 interfaceManager.readFile(interfaceManager.interfaceDefaults[control.ifCount]);
             } else {
                 interfaceManager.createInterfaceListWithStoredInterfaces();
             }
         },
-        100);
+        500);
     }
     this.rotationSet = function() {
         var r = 1;
@@ -205,24 +236,31 @@ function InterfaceManager() {
 
     this.createInterfaceListWithStoredInterfaces = function() {
         $('#interfaceList').empty();
+        PhoneGap.exec(null, null, "DeviceFeatures", "print", ["WTF?????????????"]);            
+        
         interfaceManager.interfaceFiles.all(function(r) {
+            PhoneGap.exec(null, null, "DeviceFeatures", "print", ["RETRIEVED INTERFACE ARRAY PASSING TO LIST CREATION"]);            
             interfaceManager.createInterfaceListWithArray(r);
         });
+        PhoneGap.exec(null, null, "DeviceFeatures", "print", ["WTF?????????????"]);                    
         window.isLoadingInterfaces = false;
     }
 
     this.createInterfaceListWithArray = function(listArray) {
         var list = document.getElementById('interfaceList');
         var count = 0;
-
+        PhoneGap.exec(null, null, "DeviceFeatures", "print", ["MAKING LIST length " + listArray.length]);            
         for (var i = 0; i < listArray.length; i++) {
+            PhoneGap.exec(null, null, "DeviceFeatures", "print", [listArray[i]]);                        
             var r = listArray[i];
             var item = document.createElement('li');
 
             item.style.borderBottom = "1px solid #666";
             item.style.fontWeight = "normal";
-            item.setAttribute("ontouchend", "$.mobile.changePage('#SelectedInterfacePage');interfaceManager.highlight(" + (count++) + "); interfaceManager.selectInterfaceFromList('" + r.key + "');");
-            item.innerHTML = r.key;
+            item.setAttribute("ontouchend", "$.mobile.changePage('#SelectedInterfacePage');interfaceManager.highlight(" + (count++) + "); interfaceManager.selectInterfaceFromList('" + (count - 1) + "');");
+            item.innerHTML = r.name;
+            PhoneGap.exec(null, null, "DeviceFeatures", "print", ["MAKING LIST " + r.name]);            
+            
             $(item).addClass('destinationListItem');
             $(item).addClass('interfaceListItem');
 
@@ -287,6 +325,7 @@ function InterfaceManager() {
         var loadedInterfaceName = null;
         //console.log(interfaceJSON);
         eval(interfaceJSON);
+        PhoneGap.exec(null, null, "DeviceFeatures", "print", ["SAVING"]);
         if (loadedInterfaceName != null) {
             //interfaceManager.interfaceFiles.remove(loadedInterfaceName,
             interfaceManager.interfaceFiles.save({
@@ -296,6 +335,7 @@ function InterfaceManager() {
             },
             function(r) {
                 //console.log("interface saved");
+                PhoneGap.exec(null, null, "DeviceFeatures", "print", ["SAVING " + r.key]);                            
                 if (shouldReloadList)
                 interfaceManager.createInterfaceListWithStoredInterfaces();
             }
@@ -374,16 +414,14 @@ function InterfaceManager() {
         //        }
     }
     //
-    this.selectInterfaceFromList = function(interfaceName) {
-        interfaceManager.interfaceFiles.get(interfaceName,
-        function(r) {
-            if (typeof r.address != "undefined")
+    this.selectInterfaceFromList = function(interfaceNumber) {
+        var r = interfaceManager.loadedInterfaces[interfaceNumber];
+        
+        if (typeof r.address != "undefined")
             interfaceManager.interfaceIP = r.address;
-            interfaceManager.runInterface(r.json);
-        }
-        );
+            
+        interfaceManager.runInterface(r.json);
     }
 
     return this;
 }
-

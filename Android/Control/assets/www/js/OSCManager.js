@@ -4,7 +4,6 @@ var OSCManager = function() {
 };
 
 OSCManager.prototype.startup = function() {
-    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! STARTING OSC");
     PhoneGap.exec(null, null, 'OSCManager', 'startOSCListener', []);
 };
 
@@ -17,7 +16,6 @@ OSCManager.prototype.sendOSC = function(msg, successCallback, failureCallback) {
 };
 
 PhoneGap.addConstructor(function() {
-	console.log("phonegap add constructor for OSC Manager");
 	//Register the javascript plugin with PhoneGap
 	PhoneGap.addPlugin('OSCManager', new OSCManager());
 	
@@ -123,7 +121,7 @@ OSCManager.prototype.processOSC = function(oscAddress, typetags, args) {
 		var w = control.widgets[i];
 		//console.log("w.address = " + w.address + " :: address received = " + oscAddress);
 		if(w.address == oscAddress) {
-			console.log("setting !" + args[0]);
+            // console.log("setting !" + args[0]);
 			w.setValue(args[0], false);
 			break;
 		}else{

@@ -72,10 +72,8 @@
         };
         
         PhoneGap.addConstructor(function(){
-            console.log("init constructor");
             init();
         });
-        console.log("ARGGGGGH");
         function init() {   
             document.addEventListener("touchmove", preventBehavior, false); // prevents webkit from scrolling DNR
             //console.log("interface name = *******" + window.loadedInterfaceName);
@@ -88,23 +86,17 @@
                     control.hideToolbar();
             });    
             
-            console.log("before control");
             control = new Control();
                 
             _protocol = "OSC";
             
             midiManager = new MIDIManager();
-            console.log("after MIDI Manager");
+            
             interfaceManager = new InterfaceManager();
-            console.log("after creating interfaceManager");
             interfaceManager.init();
-            console.log("after interfaceManager init");
             
             destinationManager = new DestinationManager();
             destinationManager.init();
-            
-            //console.log("AFTER INTERFACE MANAGER AND DESTINATION MANAGER INIT *************************************");
-            //interfaceManager.loadScripts();
             
             oscManager = new OSCManager();
             oscManager.startup();
@@ -122,7 +114,6 @@
             //  PhoneGap.exec("Device.setRotation", "portrait");
             
             preferencesManager = new PreferencesManager();
-            console.log("end of constructor");
         }
         
         function autolockToggle() {
