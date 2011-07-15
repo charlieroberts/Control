@@ -26,8 +26,15 @@ function InterfaceManager() {
         window.isLoadingInterfaces = false;
         // stops database calls from being executed twice, for some reason "get" returns two values.
         control.ifCount = 0;
-        this.loadScripts();
-        this.loadedInterfaces = [];
+        if(!localStorage.interfaceFiles) {
+            this.loadedInterfaces = [];
+            this.loadScripts();
+        }else{
+            PhoneGap.exec(null, null, "DeviceFeatures", "print", ["NOT RELOADING"]);
+            
+            this.loadedInterfaces = JSON.parse(localStorage.interfaceFiles);
+            this.createInterfaceListWithArray(this.loadedInterfaces);
+        }
 
     }
     
@@ -249,9 +256,9 @@ function InterfaceManager() {
     this.createInterfaceListWithArray = function(listArray) {
         var list = document.getElementById('interfaceList');
         var count = 0;
-        PhoneGap.exec(null, null, "DeviceFeatures", "print", ["MAKING LIST length " + listArray.length]);            
+        //PhoneGap.exec(null, null, "DeviceFeatures", "print", ["MAKING LIST length " + listArray.length]);            
         for (var i = 0; i < listArray.length; i++) {
-            PhoneGap.exec(null, null, "DeviceFeatures", "print", [listArray[i]]);                        
+            //PhoneGap.exec(null, null, "DeviceFeatures", "print", [listArray[i]]);                        
             var r = listArray[i];
             var item = document.createElement('li');
 
