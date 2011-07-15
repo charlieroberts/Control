@@ -98,7 +98,54 @@ pages = [[\
     \"onvaluechange\": \"accSliders.setSequentialValues(acc.x, acc.y, acc.z);\",\
 	\"address\":\"/accelerometer\",\
 },\
-\
+{\
+    \"name\": \"tabButton\",\
+    \"type\": \"Button\",\
+    \"x\": .2,\
+    \"y\": .85,\
+    \"width\": .2,\
+    \"height\": .075,\
+    \"mode\": \"toggle\",\
+    \"color\": \"#333333\",\
+    \"stroke\": \"#f00\",\
+    \"protocol\": \"local\",\
+    \"ontouchstart\": \"if(this.value == this.max) { control.showToolbar(); } else { control.hideToolbar(); }\",\
+},\
+{\
+    \"name\": \"tabButtonLabel\",\
+    \"type\": \"Label\",\
+    \"x\": .2,\
+    \"y\": .85,\
+    \"width\": .2,\
+    \"height\": .075,\
+    \"mode\": \"contact\",\
+    \"protocol\": \"local\",\
+    \"value\": \"menu\",\
+},\
+{\
+    \"name\": \"infoButton\",\
+    \"type\": \"Button\",\
+    \"x\": .0,\
+    \"y\": .85,\
+    \"width\": .2,\
+    \"height\": .075,\
+    \"mode\": \"contact\",\
+    \"color\": \"#333333\",\
+    \"stroke\": \"#f00\",\
+    \"midiType\": \"noteon\",\
+    \"protocol\": \"local\",\
+    \"ontouchstart\": \"control.changePage(1);\",\
+},\
+{\
+    \"name\": \"infoButtonLabel\",\
+    \"type\": \"Label\",\
+    \"x\": .0,\
+    \"y\": .85,\
+    \"width\": .2,\
+    \"height\": .075,\
+    \"color\": \"#fff\",\
+    \"value\": \"info\",\
+},\
 \
 ],\
 \

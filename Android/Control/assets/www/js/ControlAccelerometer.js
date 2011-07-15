@@ -78,6 +78,8 @@ function ControlAccelerometer(props) {
 	}
 	
 	this.draw = function() {}
+	
+	this.event = function() {}
 
     function onSuccess(acceleration) {
         this._onAccelUpdate(acceleration.x, acceleration.y, acceleration.z);

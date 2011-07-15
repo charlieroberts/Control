@@ -53,7 +53,9 @@ function ControlCompass(props) {
 			eval(this.onvaluechange);
 		}
 	}
-
+    
+    this.event = function() {}
+    
 	function onError() {
 	    alert('Error: failed to get heading!');
 	};

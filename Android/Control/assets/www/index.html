@@ -173,9 +173,9 @@
     <div data-role="content">
         <ul id="preferencesList" data-role="listview" data-theme="g">
             <li data-icon="false" class="preferencesListItem"><a id="autolockToggle" href="#" ontouchend="preferencesManager.autolockToggle()">Turn Autolock <b>On</b></a></li>
-            <li class="preferencesListItem">OSC Receive Port : 
-                <input id="portField" style="display:inline; width:150px;" type="number" id="receivePortSelector" name="portField" value="8080" onchange="portField.blur();preferencesManager.changePort(portField.value);console.log('EVENT SUBMIT');">
-                <!--<form id="oscForm" style="display:inline;" onsubmit="console.log('SUBMIT');portField.blur(); preferencesManager.changePort(portField.value);">
+            <li class="preferencesListItem">OSC Receive Port : 8080 (unchangeable in this version)
+                <!--<<input id="portField" style="display:inline; width:150px;" type="number" id="receivePortSelector" name="portField" value="8080" onchange="portField.blur();preferencesManager.changePort(portField.value);console.log('EVENT SUBMIT');">
+                form id="oscForm" style="display:inline;" onsubmit="console.log('SUBMIT');portField.blur(); preferencesManager.changePort(portField.value);">
                     
                 </form>-->
             </li>
@@ -222,7 +222,7 @@
 
   <!--<div style="display:block; position:fixed; top: 100px; left: 100px; width:50px; height:50px; background-color:#f00; z-index:100;" ontouchend="window.location.reload(true)"><h2>RELOAD</h2></div>-->
       
-  <div data-role="footer" data-id="foo1" data-position="fixed" class="ftr ui-bar-a ui-footer ui-footer-fixed ui-fixed-overlay" role="contentinfo" style=" border-top-width:0;bottom:0px">
+  <div data-role="footer" data-id="foo1" data-position="fixed" class="ftr ui-bar-a ui-footer ui-footer-fixed ui-fixed-overlay" role="contentinfo" style=" border-top-width:0;bottom:0px; width:100%; border-width:0; padding:0; margin:0">
       <div data-role="navbar" class="ui-navbar ui-navbar-noicons" role="navigation">
           <ul class="ui-navbar-noicons ui-grid-c"  style="border-top-width:0;">
               <li class="ui-block-a" style=" border-top-width:0;">
