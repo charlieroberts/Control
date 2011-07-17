@@ -11,6 +11,7 @@ function MultiTouchXY(ctx, props) {
 	this.valuesX = [];
 	this.valuesY = [];
 	this.isMomentary = (typeof props.isMomentary == "undefined") ? true : props.isMomentary;
+    this.lastTouchhed = null;
 	
 	this.container = document.createElement('div');
 	$(this.container).addClass('widget multiTouchXY');
@@ -102,6 +103,8 @@ function MultiTouchXY(ctx, props) {
 		touchFound.isActive = true;
 		if(touchFound != null)
 			this.changeValue(touchFound, xPos, yPos);
+        
+        this.lastTouched = touchFound;
 	}
 	
 	this.event = function(event) {

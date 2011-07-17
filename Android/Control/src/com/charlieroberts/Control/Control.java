@@ -35,6 +35,7 @@ public class Control extends DroidGap
          // touch events are generated at random somehow. But I think the behavior is better with it on than with it off.
          // when off, multiple touchdown events only work if there is a drag in between them for whatever reason. 
          super.appView.getSettings().setBuiltInZoomControls(true); //Enable Multitouch if supported by ROM
+         super.appView.getSettings().setCacheMode(android.webkit.WebSettings.LOAD_NO_CACHE); // Turn off cacheing of interfaces so that they can be refreshed / reloaded
          //super.appView.getSettings().setSupportZoom(false);
          
          handler.postDelayed(new Runnable() {
