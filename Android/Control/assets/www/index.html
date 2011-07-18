@@ -1,76 +1,69 @@
-<!DOCTYPE html> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html>
-  <head>
-    <title>Control</title>
+    <head>
+        <title>
+            Control
+        </title>
+        <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, initial-scale=1.0, target-densitydpi=med-dpi">
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" href="css/jquery.mobile-1.0a3.css" type="text/css">
+        <link rel="stylesheet" href="css/master.css" type="text/css" media="screen" title="no title" charset="utf-8">
+        <script type="text/javascript" charset="utf-8" src="js/phonegap.0.9.4.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/keyevent.js"></script>
+        <!--<link rel="stylesheet" href="css/jquery.mobile.scrollview.css" />-->
+        <!--<link rel="stylesheet" href="css/iscroll.css" type="text/css" media="screen" charset="utf-8">-->
+        <!--<script type="text/javascript" charset="utf-8" src="js/NativeControls.js"></script>-->
+        <!-- on android     -->
 
-    <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, target-densitydpi=med-dpi" />
+        <script type="text/javascript" charset="utf-8" src="js/keyevent.js"></script><!-- jQuery -->
 
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-    
-    <link rel="stylesheet" href="css/jquery.mobile-1.0a3.css" />
-    <link rel="stylesheet" href="css/master.css" type="text/css" media="screen" title="no title" charset="utf-8">
-    
-    <script type="text/javascript" charset="utf-8" src="js/phonegap.0.9.4.js"></script>
-    <script type="text/javascript" charset="utf-8" src="js/keyevent.js"></script>        
-    <!--<link rel="stylesheet" href="css/jquery.mobile.scrollview.css" />-->
-
-    <!--<link rel="stylesheet" href="css/iscroll.css" type="text/css" media="screen" charset="utf-8">-->
-
-    <!--<script type="text/javascript" charset="utf-8" src="js/NativeControls.js"></script>-->
-    <!-- on android     -->
-    <script type="text/javascript" charset="utf-8" src="js/keyevent.js"></script>
-
-    
-    <!-- jQuery -->
-    <script src="js/jquery-1.5.js"></script>
-    <script src="js/jquery.mobile-1.0a3.js"></script>
-    <script src="js/jquery.easing.1.3.js"></script>
-    <!--<script src="js/jquery.mobile.scrollview.js"></script>
+        <script src="js/jquery-1.5.js" type="text/javascript"></script>
+        <script src="js/jquery.mobile-1.0a3.js" type="text/javascript"></script>
+        <script src="js/jquery.easing.1.3.js" type="text/javascript"></script>
+        <!--<script src="js/jquery.mobile.scrollview.js"></script>
     <script src="js/scrollview.js"></script>-->
-    
-    <!-- iScroll: scrolling table views for webkit interface: http://cubiq.org/iscroll -->
-    <!--<script type="text/javascript" src="js/iscroll.js"></script>-->
-    
-    <!-- Lawnchair. used to persistently store json files. http://brianleroux.github.com/lawnchair/ -->
-    <script type="text/javascript" src="lawnchair/src/Lawnchair.js"></script>  
-    <script type="text/javascript" src="lawnchair/src/adaptors/LawnchairAdaptorHelpers.js"></script>        
-    <script type="text/javascript" src="lawnchair/src/adaptors/WebkitSQLiteAdaptor.js"></script>    
+        <!-- iScroll: scrolling table views for webkit interface: http://cubiq.org/iscroll -->
+        <!--<script type="text/javascript" src="js/iscroll.js"></script>-->
+        <!-- Lawnchair. used to persistently store json files. http://brianleroux.github.com/lawnchair/ -->
 
-    <!-- Font support for iPhone canvas. For more fonts go here: http://typeface.neocracy.org/fonts.html 
+        <script type="text/javascript" src="lawnchair/src/Lawnchair.js"></script>
+        <script type="text/javascript" src="lawnchair/src/adaptors/LawnchairAdaptorHelpers.js"></script>
+        <script type="text/javascript" src="lawnchair/src/adaptors/WebkitSQLiteAdaptor.js"></script>
+        
+        <!-- Font support for iPhone canvas. For more fonts go here: http://typeface.neocracy.org/fonts.html 
     Google code project: http://code.google.com/p/canvas-text/ 
     <script type="text/javascript" src="js/canvas.text.js?reimplement=true"></script>
     <script type="text/javascript" src="js/faces/helvetiker_regular.typeface.js"></script>-->
-    
-    <script type="text/javascript" src="js/Bonjour.js"></script>
-    <script type="text/javascript" src="js/DeviceFeatures.js"></script>    
-    <script type="text/javascript" src="js/Control.js"></script>
-    <script type="text/javascript" src="js/InterfaceManager.js"></script>
-    <script type="text/javascript" src="js/DestinationManager.js"></script>
-    <script type="text/javascript" src="js/PreferencesManager.js"></script>
-    <script type="text/javascript" src="js/OSCManager.js"></script>     
-    <script type="text/javascript" src="js/MIDIManager.js"></script>        
-    
-    <script type="text/javascript" src="js/Widget.js"></script>
-    <script type="text/javascript" src="js/Slider.js"></script>
-    <script type="text/javascript" src="js/MultiSlider.js"></script>    
-    <script type="text/javascript" src="js/Knob.js"></script>
-    <script type="text/javascript" src="js/MultiTouchXY.js"></script>
-    <script type="text/javascript" src="js/Button.js"></script>
-    <script type="text/javascript" src="js/MultiButton.js"></script>
-    <script type="text/javascript" src="js/Label.js"></script>
-    <script type="text/javascript" src="js/ControlAccelerometer.js"></script>
-    <script type="text/javascript" src="js/ControlCompass.js"></script>
-    <script type="text/javascript" src="js/ControlGyro.js"></script>
 
-    <!--<script type="text/javascript" src="../../interfaces/test.js"></script>-->
+        <script type="text/javascript" src="js/Bonjour.js"></script>
+        <script type="text/javascript" src="js/DeviceFeatures.js"></script>
+        <script type="text/javascript" src="js/Control.js"></script>
+        <script type="text/javascript" src="js/InterfaceManager.js"></script>
+        <script type="text/javascript" src="js/DestinationManager.js"></script>
+        <script type="text/javascript" src="js/PreferencesManager.js"></script>
+        <script type="text/javascript" src="js/OSCManager.js"></script>
+        <script type="text/javascript" src="js/MIDIManager.js"></script>
+        <script type="text/javascript" src="js/Widget.js"></script>
+        <script type="text/javascript" src="js/Slider.js"></script>
+        <script type="text/javascript" src="js/MultiSlider.js"></script>
+        <script type="text/javascript" src="js/Knob.js"></script>
+        <script type="text/javascript" src="js/MultiTouchXY.js"></script>
+        <script type="text/javascript" src="js/Button.js"></script>
+        <script type="text/javascript" src="js/MultiButton.js"></script>
+        <script type="text/javascript" src="js/Label.js"></script>
+        <script type="text/javascript" src="js/ControlAccelerometer.js"></script>
+        <script type="text/javascript" src="js/ControlCompass.js"></script>
+        <script type="text/javascript" src="js/ControlGyro.js"></script>
         
-    <script type="text/javascript" charset="utf-8">
-        var pages, control, interfaceScroller, destinationScroller, interfaceManager, destinationManager, features, _protocol;
+        <!--<script type="text/javascript" src="../../interfaces/test.js"></script>-->
+
+        <script type="text/javascript" charset="utf-8">
+var pages, control, interfaceScroller, destinationScroller, interfaceManager, destinationManager, features, _protocol;
         function preventBehavior(e) { // prevent scrolling
             e.stopPropagation();
             e.preventDefault(); 
         };
-        
+
         PhoneGap.addConstructor(function(){
             init();
         });
@@ -78,168 +71,167 @@
             document.addEventListener("touchmove", preventBehavior, false); // prevents webkit from scrolling DNR
             //console.log("interface name = *******" + window.loadedInterfaceName);
             // console.log("window.TEST.pages = " + window.TEST.pages);
-
-            document.addEventListener('menuKeyDown', function(){
-                if (control.tabBarHidden)
-                    control.showToolbar();
-                else
-                    control.hideToolbar();
-            });    
             
             control = new Control();
-                
-            _protocol = "OSC";
             
-            midiManager = new MIDIManager();
+           document.addEventListener('menuKeyDown', function(){
+               if (control.tabBarHidden)
+                   control.showToolbar();
+               else
+                   control.hideToolbar();
+           });    
+           
+           console.log(navigator.userAgent);
+               
+           _protocol = "OSC";
+           
+           midiManager = new MIDIManager();
+           
+           console.log("before im");
+           interfaceManager = new InterfaceManager();
+           interfaceManager.init();
+           console.log("before im");
+           destinationManager = new DestinationManager();
+           destinationManager.init();
+           
+           oscManager = new OSCManager();
+           oscManager.startup();
+           
+           bonjour = new Bonjour();
+           bonjour.startup();
+           
+           features = new DeviceFeatures();
+            document.addEventListener('orientationChanged', control.onRotation, false);
             
-            console.log("before im");
-            interfaceManager = new InterfaceManager();
-            interfaceManager.init();
-            console.log("before im");
-            destinationManager = new DestinationManager();
-            destinationManager.init();
+            // interfaceScroller   = new iScroll('interfaceScroller');
+            // destinationScroller = new iScroll('destinationScroller');
+            // preferencesScroller = new iScroll('preferencesScroller');
             
-            oscManager = new OSCManager();
-            oscManager.startup();
-            
-            bonjour = new Bonjour();
-            bonjour.startup();
-            
-            features = new DeviceFeatures();
-            //document.addEventListener('orientationChanged', control.onRotation, false);
-            
-            //interfaceScroller   = new iScroll('interfaceScroller');
-            //destinationScroller = new iScroll('destinationScroller');
-            //preferencesScroller = new iScroll('preferencesScroller');
-            
-            //  PhoneGap.exec("Device.setRotation", "portrait");
             
             preferencesManager = new PreferencesManager();
         }
-        
+
         function autolockToggle() {
             var autolockToggleLink = document.getElementById("autolockToggle");
             autolock = !autolock;
-            (!autolock) ? autolockToggleLink.innerHTML = "Turn Autolock <b>Off</b>" : autolockToggleLink.innerHTML = "Turn Autolock <b>On</b>";         
+            (!autolock) ? autolockToggleLink.innerHTML = "Turn Autolock <b>Off<\/b>" : autolockToggleLink.innerHTML = "Turn Autolock <b>On<\/b>";         
             if(device.platform == 'iPhone') PhoneGap.exec(null, null, "DeviceFeatures", "autolockToggle", [autolock]);
             preferences.save({key:"autolock", shouldAutolock:autolock});
         }
 
-    </script>
-  </head>
-  
-  <body id="stage" style="background-color:#000; -webkit-user-select: none;" class="theme"> 
-  
-
-  <div data-role="page" id="Interfaces" data-theme="a">
-        <div class="ui-bar-a  ui-header " data-role="header" id="header" data-backbtn="false">
-            <a href="#" id="interfaceEditBtn" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="interfaceManager.editInterfaceList()">Edit</a>
-            <h1 class="ui-title">Interfaces</h1>
-            <div style="display:inline; position:absolute; top:.5em; right:.75em;">
-                <a href="#" data-role="button" data-icon="plus" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="interfaceManager.createInterfaceListWithStoredInterfaces()"><img src="css/images/refresh.png"></img></a>            
-                <a href="#" data-role="button" data-icon="plus" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="interfaceManager.promptForInterfaceDownload()"><img src="css/images/add.png"></img></a>
+        </script>
+    </head>
+    <body id="stage" style="background-color:#000; -webkit-user-select: none;" class="theme">
+        <div data-role="page" id="Interfaces" data-theme="a">
+            <div class="ui-bar-a ui-header" data-role="header" id="header" data-backbtn="false">
+                <a href="#" id="interfaceEditBtn" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="interfaceManager.editInterfaceList()" name="interfaceEditBtn">Edit</a>
+                <h1 class="ui-title">
+                    Interfaces
+                </h1>
+                <div style="display:inline; position:absolute; top:.5em; right:.75em;">
+                    <a href="#" data-role="button" data-icon="plus" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="interfaceManager.createInterfaceListWithStoredInterfaces()"><img src="css/images/refresh.png"></a> <a href="#" data-role="button" data-icon="plus" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="interfaceManager.promptForInterfaceDownload()"><img src="css/images/add.png"></a>
+                </div>
+            </div>
+            <div data-role="content">
+                <ul id="interfaceList" data-role="listview" data-theme="g"></ul>
             </div>
         </div>
-        
-        <div data-role="content">
-            <ul id="interfaceList" data-role="listview" data-theme="g"></ul>
-        </div>
-    </div>
-  
-  <div data-role="page" id="Destinations" data-theme="a">
-        <div class="ui-bar-a  ui-header" data-role="header" id="header" data-backbtn="false">
-            <a href="#" id="destinationEditBtn" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="destinationManager.editDestinationList()">Edit</a>     
-            <h1 class="ui-title">Destinations</h1>
-            <div style="display:inline; position:absolute; top:.5em; right:.75em;">
-                <a href="#" data-role="button" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="destinationManager.refreshList()"><img src="css/images/refresh.png"></img></a>            
-                <a href="#" data-role="button" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="destinationManager.promptForIP()"><img src="css/images/add.png"></img></a>
+        <div data-role="page" id="Destinations" data-theme="a">
+            <div class="ui-bar-a ui-header" data-role="header" id="header" data-backbtn="false">
+                <a href="#" id="destinationEditBtn" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="destinationManager.editDestinationList()" name="destinationEditBtn">Edit</a>
+                <h1 class="ui-title">
+                    Destinations
+                </h1>
+                <div style="display:inline; position:absolute; top:.5em; right:.75em;">
+                    <a href="#" data-role="button" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="destinationManager.refreshList()"><img src="css/images/refresh.png"></a> <a href="#" data-role="button" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="destinationManager.promptForIP()"><img src="css/images/add.png"></a>
+                </div>
+            </div>
+            <div data-role="content">
+                <ul id="destinationList" data-role="listview" data-theme="g"></ul>
             </div>
         </div>
-        <div data-role="content">
-            <ul id="destinationList" data-role="listview" data-theme="g"></ul>
-        </div>
-  </div>
-  
-  <div data-role="page" id="Preferences" data-theme="a">
-    <div data-role="header" id="header" data-backbtn="false"><h1>Preferences</h1></div>
-    <div data-role="content">
-        <ul id="preferencesList" data-role="listview" data-theme="g">
-            <li data-icon="false" class="preferencesListItem"><a id="autolockToggle" href="#" ontouchend="preferencesManager.autolockToggle()">Turn Autolock <b>On</b></a></li>
-            <li class="preferencesListItem">OSC Receive Port : 8080 (unchangeable in this version)
-                <!--<<input id="portField" style="display:inline; width:150px;" type="number" id="receivePortSelector" name="portField" value="8080" onchange="portField.blur();preferencesManager.changePort(portField.value);console.log('EVENT SUBMIT');">
+        <div data-role="page" id="Preferences" data-theme="a">
+            <div data-role="header" id="header" data-backbtn="false">
+                <h1>
+                    Preferences
+                </h1>
+            </div>
+            <div data-role="content">
+                <ul id="preferencesList" data-role="listview" data-theme="g">
+                    <li data-icon="false" class="preferencesListItem">
+                        <a id="autolockToggle" href="#" ontouchend="preferencesManager.autolockToggle()" name="autolockToggle">Turn Autolock <b>On</b></a>
+                    </li>
+                    <li class="preferencesListItem">OSC Receive Port : 8080 (unchangeable in this version) <!--<<input id="portField" style="display:inline; width:150px;" type="number" id="receivePortSelector" name="portField" value="8080" onchange="portField.blur();preferencesManager.changePort(portField.value);console.log('EVENT SUBMIT');">
                 form id="oscForm" style="display:inline;" onsubmit="console.log('SUBMIT');portField.blur(); preferencesManager.changePort(portField.value);">
                     
                 </form>-->
-            </li>
-        </ul>
-    </div>
-  </div>
-  
-  <div data-role="page" id="Info" data-theme="a">
-      <div data-role="header" id="header" data-backbtn="false">
-          <h1>Info</h1>
-      </div>
-
-      <div>
-        <!--<div style="height:2000px" data-scroll="true">-->
-         <!-- TODO in javascript, update the app version -->
-        <p>Control <span id='app-version'>v1.31</span> is an application enabling configurable control surfaces for mobile devices. For more information, interfaces, tutorials and references please visit the Control website (http://www.charlie-roberts.com/Control).
-        </p>
-        <p>
-        Control was created and is maintained by Charlie Roberts, with additional contributions by Greg Shear
-        and Matt Wright. Android specific contributions by Alex Norman and Matias Wilkman. Control was partially realized as a research project for the AlloSphere Research Group.
-        </p>
-
-        <p>Control is open source and was built using the following open source projects (thank you!):</p>
-        <ul>
-            <li style="margin-bottom:.5em"><b>PhoneGap</b> http://www.phonegap.com</li>
-            <li style="margin-bottom:.5em"><b>jQuery Mobile</b> http://jquerymobile.com</li>
-            <li style="margin-bottom:.5em"><b>Lawnchair</b> http://brianleroux.github.com/lawnchair/</li>
-            <li style="margin-bottom:.5em"><b>JavaOSC</b> http://www.illposed.com/software/javaosc.html</li>
-            <li style="margin-bottom:.5em"><b>JmDNS</b> http://jmdns.sourceforge.net/</li>                       
-            <!--<li><b>oscpack</b> http://www.audiomulch.com/~rossb/code/oscpack/</li>-->
-            <!-- TODO figure out which one to use and use that only
-            <li><b>NetUtil</b> http://www.sciss.de/netutil/</li>
-            -->
-        </ul>
-    </div>
-</div>
-  </div>
-  
-   <div data-role="page" id="SelectedInterfacePage">
-       <div id="selectedInterface">
-           <!--<canvas id="canvas"></canvas>-->
-       </div>
-  </div>
-
-  <!--<div style="display:block; position:fixed; top: 100px; left: 100px; width:50px; height:50px; background-color:#f00; z-index:100;" ontouchend="window.location.reload(true)"><h2>RELOAD</h2></div>-->
-      
-  <div data-role="footer" data-id="foo1" data-position="fixed" class="ftr ui-bar-a ui-footer ui-footer-fixed ui-fixed-overlay" role="contentinfo" style=" border-top-width:0;bottom:0px; width:100%; border-width:0; padding:0; margin:0">
-      <div data-role="navbar" class="ui-navbar ui-navbar-noicons" role="navigation">
-          <ul class="ui-navbar-noicons ui-grid-c"  style="border-top-width:0;">
-              <li class="ui-block-a" style=" border-top-width:0;">
-                  <a href="#Interfaces" ontouchstart="control.changeTab(document.getElementById('Interfaces'));$.mobile.changePage('#Interfaces');" class="ui-btn ui-btn-up-a" style=" border-top-width:0;" data-theme="a">
-                      <span class="ui-btn-inner"><span class="ui-btn-text" style="font-size:1em">Interfaces</span></span>
-                  </a>
-              </li>
-              <li class="ui-block-b">
-                  <a href="#Destinations" ontouchstart="control.changeTab(document.getElementById('Destinations'));$.mobile.changePage('#Destinations');" data-theme="a" class="ui-btn ui-btn-up-a">
-                      <span class="ui-btn-inner" style="padding-left:0; padding-right:0;"><span class="ui-btn-text" >Destinations</span></span>
-                  </a>
-              </li>
-              <li class="ui-block-b">
-                  <a href="#Preferences" ontouchstart="control.changeTab(document.getElementById('Preferences'))[$.mobile.changePage('#Preferences');" data-theme="a" class="ui-btn ui-btn-up-a">
-                      <span class="ui-btn-inner" style="padding-left:0; padding-right:0;"><span class="ui-btn-text">Preferences</span></span>
-                  </a>
-              </li>
-              <li class="ui-block-b">
-                  <a href="#Info" ontouchstart="control.changeTab(document.getElementById('Info'));$.mobile.changePage('#Info');" data-theme="a" class="ui-btn ui-btn-up-a">
-                      <span class="ui-btn-inner"><span class="ui-btn-text">Info</span></span>
-                  </a>
-              </li>
-
-          </ul>
-      </div>
-  </div>
-  </body>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div data-role="page" id="Info" data-theme="a">
+            <div data-role="header" id="header" data-backbtn="false">
+                <h1>
+                    Info
+                </h1>
+            </div>
+            <div>
+                <!--<div style="height:2000px" data-scroll="true">-->
+                <!-- TODO in javascript, update the app version -->
+                <p>
+                    Control <span id='app-version'>v1.31</span> is an application enabling configurable control surfaces for mobile devices. For more information, interfaces, tutorials and references please visit the Control website (http://www.charlie-roberts.com/Control).
+                </p>
+                <p>
+                    Control was created and is maintained by Charlie Roberts, with additional contributions by Greg Shear and Matt Wright. Android specific contributions by Alex Norman and Matias Wilkman. Control was partially realized as a research project for the AlloSphere Research Group.
+                </p>
+                <p>
+                    Control is open source and was built using the following open source projects (thank you!):
+                </p>
+                <ul>
+                    <li style="margin-bottom:.5em">
+                        <b>PhoneGap</b> http://www.phonegap.com
+                    </li>
+                    <li style="margin-bottom:.5em">
+                        <b>jQuery Mobile</b> http://jquerymobile.com
+                    </li>
+                    <li style="margin-bottom:.5em">
+                        <b>Lawnchair</b> http://brianleroux.github.com/lawnchair/
+                    </li>
+                    <li style="margin-bottom:.5em">
+                        <b>JavaOSC</b> http://www.illposed.com/software/javaosc.html
+                    </li>
+                    <li style="margin-bottom:.5em">
+                        <b>JmDNS</b> http://jmdns.sourceforge.net/
+                    </li>
+                    <!--<li><b>oscpack</b> http://www.audiomulch.com/~rossb/code/oscpack/</li>-->
+                    <!-- TODO figure out which one to use and use that only
+                    <li><b>NetUtil</b> http://www.sciss.de/netutil/</li>-->
+                </ul>
+            </div>
+        </div>
+        <div data-role="page" id="SelectedInterfacePage">
+            <div id="selectedInterface">
+                <!--<canvas id="canvas"></canvas>-->
+            </div>
+        </div>
+        <!--<div style="display:block; position:fixed; top: 100px; left: 100px; width:50px; height:50px; background-color:#f00; z-index:100;" ontouchend="window.location.reload(true)"><h2>RELOAD</h2></div>-->
+        <div data-role="footer" data-id="foo1" data-position="fixed" class="ftr ui-bar-a ui-footer ui-footer-fixed ui-fixed-overlay" role="contentinfo" style=" border-top-width:0;bottom:0px; width:100%; border-width:0; padding:0; margin:0">
+            <div data-role="navbar" class="ui-navbar ui-navbar-noicons" role="navigation">
+                <ul class="ui-navbar-noicons ui-grid-c" style="border-top-width:0;">
+                    <li class="ui-block-a" style=" border-top-width:0;">
+                        <a href="#Interfaces" ontouchstart="control.changeTab(document.getElementById('Interfaces'));$.mobile.changePage('#Interfaces');" class="ui-btn ui-btn-up-a" style=" border-top-width:0;" data-theme="a"><span class="ui-btn-inner"><span class="ui-btn-text" style="font-size:1em">Interfaces</span></span></a>
+                    </li>
+                    <li class="ui-block-b">
+                        <a href="#Destinations" ontouchstart="control.changeTab(document.getElementById('Destinations'));$.mobile.changePage('#Destinations');" data-theme="a" class="ui-btn ui-btn-up-a"><span class="ui-btn-inner" style="padding-left:0; padding-right:0;"><span class="ui-btn-text">Destinations</span></span></a>
+                    </li>
+                    <li class="ui-block-b">
+                        <a href="#Preferences" ontouchstart="control.changeTab(document.getElementById('Preferences'))[$.mobile.changePage('#Preferences');" data-theme="a" class="ui-btn ui-btn-up-a"><span class="ui-btn-inner" style="padding-left:0; padding-right:0;"><span class="ui-btn-text">Preferences</span></span></a>
+                    </li>
+                    <li class="ui-block-b">
+                        <a href="#Info" ontouchstart="control.changeTab(document.getElementById('Info'));$.mobile.changePage('#Info');" data-theme="a" class="ui-btn ui-btn-up-a"><span class="ui-btn-inner"><span class="ui-btn-text">Info</span></span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </body>
 </html>

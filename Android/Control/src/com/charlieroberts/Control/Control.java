@@ -36,13 +36,14 @@ public class Control extends DroidGap
          // when off, multiple touchdown events only work if there is a drag in between them for whatever reason. 
          super.appView.getSettings().setBuiltInZoomControls(true); //Enable Multitouch if supported by ROM
          super.appView.getSettings().setCacheMode(android.webkit.WebSettings.LOAD_NO_CACHE); // Turn off cacheing of interfaces so that they can be refreshed / reloaded
-         //super.appView.getSettings().setSupportZoom(false);
+         super.appView.getSettings().setSupportZoom(false);
          
          handler.postDelayed(new Runnable() {
             public void run() {
                 setUp();
             }
          }, 1000);
+        
     }
     
     private void setUp() {

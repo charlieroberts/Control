@@ -44,10 +44,9 @@ public class OSCManager extends Plugin {
 	@Override
 	public PluginResult execute(String action, JSONArray data, String callbackId) {
 		PluginResult result = null;
-		
-		if (action.equals("startOSCListener") && receiver == null) {
-		    try {
-    		    Log.d("OSCManager", "building client");	
+		try {
+		    if (action.equals("startOSCListener") && receiver == null) {
+     		    Log.d("OSCManager", "building client");	
     			receiver = new OSCPortIn(8080);
     			listener = new OSCListener() {
     	        	public void acceptMessage(java.util.Date time, OSCMessage message) {
@@ -56,7 +55,7 @@ public class OSCManager extends Plugin {
             			if(message.getAddress().equals("/pushInterface")) {
             			    //[jsStringStart replaceOccurrencesOfString:@"\n" withString:@"" options:1 range:NSMakeRange(0, [jsStringStart length])]; // will not work with newlines present
                             String js = "javascript:interfaceManager.pushInterface('" + ((String)args[0]).replace('\n', ' ') + "')"; // remove line breaks
-                        
+                    
                             webView.loadUrl(js);
             			}else if(message.getAddress().equals("/pushDestination")) {
             			    //		NSString *jsString = [[NSString alloc] initWithFormat:@"destinationManager.addDestination('%@')", destination];
@@ -66,10 +65,10 @@ public class OSCManager extends Plugin {
             			}else{
             			    String jsString = "javascript:oscManager.processOSCMessage(";
                 			jsString = jsString + "\"" + message.getAddress() + "\", \"";
-        			
+    			
                 			StringBuffer typeTagString = new StringBuffer();
                 			StringBuffer argString = new StringBuffer();
-        			
+    			
                 			for(int i = 0; i < args.length; i++) {
                 			    Object arg = args[i];
             			        if(arg instanceof java.lang.Float) {
@@ -95,16 +94,13 @@ public class OSCManager extends Plugin {
             	receiver.addListener("/", listener);
             	receiver.startListening(); 
             	Log.d("OSCManager", "finished setting up OSC receiver and now listening");
-    		} catch (Exception e) {
-    			System.err.println("Error creating / binding OSC client");
-    		}
-		} else if (action.equals("send") && hasAddress) {
-			//Log.d("OSCManager", "building message");
-			String address = "";
-			ArrayList<Object> values = new ArrayList<Object>();
+        		
+    		} else if (action.equals("send") && hasAddress) {
+    			//Log.d("OSCManager", "building message");
+    			String address = "";
+    			ArrayList<Object> values = new ArrayList<Object>();
 			
-			try {
-				address = data.getString(0);
+    			address = data.getString(0);
 				for(int i = 2; i < data.length(); i++) {
 				    Object obj = data.get(i);
 				    if(obj instanceof java.lang.Double) { // doubles are returned from JSON instead of floatsbut not handled by the oscmsg class
@@ -115,43 +111,36 @@ public class OSCManager extends Plugin {
     				}
 					//Log.d("OSCManager", ""+data.get(i).getClass().toString());
 				}
-			} catch (Exception e) {
-				System.err.println("Error creating JSON from js message");
-			}
-			
-			OSCMessage msg = new OSCMessage( address, values.toArray() );
+    		
+    			OSCMessage msg = new OSCMessage( address, values.toArray() );
 
-         	try {
+             	
                 sender.send(msg);
-	         }
-	         catch( IOException e ) {
-	            System.err.println("CRAP NetUtil osc sending isn't working!!!");
-
-	            StringWriter sw = new StringWriter();
-	            e.printStackTrace(new PrintWriter(sw));
-	            System.err.println( sw.toString());
-	         }
-		}else if(action.equals("setIPAddressAndPort")){
-			try {
+    	         // }
+    	         //                 catch( IOException e ) {
+    	         //                    System.err.println("CRAP NetUtil osc sending isn't working!!!");
+    	         // 
+    	         //                    StringWriter sw = new StringWriter();
+    	         //                    e.printStackTrace(new PrintWriter(sw));
+    	         //                    System.err.println( sw.toString());
+    	         //                 }
+    		}else if(action.equals("setIPAddressAndPort")){
 			    ipAddress = data.getString(0);
 				sender = new OSCPortOut( InetAddress.getByName(ipAddress), data.getInt(1) );
 				hasAddress = true;
-			} catch (Exception e) {
-				System.err.println("Error creating JSON from js message");
-			}
-		}else if(action.equals("setOSCReceivePort")){
-			try {
+    		}else if(action.equals("setOSCReceivePort")){
 			   	receiver = new OSCPortIn(data.getInt(0));
 			   	receiver.addListener("/", listener);
 			   	System.err.println("MADE NEW PORT WHICH WAS " + data.getInt(0));
-			} catch (Exception e) {
-				System.err.println("Error creating JSON from js message");
-			}
-		}else{
-			result = new PluginResult(Status.INVALID_ACTION);
-		}
-		return result;
-	}
+    		}else{
+    			result = new PluginResult(Status.INVALID_ACTION);
+    		}
+    		return result;
+    	}catch (Exception e) {
+            System.err.println("Error creating JSON from js message");
+        }
+        return result;
+    }
 	
 	public String getLocalIpAddress() {
         try {
@@ -169,17 +158,4 @@ public class OSCManager extends Plugin {
         }
         return null;
     }
-/*
-
-- (void)pushInterface:(NSValue *)msgPointer;                                                    // DONE
-- (void)pushDestination:(NSValue *) msgPointer;                                                 // NOT DONE
-
-- (void)setOSCReceivePort:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;    // DONE
-- (void)setIPAddressAndPort:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;  // DONE
-- (void)startReceiveThread:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;   // NOT NEEDED
-- (void)send:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;                 // DONE
-- (void)startPolling:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;         // NOT NEEDED
-- (void)stopPolling:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;          // NOT NEEDED
-*/
-
 }

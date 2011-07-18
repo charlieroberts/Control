@@ -121,7 +121,7 @@ function DestinationManager() {
 		this.ipaddress = address;
 		this.port = port;
 		PhoneGap.exec(null, null, "MIDI", "connect", [1, this.ipaddress, this.port]);
-        PhoneGap.exec(null, null, "OSCManager" , "stopPolling");
+        PhoneGap.exec(null, null, "OSCManager" , "stopPolling", []);
 	}
 	
 	this.selectIPAddress = function(address) {

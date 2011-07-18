@@ -60,26 +60,42 @@ function InterfaceManager() {
         }, 1000);
     }
     
-    this.rotationSet = function() {
-        //control.makePages(pages, screen.width * r, screen.height * r);
-        PhoneGap.exec(null, null, "DeviceFeatures", "getScale", []);
-        //PhoneGap.exec(null, null, "DeviceFeatures", "print", ["h:" + screen.height + " || w: " + screen.width]);
+    // width and height are provided to function from Java to avoid bugs in screen.width / screen.height in Android 2.2 and 2.3
+    this.rotationSet = function(_width, _height) {
         PhoneGap.exec(null, null, "DeviceFeatures", "print", ["pixelRatio = " + window.devicePixelRatio]);
 
-
-        console.log("SCALE = " + window.interfaceManager.scale);
+        console.log("WINDOW.INNERWIDTH = " + window.innerWidth + " || window.innerheight = " + window.innerHeight);
         console.log("WINDOW DPI = " + window.devicePixelRatio);
         var r = 1 / window.devicePixelRatio;
+        console.log("width = " + _width + " || height = " + _height);
+        console.log("width = " + screen.width * r + " || height = " + screen.height * r);
+        
+        var w, h;
+        // change w / h depending on orientation
+        if(control.orientationString == "portrait") {
+            w = _width; h = _height;
+        }else{
+            w = _height; h = _width;
+        }
         
         $("#SelectedInterfacePage").css({
-                            'width':  screen.width  * r + 'px',
-                            'height': screen.height * r + 'px',
+                            'width':  w  * r + 'px',
+                            'height': h * r + 'px',
                             'display': 'block',
-                            'top':  0,
+                            'overflow': 'visible',
+                            'top':  0, 
                             'left': 0
         });
+        $("#selectedInterface").css({
+                    'width':  w  * r + 'px',
+                    'height': h * r + 'px',
+                    'display': 'block',
+                    'overflow': 'visible',
+                    'top':  0,
+                    'left': 0
+        });
 
-        control.makePages(pages, screen.width * r, screen.height * r);
+        control.makePages(pages, w * r, h * r);
         //control.makePages(pages, screen.width, screen.height);
         if (constants != null) {
             control.loadConstants(constants);
