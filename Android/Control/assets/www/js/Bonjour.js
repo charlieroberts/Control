@@ -4,7 +4,7 @@ var Bonjour = function() {
 };
 
 Bonjour.prototype.startup = function() {
-	setTimeout(function() { PhoneGap.exec(null, null, 'Bonjour', 'start', []) }, 2500);
+	setTimeout(function() { PhoneGap.exec(null, null, 'Bonjour', 'start', []) }, 1000);
 };
 
 PhoneGap.addConstructor(function() {

@@ -21,6 +21,7 @@ function Control() {
 	interfaceDiv = document.getElementById("selectedInterface");
 	this.changeTab(this.currentTab);
 	this.isAddingConstants = false;
+	this.isLoadingInterface = false;
 	return this;
 }
 

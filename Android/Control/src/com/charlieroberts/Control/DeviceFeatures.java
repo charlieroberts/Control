@@ -48,7 +48,14 @@ public class DeviceFeatures extends Plugin {
             		}
 		        
     		        if(action.equals("setOrientation")) {
-                        String jsString = "javascript:window.interfaceManager.rotationSet("+ webView.getWidth() + "," + webView.getHeight() + ");";
+    		            float w = webView.getWidth();
+    		            float h = webView.getHeight();
+    		            String jsString = "";
+    		            if(w < h) {
+                            jsString = "javascript:window.interfaceManager.rotationSet("+ w + "," + h + ");";
+                        }else{
+                            jsString = "javascript:window.interfaceManager.rotationSet("+ h + "," + w + ");";
+                        }
                         //System.out.println(jsString);
                         webView.loadUrl(jsString);
                         //System.out.println("after sending to js");

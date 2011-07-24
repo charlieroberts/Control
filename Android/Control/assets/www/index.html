@@ -87,10 +87,9 @@ var pages, control, interfaceScroller, destinationScroller, interfaceManager, de
            
            midiManager = new MIDIManager();
            
-           console.log("before im");
            interfaceManager = new InterfaceManager();
            interfaceManager.init();
-           console.log("before im");
+           
            destinationManager = new DestinationManager();
            destinationManager.init();
            
@@ -98,10 +97,10 @@ var pages, control, interfaceScroller, destinationScroller, interfaceManager, de
            oscManager.startup();
            
            bonjour = new Bonjour();
-           bonjour.startup();
+           //bonjour.startup();
            
            features = new DeviceFeatures();
-            document.addEventListener('orientationChanged', control.onRotation, false);
+           document.addEventListener('orientationChanged', control.onRotation, false);
             
             // interfaceScroller   = new iScroll('interfaceScroller');
             // destinationScroller = new iScroll('destinationScroller');
@@ -209,12 +208,12 @@ var pages, control, interfaceScroller, destinationScroller, interfaceManager, de
                 </ul>
             </div>
         </div>
-        <div data-role="page" id="SelectedInterfacePage">
+        <div data-role="page" id="SelectedInterfacePage" style="background-color:#f00">
             <div id="selectedInterface">
                 <!--<canvas id="canvas"></canvas>-->
             </div>
         </div>
-        <!--<div style="display:block; position:fixed; top: 100px; left: 100px; width:50px; height:50px; background-color:#f00; z-index:100;" ontouchend="window.location.reload(true)"><h2>RELOAD</h2></div>-->
+        <div style="display:block; position:fixed; top: 100px; left: 100px; width:50px; height:50px; background-color:#f00; z-index:100;" ontouchend="window.location.reload(true)"><h2>RELOAD</h2></div>
         <div data-role="footer" data-id="foo1" data-position="fixed" class="ftr ui-bar-a ui-footer ui-footer-fixed ui-fixed-overlay" role="contentinfo" style=" border-top-width:0;bottom:0px; width:100%; border-width:0; padding:0; margin:0">
             <div data-role="navbar" class="ui-navbar ui-navbar-noicons" role="navigation">
                 <ul class="ui-navbar-noicons ui-grid-c" style="border-top-width:0;">

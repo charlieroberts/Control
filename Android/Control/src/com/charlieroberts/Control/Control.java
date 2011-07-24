@@ -28,7 +28,8 @@ public class Control extends DroidGap
          getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN ); 
          getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); 
 
-         super.loadUrl("file:///android_asset/www/index.html");
+         //super.loadUrl("file:///android_asset/www/index.html");
+         super.loadUrl("http://192.168.1.6/~charlie/www/index.html");         
          super.appView.setWebChromeClient(new EclairClient2(this));
          
          // TODO: the line below seems to create better multitouch, but it also makes some errant calls every once in a while...

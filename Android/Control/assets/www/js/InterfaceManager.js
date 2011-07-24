@@ -59,56 +59,94 @@ function InterfaceManager() {
             }
         }, 1000);
     }
-    
-    // width and height are provided to function from Java to avoid bugs in screen.width / screen.height in Android 2.2 and 2.3
+    // assumes portrait; _width will always be less than _height
     this.rotationSet = function(_width, _height) {
+        //control.makePages(pages, screen.width * r, screen.height * r);
+        PhoneGap.exec(null, null, "DeviceFeatures", "getScale", []);
+        //PhoneGap.exec(null, null, "DeviceFeatures", "print", ["h:" + screen.height + " || w: " + screen.width]);
         PhoneGap.exec(null, null, "DeviceFeatures", "print", ["pixelRatio = " + window.devicePixelRatio]);
-
-        console.log("WINDOW.INNERWIDTH = " + window.innerWidth + " || window.innerheight = " + window.innerHeight);
-        console.log("WINDOW DPI = " + window.devicePixelRatio);
         var r = 1 / window.devicePixelRatio;
-        console.log("width = " + _width + " || height = " + _height);
-        console.log("width = " + screen.width * r + " || height = " + screen.height * r);
-        
         var w, h;
-        // change w / h depending on orientation
+            // change w / h depending on orientation
         if(control.orientationString == "portrait") {
             w = _width; h = _height;
         }else{
             w = _height; h = _width;
-        }
-        
-        $("#SelectedInterfacePage").css({
-                            'width':  w  * r + 'px',
-                            'height': h * r + 'px',
-                            'display': 'block',
-                            'overflow': 'visible',
-                            'top':  0, 
-                            'left': 0
-        });
-        $("#selectedInterface").css({
-                    'width':  w  * r + 'px',
-                    'height': h * r + 'px',
-                    'display': 'block',
-                    'overflow': 'visible',
-                    'top':  0,
-                    'left': 0
-        });
+        }   
+        // froyo / gingerbread
+        console.log("DEVICE VERSION = " + device.version);
+        if(parseFloat(device.version) >= 2.2 && parseFloat(device.version) < 3.0) {
+            console.log("inside froyo / gingerbread");
+            console.log("width = " + _width + " height = " + _height);
 
-        control.makePages(pages, w * r, h * r);
-        //control.makePages(pages, screen.width, screen.height);
+            $("#SelectedInterfacePage").css({
+                                'width':  w  + 'px',
+                                'height': h  + 'px',
+                                'display': 'block',
+                                'overflow': 'visible',
+                                'top':  0, 
+                                'left': 0
+            });
+            $("#selectedInterface").css({
+                        'width':  w  + 'px',
+                        'height': h  + 'px',
+                        'display': 'block',
+                        'overflow': 'visible',
+                        'top':  0,
+                        'left': 0
+            });
+        
+            control.makePages(pages, w * r, h * r);
+        }else{ // android 2.1 / honeycomb
+            console.log("SCALE = " + window.interfaceManager.scale);
+            console.log("WINDOW DPI = " + window.devicePixelRatio);
+            PhoneGap.exec(null, null, "DeviceFeatures", "print", ["width = " + screen.width + " || height = " + screen.height]);
+            $("#SelectedInterfacePage").css('height', 'auto');
+            // $("#SelectedInterfacePage").css({
+            //                     'width':  screen.width  * r + 'px',
+            //                     'height': screen.height * r + 'px',
+            //                     'display': 'block',
+            //                     'top':  0,
+            //                     'left': 0
+            // });
+            PhoneGap.exec(null, null, "DeviceFeatures", "print", ["PAGE " + $("#SelectedInterfacePage").css("height")]);
+            // document.getElementById("selectedInterface").style.display = "block";            
+            // document.getElementById("selectedInterface").style.height = "auto";
+            $("#selectedInterface").css({
+                                   'background-color': '#ccc',
+                                   'display': 'block',                                   
+                                   'width':  '5',
+                                   'height': '5',
+                                   'overflow': 'hidden',
+                                   'top':  0,
+                                   'left': 0
+                       });
+            PhoneGap.exec(null, null, "DeviceFeatures", "print", ["interface height = " + $("#selectedInterface").css("height")]);
+            
+            PhoneGap.exec(null, null, "DeviceFeatures", "print", ["after setting css"]);
+            control.makePages(pages, w * r, h * r);
+            PhoneGap.exec(null, null, "DeviceFeatures", "print", ["interface height = " + $("#selectedInterface").css("height")]);
+            
+        }
+
         if (constants != null) {
             control.loadConstants(constants);
         }
+        PhoneGap.exec(null, null, "DeviceFeatures", "print", ["interface height = " + $("#selectedInterface").css("height")]);
+
 
         control.loadWidgets();
+        PhoneGap.exec(null, null, "DeviceFeatures", "print", ["interface height = " + $("#selectedInterface").css("height")]);
 
-        if (this.currentTab != document.getElementById("selectedInterface")) {
+        if (control.currentTab != document.getElementById("selectedInterface")) {
             control.changeTab(document.getElementById("selectedInterface"));
             $.mobile.changePage('#SelectedInterfacePage');
         }
+        control.isLoadingInterface = false;
+        PhoneGap.exec(null, null, "DeviceFeatures", "print", ["interface height = " + $("#selectedInterface").css("height")]);
+        
     }
-
+    
     this.promptForInterfaceDownload = function() {
         var interfacesDiv = document.getElementById("Interfaces");
         var promptDiv = document.createElement("div");
@@ -359,22 +397,25 @@ function InterfaceManager() {
     }
 
     this.runInterface = function(json) {
-        control.unloadWidgets();
-        constants = null;
-        pages = null;
+        if(!control.isLoadingInterface) {
+            control.unloadWidgets();
+            constants = null;
+            pages = null;
 
-        oscManager.delegate = oscManager;
-        midiManager.delegate = midiManager;
+            oscManager.delegate = oscManager;
+            midiManager.delegate = midiManager;
 
-        eval(json);
+            eval(json);
 
-        this.currentInterfaceName = loadedInterfaceName;
-        this.currentInterfaceJSON = json;
+            this.currentInterfaceName = loadedInterfaceName;
+            this.currentInterfaceJSON = json;
 
-        if (typeof interfaceOrientation != "undefined") {
-            control.orientationString = interfaceOrientation;
-            //console.log("ROTATING ****************************" + interfaceOrientation);
-            PhoneGap.exec(null, null, "DeviceFeatures", "setOrientation", [interfaceOrientation]); // the plugin calls the rotationSet method after it's finished rotating which loads in widgets, sets screen resolution etc.
+            if (typeof interfaceOrientation != "undefined") {
+                control.orientationString = interfaceOrientation;
+                //console.log("ROTATING ****************************" + interfaceOrientation);
+                PhoneGap.exec(null, null, "DeviceFeatures", "setOrientation", [interfaceOrientation]); // the plugin calls the rotationSet method after it's finished rotating which loads in widgets, sets screen resolution etc.
+            }
+            control.isLoadingInterface = true;
         }
     }
 

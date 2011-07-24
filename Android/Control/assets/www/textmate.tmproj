@@ -3,98 +3,100 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>js/ControlAccelerometer.js</string>
+	<string>index.html</string>
 	<key>documents</key>
 	<array>
 		<dict>
 			<key>filename</key>
 			<string>js/Control.js</string>
 			<key>lastUsed</key>
-			<date>2011-07-11T22:36:33Z</date>
+			<date>2011-07-18T23:31:37Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>index.html</string>
 			<key>lastUsed</key>
-			<date>2011-07-11T23:01:01Z</date>
+			<date>2011-07-18T23:31:37Z</date>
+			<key>selected</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>js/OSCManager.js</string>
 			<key>lastUsed</key>
-			<date>2011-07-11T21:28:35Z</date>
+			<date>2011-07-18T07:31:07Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>js/Bonjour.js</string>
 			<key>lastUsed</key>
-			<date>2011-07-11T00:34:28Z</date>
+			<date>2011-07-18T22:31:18Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>js/DeviceFeatures.js</string>
 			<key>lastUsed</key>
-			<date>2011-07-11T00:34:06Z</date>
+			<date>2011-07-18T07:54:00Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>js/Widget.js</string>
 			<key>lastUsed</key>
-			<date>2011-07-05T19:34:02Z</date>
+			<date>2011-07-18T21:22:29Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>js/phonegap.0.9.4.js</string>
 			<key>lastUsed</key>
-			<date>2011-07-11T21:27:23Z</date>
+			<date>2011-07-18T07:28:10Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>js/DestinationManager.js</string>
 			<key>lastUsed</key>
-			<date>2011-07-11T19:18:03Z</date>
+			<date>2011-07-18T21:23:04Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>js/InterfaceManager.js</string>
 			<key>lastUsed</key>
-			<date>2011-07-11T21:03:12Z</date>
+			<date>2011-07-18T23:31:34Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>js/PreferencesManager.js</string>
 			<key>lastUsed</key>
-			<date>2011-07-05T20:05:10Z</date>
+			<date>2011-07-18T22:54:12Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>../../src/com/charlieroberts/Control/Bonjour.java</string>
 			<key>lastUsed</key>
-			<date>2011-07-10T23:25:16Z</date>
+			<date>2011-07-18T07:28:15Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>../../src/com/charlieroberts/Control/Control.java</string>
 			<key>lastUsed</key>
-			<date>2011-07-11T22:36:02Z</date>
+			<date>2011-07-18T07:43:54Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>../../src/com/charlieroberts/Control/DeviceFeatures.java</string>
 			<key>lastUsed</key>
-			<date>2011-07-11T19:44:00Z</date>
+			<date>2011-07-18T23:10:39Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>../../src/com/charlieroberts/Control/OSCManager.java</string>
 			<key>lastUsed</key>
-			<date>2011-07-11T21:30:24Z</date>
+			<date>2011-07-18T21:22:23Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>js/ControlAccelerometer.js</string>
 			<key>lastUsed</key>
-			<date>2011-07-11T23:52:50Z</date>
+			<date>2011-07-18T06:53:40Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -111,8 +113,6 @@
 		<dict>
 			<key>filename</key>
 			<string>js/MultiButton.js</string>
-			<key>selected</key>
-			<true/>
 		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
@@ -131,16 +131,16 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>42</integer>
+			<integer>53</integer>
 		</dict>
 		<key>../../src/com/charlieroberts/Control/Control.java</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>37</integer>
+				<integer>9</integer>
 				<key>line</key>
-				<integer>17</integer>
+				<integer>38</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -152,14 +152,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>69</integer>
+				<integer>28</integer>
 				<key>line</key>
 				<integer>56</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>17</integer>
 		</dict>
 		<key>../../src/com/charlieroberts/Control/OSCManager.java</key>
 		<dict>
@@ -180,14 +180,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>8</integer>
+				<integer>67</integer>
 				<key>line</key>
-				<integer>65</integer>
+				<integer>211</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>13</integer>
+			<integer>0</integer>
 		</dict>
 		<key>interfaces/gyro.js</key>
 		<dict>
@@ -208,44 +208,28 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>38</integer>
+				<integer>47</integer>
 				<key>line</key>
-				<integer>6</integer>
+				<integer>11</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>25</integer>
-				<key>line</key>
-				<integer>6</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>38</integer>
-				<key>line</key>
-				<integer>6</integer>
-			</dict>
 		</dict>
 		<key>js/Control.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>30</integer>
+				<integer>33</integer>
 				<key>line</key>
-				<integer>16</integer>
+				<integer>23</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>176</integer>
+			<integer>0</integer>
 		</dict>
 		<key>js/ControlAccelerometer.js</key>
 		<dict>
@@ -310,9 +294,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>85</integer>
+				<integer>4</integer>
 				<key>line</key>
-				<integer>14</integer>
+				<integer>13</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -324,23 +308,23 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>11</integer>
+				<integer>20</integer>
 				<key>line</key>
-				<integer>26</integer>
+				<integer>107</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>3</integer>
+			<integer>84</integer>
 		</dict>
 		<key>js/OSCManager.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>28</integer>
+				<integer>1</integer>
 				<key>line</key>
-				<integer>149</integer>
+				<integer>22</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -382,44 +366,28 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>23</integer>
+				<integer>0</integer>
 				<key>line</key>
 				<integer>143</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>89</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>10</integer>
-				<key>line</key>
-				<integer>143</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>23</integer>
-				<key>line</key>
-				<integer>143</integer>
-			</dict>
 		</dict>
 		<key>js/phonegap.0.9.4.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>6</integer>
+				<integer>4</integer>
 				<key>line</key>
 				<integer>487</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>479</integer>
+			<integer>472</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
@@ -445,6 +413,6 @@
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{1019, 271}, {1284, 1147}}</string>
+	<string>{{14, 0}, {1640, 1028}}</string>
 </dict>
 </plist>
