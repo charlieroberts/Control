@@ -1,6 +1,6 @@
 
 body {
-  background-color:#000;
+  background-color:#000 !important;
   color:#666;
   font-family:Helvetica;
   font-size:72%;
@@ -15,14 +15,14 @@ body {
 
 b { font-weight: bold; }
 
-#selectedInterface, #Interfaces, #Destinations, #Preferences, #Info {
+#SelectedInterfacePage, #Interfaces, #Destinations, #Preferences, #Info {
   position:absolute;
   left:0em;
   top:0em;
   height:100%;
   width:100%;
   /*overflow:hidden;*/
-  background-color:#000;
+  background-color:#000 !important;
   margin:0;
   padding:0;
   border-size:0;
@@ -45,7 +45,7 @@ b { font-weight: bold; }
 
 li { color: #fff; }
 
-#selectedInterface { 
+#SelectedInterfacePage { 
     background-color:#000;
     height:100% !important;
     width:100%  !important; 

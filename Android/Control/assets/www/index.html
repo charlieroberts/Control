@@ -4,7 +4,7 @@
         <title>
             Control
         </title>
-        <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, initial-scale=1.0, target-densitydpi=med-dpi">
+        <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no,target-densitydpi=med-dpi">
         <meta http-equiv="Content-type" content="text/html; charset=utf-8">
         <link rel="stylesheet" href="css/jquery.mobile-1.0a3.css" type="text/css">
         <link rel="stylesheet" href="css/master.css" type="text/css" media="screen" title="no title" charset="utf-8">
@@ -73,7 +73,7 @@ var pages, control, interfaceScroller, destinationScroller, interfaceManager, de
             // console.log("window.TEST.pages = " + window.TEST.pages);
             
             control = new Control();
-            
+            control.init();
            document.addEventListener('menuKeyDown', function(){
                if (control.tabBarHidden)
                    control.showToolbar();
@@ -97,7 +97,7 @@ var pages, control, interfaceScroller, destinationScroller, interfaceManager, de
            oscManager.startup();
            
            bonjour = new Bonjour();
-           //bonjour.startup();
+           bonjour.startup();
            
            features = new DeviceFeatures();
            document.addEventListener('orientationChanged', control.onRotation, false);
@@ -208,12 +208,10 @@ var pages, control, interfaceScroller, destinationScroller, interfaceManager, de
                 </ul>
             </div>
         </div>
-        <div data-role="page" id="SelectedInterfacePage" style="background-color:#f00">
-            <div id="selectedInterface">
-                <!--<canvas id="canvas"></canvas>-->
-            </div>
+        <div data-role="page" id="SelectedInterfacePage" style="background-color:#000 !important">
+            <!--<div style="width:100%; height:100%; background-color:#000; display:block;"></div>-->
         </div>
-        <div style="display:block; position:fixed; top: 100px; left: 100px; width:50px; height:50px; background-color:#f00; z-index:100;" ontouchend="window.location.reload(true)"><h2>RELOAD</h2></div>
+        <!--<div style="display:block; position:fixed; top: 100px; left: 100px; width:50px; height:50px; background-color:#f00; z-index:100;" ontouchend="window.location.reload(true)"><h2>RELOAD</h2></div>-->
         <div data-role="footer" data-id="foo1" data-position="fixed" class="ftr ui-bar-a ui-footer ui-footer-fixed ui-fixed-overlay" role="contentinfo" style=" border-top-width:0;bottom:0px; width:100%; border-width:0; padding:0; margin:0">
             <div data-role="navbar" class="ui-navbar ui-navbar-noicons" role="navigation">
                 <ul class="ui-navbar-noicons ui-grid-c" style="border-top-width:0;">

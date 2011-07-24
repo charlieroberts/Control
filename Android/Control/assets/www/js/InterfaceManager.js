@@ -74,77 +74,59 @@ function InterfaceManager() {
             w = _height; h = _width;
         }   
         // froyo / gingerbread
-        console.log("DEVICE VERSION = " + device.version);
+        //console.log("DEVICE VERSION = " + device.version);
         if(parseFloat(device.version) >= 2.2 && parseFloat(device.version) < 3.0) {
-            console.log("inside froyo / gingerbread");
-            console.log("width = " + _width + " height = " + _height);
+            //console.log("inside froyo / gingerbread");
+            //console.log("width = " + _width + " height = " + _height);
+            //console.log("ORIENTATION = " + control.orientationString);
+            // if(control.orientationString == "portrait") {
+            //                 //$("#SelectedInterfacePage").css( {'width': _width * r + "px", 'height' : _height * r + "px"} );
+            //             }else{
+            //                 //$("#SelectedInterfacePage").css({'width': _width * r + "px", 'height' : _height * r + "px"});
+            //                 $("#SelectedInterfacePage").css({'width': "320px", 'height' : "320px"});
+            //             }
+            // if(control.orientationString == "landscape") {
+            //                 $("#SelectedInterfacePage").css({'height' : "320px !important"});
+            //             }else{
+            //                 $("#SelectedInterfacePage").css({'height' : "100% !important"});
+            //             }
+            //control.makePages(pages, _width * r, _height * r);
 
-            $("#SelectedInterfacePage").css({
-                                'width':  w  + 'px',
-                                'height': h  + 'px',
-                                'display': 'block',
-                                'overflow': 'visible',
-                                'top':  0, 
-                                'left': 0
-            });
-            $("#selectedInterface").css({
-                        'width':  w  + 'px',
-                        'height': h  + 'px',
-                        'display': 'block',
-                        'overflow': 'visible',
-                        'top':  0,
-                        'left': 0
-            });
+            // $("#SelectedInterfacePage").css({
+            //                         'width':  w  + 'px',
+            //                         'height': h  + 'px',
+            //             });
         
             control.makePages(pages, w * r, h * r);
+            if(control.orientationString == "portrait") {
+                $("#SelectedInterfacePage").css({ 'height' : '100% !important'});
+            }else{
+                $("#SelectedInterfacePage").css({ 'height' : "320px !important"});
+            }
         }else{ // android 2.1 / honeycomb
-            console.log("SCALE = " + window.interfaceManager.scale);
-            console.log("WINDOW DPI = " + window.devicePixelRatio);
-            PhoneGap.exec(null, null, "DeviceFeatures", "print", ["width = " + screen.width + " || height = " + screen.height]);
-            $("#SelectedInterfacePage").css('height', 'auto');
-            // $("#SelectedInterfacePage").css({
-            //                     'width':  screen.width  * r + 'px',
-            //                     'height': screen.height * r + 'px',
-            //                     'display': 'block',
-            //                     'top':  0,
-            //                     'left': 0
-            // });
-            PhoneGap.exec(null, null, "DeviceFeatures", "print", ["PAGE " + $("#SelectedInterfacePage").css("height")]);
-            // document.getElementById("selectedInterface").style.display = "block";            
-            // document.getElementById("selectedInterface").style.height = "auto";
-            $("#selectedInterface").css({
-                                   'background-color': '#ccc',
-                                   'display': 'block',                                   
-                                   'width':  '5',
-                                   'height': '5',
-                                   'overflow': 'hidden',
-                                   'top':  0,
-                                   'left': 0
-                       });
-            PhoneGap.exec(null, null, "DeviceFeatures", "print", ["interface height = " + $("#selectedInterface").css("height")]);
+            // "height" must always be 320
+            if(control.orientationString == "portrait") {
+                $("#SelectedInterfacePage").css( {'width': _width * r, 'height' : _height * r} );
+            }else{
+                $("#SelectedInterfacePage").css({'width': _height * r, 'height' : _width * r});
+            }
             
-            PhoneGap.exec(null, null, "DeviceFeatures", "print", ["after setting css"]);
-            control.makePages(pages, w * r, h * r);
-            PhoneGap.exec(null, null, "DeviceFeatures", "print", ["interface height = " + $("#selectedInterface").css("height")]);
-            
+            control.makePages(pages, screen.width * r, screen.height * r);
+            PhoneGap.exec(null, null, "DeviceFeatures", "print", ["interface height = " + $("#SelectedInterfacePage").css("height")]);
         }
 
         if (constants != null) {
             control.loadConstants(constants);
         }
-        PhoneGap.exec(null, null, "DeviceFeatures", "print", ["interface height = " + $("#selectedInterface").css("height")]);
-
 
         control.loadWidgets();
-        PhoneGap.exec(null, null, "DeviceFeatures", "print", ["interface height = " + $("#selectedInterface").css("height")]);
 
-        if (control.currentTab != document.getElementById("selectedInterface")) {
-            control.changeTab(document.getElementById("selectedInterface"));
+        if (control.currentTab != document.getElementById("SelectedInterfacePage")) {
+            control.changeTab(document.getElementById("SelectedInterfacePage"));
             $.mobile.changePage('#SelectedInterfacePage');
         }
         control.isLoadingInterface = false;
-        PhoneGap.exec(null, null, "DeviceFeatures", "print", ["interface height = " + $("#selectedInterface").css("height")]);
-        
+//        PhoneGap.exec(null, null, "DeviceFeatures", "print", ["interface height = " + $("#SelectedInterfacePage").css("height")]);      
     }
     
     this.promptForInterfaceDownload = function() {
