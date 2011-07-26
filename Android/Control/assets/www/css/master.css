@@ -1,35 +1,56 @@
 
 body {
-  background:#222 none repeat scroll 0 0;
+  background-color:#000 !important;
   color:#666;
   font-family:Helvetica;
   font-size:72%;
   line-height:1.5em;
   margin:0;
   padding:0;
-  border-top:1px solid #393939;
+  border-size:0;
+  width: 100%;
+  /*border-top:1px solid #393939;*/
   text-shadow:none !important;
 }
 
 b { font-weight: bold; }
 
-#selectedInterface, #Interfaces, #Destinations, #Preferences, #Info {
+#SelectedInterfacePage, #Interfaces, #Destinations, #Preferences, #Info {
   position:absolute;
   left:0em;
   top:0em;
   height:100%;
   width:100%;
   /*overflow:hidden;*/
-  background-color:#000;
+  background-color:#000 !important;
+  margin:0;
+  padding:0;
+  border-size:0;
   /*display:none;*/
   /*-webkit-transition: height .2s linear;*/
 }
+
+/*#SelectedInterfacePage {
+    display:block;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    margin: 0;
+    padding: 0;
+    border-size: 0;
+}*/
 
 #Interface { display: block; }
 
 li { color: #fff; }
 
-#selectedInterface { background-color:#000; }
+#SelectedInterfacePage { 
+    background-color:#000;
+    height:100% !important;
+    width:100%  !important; 
+    overflow:hidden;
+}
 
 canvas { margin: 0; padding: 0;}
 

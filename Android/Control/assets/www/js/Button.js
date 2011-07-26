@@ -283,9 +283,10 @@ function Button(ctx, props) {
     
     this.output = function() {
         if (!this.isLocal && _protocol == "OSC") {
-            var valueString = "|" + this.address;
-            valueString += ":" + this.value;
-            control.valuesString += valueString;
+            // var valueString = "|" + this.address;
+            //   valueString += ":" + this.value;
+            //   control.valuesString += valueString;
+            window.oscManager.sendOSC([this.address, 'f', this.value]);            
         } else if (!this.isLocal && _protocol == "MIDI") {
             var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber + "," + Math.round(this.value);
             control.valuesString += valueString;

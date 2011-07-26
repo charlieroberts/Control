@@ -12,20 +12,29 @@ function Control() {
 	this.currentTab = document.getElementById("Interfaces");
 	this.tabBarHidden = false;
 	this.orientation = 0;
+ 	this.orientationString = "portrait";
+ 	this.width = screen.width;
+ 	this.height = screen.height;
 	acc = null;
 	compass = null;
 	gyro = null;
-	interfaceDiv = document.getElementById("selectedInterface");
+	interfaceDiv = document.getElementById("SelectedInterfacePage");
 	this.changeTab(this.currentTab);
 	this.isAddingConstants = false;
+	this.isLoadingInterface = false;
+	
 	return this;
 }
 
 Control.prototype.init = function() {
+	document.getElementById("SelectedInterfacePage").addEventListener('touchend', control.event, true);
+    document.getElementById("SelectedInterfacePage").addEventListener('touchstart', control.event, true);
+    document.getElementById("SelectedInterfacePage").addEventListener('touchmove', control.event, true);
+	document.getElementById("SelectedInterfacePage").addEventListener('touchmove', preventBehavior, false);
     //if(device.platform == 'iPhone') {
-        PhoneGap.exec("OSCManager.startReceiveThread");
-	    PhoneGap.exec("CNTRL_Accelerometer.setUpdateRate", 50);
-	    PhoneGap.exec("Gyro.setUpdateRate", 50);	
+        //PhoneGap.exec(null, null, "OSCManager", "startReceiveThread", []);
+	    //PhoneGap.exec("CNTRL_Accelerometer.setUpdateRate", 50);
+	    //PhoneGap.exec("Gyro.setUpdateRate", 50);	
     //}
 }
 
@@ -54,12 +63,6 @@ Control.prototype.makePages = function(_pages,width, height) {
     interfaceDiv.style.left = "0px";
     interfaceDiv.style.top = "0px";		
     */
-	interfaceDiv.addEventListener('touchend', control.event, false);
-	interfaceDiv.addEventListener('touchstart', control.event, false);
-	interfaceDiv.addEventListener('touchmove', control.event, false);
-	interfaceDiv.addEventListener('touchmove', preventBehavior, false);
-
-    
 
 }
 
@@ -76,7 +79,6 @@ Control.prototype.removeWidgetWithName = function(widgetName) {
 		for(var j = 0; j < control.pages[page].length; j++) {
 			var widget = control.pages[page][j];
 			if(widget.name == widgetName) {
-                console.log("widget found!");
                 control.pages[page].splice(j,1);
                 widget = null;
 			}
@@ -307,17 +309,24 @@ Control.prototype.refresh = function() {
 
 Control.prototype.onRotation = function(event) { control.orientation = event.orientation; }
 
-
+// multitouch works when a drag has occurred after the each touchdown. It doesn't work if touchdowns occur back to back with nothing in between
 Control.prototype.event = function(event) {
   // REMEMBER : IN EVENT METHODS TRIGGERED FROM THE WEBVIEW "THIS" REFERS TO THE HTML OBJECT THAT GENERATED THE EVENT
 	var page = control.currentPage;
-    
-	//console.log("length = " + control.pages[page].length);
-	for(var i = 0; i < control.pages[page].length; i++) {
-		var widget = control.pages[page][i];
-		//console.log("widget event for " + widget.name);
-		widget.event(event);
+    event.stopPropagation();
+    event.preventDefault(); 
+    for (var j = 0; j < event.changedTouches.length; j++) {
+		var touch = event.changedTouches.item(j);
+        // console.log("touch id:: " + touch.identifier + " || x = " + touch.pageX + " || y = " + touch.pageY);
 	}
+	//console.log("length = " + control.pages[page].length);
+	if(typeof control.pages[page] != "undefined") {
+	    for(var i = 0; i < control.pages[page].length; i++) {
+    		var widget = control.pages[page][i];
+    		//console.log("widget event for " + widget.name);
+    		widget.event(event);
+    	}
+    }
 	
 	for(var i = 0; i < control.constants.length; i++) {
 		var widget = control.constants[i];
@@ -338,7 +347,7 @@ Control.prototype.changeTab = function(tab) {
 
     this.currentTab = tab;
     
-	if(this.currentTab.id == "selectedInterface") {
+	if(this.currentTab.id == "SelectedInterfacePage") {
 		this.tabBarHidden = true;
 		control.hideToolbar();
     }else{
@@ -346,10 +355,17 @@ Control.prototype.changeTab = function(tab) {
         this.tabBarHidden = false;	  
         control.showToolbar();
       }
-	  if(oldTab.id == "selectedInterface") {
+	  if(oldTab.id == "SelectedInterfacePage") {
 		control.unloadWidgets();
+		// $("#SelectedInterfacePage").css({
+		//                             'width':  0,
+		//                             'height': 0,
+		//                             'display': 'block',
+		//                             'top':  0,
+		//                             'left': 0
+		//                         });
 		//if(device.platform == 'iPhone') 
-          PhoneGap.exec("Device.setRotation", "portrait");
+          PhoneGap.exec(null,null,"DeviceFeatures","setOrientation2", ["portrait"]); //setOrientation2 doesn't call into interfaceManager after loading widgets
 		//window.plugins.nativeControls.showTabBar({"orientation":"portrait",  "position":"bottom"});
 	  }
     }

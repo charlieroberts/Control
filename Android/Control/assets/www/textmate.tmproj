@@ -2,103 +2,157 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>currentDocument</key>
+	<string>index.html</string>
 	<key>documents</key>
 	<array>
 		<dict>
 			<key>filename</key>
-			<string>Control.js</string>
+			<string>js/Control.js</string>
 			<key>lastUsed</key>
-			<date>2010-06-05T00:32:55Z</date>
-		</dict>
-		<dict>
-			<key>filename</key>
-			<string>Button.js</string>
-			<key>lastUsed</key>
-			<date>2010-06-05T00:32:19Z</date>
-		</dict>
-		<dict>
-			<key>filename</key>
-			<string>Slider.js</string>
-			<key>lastUsed</key>
-			<date>2010-06-05T00:26:51Z</date>
-		</dict>
-		<dict>
-			<key>filename</key>
-			<string>interfaceTest.json</string>
-			<key>lastUsed</key>
-			<date>2010-06-09T19:43:31Z</date>
-			<key>selected</key>
-			<true/>
+			<date>2011-07-24T22:28:47Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>index.html</string>
 			<key>lastUsed</key>
-			<date>2010-06-03T22:32:37Z</date>
+			<date>2011-07-24T22:43:44Z</date>
+			<key>selected</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>filename</key>
-			<string>Widget.js</string>
+			<string>js/OSCManager.js</string>
 			<key>lastUsed</key>
-			<date>2010-06-04T23:17:26Z</date>
+			<date>2011-07-24T22:43:37Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
-			<string>MultiTouchXY.js</string>
+			<string>js/Bonjour.js</string>
 			<key>lastUsed</key>
-			<date>2010-06-05T00:32:54Z</date>
+			<date>2011-07-24T22:43:44Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
-			<string>Label.js</string>
+			<string>js/DeviceFeatures.js</string>
 			<key>lastUsed</key>
-			<date>2010-06-02T22:05:51Z</date>
+			<date>2011-07-24T18:50:19Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
-			<string>master.css</string>
+			<string>js/Widget.js</string>
 			<key>lastUsed</key>
-			<date>2010-06-04T22:45:20Z</date>
+			<date>2011-07-18T21:22:29Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>js/phonegap.0.9.4.js</string>
+			<key>lastUsed</key>
+			<date>2011-07-24T21:24:21Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>js/DestinationManager.js</string>
+			<key>lastUsed</key>
+			<date>2011-07-24T18:49:37Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>js/InterfaceManager.js</string>
+			<key>lastUsed</key>
+			<date>2011-07-24T22:42:51Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>js/PreferencesManager.js</string>
+			<key>lastUsed</key>
+			<date>2011-07-24T18:57:31Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>../../src/com/charlieroberts/Control/Bonjour.java</string>
+			<key>lastUsed</key>
+			<date>2011-07-18T07:28:15Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>../../src/com/charlieroberts/Control/Control.java</string>
+			<key>lastUsed</key>
+			<date>2011-07-18T07:43:54Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>../../src/com/charlieroberts/Control/DeviceFeatures.java</string>
+			<key>lastUsed</key>
+			<date>2011-07-18T23:10:39Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>../../src/com/charlieroberts/Control/OSCManager.java</string>
+			<key>lastUsed</key>
+			<date>2011-07-18T21:22:23Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>js/ControlAccelerometer.js</string>
+			<key>lastUsed</key>
+			<date>2011-07-24T18:49:39Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>js/ControlCompass.js</string>
+			<key>lastUsed</key>
+			<date>2011-07-24T18:49:38Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>interfaces/gyro.js</string>
+			<key>lastUsed</key>
+			<date>2011-07-24T18:49:35Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>js/MultiButton.js</string>
+			<key>lastUsed</key>
+			<date>2011-07-24T18:44:26Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>css/master.css</string>
+			<key>lastUsed</key>
+			<date>2011-07-24T20:08:35Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>css/jquery.mobile-1.0a3.css</string>
+			<key>lastUsed</key>
+			<date>2011-07-24T20:28:17Z</date>
 		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
-	<integer>114</integer>
+	<integer>233</integer>
 	<key>metaData</key>
 	<dict>
-		<key>Button.js</key>
+		<key>../../src/com/charlieroberts/Control/Bonjour.java</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>41</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>4</integer>
+				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>4</integer>
+			<integer>53</integer>
 		</dict>
-		<key>Control.js</key>
+		<key>../../src/com/charlieroberts/Control/Control.java</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>27</integer>
-				<key>line</key>
-				<integer>19</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>3</integer>
-		</dict>
-		<key>Label.js</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>2</integer>
+				<integer>0</integer>
 				<key>line</key>
 				<integer>0</integer>
 			</dict>
@@ -107,126 +161,329 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>MultiTouchXY.js</key>
+		<key>../../src/com/charlieroberts/Control/DeviceFeatures.java</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>27</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>138</integer>
+				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>99</integer>
+			<integer>17</integer>
 		</dict>
-		<key>Slider.js</key>
+		<key>../../src/com/charlieroberts/Control/OSCManager.java</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>165</integer>
+				<integer>0</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>126</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>42</integer>
-				<key>line</key>
-				<integer>170</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>165</integer>
-			</dict>
+			<integer>0</integer>
 		</dict>
-		<key>Widget.js</key>
+		<key>css/jquery.mobile-1.0a3.css</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>25</integer>
-				<key>line</key>
-				<integer>7</integer>
-			</dict>
-			<key>columnSelection</key>
-			<false/>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>7</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
 				<integer>8</integer>
+				<key>line</key>
+				<integer>47</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>18</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>4</integer>
+				<key>line</key>
+				<integer>47</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>8</integer>
+				<key>line</key>
+				<integer>47</integer>
+			</dict>
+		</dict>
+		<key>css/master.css</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>34</integer>
+				<key>line</key>
+				<integer>2</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
 		</dict>
 		<key>index.html</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>36</integer>
+				<integer>208</integer>
 				<key>line</key>
-				<integer>91</integer>
+				<integer>213</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>172</integer>
+		</dict>
+		<key>interfaces/gyro.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>18</integer>
+				<key>line</key>
+				<integer>145</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>22</integer>
+		</dict>
+		<key>js/Bonjour.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>47</integer>
+				<key>line</key>
+				<integer>11</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>interfaceTest.json</key>
+		<key>js/Control.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
 				<integer>32</integer>
 				<key>line</key>
-				<integer>207</integer>
+				<integer>22</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>127</integer>
+			<integer>0</integer>
 		</dict>
-		<key>master.css</key>
+		<key>js/ControlAccelerometer.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>42</integer>
+				<key>line</key>
+				<integer>67</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>19</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>67</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>42</integer>
+				<key>line</key>
+				<integer>67</integer>
+			</dict>
+		</dict>
+		<key>js/ControlCompass.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>51</integer>
+				<key>line</key>
+				<integer>41</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>js/DestinationManager.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
 				<integer>1</integer>
 				<key>line</key>
-				<integer>76</integer>
+				<integer>35</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>59</integer>
+			<integer>0</integer>
+		</dict>
+		<key>js/DeviceFeatures.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>4</integer>
+				<key>line</key>
+				<integer>13</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>js/InterfaceManager.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>132</integer>
+				<key>line</key>
+				<integer>128</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>js/MultiButton.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>js/OSCManager.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>52</integer>
+				<key>line</key>
+				<integer>75</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>54</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>49</integer>
+				<key>line</key>
+				<integer>75</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>52</integer>
+				<key>line</key>
+				<integer>75</integer>
+			</dict>
+		</dict>
+		<key>js/PreferencesManager.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>47</integer>
+				<key>line</key>
+				<integer>2</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>js/Widget.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>143</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>89</integer>
+		</dict>
+		<key>js/phonegap.0.9.4.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>6</integer>
+				<key>line</key>
+				<integer>487</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>472</integer>
 		</dict>
 	</dict>
+	<key>openDocuments</key>
+	<array>
+		<string>index.html</string>
+		<string>js/Control.js</string>
+		<string>js/InterfaceManager.js</string>
+		<string>css/master.css</string>
+		<string>css/jquery.mobile-1.0a3.css</string>
+		<string>js/DestinationManager.js</string>
+		<string>js/phonegap.0.9.4.js</string>
+		<string>js/MultiButton.js</string>
+		<string>js/ControlAccelerometer.js</string>
+		<string>js/ControlCompass.js</string>
+		<string>interfaces/gyro.js</string>
+		<string>js/PreferencesManager.js</string>
+		<string>js/Bonjour.js</string>
+		<string>js/DeviceFeatures.js</string>
+		<string>js/Widget.js</string>
+		<string>js/OSCManager.js</string>
+	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{288, 0}, {1148, 878}}</string>
+	<string>{{328, -657}, {1430, 1028}}</string>
 </dict>
 </plist>

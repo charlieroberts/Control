@@ -40,7 +40,8 @@ pages = [ [\
 \"midiNumber\": 1,\
 \"mode\":\"contact\",\
 \"requiresTouchDown\": true,\
-\"ontouchstart\": \"crossfader.value = 0; crossfader.draw();\"\
+\"isLocal\": true,\
+\"ontouchstart\": \"crossfader.setValue(0);\"\
 },\
 {\
 \"name\": \"leftXFadeLabel\",\
@@ -70,8 +71,9 @@ pages = [ [\
 \"midiType\": \"cc\",\
 \"midiNumber\": 1,\
 \"mode\":\"contact\",\
+\"isLocal\": true,\
 \"requiresTouchDown\": true,\
-\"ontouchstart\": \"crossfader.value = 127; crossfader.draw();\"\
+\"ontouchstart\": \"crossfader.setValue(127);\"\
 \
 },\
 {\
@@ -102,7 +104,8 @@ pages = [ [\
 \"midiNumber\": 1,\
 \"mode\":\"contact\",\
 \"requiresTouchDown\": true,\
-\"ontouchstart\": \"crossfader.value = 64; crossfader.draw();\"\
+\"isLocal\": true,\
+\"ontouchstart\": \"crossfader.setValue(64);\"\
 \
 },\
 {\

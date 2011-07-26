@@ -110,7 +110,7 @@ pages = [[\
 {\
 	\"name\":\"monome\",\
 	\"type\":\"MultiButton\",\
-	\"bounds\":[0, 0, .99 * whRatio, .99],\
+	\"bounds\":[0, 0, .925 * whRatio, .925],\
 	\"rows\":8,\
 	\"columns\":8,\
 	\"range\":[0,1],\
@@ -120,7 +120,7 @@ pages = [[\
 	\"stroke\":\"#aaa\",\
 	\"isLocal\":true,\
 	\"requiresTouchDown\":false,\
-	\"onvaluechange\": \"oscManager.sendOSC(this.lastChanged.address, 'iii', this.lastChanged.column, this.lastChanged.row, this.lastChanged.value);\",\
+	\"onvaluechange\": \"oscManager.sendOSC([this.lastChanged.address, 'iii', this.lastChanged.column, this.lastChanged.row, this.lastChanged.value]);\",\
 	\"shouldUseCanvas\":true,\
 	\"oninit\": \"window.monomeInit();\",\
 },\

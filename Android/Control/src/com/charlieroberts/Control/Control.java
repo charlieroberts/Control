@@ -7,8 +7,7 @@ import android.view.WindowManager;
 import android.webkit.*;
 import android.content.Context;
 
-
-import de.sciss.net.*;
+// import de.sciss.net.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.io.StringWriter;
@@ -29,27 +28,23 @@ public class Control extends DroidGap
          getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN ); 
          getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); 
 
-         //super.loadUrl("http://192.168.1.5/~charlie/www/index.html");\
          super.loadUrl("file:///android_asset/www/index.html");
+         //super.loadUrl("http://192.168.1.6/~charlie/www/index.html");         
          super.appView.setWebChromeClient(new EclairClient2(this));
-         // super.appView.setWebChromeClient(new WebChromeClient() {
-         //    public void onExceededDatabaseQuota(String url, String databaseIdentifier, long currentQuota, long estimatedSize, long totalUsedQuota, WebStorage.QuotaUpdater quotaUpdater) {
-         //        quotaUpdater.updateQuota(100000);
-         //    };
-         //    @Override
-         //    public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-         //        Log.d(1, message);
-         //        result.confirm();
-         //        return true;
-         //    };
-         // 
-         // });
+         
+         // TODO: the line below seems to create better multitouch, but it also makes some errant calls every once in a while...
+         // touch events are generated at random somehow. But I think the behavior is better with it on than with it off.
+         // when off, multiple touchdown events only work if there is a drag in between them for whatever reason. 
+         super.appView.getSettings().setBuiltInZoomControls(true); //Enable Multitouch if supported by ROM
+         super.appView.getSettings().setCacheMode(android.webkit.WebSettings.LOAD_NO_CACHE); // Turn off cacheing of interfaces so that they can be refreshed / reloaded
+         super.appView.getSettings().setSupportZoom(false);
          
          handler.postDelayed(new Runnable() {
             public void run() {
                 setUp();
             }
          }, 1000);
+        
     }
     
     private void setUp() {
@@ -59,8 +54,9 @@ public class Control extends DroidGap
          lock.setReferenceCounted(true);
          lock.acquire();
       }
-      
-public class EclairClient2 extends GapClient {
+ 
+// this overrides the EclarClient class in DroidGap.java (part of the phonegap.jar to give more memory to the web database. This is needed for storing interface files.    
+    public class EclairClient2 extends GapClient {
 
     	private String TAG = "PhoneGapLog";
     	private long MAX_QUOTA = 10000 * 1024 * 1024;
