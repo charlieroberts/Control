@@ -15,6 +15,7 @@ function Control() {
 	acc = null;
 	compass = null;
 	gyro = null;
+    audioInput = null;
 	interfaceDiv = document.getElementById("selectedInterface");
 	this.changeTab(this.currentTab);
 	this.isAddingConstants = false;
@@ -195,7 +196,7 @@ Control.prototype.loadConstants = function(_constants) {
 	
 Control.prototype.makeWidget = function(w) {
 	var _w;
-	if(w.type != "Accelerometer" && w.type != "Compass" && w.type != "Gyro") {
+	if(w.type != "Accelerometer" && w.type != "Compass" && w.type != "Gyro" && w.type != "AudioInput") {
 		_w = eval(w.name + " = new " + w.type + "(interfaceDiv,w);");
 //		_w = eval(w.name + " = new " + w.type + "(interfaceDiv,w,this.ctx);");  
 		if(_w.init != null) { 
@@ -214,6 +215,12 @@ Control.prototype.makeWidget = function(w) {
             //gyro = null;
             _w = eval(w.name + " = new ControlGyro(w);");
             gyro = _w;
+		}else if(w.type == "AudioInput") {
+            //gyro = null;
+            console.log("control make widget audio input start");
+            _w = eval(w.name + " = new AudioInput(w);");
+            console.log("control make widget audio input end");            
+            audioInput = _w;
 		}
         _w.start();        
 	}
