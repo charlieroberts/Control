@@ -4,6 +4,14 @@ function MIDIManager() {
 	return this;
 }
 
+PhoneGap.addConstructor( function() {
+	//Register the javascript plugin with PhoneGap
+	PhoneGap.addPlugin('MIDIManager', new MIDIManager());
+	
+	//Register the native class of plugin with PhoneGap
+	PluginManager.addService("MIDIManager","com.charlieroberts.Control.MIDIManager");
+});
+
 MIDIManager.prototype.processMIDIMessage = function(msgType, channel, number, value) {	
 	this.delegate.processMIDI(msgType, channel, number, value);
 }	

@@ -24,6 +24,7 @@
 		305D5FD1115AB8F900A74A75 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 305D5FD0115AB8F900A74A75 /* MobileCoreServices.framework */; };
 		307D28A2123043360040C0FA /* PhoneGapBuildSettings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 307D28A1123043350040C0FA /* PhoneGapBuildSettings.xcconfig */; };
 		30E1352710E2C1420031B30D /* PhoneGap.plist in Resources */ = {isa = PBXBuildFile; fileRef = 30E1352610E2C1420031B30D /* PhoneGap.plist */; };
+		CB0D015113E08CD700148DA0 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB0D015013E08CD700148DA0 /* Accelerate.framework */; };
 		CB28AB131396276800B9151E /* Default-PortraitUpsideDown~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = CB28AB121396276800B9151E /* Default-PortraitUpsideDown~ipad.png */; };
 		CB28AB15139627C700B9151E /* Default-Portrait~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = CB28AB14139627C700B9151E /* Default-Portrait~ipad.png */; };
 		CB28AB18139627D700B9151E /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = CB28AB16139627D600B9151E /* Default.png */; };
@@ -98,6 +99,9 @@
 		30E1352610E2C1420031B30D /* PhoneGap.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = PhoneGap.plist; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* Control_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Control_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Control-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Control-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		CB0D013713DF611500148DA0 /* AudioInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioInput.h; sourceTree = "<group>"; };
+		CB0D013813DF611500148DA0 /* AudioInput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioInput.m; sourceTree = "<group>"; };
+		CB0D015013E08CD700148DA0 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		CB28AB121396276800B9151E /* Default-PortraitUpsideDown~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-PortraitUpsideDown~ipad.png"; path = "../../resources/images/Default-PortraitUpsideDown~ipad.png"; sourceTree = "<group>"; };
 		CB28AB14139627C700B9151E /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Portrait~ipad.png"; path = "../../resources/images/Default-Portrait~ipad.png"; sourceTree = "<group>"; };
 		CB28AB16139627D600B9151E /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = ../../resources/images/Default.png; sourceTree = "<group>"; };
@@ -211,6 +215,7 @@
 				301BF5C5109A6A2B0062928A /* SystemConfiguration.framework in Frameworks */,
 				305D5FD1115AB8F900A74A75 /* MobileCoreServices.framework in Frameworks */,
 				CBDDF3A91300B8740030E736 /* CoreMIDI.framework in Frameworks */,
+				CB0D015113E08CD700148DA0 /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -282,6 +287,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CB0D015013E08CD700148DA0 /* Accelerate.framework */,
 				CBDDF3B81300B8960030E736 /* CoreMotion.framework */,
 				CBDDF3A81300B8740030E736 /* CoreMIDI.framework */,
 				CBDDF3641300B6B10030E736 /* oscpack */,
@@ -305,6 +311,8 @@
 		307C750510C5A3420062BCA9 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				CB0D013713DF611500148DA0 /* AudioInput.h */,
+				CB0D013813DF611500148DA0 /* AudioInput.m */,
 				CBDDF3481300B5280030E736 /* Bonjour.h */,
 				CBDDF3491300B5280030E736 /* Bonjour.m */,
 				CBDDF3551300B6580030E736 /* CNTRL_Accelerometer.h */,
