@@ -85,7 +85,6 @@ var pages, control, interfaceScroller, destinationScroller, interfaceManager, de
                
            _protocol = "OSC";
            
-           midiManager = new MIDIManager();
            
            interfaceManager = new InterfaceManager();
            interfaceManager.init();
@@ -95,6 +94,9 @@ var pages, control, interfaceScroller, destinationScroller, interfaceManager, de
            
            oscManager = new OSCManager();
            oscManager.startup();
+           
+           midiManager = new MIDIManager();
+           midiManager.startup();
            
            bonjour = new Bonjour();
            bonjour.startup();

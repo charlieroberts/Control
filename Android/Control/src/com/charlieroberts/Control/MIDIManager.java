@@ -39,28 +39,50 @@ public class MIDIManager extends Plugin implements NetworkMidiListener, NMJSyste
 
 	public String ipAddress;
 	
+	private NetworkMidiOutput midiOut;
+	private byte[] myNote = new byte[]{(byte)0x90, (byte)0x24, 0};
+	
 	private NetworkMidiSystem nmjs;
 
-	
 	@Override
 	public PluginResult execute(String action, JSONArray data, String callbackId) {
 		PluginResult result = null;
 		try {
-		    if (action.equals("startMIDIListener")) {
-		        Log.d("MIDIManager", "building client");
+		    if (action.equals("start")) {
+		        Log.d("MIDIManager", "starting native midimanager code");
 		        try{
                 	nmjs = NetworkMidiSystem.get(this.ctx);
                 } catch (Exception e) {
                 	// This would happen if no network permissions were given. See AndroidManifest.xml
+			        Log.d("MIDIManager", "failed to create network midi system code");
+
                 	e.printStackTrace();
                 	return result;
                 }
                 
-                 NMJConfig.addSystemListener(this);
-
+                
+                NMJConfig.addSystemListener(this);
+                NMJConfig.setIO(8,1);
+                Log.d("MIDIManager", "add system listener");
                 /** can't use "this" in the below event handler **/
                 final NetworkMidiClient nmc = (NetworkMidiClient)this;
+                Log.d("MIDIManager", " make midi client");
                 final NetworkMidiListener ml = this;
+                Log.d("MIDIManager", " midi listener");
+                
+                NMJConfig.connectLocalSession(8,8);
+                
+                try{ midiOut.close(nmc); } catch (NullPointerException ne){}
+
+                try{
+		        	midiOut = nmjs.openOutput(8, nmc);
+		        } catch (Exception e){
+		        	Log.d("MIDIManager", "unable to open output");
+		        	e.printStackTrace();
+		        }
+		        
+                midiOut.sendMidi(myNote);
+
 
             	Log.d("MIDIManager", "finished setting up MIDI receiver and now listening");
     		} else if (action.equals("send") && hasAddress) {

@@ -1,8 +1,13 @@
 function MIDIManager() {
+    console.log("Starting midimanager");
 	this.delegate = this;
-	PhoneGap.exec("MIDI.start");
+
 	return this;
 }
+
+MIDIManager.prototype.startup = function() {
+    PhoneGap.exec(null, null, 'MIDIManager', 'start', []);
+};
 
 PhoneGap.addConstructor( function() {
 	//Register the javascript plugin with PhoneGap
