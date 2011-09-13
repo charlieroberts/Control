@@ -322,7 +322,7 @@ Control.prototype.event = function(event) {
 	//console.log("length = " + control.pages[page].length);
 	for(var i = 0; i < control.pages[page].length; i++) {
 		var widget = control.pages[page][i];
-		//console.log("widget event for " + widget.name);
+		//console.log("widget event for " + widget.name + " type = " + widget.type);
 		widget.event(event);
 	}
 	
