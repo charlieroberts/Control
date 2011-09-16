@@ -160,7 +160,7 @@ function InterfaceManager() {
 		interfaceManager.interfaceFiles.all(function(r) { interfaceManager.createInterfaceListWithArray(r); });
         window.isLoadingInterfaces = false;
 	}
-	
+    
 	this.createInterfaceListWithArray = function(listArray) {
 		var list = document.getElementById('interfaceList');
 		var count = 0;
@@ -169,15 +169,27 @@ function InterfaceManager() {
 			var r = listArray[i];
 			var item = document.createElement('li');
             
-            item.style.borderBottom = "1px solid #666";
-            item.style.fontWeight = "normal";
-            item.setAttribute("ontouchend", "$.mobile.changePage('#SelectedInterfacePage');interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "');");
+            function _touchend(_key, _count) { 
+                return function(e) {
+                    interfaceManager.highlight(_count);
+                    interfaceManager.selectInterfaceFromList(_key);
+                }
+            }
+            
+            $(item).bind("tap", _touchend(r.key, count++));
+
             item.innerHTML = r.key;
-            $(item).addClass('destinationListItem');
-            $(item).addClass('interfaceListItem');
+                        
+            $(item).css({
+                        "border-bottom" : "1px solid #666", 
+                        "font-weight"   : "normal"
+                        });
+            
+            $(item).addClass('destinationListItem interfaceListItem');
 
    			list.appendChild(item);
 		}
+        
 		$(list).listview('refresh');
 	}
 
