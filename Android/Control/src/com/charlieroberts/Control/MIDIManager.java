@@ -62,7 +62,9 @@ public class MIDIManager extends Plugin implements NetworkMidiListener, NMJSyste
                 
                 
                 NMJConfig.addSystemListener(this);
-                NMJConfig.setIO(8,1);
+                NMJConfig.setIP(0,"192.168.1.102");
+                NMJConfig.setPort(0, 10233);
+                NMJConfig.setIO(0,1);
                 Log.d("MIDIManager", "add system listener");
                 /** can't use "this" in the below event handler **/
                 final NetworkMidiClient nmc = (NetworkMidiClient)this;
@@ -70,7 +72,7 @@ public class MIDIManager extends Plugin implements NetworkMidiListener, NMJSyste
                 final NetworkMidiListener ml = this;
                 Log.d("MIDIManager", " midi listener");
                 
-                //NMJConfig.connectLocalSession(8,8);
+                NMJConfig.connectLocalSession(0,0);
                 
                 // try{ midiOut.close(nmc); } catch (NullPointerException ne){}
                 // 
