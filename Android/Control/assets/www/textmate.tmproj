@@ -3,9 +3,27 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>js/Button.js</string>
+	<string>js/Widget.js</string>
 	<key>documents</key>
 	<array>
+		<dict>
+			<key>filename</key>
+			<string>js/Bonjour.js</string>
+			<key>lastUsed</key>
+			<date>2011-09-17T20:40:37Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>../../src/com/charlieroberts/Control/Bonjour.java</string>
+			<key>lastUsed</key>
+			<date>2011-09-17T20:41:47Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>js/Button.js</string>
+			<key>lastUsed</key>
+			<date>2011-09-17T06:13:54Z</date>
+		</dict>
 		<dict>
 			<key>filename</key>
 			<string>js/Control.js</string>
@@ -14,81 +32,9 @@
 		</dict>
 		<dict>
 			<key>filename</key>
-			<string>index.html</string>
-			<key>lastUsed</key>
-			<date>2011-09-09T21:09:39Z</date>
-		</dict>
-		<dict>
-			<key>filename</key>
-			<string>js/OSCManager.js</string>
-			<key>lastUsed</key>
-			<date>2011-09-17T06:02:33Z</date>
-		</dict>
-		<dict>
-			<key>filename</key>
-			<string>js/Bonjour.js</string>
-			<key>lastUsed</key>
-			<date>2011-09-09T20:54:49Z</date>
-		</dict>
-		<dict>
-			<key>filename</key>
-			<string>js/DeviceFeatures.js</string>
-			<key>lastUsed</key>
-			<date>2011-07-24T18:50:19Z</date>
-		</dict>
-		<dict>
-			<key>filename</key>
-			<string>js/Widget.js</string>
-			<key>lastUsed</key>
-			<date>2011-09-17T06:02:00Z</date>
-		</dict>
-		<dict>
-			<key>filename</key>
-			<string>js/phonegap.0.9.4.js</string>
-			<key>lastUsed</key>
-			<date>2011-07-24T21:24:21Z</date>
-		</dict>
-		<dict>
-			<key>filename</key>
-			<string>js/DestinationManager.js</string>
-			<key>lastUsed</key>
-			<date>2011-09-09T20:35:52Z</date>
-		</dict>
-		<dict>
-			<key>filename</key>
-			<string>js/InterfaceManager.js</string>
-			<key>lastUsed</key>
-			<date>2011-07-24T22:42:51Z</date>
-		</dict>
-		<dict>
-			<key>filename</key>
-			<string>js/PreferencesManager.js</string>
-			<key>lastUsed</key>
-			<date>2011-07-24T18:57:31Z</date>
-		</dict>
-		<dict>
-			<key>filename</key>
-			<string>../../src/com/charlieroberts/Control/Bonjour.java</string>
-			<key>lastUsed</key>
-			<date>2011-07-24T23:02:00Z</date>
-		</dict>
-		<dict>
-			<key>filename</key>
 			<string>../../src/com/charlieroberts/Control/Control.java</string>
 			<key>lastUsed</key>
 			<date>2011-09-09T06:38:47Z</date>
-		</dict>
-		<dict>
-			<key>filename</key>
-			<string>../../src/com/charlieroberts/Control/DeviceFeatures.java</string>
-			<key>lastUsed</key>
-			<date>2011-09-09T20:50:26Z</date>
-		</dict>
-		<dict>
-			<key>filename</key>
-			<string>../../src/com/charlieroberts/Control/OSCManager.java</string>
-			<key>lastUsed</key>
-			<date>2011-09-09T20:56:06Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -104,21 +50,39 @@
 		</dict>
 		<dict>
 			<key>filename</key>
+			<string>js/DestinationManager.js</string>
+			<key>lastUsed</key>
+			<date>2011-09-17T20:20:51Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>js/DeviceFeatures.js</string>
+			<key>lastUsed</key>
+			<date>2011-07-24T18:50:19Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>../../src/com/charlieroberts/Control/DeviceFeatures.java</string>
+			<key>lastUsed</key>
+			<date>2011-09-09T20:50:26Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
 			<string>interfaces/gyro.js</string>
 			<key>lastUsed</key>
 			<date>2011-09-16T21:20:41Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
-			<string>js/MultiButton.js</string>
+			<string>index.html</string>
 			<key>lastUsed</key>
-			<date>2011-07-24T18:44:26Z</date>
+			<date>2011-09-09T21:09:39Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
-			<string>css/master.css</string>
+			<string>js/InterfaceManager.js</string>
 			<key>lastUsed</key>
-			<date>2011-07-24T20:08:35Z</date>
+			<date>2011-07-24T22:42:51Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -128,9 +92,33 @@
 		</dict>
 		<dict>
 			<key>filename</key>
+			<string>js/Knob.js</string>
+			<key>lastUsed</key>
+			<date>2011-09-17T06:30:22Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>js/Label.js</string>
+			<key>lastUsed</key>
+			<date>2011-09-17T06:32:05Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>js/OSCManager.js</string>
+			<key>lastUsed</key>
+			<date>2011-09-17T06:02:33Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>css/master.css</string>
+			<key>lastUsed</key>
+			<date>2011-07-24T20:08:35Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
 			<string>../../src/com/charlieroberts/Control/MIDIManager.java</string>
 			<key>lastUsed</key>
-			<date>2011-09-12T22:25:59Z</date>
+			<date>2011-09-17T20:40:35Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -140,13 +128,51 @@
 		</dict>
 		<dict>
 			<key>filename</key>
-			<string>js/Button.js</string>
+			<string>js/MultiButton.js</string>
 			<key>lastUsed</key>
-			<date>2011-09-17T06:13:02Z</date>
+			<date>2011-09-17T06:33:16Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
-			<string>js/Knob.js</string>
+			<string>js/MultiSlider.js</string>
+			<key>lastUsed</key>
+			<date>2011-09-17T06:33:23Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>js/MultiTouchXY.js</string>
+			<key>lastUsed</key>
+			<date>2011-09-17T06:45:17Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>../../src/com/charlieroberts/Control/OSCManager.java</string>
+			<key>lastUsed</key>
+			<date>2011-09-09T20:56:06Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>js/phonegap.0.9.4.js</string>
+			<key>lastUsed</key>
+			<date>2011-07-24T21:24:21Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>js/PreferencesManager.js</string>
+			<key>lastUsed</key>
+			<date>2011-07-24T18:57:31Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>js/Slider.js</string>
+			<key>lastUsed</key>
+			<date>2011-09-17T20:19:07Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>js/Widget.js</string>
+			<key>lastUsed</key>
+			<date>2011-09-17T20:41:47Z</date>
 			<key>selected</key>
 			<true/>
 		</dict>
@@ -160,14 +186,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>81</integer>
+				<integer>18</integer>
 				<key>line</key>
-				<integer>89</integer>
+				<integer>104</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>59</integer>
+			<integer>33</integer>
 		</dict>
 		<key>../../src/com/charlieroberts/Control/Control.java</key>
 		<dict>
@@ -202,14 +228,30 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>33</integer>
+				<integer>60</integer>
 				<key>line</key>
-				<integer>64</integer>
+				<integer>83</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>5</integer>
+			<integer>24</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>16</integer>
+				<key>line</key>
+				<integer>74</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>60</integer>
+				<key>line</key>
+				<integer>83</integer>
+			</dict>
 		</dict>
 		<key>../../src/com/charlieroberts/Control/OSCManager.java</key>
 		<dict>
@@ -381,7 +423,7 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>80</integer>
+			<integer>78</integer>
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
@@ -425,6 +467,34 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
+		<key>js/Knob.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>1</integer>
+				<key>line</key>
+				<integer>199</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>133</integer>
+		</dict>
+		<key>js/Label.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>92</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
 		<key>js/MIDIManager.js</key>
 		<dict>
 			<key>caret</key>
@@ -444,9 +514,37 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>4</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>28</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>js/MultiSlider.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>1</integer>
+				<key>line</key>
+				<integer>145</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>js/MultiTouchXY.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>49</integer>
+				<key>line</key>
+				<integer>295</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -497,6 +595,20 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
+		<key>js/Slider.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>255</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>189</integer>
+		</dict>
 		<key>js/Widget.js</key>
 		<dict>
 			<key>caret</key>
@@ -534,6 +646,8 @@
 		<string>../../src/com/charlieroberts/Control/DeviceFeatures.java</string>
 		<string>js/MIDIManager.js</string>
 		<string>js/Button.js</string>
+		<string>js/Knob.js</string>
+		<string>js/Label.js</string>
 		<string>../../src/com/charlieroberts/Control/OSCManager.java</string>
 		<string>../../src/com/charlieroberts/Control/Bonjour.java</string>
 		<string>js/Control.js</string>
@@ -543,6 +657,7 @@
 		<string>js/DestinationManager.js</string>
 		<string>js/phonegap.0.9.4.js</string>
 		<string>js/MultiButton.js</string>
+		<string>js/MultiSlider.js</string>
 		<string>js/ControlAccelerometer.js</string>
 		<string>js/ControlCompass.js</string>
 		<string>interfaces/gyro.js</string>
@@ -550,6 +665,8 @@
 		<string>js/Bonjour.js</string>
 		<string>js/DeviceFeatures.js</string>
 		<string>js/Widget.js</string>
+		<string>js/MultiTouchXY.js</string>
+		<string>js/Slider.js</string>
 		<string>js/OSCManager.js</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>

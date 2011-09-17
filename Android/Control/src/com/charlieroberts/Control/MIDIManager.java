@@ -70,18 +70,18 @@ public class MIDIManager extends Plugin implements NetworkMidiListener, NMJSyste
                 final NetworkMidiListener ml = this;
                 Log.d("MIDIManager", " midi listener");
                 
-                NMJConfig.connectLocalSession(8,8);
+                //NMJConfig.connectLocalSession(8,8);
                 
-                try{ midiOut.close(nmc); } catch (NullPointerException ne){}
-
-                try{
-		        	midiOut = nmjs.openOutput(8, nmc);
-		        } catch (Exception e){
-		        	Log.d("MIDIManager", "unable to open output");
-		        	e.printStackTrace();
-		        }
-		        
-                midiOut.sendMidi(myNote);
+                // try{ midiOut.close(nmc); } catch (NullPointerException ne){}
+                // 
+                //                 try{
+                //                  midiOut = nmjs.openOutput(8, nmc);
+                //              } catch (Exception e){
+                //                  Log.d("MIDIManager", "unable to open output");
+                //                  e.printStackTrace();
+                //              }
+                //              
+                //                 midiOut.sendMidi(myNote);
 
 
             	Log.d("MIDIManager", "finished setting up MIDI receiver and now listening");
