@@ -149,7 +149,7 @@ Widget.prototype.output = function() {
     
 }
 
-Widget.event = function(event) {
+Widget.prototype.event = function(event) {
   if(event.type != "touchend") {
     touch = event.changedTouches.item(0);
     if(this.hitTest(touch.pageX, touch.pageY)) {

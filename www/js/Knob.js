@@ -198,5 +198,3 @@ Knob.prototype.hide = function() {
 Knob.prototype.unload = function() {
     this.ctx.removeChild(this.canvas);
 }
-
-

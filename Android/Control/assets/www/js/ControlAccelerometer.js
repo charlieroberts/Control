@@ -1,7 +1,7 @@
 // Accelerometer is a singleton object.
 
 function ControlAccelerometer(props) {
-	this.name = props.name;
+    this.make("sensor", props);
 
 	this.x = 0;
 	this.y = 0;
@@ -24,20 +24,13 @@ function ControlAccelerometer(props) {
 		this.min = (typeof props.min != "undefined") ? props.min : this.hardwareMin;			
 	}
     this.userDefinedRange = this.max - this.min;
+        
+    return this;
+}
     
-	this.isLocal = (typeof props.isLocal != "undefined") ? props.isLocal : false;
-    
-	this.midiType   = (typeof props.midiType   != "undefined") ? props.midiType   : "cc";
-	this.channel    = (typeof props.channel    != "undefined") ? props.channel    : 1;
-	this.midiNumber = (typeof props.midiNumber != "undefined") ? props.midiNumber : 0;
-	
-	this.address = (typeof props.address != "undefined") ? props.address : "/" + this.name;
-    console.log("**********************************  ACCELEROMETER INIT");
-	//console.log("setting onvaluechange to: " + props.onvaluechange);
-	this.onvaluechange = (typeof props.onvaluechange != "undefined") ? props.onvaluechange : null;
-    //console.log("set onvaluechange to: " + this.onvaluechange);
-    
-	this._onAccelUpdate = function(acceleration) {
+ControlAccelerometer.prototype = new Widget();
+
+ControlAccelerometer.prototype._onAccelUpdate  = function(acceleration) {
 	    var x = acceleration.x;
 	    var y = acceleration.y;
 	    var z = acceleration.z;
@@ -77,46 +70,43 @@ function ControlAccelerometer(props) {
 		}
 	}
 	
-	this.draw = function() {}
+ControlAccelerometer.prototype.draw = function() {}
 	
-	this.event = function() {}
+ControlAccelerometer.prototype.event = function() {}
 
-    function onSuccess(acceleration) {
-        this._onAccelUpdate(acceleration.x, acceleration.y, acceleration.z);
-    }		
+function onSuccess(acceleration) {
+    this._onAccelUpdate(acceleration.x, acceleration.y, acceleration.z);
+}		
 	
-	this.start = function() {
-		//PhoneGap.exec("CNTRL_Accelerometer.start", null);
-	    console.log("********************************* STARTING ACC");    
-        var options = {frequency: Math.round(this.delay)};
+ControlAccelerometer.prototype.start = function() {
+	//PhoneGap.exec("CNTRL_Accelerometer.start", null);
+    console.log("********************************* STARTING ACC");    
+    var options = {frequency: Math.round(this.delay)};
 
 //        options.frequency = this.delay;  //options.frequency is actually the period in milliseconds
-        console.log("************************ ACC FREQ = " + options.frequency);
-        this.watchID = navigator.accelerometer.watchAcceleration(
-                this._onAccelUpdate, 
-                function(ex) {
-                    alert("accel fail (" + ex.name + ": " + ex.message + ")");
-                }, options);
-        console.log("started accelerometer: "  +this.watchID);	        
-	}
+    console.log("************************ ACC FREQ = " + options.frequency);
+    this.watchID = navigator.accelerometer.watchAcceleration(
+            this._onAccelUpdate, 
+            function(ex) {
+                alert("accel fail (" + ex.name + ": " + ex.message + ")");
+            }, options);
+    console.log("started accelerometer: "  +this.watchID);	        
+}
 			
-	this.unload = function() {
-	    console.log("stopping accelerometer");
-		//PhoneGap.exec("CNTRL_Accelerometer.stop");
-	    if (this.watchID) {
-	        navigator.accelerometer.clearWatch(this.watchID);
-	        this.watchID = null;
-	    }	    
-	}
+ControlAccelerometer.prototype.unload = function() {
+    console.log("stopping accelerometer");
+	//PhoneGap.exec("CNTRL_Accelerometer.stop");
+    if (this.watchID) {
+        navigator.accelerometer.clearWatch(this.watchID);
+        this.watchID = null;
+    }	    
+}
     
-    this.setUpdateRate = function(rateInHz) {
-        console.log("********************************* SETTING UPDATE RATE");    
-		//debug.log("setting accelerometer updateRate " + rateInHz);
-        //PhoneGap.exec("CNTRL_Accelerometer.setUpdateRate", rateInHz);
-        this.unload();
-        this.delay = (1/rateInHz) * 1000;
-        this.start();
-    }
-	
-	return this;
+ControlAccelerometer.prototype.setUpdateRate = function(rateInHz) {
+    console.log("********************************* SETTING UPDATE RATE");    
+	//debug.log("setting accelerometer updateRate " + rateInHz);
+    //PhoneGap.exec("CNTRL_Accelerometer.setUpdateRate", rateInHz);
+    this.unload();
+    this.delay = (1/rateInHz) * 1000;
+    this.start();
 }
