@@ -17,6 +17,7 @@
 #define as        0xfe
 #define clock     0xf8
 #define PgmChange 0xc0
+#define Sysex     0xf0
 
 MIDI *me;
 static void notifyProc(const MIDINotification *message, void *refCon) {// if MIDI setup is changed
@@ -62,6 +63,7 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 					INT(CC), @"cc",
 					INT(PitchBend), @"pitchbend",
 					INT(PgmChange), @"programchange",
+                    INT(Sysex), @"sysex",
 					nil];
 		[self setWebView:theWebView];
 	}
@@ -169,25 +171,27 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 			NSArray *bytes = [msg componentsSeparatedByString:@","];
 			if([bytes count] < 3) continue;
 		 
-			MIDIPacket myMessage; 
-			myMessage.timeStamp = 0;
-			myMessage.length = [bytes count] - 1; // -1 becuase first data byte is msgType + channel
-			
-			NSString *msgType = [bytes objectAtIndex:0];
+            NSString *msgType = [bytes objectAtIndex:0];
+            
+            MIDIPacket myMessage; 
+            myMessage.timeStamp = 0;
+            myMessage.length = [bytes count] - 1; // -1 becuase first data byte is msgType + channel
+            
 //            if([msgType isEqualToString:@"noteon"] && [[bytes objectAtIndex:3] intValue] == 0) {
 //                msgType = @"noteoff";
 //            }
             
-			int firstByte = [[midiDict objectForKey:msgType] intValue];
-			firstByte += [[bytes objectAtIndex:1] intValue];
-			
-			myMessage.data[0] = firstByte;
-			myMessage.data[1] = [[bytes objectAtIndex:2] intValue];
+            int firstByte = [[midiDict objectForKey:msgType] intValue];
+            firstByte += [[bytes objectAtIndex:1] intValue];
+            
+            myMessage.data[0] = firstByte;
+            myMessage.data[1] = [[bytes objectAtIndex:2] intValue];
 
-			if([bytes count] > 3)
-				myMessage.data[2] = [[bytes objectAtIndex:3] intValue];
+            if([bytes count] > 3)
+                myMessage.data[2] = [[bytes objectAtIndex:3] intValue];
 
-			myList.packet[i] = myMessage;
+            myList.packet[i] = myMessage;
+            
 
 			//MIDISend(outPort, dst, &myList);
 		}
@@ -219,7 +223,7 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 			
 			NSArray *bytes = [msg componentsSeparatedByString:@","];
 			if([bytes count] < 3) continue;
-		 
+            
 			MIDIPacket myMessage; 
 			myMessage.timeStamp = 0;
 			myMessage.length = [bytes count] - 1; // -1 becuase first data byte is msgType + channel
@@ -246,6 +250,12 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 	[pool drain];
 }
 
+void MyCompletionProc(void *ptr) {
+    NSLog(@"sysex complete");
+    MIDISysexSendRequest * sysex = (MIDISysexSendRequest *) ptr;
+    free(sysex);
+    // nothing for now
+};
 - (void)send:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
 	MIDIPacketList myList;
 	myList.numPackets = 1;
@@ -254,18 +264,62 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
     myMessage.timeStamp = 0;
     myMessage.length = [arguments count] - 1;
 	
-	int msgType = [[midiDict objectForKey:[arguments objectAtIndex:0]] intValue];
-	
-    myMessage.data[0] = msgType + [[arguments objectAtIndex:1] intValue] - 1;
-	myMessage.data[1] = [[arguments objectAtIndex:2] intValue];
-	
-	if (myMessage.length > 2) 
-		myMessage.data[2] = [[arguments objectAtIndex:3] intValue];
-	
-	myList.packet[0] = myMessage;
-	
-	MIDISend(outPort, dst, &myList);
+    NSLog(@"midi type = %@", [arguments objectAtIndex:0]);
+    int msgType = [[midiDict objectForKey:[arguments objectAtIndex:0]] intValue];
+
+    if(msgType != Sysex) {
+        myMessage.data[0] = msgType + [[arguments objectAtIndex:1] intValue] - 1;
+        myMessage.data[1] = [[arguments objectAtIndex:2] intValue];
+        
+        if (myMessage.length > 2) 
+            myMessage.data[2] = [[arguments objectAtIndex:3] intValue];
+        
+        myList.packet[0] = myMessage;
+        
+        MIDISend(outPort, dst, &myList);
+    }else{
+        NSLog(@"%@", [arguments description]);
+        NSLog(@"sending sysex");
+        NSMutableString *data = [NSMutableString stringWithString:[arguments objectAtIndex:1]];
+        [data deleteCharactersInRange:NSMakeRange(0, 1)];
+        [data deleteCharactersInRange:NSMakeRange([data length] - 1, 1)];
+        
+        Byte * charData = malloc(sizeof(Byte) * [data length]);
+        
+        NSArray *charArray = [data componentsSeparatedByString:@","];
+        
+        for(int i = 0; i < [charArray count]; i++) {
+            int _i = [[charArray objectAtIndex:i] intValue];
+            NSLog(@"int  = %d", _i);
+            charData[i] = (Byte)_i;
+            NSLog(@"charData %d = %X", i, charData[i]);
+        }
+        
+        NSLog(@"before making sysex");
+        MIDISysexSendRequest * sysex = malloc(sizeof(MIDISysexSendRequest));
+        sysex->destination = dst;
+        sysex->data = charData;
+        sysex->bytesToSend = 11; //[[arguments objectAtIndex:2]  intValue];
+        sysex->complete = false;
+        sysex->completionProc = MyCompletionProc;
+        sysex->completionRefCon = sysex;
+        NSLog(@"after making sysex %X", charData[8]);        
+        MIDISendSysex(sysex);
+    }
 }
+
+/*
+ struct             
+ {
+ MIDIEndpointRef		destination;
+ const Byte *		data;
+ UInt32				bytesToSend;
+ Boolean				complete;
+ Byte				reserved[3];
+ MIDICompletionProc	completionProc;
+ void *				completionRefCon;
+ };
+ */
 
 - (void) dealloc {
 	if(inPort != nil) { MIDIPortDispose(inPort); }
