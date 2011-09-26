@@ -86,9 +86,9 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
         source = MIDIGetSource(i);
 		
 		MIDIObjectGetStringProperty(source, kMIDIPropertyName, &pName);
-		//NSLog(@"MIDI Object %@", (NSString *)pName);
+		NSLog(@"MIDI Object %@", (NSString *)pName);
 		NSString *ipString = [NSString stringWithFormat: @"destinationManager.addMIDIDestination(\"%@\");", (NSString *)pName];
-		//NSLog(ipString);
+		NSLog(ipString);
 		[webView stringByEvaluatingJavaScriptFromString:ipString];
 	//	sources[j++] = source;
     }
@@ -114,13 +114,40 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 	}
 }
 
+- (void) connectHardware:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
+    CFStringRef pName;
+    NSLog(@"CONNECTING HARDWARE MIDI %@", [arguments objectAtIndex:0]);
+    int i, j;
+    
+    ItemCount num_sources = MIDIGetNumberOfDestinations();
+	//NSLog(@"number of sources found = %d", num_sources);
+    //sources = (MIDIEndpointRef *)malloc(sizeof(MIDIEndpointRef) * num_sources);
+    j = 0;
+    for (i = 0; i < num_sources; i++) {
+        MIDIEndpointRef source;
+        source = MIDIGetDestination(i);
+		
+		MIDIObjectGetStringProperty(source, kMIDIPropertyName, &pName);
+        NSLog(@"DESTINATION %@", (NSString *)pName);
+        if([[arguments objectAtIndex:0] isEqualToString:(NSString *)pName]) {
+            NSLog(@"CONNECTING");
+            dst = source;
+            if(shouldSend == NO) {
+                shouldSend = YES;
+                [NSThread detachNewThreadSelector:@selector(pollJavascriptStart:) toTarget:self withObject:nil];
+            }
+            break;
+        }
+    }
+}
+
 - (void) start:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
 	session = [MIDINetworkSession defaultSession];
 	session.enabled = YES;
 	session.connectionPolicy = MIDINetworkConnectionPolicy_Anyone; // MIDINetworkConnectionPolicy_NoOne; // 
 	
 	//NSLog([arguments description]);
-	//[self rescanForSources];
+	[self rescanForSources];
 	
 	OSStatus err;
 	
