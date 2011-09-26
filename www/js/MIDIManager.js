@@ -47,17 +47,11 @@ MIDIManager.prototype.processMIDI = function(midiType, midiChannel, midiNumber, 
 	}
 }
 
-MIDIManager.prototype.sendMIDI = function(msgType, channel, number, value) {
-    
-    console.log("MIDI SEND 1 " + value);
+MIDIManager.prototype.sendMIDI = function(msgType, channel, number, value) {    
 	if(_protocol == "MIDI") {
-        console.log("MIDI SEND 2");
 		if(typeof value != "undefined") { // -1 means the value was undefined, ie for a program change message
-                    console.log("MIDI SEND WRONG");
 			PhoneGap.exec('MIDI.send', msgType, channel, number, value);
 		}else{
-            console.log(channel);
-            console.log("MIDI SEND 3");
 			PhoneGap.exec('MIDI.send', msgType, JSON.stringify(channel), number);
 		}
 	}

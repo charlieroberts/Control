@@ -250,11 +250,9 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 	[pool drain];
 }
 
-void MyCompletionProc(void *ptr) {
-    NSLog(@"sysex complete");
-    MIDISysexSendRequest * sysex = (MIDISysexSendRequest *) ptr;
-    free(sysex);
-    // nothing for now
+void MyCompletionProc(MIDISysexSendRequest *request) {
+//    free(request->data); // HOW DOES DATA GET FREED? AUTOMATICALLY?
+    free(request);
 };
 - (void)send:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
 	MIDIPacketList myList;
@@ -264,7 +262,7 @@ void MyCompletionProc(void *ptr) {
     myMessage.timeStamp = 0;
     myMessage.length = [arguments count] - 1;
 	
-    NSLog(@"midi type = %@", [arguments objectAtIndex:0]);
+    //NSLog(@"midi type = %@", [arguments objectAtIndex:0]);
     int msgType = [[midiDict objectForKey:[arguments objectAtIndex:0]] intValue];
 
     if(msgType != Sysex) {
@@ -278,8 +276,6 @@ void MyCompletionProc(void *ptr) {
         
         MIDISend(outPort, dst, &myList);
     }else{
-        NSLog(@"%@", [arguments description]);
-        NSLog(@"sending sysex");
         NSMutableString *data = [NSMutableString stringWithString:[arguments objectAtIndex:1]];
         [data deleteCharactersInRange:NSMakeRange(0, 1)];
         [data deleteCharactersInRange:NSMakeRange([data length] - 1, 1)];
@@ -290,12 +286,9 @@ void MyCompletionProc(void *ptr) {
         
         for(int i = 0; i < [charArray count]; i++) {
             int _i = [[charArray objectAtIndex:i] intValue];
-            NSLog(@"int  = %d", _i);
             charData[i] = (Byte)_i;
-            NSLog(@"charData %d = %X", i, charData[i]);
         }
         
-        NSLog(@"before making sysex");
         MIDISysexSendRequest * sysex = malloc(sizeof(MIDISysexSendRequest));
         sysex->destination = dst;
         sysex->data = charData;
@@ -303,7 +296,6 @@ void MyCompletionProc(void *ptr) {
         sysex->complete = false;
         sysex->completionProc = MyCompletionProc;
         sysex->completionRefCon = sysex;
-        NSLog(@"after making sysex %X", charData[8]);        
         MIDISendSysex(sysex);
     }
 }
