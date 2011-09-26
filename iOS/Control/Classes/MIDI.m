@@ -116,7 +116,7 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 
 - (void) connectHardware:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
     CFStringRef pName;
-    NSLog(@"CONNECTING HARDWARE MIDI %@", [arguments objectAtIndex:0]);
+    //NSLog(@"CONNECTING HARDWARE MIDI %@", [arguments objectAtIndex:0]);
     int i, j;
     
     ItemCount num_sources = MIDIGetNumberOfDestinations();
@@ -128,14 +128,36 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
         source = MIDIGetDestination(i);
 		
 		MIDIObjectGetStringProperty(source, kMIDIPropertyName, &pName);
-        NSLog(@"DESTINATION %@", (NSString *)pName);
+        //NSLog(@"DESTINATION %@", (NSString *)pName);
         if([[arguments objectAtIndex:0] isEqualToString:(NSString *)pName]) {
-            NSLog(@"CONNECTING");
+            //NSLog(@"CONNECTING");
+            [self connectSourceWithName:(NSString *)pName];
             dst = source;
             if(shouldSend == NO) {
                 shouldSend = YES;
                 [NSThread detachNewThreadSelector:@selector(pollJavascriptStart:) toTarget:self withObject:nil];
             }
+            break;
+        }
+    }
+}
+
+- (void) connectSourceWithName:(NSString *)sourceName {
+    CFStringRef pName;
+    //NSLog(@"CONNECTING HARDWARE MIDI %@", sourceName);
+    
+    ItemCount num_sources = MIDIGetNumberOfSources();
+
+    for (int i = 0; i < num_sources; i++) {
+        MIDIEndpointRef source;
+        source = MIDIGetSource(i);
+		
+		MIDIObjectGetStringProperty(source, kMIDIPropertyName, &pName);
+        //NSLog(@"Source %@", (NSString *)pName);
+        if([sourceName isEqualToString:(NSString *)pName]) {
+            //NSLog(@"CONNECTING");
+            src = source;
+            MIDIPortConnectSource(inPort, src, NULL);
             break;
         }
     }
