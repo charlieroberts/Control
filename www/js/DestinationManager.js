@@ -1,3 +1,6 @@
+// TODO: Implement refresh for MIDI Hardware destinations. Might be best to do this using MIDI scanning instead of Bonjour, and just abandon
+// Bonjour for MIDI sources altogether.
+
 function DestinationManager() {
 	this.init = function() {
 		this.selectedListItem = 0;
@@ -16,8 +19,9 @@ function DestinationManager() {
     this.refreshList = function() {
         this.clearList();
         this.destinationsSynch = [];
+        this.midiDestinations = [];
         PhoneGap.exec("Bonjour.browse", null);
-        
+        PhoneGap.exec("MIDI.browse", null);
         window.destinationManager.createDestinationList();        
     }
 	
@@ -91,7 +95,6 @@ function DestinationManager() {
 	}
 	
 	this.addMIDIDestination = function(destName) {
-		console.log("adding " + destName);
 		for(var i = 0; i < this.midiDestinations.length; i++) {
 			var destCheck = this.midiDestinations[i];
 			if(destName == destCheck) return;
@@ -100,11 +103,45 @@ function DestinationManager() {
 		this.midiDestinations.push(destName);
 		var list = document.getElementById('destinationList');
 		var item = document.createElement('li');
-		item.innerHTML = destName;
-		item.setAttribute("ontouchend", "destinationManager.highlight(" + list.childNodes.length + "); _protocol='MIDI';destinationManager.selectMIDIDestination('" + destName + ");");		
+        $(item).addClass('destinationListItem');
+        
+        function destinationListItemSelect(itemNumber, name) { 
+            return function(e) {
+                console.log(destName + "highlighting " + itemNumber); 
+                destinationManager.highlight(itemNumber);
+                destinationManager.selectMIDI(name);                
+                _protocol='MIDI';
 
-		list.appendChild(item);
+            }
+        }
+                
+        $(item).bind("touchend", destinationListItemSelect(list.childNodes.length, destName));
+        
+        // destinationManager.selectMIDIIPAddressAndPort('" + address + "'," + port + ");
+
+		//item.innerHTML = destName;
+		//item.setAttribute("ontouchend", "destinationManager.highlight(" + list.childNodes.length + "); _protocol='MIDI';destinationManager.selectMIDIDestination('" + destName + ");");		
+        
+        var innerDiv = document.createElement('div');
+        $(innerDiv).css('display', 'inline');
+        $(innerDiv).append(document.createTextNode(destName));
+
+		var _img = document.createElement('img');
+        $(_img).addClass('destinationImage');
+
+        $(_img).attr('src', 'images/MIDI_Icon.png');
+        
+        $(innerDiv).append(_img);
+        $(item).append(innerDiv);        
+        $(list).append(item);
+    
+        $('#destinationList').listview('refresh');    
 	}
+    
+    this.selectMIDI = function(destName) {
+        console.log("JS CALLING HARDWARE MIDI CONNECT" + destName);
+        PhoneGap.exec('MIDI.connectMIDI', destName);
+    }
     
     /*
     * takes a recently pushed destination (pushed via OSC), highlights it and mimics its selection 

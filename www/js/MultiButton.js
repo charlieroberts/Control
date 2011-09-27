@@ -7,7 +7,7 @@ function MultiButton(ctx, props) {
 	this.heightInPercentage = props.height || props.bounds[3];
 
     this.mode    = (typeof props.mode != "undefined") ? props.mode : "toggle";
-	this.children = new Array();
+	this.children = []  ;
     
 	this.origX = props.x;
 	this.origY = props.y;

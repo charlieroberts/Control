@@ -8,7 +8,7 @@ function Label(ctx, props) { //x, y, width, height, color, value, size, align) {
     if(typeof this.value == "undefined") this.value = "";
 	this.widgetID = -1;
     
-    this.name = props.name;
+    this.name = props.name; 
     this.labelSize = props.labelSize || 12;
 
     this.label = document.createElement("h3");

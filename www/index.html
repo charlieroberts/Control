@@ -55,20 +55,21 @@
     <script type="text/javascript" src="js/ControlCompass.js"></script>
     <script type="text/javascript" src="js/ControlGyro.js"></script>
 
-    <!--<script type="text/javascript" src="js/AudioInput.js"></script>-->
+    <script type="text/javascript" src="js/AudioInput.js"></script>
         
     <script type="text/javascript" charset="utf-8">
         var pages, control, interfaceScroller, destinationScroller, interfaceManager, destinationManager, _protocol;
         function preventBehavior(e) { // prevent scrolling
+            e.preventDefault();
             //console.log("target = " + e.target + " :: " + $(e.target).attr("id"));
-            if($(e.target).is("div")) {
-                e.preventDefault();
-            }else{
-                //console.log("list height = " + $(e.target).parent().height() + " :: wrapper height = " + $("#wrapper").height());
-                if($(e.target).is("li") && $(e.target).parent().height() < $("#wrapper").height()) {
-                    e.preventDefault();
-                }
-            }
+//            if($(e.target).is("div")) {
+//                e.preventDefault();
+//            }else{
+//                //console.log("list height = " + $(e.target).parent().height() + " :: wrapper height = " + $("#wrapper").height());
+//                if($(e.target).is("li") && $(e.target).parent().height() < $("#wrapper").height()) {
+//                    e.preventDefault();
+//                }
+//            }
         };
         
         PhoneGap.addConstructor(function(){
@@ -120,7 +121,7 @@
     </script>
   </head>
   
-  <body id="stage" onload="init();control.init();" style="background-color:#000; -webkit-user-select: none; overflow:hidden;" class="theme"> 
+  <body id="stage" onload="control.init();" style="background-color:#000; -webkit-user-select: none; overflow:hidden;" class="theme"> 
   
 
   <div data-role="page" id="Interfaces" data-theme="a">

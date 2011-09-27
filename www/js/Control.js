@@ -197,7 +197,7 @@ Control.prototype.loadConstants = function(_constants) {
 Control.prototype.makeWidget = function(w) {
 	var _w;
 	if(w.type != "Accelerometer" && w.type != "Compass" && w.type != "Gyro" && w.type != "AudioInput") {
-		_w = eval(w.name + " = new " + w.type + "(interfaceDiv,w);");
+		_w = eval("window." + w.name + " = new " + w.type + "(interfaceDiv,w);");
 //		_w = eval(w.name + " = new " + w.type + "(interfaceDiv,w,this.ctx);");  
 		if(_w.init != null) { 
 			_w.init();

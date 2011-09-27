@@ -40,69 +40,78 @@ public class MIDIManager extends Plugin implements NetworkMidiListener, NMJSyste
 	public String ipAddress;
 	
 	private NetworkMidiOutput midiOut;
+	private NetworkMidiInput midiIn;	
 	private byte[] myNote = new byte[]{(byte)0x90, (byte)0x24, 0};
-	
-	private NetworkMidiSystem nmjs;
+	private boolean showDialog;
 
+	private NetworkMidiSystem nmjs;
+    private  NetworkMidiOutput out;
 	@Override
 	public PluginResult execute(String action, JSONArray data, String callbackId) {
 		PluginResult result = null;
+
 		try {
 		    if (action.equals("start")) {
+		        System.out.println("TESTING MIDI ******************************");
 		        Log.d("MIDIManager", "starting native midimanager code");
-		        try{
-                	nmjs = NetworkMidiSystem.get(this.ctx);
+                try{
+                    nmjs = NetworkMidiSystem.get(this.ctx);
                 } catch (Exception e) {
-                	// This would happen if no network permissions were given. See AndroidManifest.xml
-			        Log.d("MIDIManager", "failed to create network midi system code");
+                 // This would happen if no network permissions were given. See AndroidManifest.xml
+                    Log.d("MIDIManager", "failed to create network midi system code");
 
-                	e.printStackTrace();
-                	return result;
+                    e.printStackTrace();
+                    return result;
                 }
                 
                 
                 NMJConfig.addSystemListener(this);
-                NMJConfig.setIP(0,"192.168.1.102");
-                NMJConfig.setPort(0, 10233);
-                NMJConfig.setIO(0,1);
-                Log.d("MIDIManager", "add system listener");
-                /** can't use "this" in the below event handler **/
                 final NetworkMidiClient nmc = (NetworkMidiClient)this;
-                Log.d("MIDIManager", " make midi client");
                 final NetworkMidiListener ml = this;
-                Log.d("MIDIManager", " midi listener");
-                
-                NMJConfig.connectLocalSession(0,0);
-                
-                // try{ midiOut.close(nmc); } catch (NullPointerException ne){}
-                // 
-                //                 try{
-                //                  midiOut = nmjs.openOutput(8, nmc);
-                //              } catch (Exception e){
-                //                  Log.d("MIDIManager", "unable to open output");
-                //                  e.printStackTrace();
-                //              }
-                //              
-                //                 midiOut.sendMidi(myNote);
 
-
-            	Log.d("MIDIManager", "finished setting up MIDI receiver and now listening");
+		        
+                System.out.println("num channels = " + NMJConfig.getNumChannels());
+                for (int i = 0; i < NMJConfig.getNumChannels(); i++) {
+			         System.out.println("MIDI :: " + NMJConfig.getName(i));
+			    }
+                //NMJConfig.setNumChannels(4);
+                // NMJConfig.setMode(3, NMJConfig.RAW);
+                // NMJConfig.setIP(3,"192.168.1.102");
+                // NMJConfig.setPort(3, 10233);
+                // NMJConfig.connectLocalSession(3,0);
     		} else if (action.equals("send") && hasAddress) {
+    		    System.out.println("SENDING MIDI");
+    		                    final NetworkMidiListener ml = this;
+
+                final NetworkMidiClient nmc = (NetworkMidiClient)this;
+                try{
+	        		midiIn = nmjs.openInput(3, nmc);
+	        		midiIn.addMidiListener(ml);
+		        } catch (Exception e){
+	        		e.printStackTrace();
+		        }
+		        
+		        try{
+	        		out = nmjs.openOutput(4, nmc);
+	        	} catch (Exception e){
+	        		e.printStackTrace();
+		        }
+			    out.sendMidi(new byte[]{(byte)0x80, 7, 0});
     			//Log.d("OSCManager", "building message");
-    			String address = "";
-    			ArrayList<Object> values = new ArrayList<Object>();
-			
-    			address = data.getString(0);
-				for(int i = 2; i < data.length(); i++) {
-				    Object obj = data.get(i);
-				    if(obj instanceof java.lang.Double) { // doubles are returned from JSON instead of floatsbut not handled by the oscmsg class
-				        //System.out.println("got a double");
-				        values.add( new Float( ( (Double) obj ).doubleValue() ) );
-				    }else{
-    					values.add( obj);
-    				}
-					//Log.d("OSCManager", ""+data.get(i).getClass().toString());
-				}
+    			// String address = "";
+    			//               ArrayList<Object> values = new ArrayList<Object>();
+    			//           
+    			//               address = data.getString(0);
+    			//               for(int i = 2; i < data.length(); i++) {
+    			//                   Object obj = data.get(i);
+    			//                   if(obj instanceof java.lang.Double) { // doubles are returned from JSON instead of floatsbut not handled by the oscmsg class
+    			//                       //System.out.println("got a double");
+    			//                       values.add( new Float( ( (Double) obj ).doubleValue() ) );
+    			//                   }else{
+    			//                       values.add( obj);
+    			//                   }
+    			//                   //Log.d("OSCManager", ""+data.get(i).getClass().toString());
+    			//               }
     		}else{
     			result = new PluginResult(Status.INVALID_ACTION);
     		}

@@ -3,26 +3,28 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>js/Widget.js</string>
+	<string>js/Button.js</string>
 	<key>documents</key>
 	<array>
 		<dict>
 			<key>filename</key>
 			<string>js/Bonjour.js</string>
 			<key>lastUsed</key>
-			<date>2011-09-17T20:40:37Z</date>
+			<date>2011-09-17T20:54:21Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>../../src/com/charlieroberts/Control/Bonjour.java</string>
 			<key>lastUsed</key>
-			<date>2011-09-17T20:41:47Z</date>
+			<date>2011-09-17T22:05:56Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>js/Button.js</string>
 			<key>lastUsed</key>
-			<date>2011-09-17T06:13:54Z</date>
+			<date>2011-09-18T02:19:40Z</date>
+			<key>selected</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -52,7 +54,7 @@
 			<key>filename</key>
 			<string>js/DestinationManager.js</string>
 			<key>lastUsed</key>
-			<date>2011-09-17T20:20:51Z</date>
+			<date>2011-09-17T20:58:05Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -76,7 +78,7 @@
 			<key>filename</key>
 			<string>index.html</string>
 			<key>lastUsed</key>
-			<date>2011-09-09T21:09:39Z</date>
+			<date>2011-09-17T22:28:03Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -106,7 +108,7 @@
 			<key>filename</key>
 			<string>js/OSCManager.js</string>
 			<key>lastUsed</key>
-			<date>2011-09-17T06:02:33Z</date>
+			<date>2011-09-18T02:17:03Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -118,13 +120,13 @@
 			<key>filename</key>
 			<string>../../src/com/charlieroberts/Control/MIDIManager.java</string>
 			<key>lastUsed</key>
-			<date>2011-09-17T20:40:35Z</date>
+			<date>2011-09-18T02:13:44Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>js/MIDIManager.js</string>
 			<key>lastUsed</key>
-			<date>2011-09-17T05:16:51Z</date>
+			<date>2011-09-18T02:19:40Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -148,7 +150,7 @@
 			<key>filename</key>
 			<string>../../src/com/charlieroberts/Control/OSCManager.java</string>
 			<key>lastUsed</key>
-			<date>2011-09-09T20:56:06Z</date>
+			<date>2011-09-18T02:16:55Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
@@ -172,9 +174,7 @@
 			<key>filename</key>
 			<string>js/Widget.js</string>
 			<key>lastUsed</key>
-			<date>2011-09-17T20:41:47Z</date>
-			<key>selected</key>
-			<true/>
+			<date>2011-09-18T02:14:17Z</date>
 		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
@@ -186,14 +186,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>18</integer>
+				<integer>26</integer>
 				<key>line</key>
-				<integer>104</integer>
+				<integer>89</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>33</integer>
+			<integer>16</integer>
 		</dict>
 		<key>../../src/com/charlieroberts/Control/Control.java</key>
 		<dict>
@@ -228,30 +228,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>60</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>83</integer>
+				<integer>84</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>24</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>16</integer>
-				<key>line</key>
-				<integer>74</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>60</integer>
-				<key>line</key>
-				<integer>83</integer>
-			</dict>
+			<integer>51</integer>
 		</dict>
 		<key>../../src/com/charlieroberts/Control/OSCManager.java</key>
 		<dict>
@@ -323,7 +307,7 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>51</integer>
 		</dict>
 		<key>interfaces/gyro.js</key>
 		<dict>
@@ -344,9 +328,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>47</integer>
+				<integer>1</integer>
 				<key>line</key>
-				<integer>11</integer>
+				<integer>6</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -358,14 +342,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>16</integer>
+				<integer>46</integer>
 				<key>line</key>
-				<integer>287</integer>
+				<integer>294</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>261</integer>
 		</dict>
 		<key>js/Control.js</key>
 		<dict>
@@ -423,7 +407,7 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>78</integer>
+			<integer>39</integer>
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
@@ -500,14 +484,30 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>33</integer>
 				<key>line</key>
-				<integer>4</integer>
+				<integer>65</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>65</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>66</integer>
+			</dict>
 		</dict>
 		<key>js/MultiButton.js</key>
 		<dict>
@@ -556,9 +556,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>14</integer>
 				<key>line</key>
-				<integer>5</integer>
+				<integer>6</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
@@ -569,16 +569,16 @@
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
-				<integer>2</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>7</integer>
+				<integer>6</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>5</integer>
+				<integer>7</integer>
 			</dict>
 		</dict>
 		<key>js/PreferencesManager.js</key>
@@ -614,14 +614,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>1</integer>
+				<integer>80</integer>
 				<key>line</key>
-				<integer>175</integer>
+				<integer>28</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>109</integer>
 		</dict>
 		<key>js/phonegap.0.9.4.js</key>
 		<dict>
@@ -672,6 +672,6 @@
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{243, 0}, {1433, 1028}}</string>
+	<string>{{462, 400}, {777, 1018}}</string>
 </dict>
 </plist>

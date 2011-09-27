@@ -2,12 +2,11 @@ gNOT_ACTIVE = -10000;
 // TODO: touches don't adjust position when range is set via osc
 function MultiTouchXY(ctx, props) {
     this.make(ctx, props);
-    
 	this.xvalue = this.min;
 	this.yvalue = this.min;
 	this.half = (this.width / 8) / 2;
 	this.maxTouches = props.maxTouches > 0 ? props.maxTouches : 1;
-	this.children = new Array();
+	this.children = [];
 	this.valuesX = [];
 	this.valuesY = [];
 	this.isMomentary = (typeof props.isMomentary == "undefined") ? true : props.isMomentary;

@@ -1,23 +1,18 @@
 function AudioInput(props) {
-    this.props = props;
+    this.make("sensor", props);
     
     this.mode = (typeof props.mode != "undefined") ? props.mode : "max";
-    this.onvaluechange = (typeof props.onvaluechange != "undefined") ? props.onvaluechange : null;
-    this.name = props.name;
-    
-	this.isLocal = (typeof props.isLocal != "undefined") ? props.isLocal : false;
-    
-	this.midiType    = (typeof props.midType != "undefined") ? props.midiType: "cc";
-	this.channel = (typeof props.channel != "undefined") ? props.channel : 1;
-	this.midiNumber = (typeof props.midiNumber  != "undefined") ? props.midiNumber  : 0;
-	
-	this.address = (typeof props.address != "undefined") ? props.address : "/" + this.name;
-    
     this.volume = 0;
     
     this.hardwareMin = 0;
-    this.hardwareMax = 1;
-    this.hardwareRange = 1;
+
+    if(this.mode != "pitch") {
+        this.hardwareMax = 1;
+        this.hardwareRange = 1;
+    }else{
+        this.hardwareMax = 127;
+        this.hardwareRange = 127;
+    }
     
     if(_protocol == "MIDI") {
 		this.max = (typeof props.midiMax != "undefined") ? props.midiMax : 127;
@@ -28,12 +23,15 @@ function AudioInput(props) {
 	}
     
     this.userDefinedRange = this.max - this.min;
-    
+    this.pitch = 0;
+
 	return this;
 }
 
+AudioInput.prototype = new Widget();
+
 AudioInput.prototype.start = function() {	
-    PhoneGap.exec("AudioInput.start", this.mode);
+    PhoneGap.exec("AudioInput.start", this.mode, this.shouldOutputPitch);
 }	
 
 AudioInput.prototype.stop = function() {	
@@ -43,6 +41,7 @@ AudioInput.prototype.stop = function() {
 AudioInput.prototype._onVolumeUpdate = function(newVolume) {
     this.volume = this.min + (((0 - this.hardwareMin) + newVolume)  / this.hardwareRange ) * this.userDefinedRange;
     
+    //console.log("volume = " + this.volume + " :: newVolume = " + newVolume);
     if(this.onvaluechange != null) {
         eval(this.onvaluechange);
     }
@@ -53,6 +52,24 @@ AudioInput.prototype._onVolumeUpdate = function(newVolume) {
         control.valuesString += valueString;
     }else if (!this.isLocal && _protocol == "MIDI") {
         var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.volume);			
+        control.valuesString += valueString;
+    }
+}
+
+AudioInput.prototype._onPitchUpdate = function(newPitch) {
+    this.pitch = Math.floor(69 + 12 * Math.log(newPitch / 440) / Math.log(2));
+    console.log("PITCH NUMBER = " + this.pitch);
+
+    if(this.onvaluechange != null) {
+        eval(this.onvaluechange);
+    }
+    
+    if(!this.isLocal && _protocol == "OSC") {
+        var valueString = "|" + this.address;
+        valueString += ":" + this.pitch;
+        control.valuesString += valueString;
+    }else if (!this.isLocal && _protocol == "MIDI") {
+        var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.pitch);			
         control.valuesString += valueString;
     }
 }

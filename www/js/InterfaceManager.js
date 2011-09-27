@@ -226,6 +226,7 @@ function InterfaceManager() {
 	}
     
     this.refreshInterface = function() {
+
         interfaceManager.myRequest = new XMLHttpRequest();    	
         interfaceManager.myRequest.onreadystatechange = function() {
             if(interfaceManager.myRequest.readyState == 4) {              
@@ -240,6 +241,7 @@ function InterfaceManager() {
     }
     
 	this.saveInterface = function(interfaceJSON, shouldReloadList, ipAddress) {
+        console.log("SAVING");
         if(typeof ipAddress == "undefined") ipAddress = "";
 		var loadedInterfaceName = null;
         //console.log(interfaceJSON);
@@ -255,6 +257,7 @@ function InterfaceManager() {
                 )
             //);
         }
+        console.log("END SAVING");
 	}
 	
 	this.pushInterfaceWithDestination = function(interfaceJSON, nameOfSender, newDestination) {
@@ -294,6 +297,7 @@ function InterfaceManager() {
 	}
     
     this.runInterface = function(json) {
+        console.log("running interface");
 		control.unloadWidgets();
         constants = null;
         pages = null;

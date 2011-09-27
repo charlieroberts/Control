@@ -51,8 +51,6 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 	[pool drain];
 }
 
-
-
 @implementation MIDI
 @synthesize midiDict;
 - (PhoneGapCommand*) initWithWebView:(UIWebView*)theWebView {	
@@ -71,26 +69,48 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 	return self;
 }
 
--(void)rescanForSources {
-    MIDIEndpointRef *sources;
-	CFStringRef pName;
+- (void) start:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
+	session = [MIDINetworkSession defaultSession];
+    NSLog(@"SESSION NAME = %@", session.localName);
+	session.enabled = YES;
+	session.connectionPolicy = MIDINetworkConnectionPolicy_Anyone; // MIDINetworkConnectionPolicy_NoOne; // 
+    NSLog(@"session.contacts = %@", session.contacts);
 
-    int i, j;
+	//NSLog([arguments description]);
+	[self browse:nil withDict:nil];
+	
+	OSStatus err;
+	
+	if(client != nil) { MIDIClientDispose(client); }
+	
+	err = MIDIClientCreate(CFSTR("TEST"), notifyProc, self, &client);
+	if(err != noErr) { NSLog(@"CLIENT ERROR"); }
+	
+	if(inPort != nil) { MIDIPortDispose(inPort); }
+	err = MIDIInputPortCreate(client, CFSTR("Input Port"), readProc, self, &inPort);
+	if(err != noErr) { NSLog(@"INPUT CREATE ERROR"); }
+	
+	if(outPort != nil) { MIDIPortDispose(outPort); }	
+	err = MIDIOutputPortCreate(client, CFSTR("Output Port"), &outPort);
+	if(err != noErr) { NSLog(@"OUTPUT CREATE ERROR"); }
+	
+	//BOOL connectTest = [session addConnection:connection];
+}
+
+- (void) browse:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
+    CFStringRef pName;
+
+    ItemCount num_dest = MIDIGetNumberOfDestinations();
     
-    ItemCount num_sources = MIDIGetNumberOfSources();
-	//NSLog(@"number of sources found = %d", num_sources);
-    //sources = (MIDIEndpointRef *)malloc(sizeof(MIDIEndpointRef) * num_sources);
-    j = 0;
-    for (i = 0; i < num_sources; i++) {
-        MIDIEndpointRef source;
-        source = MIDIGetSource(i);
+    for (int i = 0; i < num_dest; i++) {
+        MIDIEndpointRef dest = MIDIGetDestination(i);
 		
-		MIDIObjectGetStringProperty(source, kMIDIPropertyName, &pName);
-		NSLog(@"MIDI Object %@", (NSString *)pName);
+		MIDIObjectGetStringProperty(dest, kMIDIPropertyName, &pName);
+        NSString *n = (NSString *)pName;
+        if([n isEqualToString:@"Session 1"]) continue;
 		NSString *ipString = [NSString stringWithFormat: @"destinationManager.addMIDIDestination(\"%@\");", (NSString *)pName];
-		NSLog(ipString);
-		[webView stringByEvaluatingJavaScriptFromString:ipString];
-	//	sources[j++] = source;
+		NSLog(@"%@", ipString);
+        [webView stringByEvaluatingJavaScriptFromString:ipString];
     }
 }
 
@@ -114,21 +134,19 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 	}
 }
 
-- (void) connectHardware:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
+- (void) connectMIDI:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
     CFStringRef pName;
     //NSLog(@"CONNECTING HARDWARE MIDI %@", [arguments objectAtIndex:0]);
-    int i, j;
     
     ItemCount num_sources = MIDIGetNumberOfDestinations();
-	//NSLog(@"number of sources found = %d", num_sources);
+	NSLog(@"number of sources found = %d", num_sources);
     //sources = (MIDIEndpointRef *)malloc(sizeof(MIDIEndpointRef) * num_sources);
-    j = 0;
-    for (i = 0; i < num_sources; i++) {
+    for (int i = 0; i < num_sources; i++) {
         MIDIEndpointRef source;
         source = MIDIGetDestination(i);
 		
 		MIDIObjectGetStringProperty(source, kMIDIPropertyName, &pName);
-        //NSLog(@"DESTINATION %@", (NSString *)pName);
+        NSLog(@"DESTINATION %@", (NSString *)pName);
         if([[arguments objectAtIndex:0] isEqualToString:(NSString *)pName]) {
             //NSLog(@"CONNECTING");
             [self connectSourceWithName:(NSString *)pName];
@@ -163,32 +181,6 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
     }
 }
 
-- (void) start:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
-	session = [MIDINetworkSession defaultSession];
-	session.enabled = YES;
-	session.connectionPolicy = MIDINetworkConnectionPolicy_Anyone; // MIDINetworkConnectionPolicy_NoOne; // 
-	
-	//NSLog([arguments description]);
-	[self rescanForSources];
-	
-	OSStatus err;
-	
-	if(client != nil) { MIDIClientDispose(client); }
-	
-	err = MIDIClientCreate(CFSTR("TEST"), notifyProc, self, &client);
-	if(err != noErr) { NSLog(@"CLIENT ERROR"); }
-	
-	if(inPort != nil) { MIDIPortDispose(inPort); }
-	err = MIDIInputPortCreate(client, CFSTR("Input Port"), readProc, self, &inPort);
-	if(err != noErr) { NSLog(@"INPUT CREATE ERROR"); }
-	
-	if(outPort != nil) { MIDIPortDispose(outPort); }	
-	err = MIDIOutputPortCreate(client, CFSTR("Output Port"), &outPort);
-	if(err != noErr) { NSLog(@"OUTPUT CREATE ERROR"); }
-	
-	//BOOL connectTest = [session addConnection:connection];
-}
-
 - (void) pollJavascriptStart:(id)obj {
 	//NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	while(1) {
@@ -200,58 +192,7 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 }
 
 // form is objectName:paramNumber,val1,val2,val3|objectName:paramNumber,val1,val2,val3|objectName:paramNumber,val1,val2,val3
-// form should be |type,channel,val1, ?val2|
-- (void) _pollJavascript:(id)obj {
-	//NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSString *cmdString = [webView stringByEvaluatingJavaScriptFromString:@"control.getValues()"];
-	
-	if(![cmdString isEqualToString:@""] && cmdString != nil) {
-		//NSLog(@"cmdString = %@", cmdString);
-		[webView stringByEvaluatingJavaScriptFromString:@"control.clearValuesString()"];
-		NSMutableArray *objects = [[NSMutableArray alloc] initWithArray:[cmdString componentsSeparatedByString:@"|"]];
-		[objects removeObjectAtIndex:0];
-		int objectCount = [objects count];
-		
-		MIDIPacketList myList;
-		myList.numPackets = 1; //objectCount;		
-		for(int i = 0; i < 1; i++) {
-			NSString *msg = [objects objectAtIndex:i];
-			NSLog(msg);
-			NSArray *bytes = [msg componentsSeparatedByString:@","];
-			if([bytes count] < 3) continue;
-		 
-            NSString *msgType = [bytes objectAtIndex:0];
-            
-            MIDIPacket myMessage; 
-            myMessage.timeStamp = 0;
-            myMessage.length = [bytes count] - 1; // -1 becuase first data byte is msgType + channel
-            
-//            if([msgType isEqualToString:@"noteon"] && [[bytes objectAtIndex:3] intValue] == 0) {
-//                msgType = @"noteoff";
-//            }
-            
-            int firstByte = [[midiDict objectForKey:msgType] intValue];
-            firstByte += [[bytes objectAtIndex:1] intValue];
-            
-            myMessage.data[0] = firstByte;
-            myMessage.data[1] = [[bytes objectAtIndex:2] intValue];
-
-            if([bytes count] > 3)
-                myMessage.data[2] = [[bytes objectAtIndex:3] intValue];
-
-            myList.packet[i] = myMessage;
-            
-
-			//MIDISend(outPort, dst, &myList);
-		}
-		
-		//NSLog(@"before sending");
-		MIDISend(outPort, dst, &myList);
-		//NSLog(@"after sending");	*/	
-	}
-	//[pool drain];
-}
-
+// form should be |type,channel,val1,?val2|
 - (void) pollJavascript:(id)obj {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSString *cmdString = [webView stringByEvaluatingJavaScriptFromString:@"control.getValues()"];
@@ -348,19 +289,6 @@ void MyCompletionProc(MIDISysexSendRequest *request) {
         MIDISendSysex(sysex);
     }
 }
-
-/*
- struct             
- {
- MIDIEndpointRef		destination;
- const Byte *		data;
- UInt32				bytesToSend;
- Boolean				complete;
- Byte				reserved[3];
- MIDICompletionProc	completionProc;
- void *				completionRefCon;
- };
- */
 
 - (void) dealloc {
 	if(inPort != nil) { MIDIPortDispose(inPort); }
