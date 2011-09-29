@@ -26,12 +26,19 @@
 	float sampleRate;
 	float frequency;
     
-    BOOL outputPitch;
+    Float32 audioBufferSize;
     
+    BOOL outputPitch;
+    BOOL outputVolume;
+    BOOL initialized;
+    BOOL fftInitialized;
+    
+    int pitchMode;
+    int volumeMode;
 }
 
-@property int mode;
-@property BOOL outputPitch;
+@property int pitchMode, volumeMode;
+@property BOOL outputPitch, outputVolume;
 
 - (void)start:(NSMutableArray *)arguments withDict:(NSMutableDictionary *) options;
 - (void)stop:(NSMutableArray *)arguments withDict:(NSMutableDictionary *) options;

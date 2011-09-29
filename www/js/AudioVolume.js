@@ -1,4 +1,4 @@
-function AudioInput(props) {
+function AudioVolume(props) {
     this.make("sensor", props);
     
     this.mode = (typeof props.mode != "undefined") ? props.mode : "max";
@@ -22,18 +22,17 @@ function AudioInput(props) {
 	return this;
 }
 
-AudioInput.prototype = new Widget();
+AudioVolume.prototype = new Widget();
 
-
-AudioInput.prototype.start = function() {	
-    PhoneGap.exec("AudioInput.start", this.mode);
+AudioVolume.prototype.start = function() {
+    PhoneGap.exec("AudioInput.start", "volume", this.mode);
 }	
 
-AudioInput.prototype.stop = function() {	
-    PhoneGap.exec("AudioInput.stop");
+AudioVolume.prototype.stop = function() {	
+    PhoneGap.exec("AudioInput.stop", "volume");
 }
 
-AudioInput.prototype._onVolumeUpdate = function(newVolume) {    
+AudioVolume.prototype._onVolumeUpdate = function(newVolume) {
     this.volume = this.min + (((0 - this.hardwareMin) + newVolume)  / this.hardwareRange ) * this.userDefinedRange;
     
     //console.log("volume = " + this.volume + " :: newVolume = " + newVolume);
