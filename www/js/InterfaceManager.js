@@ -297,7 +297,6 @@ function InterfaceManager() {
 	}
     
     this.runInterface = function(json) {
-        console.log("running interface");
 		control.unloadWidgets();
         constants = null;
         pages = null;
@@ -326,6 +325,7 @@ function InterfaceManager() {
         }
         control.loadWidgets();
         if(this.currentTab != document.getElementById("selectedInterface")) {
+            control.shouldPrevent = true;
             control.changeTab(document.getElementById("selectedInterface"));
             $.mobile.changePage('#SelectedInterfacePage');
 		}

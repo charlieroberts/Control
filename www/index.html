@@ -23,7 +23,7 @@
     <script src="js/jquery-1.5.js"></script>
     <script src="js/jquery.mobile-1.0a3.js"></script>
     <script src="js/jquery.easing.1.3.js"></script>
-    <script src="js/touch-scroll.js"></script>
+    <!--<script src="js/touch-scroll.js"></script>-->
     
     <!-- Lawnchair. used to persistently store json files. http://brianleroux.github.com/lawnchair/ -->
     <script type="text/javascript" src="lawnchair/src/Lawnchair.js"></script>  
@@ -61,16 +61,18 @@
     <script type="text/javascript" charset="utf-8">
         var pages, control, interfaceScroller, destinationScroller, interfaceManager, destinationManager, _protocol;
         function preventBehavior(e) { // prevent scrolling
-            e.preventDefault();
-            //console.log("target = " + e.target + " :: " + $(e.target).attr("id"));
-//            if($(e.target).is("div")) {
-//                e.preventDefault();
-//            }else{
-//                //console.log("list height = " + $(e.target).parent().height() + " :: wrapper height = " + $("#wrapper").height());
-//                if($(e.target).is("li") && $(e.target).parent().height() < $("#wrapper").height()) {
-//                    e.preventDefault();
-//                }
-//            }
+            //console.log(event.target.nodeName);
+            //console.log("preventing " + control.shouldPrevent);
+            if(control.shouldPrevent) { e.preventDefault(); return; }
+            //e.preventDefault();
+            if($(e.target).is("div")) {
+                e.preventDefault();
+            }else{
+                //console.log("list height = " + $(e.target).parent().height() + " :: wrapper height = " + $("#wrapper").height());
+                if($(e.target).is("li") && $(e.target).parent().height() < $("#wrapper").height()) {
+                    e.preventDefault();
+                }
+            }
         };
         
         PhoneGap.addConstructor(function(){
@@ -79,12 +81,17 @@
         
         function init() {
             //document.addEventListener("touchmove", preventBehavior, false); // prevents webkit from scrolling DNR
-            $("body").bind('touchmove', preventBehavior);
+            $("body").bind('touchmove touchstart touchend', preventBehavior);
+            $("html").bind('touchmove touchstart touchend', preventBehavior); // why the hell is this getting events???? must be bug in webkit      
+            $("#selectedInterface").bind('touchmove touchstart touchend', preventBehavior);            
+            $("#SelectedInterfacePage").bind('touchmove touchstart touchend', preventBehavior);
+
             //$("body").unbind('touchmove', preventBehavior);            
             
             //$("#Interfaces").bind('touchmove', preventBehavior, true);
             control = new Control();
-            
+            control.shouldPrevent = false;
+
             interfaceManager = new InterfaceManager();
             interfaceManager.init();
             interfaceManager.loadScripts();
@@ -115,7 +122,7 @@
         }
         
         function wrapMe() {
-            console.log("device height = " + device.height + " header height = " + $('#header').height() + " footer height = " + $('#ftr').height());
+            //console.log("device height = " + device.height + " header height = " + $('#header').height() + " footer height = " + $('#ftr').height());
             $('#wrapper').height(screen.height - $('#header').height() - $('#ftr').height());
         }
 
@@ -211,7 +218,7 @@
       <div data-role="navbar" class="ui-navbar ui-navbar-noicons" role="navigation">
           <ul class="ui-navbar-noicons ui-grid-c"  style="border-top-width:0;">
               <li class="ui-block-a" style=" border-top-width:0;">
-                  <a href="#" ontouchend="$.mobile.changePage('#Interfaces');" class="ui-btn ui-btn-up-a" style=" border-top-width:0;" data-theme="a">
+                  <a href="#" ontouchend="$.mobile.changePage('#Interfaces'); control.shouldPrevent = false;" class="ui-btn ui-btn-up-a" style=" border-top-width:0;" data-theme="a">
                       <span class="ui-btn-inner"><span class="ui-btn-text" style="font-size:1em">Interfaces</span></span>
                   </a>
               </li>
