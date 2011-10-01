@@ -256,6 +256,7 @@ void MyCompletionProc(MIDISysexSendRequest *request) {
     int msgType = [[midiDict objectForKey:[arguments objectAtIndex:0]] intValue];
 
     if(msgType != Sysex) {
+        //NSLog(@"msgType = %d, value = %d", msgType, [[arguments objectAtIndex:1] intValue] - 1);
         myMessage.data[0] = msgType + [[arguments objectAtIndex:1] intValue] - 1;
         myMessage.data[1] = [[arguments objectAtIndex:2] intValue];
         

@@ -112,7 +112,7 @@ static OSStatus inRenderProc (void *inRefCon,
             float freqBinSize = 22050.f / (inNumberFrames / 2);
             
             freq = maxBin * freqBinSize;
-            printf("freq = %f\n", maxBin * freqBinSize);
+            //printf("freq = %f\n", maxBin * freqBinSize);
         }
         
         jsCallBack = [[NSMutableString alloc] initWithFormat:@"audioPitch._onPitchUpdate(%f);", freq];
@@ -209,6 +209,9 @@ static OSStatus inRenderProc (void *inRefCon,
     return self;
 }
 
+- (void)restart:(NSMutableArray *)arguments withDict:(NSMutableDictionary *) options {
+    AudioOutputUnitStart(inRemoteIOUnit);
+}
 
 - (void)start:(NSMutableArray *)arguments withDict:(NSMutableDictionary *) options {
     if([[arguments objectAtIndex:0] isEqualToString:@"volume"]) {
@@ -223,7 +226,7 @@ static OSStatus inRenderProc (void *inRefCon,
         if([[arguments objectAtIndex:1] isEqualToString:@"zero"]){
             pitchMode = PITCH_ZERO;
         } else {
-            //NSLog(@"setting mode to HPS");
+            NSLog(@"setting mode to HPS");
             pitchMode = PITCH_HPS;
         }
 
@@ -295,7 +298,7 @@ static OSStatus inRenderProc (void *inRefCon,
     if(!initialized) {
         AudioUnitInitialize(inRemoteIOUnit);
         AudioOutputUnitStart(inRemoteIOUnit);
-        initialized = YES;
+        //initialized = YES;
     }
 }
 

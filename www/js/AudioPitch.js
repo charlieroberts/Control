@@ -6,6 +6,7 @@ function AudioPitch(props) {
     this.number = 21;
     this.noteName = "A0";
     this.freq = 0;
+    this.freqs = [];
     
     this.hardwareMin = 0;
     this.hardwareMax = 127;
@@ -18,7 +19,7 @@ function AudioPitch(props) {
 		this.max = (typeof props.max != "undefined") ? props.max : this.hardwareMax;
 		this.min = (typeof props.min != "undefined") ? props.min : this.hardwareMin;			
 	}
-    
+    this.maxFreqs = 4;
     this.userDefinedRange = this.max - this.min;
     
     this.pitch = 0;
@@ -32,18 +33,35 @@ AudioPitch.prototype = new Widget();
 
 AudioPitch.prototype.start = function() {	
     PhoneGap.exec("AudioInput.start", "pitch", this.mode);
-}	
+}
+
+AudioPitch.prototype.restart = function() {	
+    PhoneGap.exec("AudioInput.restart");
+}
 
 AudioPitch.prototype.stop = function() {	
     PhoneGap.exec("AudioInput.stop", "pitch");
 }
 
 AudioPitch.prototype._onPitchUpdate = function(newFreq) {
-    this.freq = newFreq;
-    this.pitch = Math.floor(69 + 12 * Math.log(newFreq / 440) / Math.log(2));
+    if(newFreq > 20) 
+        this.freqs.unshift(newFreq);
+    
+    // basic averaging
+    var freqTotal = 0;
+    for(var i = 0; i < this.freqs.length; i++) {
+        freqTotal += this.freqs[i];
+    }
+    this.freq = freqTotal / this.freqs.length;
+    while(this.freqs.length >= this.maxFreqs) { this.freqs.pop(); }
+    
+    this.pitch = Math.round(69 + 12 * Math.log(newFreq / 440) / Math.log(2));
     this.octave = Math.round(this.pitch / 12) - 2;
-    this.number = Math.round(this.pitch % 12) + 1;
-    this.noteName = this.noteNames[this.number] + this.octave;
+    this.number = Math.round(this.pitch % 12);
+    if(this.octave < 128) 
+        this.noteName = this.noteNames[this.number] + this.octave;
+    else
+        this.noteName = "-";
     
 //    console.log("PITCH NAME = " + this.pitch);
     
