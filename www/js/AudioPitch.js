@@ -58,7 +58,7 @@ AudioPitch.prototype._onPitchUpdate = function(newFreq) {
     this.pitch = Math.round(69 + 12 * Math.log(newFreq / 440) / Math.log(2));
     this.octave = Math.round(this.pitch / 12) - 2;
     this.number = Math.round(this.pitch % 12);
-    if(this.octave < 128) 
+    if(this.octave < 12 && this.octave > 0) 
         this.noteName = this.noteNames[this.number] + this.octave;
     else
         this.noteName = "-";

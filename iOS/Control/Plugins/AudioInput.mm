@@ -101,17 +101,17 @@ static OSStatus inRenderProc (void *inRefCon,
             for(int i = 0, j = 0; i < inNumberFrames; i += 3, j++) {
                 fftDiv3[j] = allocated_magnitude_buffer[i];
             }
-            float maxValue = -10000; int maxBin = 0;
+            float maxValue = -10000; int maxBinNumber = 0;
             for(int i = 0; i < inNumberFrames / 3; i++) {
                 if((allocated_magnitude_buffer[i] + fftDiv2[i] + fftDiv3[i]) > maxValue) {
                     maxValue = allocated_magnitude_buffer[i] + fftDiv2[i] + fftDiv3[i];
-                    maxBin = i;
+                    maxBinNumber = i;
                 }
             }
             
             float freqBinSize = 22050.f / (inNumberFrames / 2);
             
-            freq = maxBin * freqBinSize;
+            freq = maxBinNumber * freqBinSize;
             //printf("freq = %f\n", maxBin * freqBinSize);
         }
         

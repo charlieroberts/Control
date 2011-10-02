@@ -13,11 +13,12 @@ function InterfaceManager() {
                                   "djcut.js",
                                   "life.js",
 								  "monome.js",
-								  "multibutton.js",
+								  //"multibutton.js",
 								  "multiXY.js",
 								  "sequencer.js",
 								  "gyro.js",
                                   "spacetime.js",
+                                  "pitchTracker.js",
                                   ];
         window.shouldReadFiles = true;
         window.isLoadingInterfaces = false; // stops database calls from being executed twice, for some reason "get" returns two values.
