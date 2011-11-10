@@ -196,27 +196,28 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 - (void) pollJavascript:(id)obj {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSString *cmdString = [webView stringByEvaluatingJavaScriptFromString:@"control.getValues()"];
-	
-	if(![cmdString isEqualToString:@""] && cmdString != nil) {
-		//NSLog(@"cmdString = %@", cmdString);
-	
+    
+	if(![cmdString isEqualToString:@""] && cmdString != nil) {	
 		[webView stringByEvaluatingJavaScriptFromString:@"control.clearValuesString()"];
 		NSMutableArray *objects = [[NSMutableArray alloc] initWithArray:[cmdString componentsSeparatedByString:@"|"]];
-		
+
 		[objects removeObjectAtIndex:0];
 		int objectCount = [objects count];
-
+        
+        MIDIPacketList  myList;
+        myList.numPackets = objectCount;
+        MIDIPacket *packet = &myList.packet[0];
+        
 		for(int i = 0; i < objectCount; i++) {
-			MIDIPacketList myList;
-			myList.numPackets = 1;
+            if(i != 0) packet = MIDIPacketNext(packet);
+
 			NSString *msg = [objects objectAtIndex:i];
 			
 			NSArray *bytes = [msg componentsSeparatedByString:@","];
 			if([bytes count] < 3) continue;
             
-			MIDIPacket myMessage; 
-			myMessage.timeStamp = 0;
-			myMessage.length = [bytes count] - 1; // -1 becuase first data byte is msgType + channel
+			packet->timeStamp = 0;
+			packet->length = [bytes count] - 1; // -1 becuase first data byte is msgType + channel
 			
 			NSString *msgType = [bytes objectAtIndex:0];
             if([msgType isEqualToString:@"noteon"] && [[bytes objectAtIndex:3] intValue] == 0) {
@@ -226,16 +227,15 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 			int firstByte = [[midiDict objectForKey:msgType] intValue];
 			firstByte += [[bytes objectAtIndex:1] intValue];
 			
-			myMessage.data[0] = firstByte;
-			myMessage.data[1] = [[bytes objectAtIndex:2] intValue];
+			packet->data[0] = firstByte;
+			packet->data[1] = [[bytes objectAtIndex:2] intValue];
 
 			if([bytes count] > 3)
-				myMessage.data[2] = [[bytes objectAtIndex:3] intValue];
-
-			myList.packet[0] = myMessage;
-
-			MIDISend(outPort, dst, &myList);
+				packet->data[2] = [[bytes objectAtIndex:3] intValue];
 		}
+        
+        MIDISend(outPort, dst, &myList);
+
 	}
 	[pool drain];
 }
