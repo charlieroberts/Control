@@ -37,7 +37,7 @@ function Knob(ctx,props) {
 	this.canvas = document.createElement('canvas');
 	$(this.canvas).addClass('widget knob');
 
-	if(control.orientation == 0 || control.orientation == 180)
+	if(control.orientation == 0 || control.orientation == 180)  
 		this.height = this.width;
 	else
 		this.width = this.height;

@@ -141,6 +141,7 @@ MultiTouchXY.prototype.event = function(event) {
                 for(var t = 0; t < this.children.length; t++) {
                     _t = this.children[t];
                     if(touch.identifier == _t.id) {
+                        this.endingTouchID = touch.activeNumber;
                         eval(this.ontouchend);
                         if(this.isMomentary) {
                             this.removeTouch(_t);

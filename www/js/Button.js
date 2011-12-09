@@ -83,7 +83,6 @@ Button.prototype.draw = function() {
     }
     
 //        if (this.mode != "contact") {
-//            this.ctx.fillStyle = (this.isLit) ? this.fillColor: this.backgroundColor;
 //            this.ctx.fillRect(this.x, this.y, this.width, this.height);
 //        } else {
 //            
@@ -146,140 +145,7 @@ Button.prototype.drawLabel = function() {
  * The event handler for the widget
  * @param {Object} event The event object containing the type of event, touch coordinates etc.	 
  */
-Button.prototype.event = function(event) {
-    for (var j = 0; j < event.changedTouches.length; j++) {
-        var touch = event.changedTouches.item(j);
-        breakCheck = false;
-        var isHit = this.hitTest(touch.pageX, touch.pageY);
-        //if(isHit) console.log("button " + this.name + " is hit");
-        //if(!isHit && this.mode == "contact") return; // needed for moving on and off of !requiresTouchDown button without releasing touch
-        var newValue;
-        switch (event.type) {
-            case "touchstart":
-                if (isHit) {
-                    this.xOffset = (touch.pageX - this.x) / (this.width - this.x);
-                    this.yOffset = (touch.pageY - this.y) / (this.height - this.y);
-                    this.activeTouches.push(touch.identifier);
-                    switch (this.mode) {
-                        case "toggle":
-                            newValue = (this.value == this.min) ? this.max: this.min;
-                            break;
-                        case "visualToggle":
-                            newValue = this.max;
-                            this.visualToggleLit = !this.visualToggleLit;
-                            break;
-                        case "latch":
-                        case "momentary":
-                            newValue = this.max;
-                            break;
-                        case "contact":
-                            this.contactOn = true;
-                            newValue = this.max;
-                            break;
-                    }
-                    this.setValue(newValue);
-                    eval(this.ontouchstart);
-                    //this.output();
-                    //this.draw();
-                    return;
-                }
-                
-                break;
-            case "touchmove":
-                var shouldChange = true;
-                var rollOff = false;
-                if (!this.requiresTouchDown) {
-                    var touchFound = false;
-                    var l = this.activeTouches.length;
-                    for (var i = 0; i < l; i++) {
-                        if (touch.identifier == this.activeTouches[i]) {
-                            shouldChange = false;
-                            
-                            if (isHit) {
-                                touchFound = true;
-                            } else {
-                                if (this.mode != "latch") {
-                                    this.activeTouches.splice(i, 1);
-                                    shouldChange = true;
-                                    rollOff = true;
-                                }
-                            }
-                        }
-                    }
-                    if (!touchFound && isHit) {
-                        this.activeTouches.push(touch.identifier);
-                        this.xOffset = (touch.pageX - this.x) / (this.width - this.x);
-                        this.yOffset = (touch.pageY - this.y) / (this.height - this.y);
-                        shouldChange = true;
-                    }
-                }
-                
-                if (shouldChange && isHit && !this.requiresTouchDown) {
-                    switch (this.mode) {
-                        case "toggle":
-                            this.value = (this.value == this.min) ? this.max: this.min;
-                            this.isLit = (this.value == this.max);
-                            break;
-                        case "visualToggle":
-                            this.value = this.max;
-                            this.isLit = !this.isLit;
-                            break;
-                        case "latch":
-                            this.value = this.max;
-                            this.isLit = true;
-                            break;
-                        case "momentary":
-                            if (!rollOff) {
-                                this.value = this.max;
-                                this.isLit = true;
-                            } else {
-                                this.value = this.min;
-                                this.isLit = false;
-                            }
-                            break;
-                        case "contact":
-                            this.value = this.max;
-                            break;
-                    }
-                    eval(this.ontouchmove);
-                    eval(this.onvaluechange);
-                    this.output();
-                    this.draw();
-                } else if (rollOff && this.mode == "momentary") {
-                    this.value = this.min;
-                    this.isLit = false;
-                    eval(this.onvaluechange);
-                    this.output();
-                    this.draw();
-                }
-                break;
-                
-            case "touchend":
-                if (isHit || this.mode == "latch" || this.mode == "momentary") {
-                    for (var i = 0; i < this.activeTouches.length; i++) {
-                        if (touch.identifier == this.activeTouches[i]) {
-                            this.activeTouches.splice(i, 1);
-                            // remove touch ID from array
-                            breakCheck = true;
-                            
-                            if (this.mode == "latch" || this.mode == "momentary") {
-                                this.isLit = false;
-                                this.value = this.min;
-                                eval(this.onvaluechange);
-                                this.draw();
-                                this.output();
-                            }
-                            
-                            eval(this.ontouchend);
-                            //break;
-                        }
-                    }
-                }
-                break;
-        }
-        if (breakCheck) break;
-    }
-}
+    
 
 /**
  * Outputs the widget's value according to its protocol

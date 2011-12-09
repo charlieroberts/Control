@@ -288,6 +288,9 @@ void MyCompletionProc(MIDISysexSendRequest *request) {
         sysex->completionProc = MyCompletionProc;
         sysex->completionRefCon = sysex;
         MIDISendSysex(sysex);
+        
+        free(sysex);
+        free(charData);
     }
 }
 

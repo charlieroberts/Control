@@ -1,13 +1,99 @@
+function AutoGUI() {
+    this.divisions = [
+        {"bounds" : [0, 0, 1, .9], "widget" : null, "sacrosanct" : false},
+        {"bounds" : [0,.9, 1, .1], "widget" : null, "sacrosanct" : true },
+    ];
+    return this;
+}
+
 function OSCManager() {
 	this.delegate = this;
 	return this;
 }
 
+AutoGUI.prototype.placeWidget = function(_widget) {
+    var maxSize = 0;
+    var bestDiv = -1;
+    for(var i = 0; i < this.divisions.length; i++) {
+        var div = this.divisions[i];
+        if(div.sacrosanct) continue;
+        if(div.bounds[2] + div.bounds[3] > maxSize) {
+            maxSize = div.bounds[2] + div.bounds[3];
+            bestDiv = i;
+        }
+    }
+    
+    console.log("Best div  = " + bestDiv);
+    if(bestDiv != -1) {
+        var selectedDiv = this.divisions[bestDiv];
+        //selectedDiv.widgets.push(_widget);
+        
+        var splitDir = (selectedDiv.bounds[2] > selectedDiv.bounds[3]) ? 0 : 1;
+        
+        var widgetWidth, widgetHeight;
+        if(selectedDiv.widget != null) {
+            widgetWidth  = (splitDir == 0) ? selectedDiv.bounds[2] / 2 : selectedDiv.bounds[2];
+            widgetHeight = (splitDir == 1) ? selectedDiv.bounds[3] / 2 : selectedDiv.bounds[3];
+        }else{
+            widgetWidth = selectedDiv.bounds[2];
+            widgetHeight = selectedDiv.bounds[3];            
+        }
+        
+        var w = (selectedDiv.widget == null) ? _widget : selectedDiv.widget;
+        var div1 = {
+            "bounds": [selectedDiv.bounds[0], selectedDiv.bounds[1], widgetWidth, widgetHeight],
+            "widget": w,
+            "sacrosanct": false,
+        }
+        
+        if(selectedDiv.widget != null) {
+            var newDivX = (splitDir == 0) ? selectedDiv.bounds[0] + widgetWidth  : selectedDiv.bounds[0];
+            var newDivY = (splitDir == 1) ? selectedDiv.bounds[1] + widgetHeight : selectedDiv.bounds[1];
+                
+            var div2 = {
+                "bounds": [newDivX, newDivY, widgetWidth, widgetHeight],
+                "widget": _widget,
+                "sacrosanct": false,
+            }
+        
+            console.log("DIV 1 :::: " + div1.bounds);
+            console.log("DIV 2 :::: " + div2.bounds);        
+        
+            this.divisions.splice( bestDiv, 1, div1, div2 );
+            div1.widget.setBounds(div1.bounds);
+            div2.widget.setBounds(div2.bounds); 
+        }else{
+            selectedDiv.widget = _widget;
+            _widget.setBounds(div1.bounds);
+        }
+        
+       
+        // for(var i = 0; i < selectedDiv.widgets.length; i++) {
+        //     var w = selectedDiv.widgets[i];
+        //     var currentBounds = [];
+        //     if(splitDir == 0) {
+        //         currentBounds[0] = widgetWidth * i;
+        //         currentBounds[1] = selectedDiv.bounds[1];              
+        //     }else{
+        //         currentBounds[0] = selectedDiv.bounds[0];
+        //         currentBounds[1] = widgetHeight * i;
+        //     }
+        //     currentBounds[2] = widgetWidth;
+        //     currentBounds[3] = widgetHeight;
+        //     
+        //     console.log(currentBounds);
+        //     
+        //     w.setBounds(currentBounds);
+        // }
+    }
+}
+
+
 OSCManager.prototype.processOSCMessage = function() {
 	var address = arguments[0];
 	var typetags = arguments[1];
 	var args = [];
-	
+	console.log(address + "::"+typetags+"::"+arguments[2]);
     switch(address){
         case "/control/runScript":
             eval(arguments[2]);
@@ -17,6 +103,11 @@ OSCManager.prototype.processOSCMessage = function() {
             eval("var w = " + arguments[2]);
             var _w = control.makeWidget(w);
             control.widgets.push(_w);
+            
+            if(typeof _w.bounds == "undefined") {
+                this.autogui.placeWidget(_w);
+            }
+
             eval("control.addWidget(" + w.name + ", control.currentPage);");
         return;
         break;
@@ -46,12 +137,15 @@ OSCManager.prototype.processOSCMessage = function() {
             break;
         case "/control/createBlankInterface":
             control.unloadWidgets();
+            
+        	this.autogui = new AutoGUI();
+        	
             var _json = "loadedInterfaceName = '" + arguments[2] + "'; interfaceOrientation = '" + arguments[3] + "'; pages = [["
             if(typeof arguments[4] == "undefined" || arguments[4] == "true") {
                 _json += '{\
                     "name": "menuButton",\
                     "type": "Button",\
-                    "bounds": [.8,.8,.2,.1],\
+                    "bounds": [.8,.9,.2,.1],\
                     "mode":"toggle",\
                     "colors": ["#000", "#444", "#aaa"],\
                     "ontouchstart": "if(this.value == this.max) { control.showToolbar();} else { control.hideToolbar(); }",\

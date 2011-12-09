@@ -59,7 +59,7 @@ Control.prototype.makePages = function(_pages,width, height) {
 	interfaceDiv.addEventListener('touchend', control.event, false);
 	interfaceDiv.addEventListener('touchstart', control.event, false);
 	interfaceDiv.addEventListener('touchmove', control.event, false);
-	interfaceDiv.addEventListener('touchmove', preventBehavior, false);
+	//interfaceDiv.addEventListener('touchmove', preventBehavior, false);
 
     
 
@@ -279,7 +279,7 @@ Control.prototype.addConstantWidget = function(widget) {
 
 Control.prototype.addWidget = function(widget, page) {
 	this.pages[page].push(widget);
-	if(page == 0) { // TODO: SHOULD THIS BE VARIABLE?
+	if(page == control.currentPage) {
 		if(widget.show != null)
 			widget.show();
 		
@@ -291,7 +291,6 @@ Control.prototype.addWidget = function(widget, page) {
 			widget.hide();
 	}
 	eval(widget.oninit);
-	//widget.oninit();
 }
 
 

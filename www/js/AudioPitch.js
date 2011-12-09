@@ -34,7 +34,7 @@ AudioPitch.prototype = new Widget();
 AudioPitch.prototype.start = function() {	
     PhoneGap.exec("AudioInput.start", "pitch", this.mode);
 }
-
+ 
 AudioPitch.prototype.restart = function() {	
     PhoneGap.exec("AudioInput.restart");
 }

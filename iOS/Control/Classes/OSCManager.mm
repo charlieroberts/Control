@@ -21,19 +21,18 @@ protected:
     virtual void ProcessMessage( const osc::ReceivedMessage& m, const IpEndpointName& remoteEndpoint ) {
 		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		NSString *oscAddress = [NSString stringWithUTF8String:m.AddressPattern()];
-		if([_oscManager.addresses objectForKey:oscAddress] != nil) {			
+		if([_oscManager.addresses objectForKey:oscAddress] != nil) {
 			[_oscManager performSelector:NSSelectorFromString([_oscManager.addresses objectForKey:oscAddress]) withObject:[NSValue valueWithPointer:&m]];
 		}else{
 			osc::ReceivedMessage::const_iterator arg = m.ArgumentsBegin();
 			//NSLog(@"%s %d", m.AddressPattern(), m.ArgumentCount());
 			NSMutableString *jsString = [NSMutableString stringWithFormat:@"oscManager.processOSCMessage(\"%s\", \"%s\", ", m.AddressPattern(), m.TypeTags(), nil];
-
+            
 			const char * tags = m.TypeTags();
 
 			for(int i = 0; i < m.ArgumentCount(); i++) {
 					switch(tags[i]) {
-						case 'f':
-						[jsString appendString:[NSString stringWithFormat:@"%f", (arg++)->AsFloat()]];
+						case 'f':                           [jsString appendString:[NSString stringWithFormat:@"%f", (arg++)->AsFloat()]];
 						break;
 					case 'i':
 						[jsString appendString:[NSString stringWithFormat:@"%i", (arg++)->AsInt32()]];						
@@ -92,6 +91,7 @@ protected:
 }
 
 - (void)pushInterface:(NSValue *)msgPointer {
+    //NSLog(@"PUSH INTERFACE");
    osc::ReceivedMessage& msg = *(osc::ReceivedMessage *)[msgPointer pointerValue];
    try{
 		osc::ReceivedMessageArgumentStream args = msg.ArgumentStream();
@@ -109,6 +109,7 @@ protected:
 
 			[webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsString waitUntilDone:NO];
 		}else{	// push interface + destination;
+            //NSLog(@"push interface 2");
 			const char * a1, *a2, *a3;
 			args >> a1 >> a2 >> a3 >> osc::EndMessage;
 
