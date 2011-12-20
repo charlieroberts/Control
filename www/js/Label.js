@@ -17,10 +17,24 @@ function Label(ctx, props) { //x, y, width, height, color, value, size, align) {
     this.align = (typeof props.align != "undefined") ? props.align : "center";
     this.verticalCenter = (typeof props.verticalCenter != "undefined") ? props.verticalCenter : true;
     
-    this.label.setAttribute("style", "text-align:" + this.align + "; z-index:10; position:absolute; left:" + this.x + "px; top:" + (this.y - this.size) + "px; color:" + this.color + "; width:" + this.width + "px; height:" + this.height + "px; font-size:" + this.size + "px;");
+    //this.label.setAttribute("style", );
+    $(this.label).css({
+        "text-align": this.align,
+        "z-index"   : 10,
+        "position"  : "absolute",
+        "left"      : this.x + "px",
+        "top"       : (this.y - this.size) + "px",
+        "color"     : this.color,
+        "width"     : this.width + "px",
+        "height"    : this.height + "px",
+        "font-size" : this.size + "px",
+        "overflow"  : "hidden",        
+        "background-color" : this.backgroundColor,
+    });
+    
     this.label.style.lineHeight = (this.verticalCenter) ? this.height + "px" : (this.size + 2) + "px";
     //this.label.style.textShadow = "none";
-    this.label.style.backgroundColor = this.backgroundColor;
+    //this.label.style.backgroundColor = this.backgroundColor;
     //this.label.innerHTML = this.value;        
     this.ctx.appendChild(this.label);
     

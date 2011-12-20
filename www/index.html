@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="css/jquery.mobile-1.0a3.css" />
     <link rel="stylesheet" href="css/master.css" type="text/css" media="screen" title="no title" charset="utf-8">
     
-    <script type="text/javascript" charset="utf-8" src="js/phonegap-uncompressed.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/phonegap-1.2.0.js"></script>
     <script type="text/javascript" charset="utf-8" src="js/keyevent.js"></script>        
         <!-- on android
     <script type="text/javascript" charset="utf-8" src="js/keyevent.js"></script>
@@ -36,15 +36,18 @@
     <script type="text/javascript" src="js/faces/helvetiker_regular.typeface.js"></script>-->
     
     <script type="text/javascript" src="js/Control.js"></script>
+    <script type="text/javascript" src="js/Device.js"></script>
+    <script type="text/javascript" src="js/Bonjour.js"></script>
+   
     <script type="text/javascript" src="js/InterfaceManager.js"></script>
     <script type="text/javascript" src="js/DestinationManager.js"></script>
     <script type="text/javascript" src="js/PreferencesManager.js"></script>
+        
     <script type="text/javascript" src="js/OSCManager.js"></script>     
     <script type="text/javascript" src="js/MIDIManager.js"></script>        
-    
+        
     <script type="text/javascript" src="js/Widget.js"></script>
     <script type="text/javascript" src="js/Slider.js"></script>
-    
     <script type="text/javascript" src="js/MultiButton.js"></script>
     <script type="text/javascript" src="js/Label.js"></script>
     <script type="text/javascript" src="js/Button.js"></script>
@@ -56,10 +59,12 @@
     <script type="text/javascript" src="js/ControlGyro.js"></script>
 
     <script type="text/javascript" src="js/AudioPitch.js"></script>
-    <script type="text/javascript" src="js/AudioVolume.js"></script>
-        
+    <script type="text/javascript" src="js/AudioVolume.js"></script>        
     <script type="text/javascript" charset="utf-8">
         var pages, control, interfaceScroller, destinationScroller, interfaceManager, destinationManager, _protocol;
+        
+        document.addEventListener("deviceready", onDeviceReady, false);
+        
         function preventBehavior(e) { // prevent scrolling
             //console.log(event.target.nodeName);
             //console.log("preventing " + control.shouldPrevent);
@@ -75,9 +80,15 @@
             }
         };
         
-        PhoneGap.addConstructor(function(){
+        function onDeviceReady() {
             init();
-        });
+            //control.init();
+        }
+        
+//        function onBodyLoad() {
+//            alert("BODY LOADED");
+//            document.addEventListener("deviceready", onDeviceReady, false);
+//        }
         
         function init() {
             //document.addEventListener("touchmove", preventBehavior, false); // prevents webkit from scrolling DNR
@@ -91,36 +102,35 @@
             //$("#Interfaces").bind('touchmove', preventBehavior, true);
             control = new Control();
             control.shouldPrevent = false;
-
+            
             interfaceManager = new InterfaceManager();
             interfaceManager.init();
             interfaceManager.loadScripts();
-            
+
             _protocol = "OSC";
-            //console.setLevel(8);
-            oscManager  = new OSCManager();
-            midiManager = new MIDIManager();
+            midiManager.start();
             
             destinationManager = new DestinationManager();
             destinationManager.init();
 
             document.addEventListener('orientationChanged', control.onRotation, false);
             
-            // PhoneGap.exec("Device.setRotation", "portrait");
-            
+            Rotator.setRotation("portrait");
+
             preferencesManager = new PreferencesManager();
             console.log("end of constructor");
+
             wrapMe();
         }
-        
-        function autolockToggle() {
-            var autolockToggleLink = document.getElementById("autolockToggle");
-            autolock = !autolock;
-            (!autolock) ? autolockToggleLink.innerHTML = "Turn Autolock <b>Off</b>" : autolockToggleLink.innerHTML = "Turn Autolock <b>On</b>";         
-            if(device.platform == 'iPhone') PhoneGap.exec("Device.autolockToggle", autolock);
-            preferences.save({key:"autolock", shouldAutolock:autolock});
-        }
-        
+//        
+//        function autolockToggle() {
+//            var autolockToggleLink = document.getElementById("autolockToggle");
+//            autolock = !autolock;
+//            (!autolock) ? autolockToggleLink.innerHTML = "Turn Autolock <b>Off</b>" : autolockToggleLink.innerHTML = "Turn Autolock <b>On</b>";         
+//            if(device.platform == 'iPhone') PhoneGap.exec("Device.autolockToggle", autolock);
+//            preferences.save({key:"autolock", shouldAutolock:autolock});
+//        }
+//        
         function wrapMe() {
             //console.log("device height = " + device.height + " header height = " + $('#header').height() + " footer height = " + $('#ftr').height());
             $('#wrapper').height(screen.height - $('#header').height() - $('#ftr').height());
@@ -128,8 +138,8 @@
 
     </script>
   </head>
-  
-  <body id="stage" onload="control.init();" style="background-color:#000; -webkit-user-select: none; overflow:hidden;" class="theme"> 
+  <!-- onload="control.init();" -->
+  <body id="stage" style="background-color:#000; -webkit-user-select: none; overflow:hidden;" class="theme"> 
   
 
   <div data-role="page" id="Interfaces" data-theme="a">

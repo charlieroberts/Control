@@ -85,7 +85,6 @@ Widget.prototype.make = function(ctx, props) {
 		}
 		
 		//this.value = (typeof props.startingValue != "undefined") ? props.startingValue : this.min;
-		
 		this.ontouchstart  = (typeof props.ontouchstart  != "undefined") ? props.ontouchstart  : null; 
 		this.ontouchmove   = (typeof props.ontouchmove   != "undefined") ? props.ontouchmove   : null;
 		this.ontouchend    = (typeof props.ontouchend    != "undefined") ? props.ontouchend    : null;
@@ -118,9 +117,16 @@ Widget.prototype.setValue = function(newValue) {
     }else if(newValue < this.min) {
         newValue = this.min;
     }
+	
     this.value = newValue;
-    this.draw();    
-    eval(this.onvaluechange);
+    this.draw();
+	
+	if(typeof this.onvaluechange === "string") {
+        eval(this.onvaluechange);
+	}else{
+		this.onvaluechange();
+	}
+    
 	if(!(arguments[1] === false))
 		this.output();
 }
@@ -150,10 +156,10 @@ Widget.prototype.output = function() {
 }
 
 Widget.prototype.event = function(event) {
-  if(event.type != "touchend") {
-    touch = event.changedTouches.item(0);
-    if(this.hitTest(touch.pageX, touch.pageY)) {
-      this.changeValue(touch.pageX);
+    if(event.type != "touchend") {
+        touch = event.changedTouches.item(0);
+        if(this.hitTest(touch.pageX, touch.pageY)) {
+          this.changeValue(touch.pageX);
+        }
     }
-  }
 }

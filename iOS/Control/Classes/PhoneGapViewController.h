@@ -1,24 +1,23 @@
-//
-//  PhoneGapViewController.h
-//  PhoneGap
-//
-//  Created by Nitobi on 15/12/08.
-//  Copyright 2008 Nitobi. All rights reserved.
-//
+/*
+ * PhoneGap is available under *either* the terms of the modified BSD license *or* the
+ * MIT License (2008). See http://opensource.org/licenses/alphabetical for full text.
+ * 
+ * Copyright (c) 2005-2010, Nitobi Software Inc.
+ */
 
 
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 
 @interface PhoneGapViewController : UIViewController {
-    IBOutlet UIWebView *webView;
-    BOOL     autoRotate;
     NSString *rotateOrientation;
+    BOOL     autoRotate;
+
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation; 
-- (void)willRotateToInterfaceOrientation: (UIInterfaceOrientation)toInterfaceOrientation duration: (NSTimeInterval)duration;
-- (void)setAutoRotate:(BOOL) shouldRotate;
-- (void)setRotateOrientation:(NSString*) orientation;
+@property (nonatomic, retain) 	NSArray* supportedOrientations;
+@property (nonatomic, retain)	UIWebView* webView;
+
+- (void) setRotateOrientation:(NSString*) orientation;
 
 @end

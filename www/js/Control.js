@@ -1,6 +1,7 @@
 //TODO: this.widgets should hold ALL widgets, including constants. this.constants and this.pages can be used to keep them separated.
 
 function Control() {
+    this.oninit = null;
 	this.widgetCount = 0;
 	this.pages = [];
     this.constants = [];
@@ -248,15 +249,15 @@ Control.prototype.loadWidgets = function() {
 	this.widgets = new Array();
 	this.pages = new Array();
 	var oldCurrentPage = this.currentPage;
-	for(this.currentPage = 0; this.currentPage < pages.length; this.currentPage++) {
+    
+	for(var pageNumber = 0; pageNumber < pages.length; pageNumber++) {
 		this.pages.push(new Array());
-        var page = pages[this.currentPage];
-
+        var page = pages[pageNumber];
 		for(var i=0; i < page.length; i++) {
 			var w = page[i];
 			var _w = this.makeWidget(w);
 			this.widgets.push(_w);
-			eval("this.addWidget(" + w.name + ", this.currentPage);"); // PROBLEM
+			eval("this.addWidget(" + w.name + ", pageNumber);"); // PROBLEM
 		}
 	}
 
@@ -274,7 +275,11 @@ Control.prototype.addConstantWidget = function(widget) {
 	if(widget.draw != null)
 		widget.draw();
 		
-	eval(widget.oninit);
+    if(typeof widget.oninit === "string") {
+        eval(widget.oninit);
+    }else{
+        widget.oninit();
+    }
 }
 
 Control.prototype.addWidget = function(widget, page) {
@@ -290,7 +295,12 @@ Control.prototype.addWidget = function(widget, page) {
 		if(widget.hide != null)
 			widget.hide();
 	}
-	eval(widget.oninit);
+    eval(widget.oninit);
+//    if(typeof widget.oninit === "string") {
+//        eval(widget.oninit);
+//    }else{
+//        widget.oninit();
+//    }
 }
 
 
@@ -369,7 +379,9 @@ Control.prototype.changeTab = function(tab) {
 	  if(oldTab.id == "selectedInterface") {
 		control.unloadWidgets();
 		//if(device.platform == 'iPhone') 
-          PhoneGap.exec("Device.setRotation", "portrait");
+          //PhoneGap.exec("Device.setRotation", "portrait");
+          //Rotator.setRotation("portrait");
+
 		//window.plugins.nativeControls.showTabBar({"orientation":"portrait",  "position":"bottom"});
 	  }
     }
@@ -394,14 +406,12 @@ Control.prototype.changePage = function(newPage) {
 		}
 
 		this.currentPage = newPage;
-
-		for(var i = 0; i < this.pages[this.currentPage].length; i++) {
-			var w = this.pages[this.currentPage][i];
-			//console.log("name: " + w.name + " || page : " + this.currentPage);
-			if(typeof w.show != "undefined")							
-				w.show();
-			if(typeof w.draw != "undefined")				
-				w.draw();
+		var page = this.pages[this.currentPage];
+		
+		for(var i = 0; i < page.length; i++) {
+			var w = page[i];
+			if(typeof w.show != "undefined") w.show();
+			if(typeof w.draw != "undefined") w.draw();
 		}
 	}
 }

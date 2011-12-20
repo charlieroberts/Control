@@ -10,7 +10,7 @@ function DestinationManager() {
 		this.midiDestinations = [];
 		this.ipaddress = null;
 		this.bonjourDestinations = new Array();
-		PhoneGap.exec("Bonjour.start", null);
+		Bonjour.start();
 		//setTimeout(function() { window.destinationManager.createDestinationList(); }, 1000);
         window.destinationManager.createDestinationList();        
 
@@ -20,8 +20,9 @@ function DestinationManager() {
         this.clearList();
         this.destinationsSynch = [];
         this.midiDestinations = [];
-        PhoneGap.exec("Bonjour.browse", null);
-        PhoneGap.exec("MIDI.browse", null);
+        //PhoneGap.exec("Bonjour.browse", null);
+        Bonjour.browse();
+        //PhoneGap.exec("MIDI.browse", null);
         window.destinationManager.createDestinationList();        
     }
 	

@@ -1,41 +1,96 @@
-//
-//  PhoneGapViewController.m
-//  PhoneGap
-//
-//  Created by Nitobi on 15/12/08.
-//  Copyright 2008 Nitobi. All rights reserved.
-//
+/*
+ * PhoneGap is available under *either* the terms of the modified BSD license *or* the
+ * MIT License (2008). See http://opensource.org/licenses/alphabetical for full text.
+ * 
+ * Copyright (c) 2005-2010, Nitobi Software Inc.
+ */
+
 
 #import "PhoneGapViewController.h"
 #import "PhoneGapDelegate.h" 
 
 @implementation PhoneGapViewController
 
+@synthesize supportedOrientations, webView;
+
+- (id) init
+{
+    if (self = [super init]) {
+        rotateOrientation = @"portrait";
+        [rotateOrientation retain];
+		// do other init here
+	}
+	
+	return self;
+}
+
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation 
 {
-    if (autoRotate == YES) {
-        return YES;
+	// First ask the webview via JS if it wants to support the new orientation -jm
+//	int i = 0;
+//	
+//	switch (interfaceOrientation){
+//
+//		case UIInterfaceOrientationPortraitUpsideDown:
+//			i = 180;
+//			break;
+//		case UIInterfaceOrientationLandscapeLeft:
+//			i = -90;
+//			break;
+//		case UIInterfaceOrientationLandscapeRight:
+//			i = 90;
+//			break;
+//		default:
+//		case UIInterfaceOrientationPortrait:
+//			// noop
+//			break;
+//	}
+//	
+//	NSString* jsCall = [ NSString stringWithFormat:@"shouldRotateToOrientation(%d);",i];
+//	NSString* res = [webView stringByEvaluatingJavaScriptFromString:jsCall];
+//	
+//	if([res length] > 0)
+//	{
+//		return [res boolValue];
+//	}
+//	
+//	// if js did not handle the new orientation ( no return value ) we will look it up in the plist -jm
+//	
+//	BOOL autoRotate = [self.supportedOrientations count] > 0; // autorotate if only more than 1 orientation supported
+//	if (autoRotate)
+//	{
+//		if ([self.supportedOrientations containsObject:
+//			 [NSNumber numberWithInt:interfaceOrientation]]) {
+//			return YES;
+//		}
+//    }
+//	
+//	// default return value is NO! -jm
+//	
+//	return NO;
+    if ([rotateOrientation isEqualToString:@"portrait"]) {
+        if (interfaceOrientation == UIDeviceOrientationPortraitUpsideDown) return YES;
+        return (interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIDeviceOrientationPortraitUpsideDown);
+    } else if ([rotateOrientation isEqualToString:@"landscape"]) {
+        return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
     } else {
-        if ([rotateOrientation isEqualToString:@"portrait"]) {
-            return (interfaceOrientation == UIInterfaceOrientationPortrait);
-        } else if ([rotateOrientation isEqualToString:@"landscape"]) {
-            return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
-        } else {
-            return NO;
-        }
+        return NO;
     }
-	
-	return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft ||
-			interfaceOrientation == UIInterfaceOrientationLandscapeRight);
+
+
+    return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
 }
+
 /**
  Called by UIKit when the device starts to rotate to a new orientation.  This fires the \c setOrientation
  method on the Orientation object in JavaScript.  Look at the JavaScript documentation for more information.
  */
-- (void)willRotateToInterfaceOrientation: (UIInterfaceOrientation)toInterfaceOrientation duration: (NSTimeInterval)duration {
-	double i = 0;
+- (void)didRotateFromInterfaceOrientation: (UIInterfaceOrientation)fromInterfaceOrientation
+{
+	int i = 0;
 	
-	switch (toInterfaceOrientation){
+	switch (self.interfaceOrientation){
 		case UIInterfaceOrientationPortrait:
 			i = 0;
 			break;
@@ -43,13 +98,16 @@
 			i = 180;
 			break;
 		case UIInterfaceOrientationLandscapeLeft:
-			i = 90;
-			break;
-		case UIInterfaceOrientationLandscapeRight:
 			i = -90;
 			break;
+		case UIInterfaceOrientationLandscapeRight:
+			i = 90;
+			break;
 	}
-	[webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"navigator.orientation.setOrientation(%f);", i]];
+	
+	NSString* jsCallback = [NSString stringWithFormat:@"window.__defineGetter__('orientation',function(){ return %d; }); PhoneGap.fireEvent('orientationchange', window);",i];
+	[webView stringByEvaluatingJavaScriptFromString:jsCallback];
+	 
 }
 
 - (void) setAutoRotate:(BOOL) shouldRotate {
@@ -63,8 +121,13 @@
 	rotateOrientation = [[NSString alloc] initWithString:orientation];
 }
 
-- (void)dealloc {
-	[rotateOrientation release];
-	[super dealloc];
+- (void) dealloc
+{
+    [rotateOrientation release];
+    self.supportedOrientations = nil;
+    self.webView = nil;
+    
+    [super dealloc];
 }
+
 @end

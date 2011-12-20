@@ -328,22 +328,23 @@ function InterfaceManager() {
     
     this.runInterface = function(json) {
 		control.unloadWidgets();
+        control.oninit = null;
         constants = null;
         pages = null;
-                
+
         oscManager.delegate = oscManager;
         midiManager.delegate = midiManager;
-        
+
         eval(json);
-        
+
         this.currentInterfaceName = loadedInterfaceName;
         this.currentInterfaceJSON = json;
-		
+
 		if(typeof interfaceOrientation != "undefined") {
 			console.log(interfaceOrientation);
-            PhoneGap.exec("Device.setRotation", interfaceOrientation);
+            Rotator.setRotation(interfaceOrientation);
         }
-        //if(control.orientation == 0 || control.orientation == 180) {
+
 		if(interfaceOrientation == "portrait") {
             control.makePages(pages, screen.width, screen.height);
         }else{
@@ -353,7 +354,15 @@ function InterfaceManager() {
         if(constants != null) {
             control.loadConstants(constants);
         }
+
         control.loadWidgets();
+        
+        if(typeof control.oninit === "string") {
+            eval(control.oninit);
+        }else if(control.oninit != null) {
+            control.oninit();
+        }
+
         if(this.currentTab != document.getElementById("selectedInterface")) {
             control.shouldPrevent = true;
             control.changeTab(document.getElementById("selectedInterface"));
