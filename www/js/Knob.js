@@ -50,13 +50,49 @@ function Knob(ctx,props) {
 	this.canvas.style.top = this.y + "px";
 	this.canvas.style.left = this.x + "px";
 	this.canvas.style.position = "absolute";
-
+	
+	this.displayValue = props.displayValue;
+	
 	this.canvasCtx = this.canvas.getContext('2d');
-    
+	
+    if (typeof props.label != "undefined" || props.displayValue == true) {
+        this.text = props.label;
+        this.labelSize = props.labelSize || 12;
+        {
+			var _width, _height, _x, _y;
+			
+			_width = props.width * .75;
+			_height = (this.labelSize + 4) / control.deviceHeight;
+			_x = props.x + props.radius * .125;
+			_y = props.y + (props.radius / 3) - _height / 2;
+
+            this.label = {
+				"name":  	this.name + "Label",
+				"type":  	"Label", 
+ 				"bounds":   [_x, _y, _width, _height],
+				"color": 	this.strokeColor, 
+				"value": 	this.text,
+				"size" : 	props.labelSize || 12,
+ 				"backgroundColor": "rgba(127, 127, 127, .75)",				
+			};
+                        
+            var _w = control.makeWidget(this.label);
+            control.widgets.push(_w);
+	        if(!control.isAddingConstants)
+	            control.addWidget(_w, control.currentPage); // PROBLEM
+	        else
+	            control.addConstantWidget(_w); // PROBLEM
+  
+            
+            this.label = _w;
+        }
+    }
+
     this.setValue(this.value);
     
     return this;
 }
+
 
 Knob.prototype = new Widget();
 
@@ -184,7 +220,10 @@ Knob.prototype.changeValue = function(yinput, xinput) {
     if(this.lastValue != this.value) {
         this.setValue(this.value);
         this.lastValue = this.value;
+		if(this.displayValue)
+			this.label.setValue(this.value.toFixed(3));
     }
+	//Math.round(number).toFixed(2);
 }
 
 Knob.prototype.show = function() {

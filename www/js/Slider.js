@@ -103,9 +103,9 @@ function Slider(ctx, props) {
 	        var _w = control.makeWidget(this.label);
 	        control.widgets.push(_w);
 	        if(!control.isAddingConstants)
-	            eval("control.addWidget(" + _w.name + ", control.currentPage);"); // PROBLEM
+	            control.addWidget(_w, control.currentPage); // PROBLEM
 	        else
-	            eval("control.addConstantWidget(" + _w.name + ");"); // PROBLEM
+	            control.addConstantWidget(_w); // PROBLEM
             
 	        this.label = _w;
 			$(this.label.label).css("padding", "0px 4px 0px 4px");

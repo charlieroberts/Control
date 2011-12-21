@@ -123,7 +123,7 @@ Widget.prototype.setValue = function(newValue) {
 	
 	if(typeof this.onvaluechange === "string") {
         eval(this.onvaluechange);
-	}else{
+	}else if(this.onvaluechange != null){
 		this.onvaluechange();
 	}
     

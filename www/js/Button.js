@@ -13,40 +13,45 @@ function Button(ctx, props) {
         this.requiresTouchDown = props.requiresTouchDown;
     }
     
-    this.contactOn = false;
-    // used to trigger flash for contact mode buttons
+    this.contactOn = false;	// used to trigger flash for contact mode buttons
+	
     if (typeof props.label != "undefined") {
         this.text = props.label;
         this.labelSize = props.labelSize || 12;
         {   //remove for canvas
 
-            this.label = {"name": this.name + "Label", "type": "Label", "bounds":[props.x, props.y, props.width, props.height], "color":this.strokeColor, "value":this.text, "size":props.labelSize || 12,};
+            this.label = {
+				"name": this.name + "Label",
+				 "type": "Label", 
+				 "bounds":[props.x, props.y, props.width, props.height], 
+				 "color":this.strokeColor, 
+				 "value":this.text,
+				 "size":props.labelSize || 12,
+			 };
                         
             var _w = control.makeWidget(this.label);
             control.widgets.push(_w);
-            if(!control.isAddingConstants)
-                eval("control.addWidget(" + _w.name + ", control.currentPage);"); // PROBLEM
-            else
-                eval("control.addConstantWidget(" + _w.name + ");"); // PROBLEM
-            
+	        if(!control.isAddingConstants)
+	            control.addWidget(_w, control.currentPage); // PROBLEM
+	        else
+	            control.addConstantWidget(_w); // PROBLEM
+          
             this.label = _w;
-            //this.label.label.style.backgroundColor = "rgba(255,0,0,1)";
-            //this.label.show();
-            //this.label.draw();
-            //this.label.label.style.zIndex = 100;
         }
     }
     
     {   // remove for canvas
         this.fillDiv   = document.createElement("div");
-		  $(this.fillDiv).addClass('widget button');
-
-        this.fillDiv.style.width = this.width - 2 + "px";
-        this.fillDiv.style.height = this.height - 2 + "px";	
-        this.fillDiv.style.position = "absolute";
-        this.fillDiv.style.left = this.x + "px";
-        this.fillDiv.style.top  = this.y + "px";
-        this.fillDiv.style.border = "1px solid " + this.strokeColor;
+        $(this.fillDiv).addClass('widget button');
+        
+        $(this.fillDiv).css({
+            "width" 	: this.width - 2 + "px",
+            "height" 	: this.height - 2 + "px",	
+            "position" 	: "absolute",
+            "left" 		: this.x + "px",
+            "top"  		: this.y + "px",
+            "border" 	: "1px solid " + this.strokeColor,
+		});
         
         this.ctx.appendChild(this.fillDiv);
     }
@@ -66,6 +71,12 @@ function Button(ctx, props) {
 
 Button.prototype = new Widget();
 
+Button.prototype.flash = function(btn) {
+	return (function() {
+		$(btn.fillDiv).css("background-color", btn.backgroundColor);
+	});
+}
+
 Button.prototype.draw = function() {
     //console.log("drawing " + this.value );
     //this.ctx.clearRect(this.x, this.y, this.width, this.height);
@@ -74,10 +85,8 @@ Button.prototype.draw = function() {
             this.fillDiv.style.backgroundColor = (this.isLit) ? this.fillColor : this.backgroundColor;
         } else {
             this.fillDiv.style.backgroundColor = this.fillColor;
-            var str = "gButton"+parseInt(Math.random()*10000);
-            eval(str + " = this;");
-            var evalString = 'setTimeout(function() {'+str+'.fillDiv.style.backgroundColor=' + str + '.backgroundColor;}, 50)';
-            eval(evalString);
+			var flashFunction = Button.prototype.flash(this);
+			setTimeout(flashFunction, 50);
         }
         if(this.label != null) this.label.draw();
     }
@@ -140,143 +149,166 @@ Button.prototype.drawLabel = function() {
     }
 }
 
+Button.prototype.touchstart = function(touch, isHit) {
+    if (isHit) {
+        this.xOffset = (touch.pageX - this.x) / (this.width - this.x);
+        this.yOffset = (touch.pageY - this.y) / (this.height - this.y);
+        this.activeTouches.push(touch.identifier);
+        switch (this.mode) {
+            case "toggle":
+                newValue = (this.value == this.min) ? this.max: this.min;
+                break;
+            case "visualToggle":
+                newValue = this.max;
+                this.visualToggleLit = !this.visualToggleLit;
+                break;
+            case "latch":
+            case "momentary":
+                newValue = this.max;
+                break;
+            case "contact":
+                this.contactOn = true;
+                newValue = this.max;
+                break;
+        }
+        this.setValue(newValue);
+		
+		if(typeof this.ontouchstart === "string") {
+	        eval(this.ontouchstart);
+		}else{
+			this.ontouchstart();
+		} 
+		return true;      
+    }
+	return false;
+}
+
+Button.prototype.touchmove = function(touch, isHit) {
+    var shouldChange = true;
+    var rollOff = false;
+    if (!this.requiresTouchDown) {
+        var touchFound = false;
+        var l = this.activeTouches.length;
+        for (var i = 0; i < l; i++) {
+            if (touch.identifier == this.activeTouches[i]) {
+                shouldChange = false;
+                            
+                if (isHit) {
+                    touchFound = true;
+                } else {
+                    if (this.mode != "latch") {
+                        this.activeTouches.splice(i, 1);
+                        shouldChange = true;
+                        rollOff = true;
+                    }
+                }
+            }
+        }
+        if (!touchFound && isHit) {
+            this.activeTouches.push(touch.identifier);
+            this.xOffset = (touch.pageX - this.x) / (this.width - this.x);
+            this.yOffset = (touch.pageY - this.y) / (this.height - this.y);
+            shouldChange = true;
+        }
+    }
+                
+    if (shouldChange && isHit && !this.requiresTouchDown) {
+        switch (this.mode) {
+            case "toggle":
+                this.value = (this.value == this.min) ? this.max: this.min;
+                this.isLit = (this.value == this.max);
+                break;
+            case "visualToggle":
+                this.value = this.max;
+                this.isLit = !this.isLit;
+                break;
+            case "latch":
+                this.value = this.max;
+                this.isLit = true;
+                break;
+            case "momentary":
+                if (!rollOff) {
+                    this.value = this.max;
+                    this.isLit = true;
+                } else {
+                    this.value = this.min;
+                    this.isLit = false;
+                }
+                break;
+            case "contact":
+                this.value = this.max;
+                break;
+        }
+		
+		if(typeof this.ontouchmove === "string")
+	        eval(this.ontouchmove);
+		else
+			this.ontouchmove();
+		
+		if(typeof this.onvaluechange === "string") 
+			eval(this.onvaluechange);
+		else
+			this.onvaluechange();
+		
+        this.output();
+        this.draw();
+    } else if (rollOff && this.mode == "momentary") {
+        this.value = this.min;
+        this.isLit = false;
+		if(typeof this.onvaluechange === "string") {
+			eval(this.onvaluechange);
+		}else{
+			this.onvaluechange();
+		}
+        
+        this.output();
+        this.draw();
+    }
+	return false;
+}
+
+Button.prototype.touchend = function(touch, isHit) {
+    if (isHit || this.mode == "latch" || this.mode == "momentary") {
+        for (var i = 0; i < this.activeTouches.length; i++) {
+            if (touch.identifier == this.activeTouches[i]) {
+                this.activeTouches.splice(i, 1);
+                // remove touch ID from array
+                            
+                if (this.mode == "latch" || this.mode == "momentary") {
+                    this.isLit = false;
+                    this.value = this.min;
+                    eval(this.onvaluechange);
+                    this.draw();
+                    this.output();
+                }
+                            
+                eval(this.ontouchend);
+				
+				return true;
+            }
+        }
+    }
+	return false;
+}
+
+Button.prototype.events = { 
+	"touchstart": Button.prototype.touchstart, 
+	"touchmove" : Button.prototype.touchmove, 
+	"touchend"  : Button.prototype.touchend,
+};
 
 /**
  * The event handler for the widget
  * @param {Object} event The event object containing the type of event, touch coordinates etc.	 
  */
 Button.prototype.event = function(event) {
-    for (var j = 0; j < event.changedTouches.length; j++) {
+    for (var j = 0; j < event.changedTouches.length; j++){
         var touch = event.changedTouches.item(j);
-        breakCheck = false;
         var isHit = this.hitTest(touch.pageX, touch.pageY);
-        //if(isHit) console.log("button " + this.name + " is hit");
-        //if(!isHit && this.mode == "contact") return; // needed for moving on and off of !requiresTouchDown button without releasing touch
-        var newValue;
-        switch (event.type) {
-            case "touchstart":
-                if (isHit) {
-                    this.xOffset = (touch.pageX - this.x) / (this.width - this.x);
-                    this.yOffset = (touch.pageY - this.y) / (this.height - this.y);
-                    this.activeTouches.push(touch.identifier);
-                    switch (this.mode) {
-                        case "toggle":
-                            newValue = (this.value == this.min) ? this.max: this.min;
-                            break;
-                        case "visualToggle":
-                            newValue = this.max;
-                            this.visualToggleLit = !this.visualToggleLit;
-                            break;
-                        case "latch":
-                        case "momentary":
-                            newValue = this.max;
-                            break;
-                        case "contact":
-                            this.contactOn = true;
-                            newValue = this.max;
-                            break;
-                    }
-                    this.setValue(newValue);
-                    eval(this.ontouchstart);
-                    //this.output();
-                    //this.draw();
-                    return;
-                }
-                
-                break;
-            case "touchmove":
-                var shouldChange = true;
-                var rollOff = false;
-                if (!this.requiresTouchDown) {
-                    var touchFound = false;
-                    var l = this.activeTouches.length;
-                    for (var i = 0; i < l; i++) {
-                        if (touch.identifier == this.activeTouches[i]) {
-                            shouldChange = false;
-                            
-                            if (isHit) {
-                                touchFound = true;
-                            } else {
-                                if (this.mode != "latch") {
-                                    this.activeTouches.splice(i, 1);
-                                    shouldChange = true;
-                                    rollOff = true;
-                                }
-                            }
-                        }
-                    }
-                    if (!touchFound && isHit) {
-                        this.activeTouches.push(touch.identifier);
-                        this.xOffset = (touch.pageX - this.x) / (this.width - this.x);
-                        this.yOffset = (touch.pageY - this.y) / (this.height - this.y);
-                        shouldChange = true;
-                    }
-                }
-                
-                if (shouldChange && isHit && !this.requiresTouchDown) {
-                    switch (this.mode) {
-                        case "toggle":
-                            this.value = (this.value == this.min) ? this.max: this.min;
-                            this.isLit = (this.value == this.max);
-                            break;
-                        case "visualToggle":
-                            this.value = this.max;
-                            this.isLit = !this.isLit;
-                            break;
-                        case "latch":
-                            this.value = this.max;
-                            this.isLit = true;
-                            break;
-                        case "momentary":
-                            if (!rollOff) {
-                                this.value = this.max;
-                                this.isLit = true;
-                            } else {
-                                this.value = this.min;
-                                this.isLit = false;
-                            }
-                            break;
-                        case "contact":
-                            this.value = this.max;
-                            break;
-                    }
-                    eval(this.ontouchmove);
-                    eval(this.onvaluechange);
-                    this.output();
-                    this.draw();
-                } else if (rollOff && this.mode == "momentary") {
-                    this.value = this.min;
-                    this.isLit = false;
-                    eval(this.onvaluechange);
-                    this.output();
-                    this.draw();
-                }
-                break;
-                
-            case "touchend":
-                if (isHit || this.mode == "latch" || this.mode == "momentary") {
-                    for (var i = 0; i < this.activeTouches.length; i++) {
-                        if (touch.identifier == this.activeTouches[i]) {
-                            this.activeTouches.splice(i, 1);
-                            // remove touch ID from array
-                            breakCheck = true;
-                            
-                            if (this.mode == "latch" || this.mode == "momentary") {
-                                this.isLit = false;
-                                this.value = this.min;
-                                eval(this.onvaluechange);
-                                this.draw();
-                                this.output();
-                            }
-                            
-                            eval(this.ontouchend);
-                            //break;
-                        }
-                    }
-                }
-                break;
-        }
-        if (breakCheck) break;
+		
+		var breakCheck = this.events[event.type].call(this, touch, isHit);
+		
+        if(breakCheck) break;
     }
 }
 

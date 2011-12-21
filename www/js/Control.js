@@ -211,6 +211,8 @@ Control.prototype.isWidgetSensor = function(w) {
 Control.prototype.makeWidget = function(w) {
 	var _w;
 	if(this.isWidgetSensor(w) == false) {
+        //_w = window[w.name] = 
+        console.log("w.name = " + w.name + " :: w.type = " + w.type);
 		_w = eval("window." + w.name + " = new " + w.type + "(interfaceDiv,w);");
 //		_w = eval(w.name + " = new " + w.type + "(interfaceDiv,w,this.ctx);");  
 		if(_w.init != null) { 
@@ -255,9 +257,14 @@ Control.prototype.loadWidgets = function() {
         var page = pages[pageNumber];
 		for(var i=0; i < page.length; i++) {
 			var w = page[i];
+            console.log("before making");
 			var _w = this.makeWidget(w);
+            console.log("after making");
 			this.widgets.push(_w);
-			eval("this.addWidget(" + w.name + ", pageNumber);"); // PROBLEM
+            console.log("after pushing");
+            console.log("widget name = " + _w.name);
+			this.addWidget(_w, pageNumber);
+            console.log("after adding");
 		}
 	}
 
