@@ -7,11 +7,7 @@ function Button(ctx, props) {
     
     this.activeTouches = new Array();
     
-    if (typeof props.requiresTouchDown == "undefined") {
-        this.requiresTouchDown = true;
-    } else {
-        this.requiresTouchDown = props.requiresTouchDown;
-    }
+    this.requiresTouchDown = (typeof props.requiresTouchDown == "undefined") ? true : props.requiresToucDown;
     
     this.contactOn = false;	// used to trigger flash for contact mode buttons
 	
@@ -59,9 +55,6 @@ function Button(ctx, props) {
     this.yOffset = 0;
     this.xOffset = 0;
     
-    /**
-     The current value of the button
-     */
     if (props.mode == "visualToggle") this.visualToggleLit = (this.value == this.max);
     
     this.isLit = (this.value == this.max);
@@ -242,14 +235,14 @@ Button.prototype.touchmove = function(touch, isHit) {
 		
 		if(typeof this.ontouchmove === "string")
 	        eval(this.ontouchmove);
-		else
+		else if(this.ontouchmove != null)
 			this.ontouchmove();
-		
+			
 		if(typeof this.onvaluechange === "string") 
 			eval(this.onvaluechange);
-		else
+		else if(this.ontouchmove != null)
 			this.onvaluechange();
-		
+
         this.output();
         this.draw();
     } else if (rollOff && this.mode == "momentary") {
@@ -297,24 +290,16 @@ Button.prototype.events = {
 	"touchend"  : Button.prototype.touchend,
 };
 
-/**
- * The event handler for the widget
- * @param {Object} event The event object containing the type of event, touch coordinates etc.	 
- */
 Button.prototype.event = function(event) {
     for (var j = 0; j < event.changedTouches.length; j++){
         var touch = event.changedTouches.item(j);
-        var isHit = this.hitTest(touch.pageX, touch.pageY);
 		
+        var isHit = this.hitTest(touch.pageX, touch.pageY);
 		var breakCheck = this.events[event.type].call(this, touch, isHit);
 		
         if(breakCheck) break;
     }
 }
-
-/**
- * Outputs the widget's value according to its protocol
- */
 
 Button.prototype.output = function() {
     if (!this.isLocal && _protocol == "OSC") {
@@ -326,10 +311,6 @@ Button.prototype.output = function() {
         control.valuesString += valueString;
     }
 }
-
-/**
- * Sets the value of the widget, outputs the value via the widget's protocol and redraws the widget.
- */
 
 Button.prototype.setValue = function(newValue) {
     this.value = newValue;
@@ -355,26 +336,17 @@ Button.prototype.setValue = function(newValue) {
     }
 }
 
-/**
- * Reveals the widget if it is hidden. Normally called when switching "pages" in an interface
- */
 Button.prototype.show = function() {
     //this.draw();
     this.fillDiv.style.display = "block";
 }
 
-/**
- * Hides the widget if it is visible. Normally called when switching "pages" in an interface
- */
 Button.prototype.hide = function() {
-    //this.ctx.clearRect(this.x, this.y, this.width, this.height);
-    
+    //this.ctx.clearRect(this.x, this.y, this.width, this.height);    
     this.fillDiv.style.display = "none";
 }
 
 Button.prototype.unload = function() {
     //this.ctx.clearRect(this.x, this.y, this.width, this.height);
-    
     this.ctx.removeChild(this.fillDiv);
 }
-

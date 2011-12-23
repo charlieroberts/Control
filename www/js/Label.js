@@ -1,12 +1,9 @@
 function Label(ctx, props) { //x, y, width, height, color, value, size, align) {
     this.make(ctx, props);
-    this.ctx = ctx;
-    //this.ctx = arguments[2];
-	this.size = (typeof props.size != "undefined") ? props.size : 12;
-
-	this.value = props.value;
-    if(typeof this.value == "undefined") this.value = "";
-	this.widgetID = -1;
+    
+	this.size  = (typeof props.size != "undefined") ? props.size : 12;
+    
+    this.value = (typeof props.value == "undefined") ? "" : props.value;
     
     this.name = props.name; 
     this.labelSize = props.labelSize || 12;
@@ -17,7 +14,6 @@ function Label(ctx, props) { //x, y, width, height, color, value, size, align) {
     this.align = (typeof props.align != "undefined") ? props.align : "center";
     this.verticalCenter = (typeof props.verticalCenter != "undefined") ? props.verticalCenter : true;
     
-    //this.label.setAttribute("style", );
     $(this.label).css({
         "text-align": this.align,
         "z-index"   : 10,
@@ -33,9 +29,7 @@ function Label(ctx, props) { //x, y, width, height, color, value, size, align) {
     });
     
     this.label.style.lineHeight = (this.verticalCenter) ? this.height + "px" : (this.size + 2) + "px";
-    //this.label.style.textShadow = "none";
-    //this.label.style.backgroundColor = this.backgroundColor;
-    //this.label.innerHTML = this.value;        
+      
     this.ctx.appendChild(this.label);
     
     return this;
@@ -44,9 +38,16 @@ function Label(ctx, props) { //x, y, width, height, color, value, size, align) {
 Label.prototype = new Widget();
 
 Label.prototype.draw = function() {
-    //console.log("draw " + this.name);
     this.changeValue(this.value);
 }
+
+//    Label.prototype.draw = function() {
+//        this.ctx.fillStyle = this.strokeColor;
+//        this.ctx.textBaseline = 'middle';
+//        this.ctx.textAlign = "center";
+//        this.ctx.font = this.labelSize + "px helvetiker";
+//        this.ctx.fillText(this.value, this.x + this.width / 2 , this.y + this.height / 2);
+//    }
 
 Label.prototype.setColors = function(newColors) {
     this.backgroundColor = newColors[0];
@@ -56,13 +57,7 @@ Label.prototype.setColors = function(newColors) {
     this.label.style.color = this.fillColor;
     this.label.style.backgroundColor = this.backgroundColor;
 }
-//    this.draw = function() {
-//        this.ctx.fillStyle = this.strokeColor;
-//        this.ctx.textBaseline = 'middle';
-//        this.ctx.textAlign = "center";
-//        this.ctx.font = this.labelSize + "px helvetiker";
-//        this.ctx.fillText(this.value, this.x + this.width / 2 , this.y + this.height / 2);
-//    }
+
 
 Label.prototype.event = function(event, eventType) {}
 
@@ -82,17 +77,16 @@ Label.prototype.setBounds = function(newBounds) {
     this.x = Math.round(newBounds[0] * control.deviceWidth);
     this.y = Math.round(newBounds[1] * control.deviceHeight);
     
-    this.label.style.width  = this.width;						// DO NOT USE STYLES TO RESIZE CANVAS OBJECT
-    this.label.style.height = this.width;					// DO NOT USE STYLES TO RESIZE CANVAS OBJECT
-    this.label.style.top  = (this.y - this.size) + "px";
-    this.label.style.left = this.x + "px";
-    
-    this.label.style.lineHeight = (this.verticalCenter) ? this.height + "px" : (this.size + 2) + "px";        
+    $(this.label).css({
+        "width":    this.width,
+        "height":   this.height,
+        "top":      (this.y - this.size) + "px",
+        "left":     this.x + "px",
+        "line-height": (this.verticalCenter) ? this.height + "px" : (this.size + 2) + "px",
+    });
 }
 
-Label.prototype.output = function() {
-//control.send("/msg", "i", this.value);
-}
+Label.prototype.output = function() { }
 
 Label.prototype.show = function() {
     this.label.style.display = "block";
@@ -101,6 +95,7 @@ Label.prototype.show = function() {
 Label.prototype.hide = function() {
     this.label.style.display = "none";
 }
+
 Label.prototype.unload = function() {
     this.ctx.removeChild(this.label);
 }

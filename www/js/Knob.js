@@ -26,7 +26,6 @@ function Knob(ctx,props) {
 	this.knobBuffer = 1;
 	
 	this.lastValue = this.value;
-	this.widgetID = -1;
 	this.usesRotation = (typeof props.usesRotation != "undefined") ? props.usesRotation : true;
 	
 	if(this.centerZero)
@@ -61,9 +60,9 @@ function Knob(ctx,props) {
         {
 			var _width, _height, _x, _y;
 			
-			_width = props.width * .75;
+			_width = .1 + (props.radius * .15);
 			_height = (this.labelSize + 4) / control.deviceHeight;
-			_x = props.x + props.radius * .125;
+			_x = props.x + (props.radius / 2) - (_width / 2);
 			_y = props.y + (props.radius / 3) - _height / 2;
 
             this.label = {
@@ -83,7 +82,6 @@ function Knob(ctx,props) {
 	        else
 	            control.addConstantWidget(_w); // PROBLEM
   
-            
             this.label = _w;
         }
     }

@@ -257,14 +257,11 @@ Control.prototype.loadWidgets = function() {
         var page = pages[pageNumber];
 		for(var i=0; i < page.length; i++) {
 			var w = page[i];
-            console.log("before making");
 			var _w = this.makeWidget(w);
-            console.log("after making");
+
 			this.widgets.push(_w);
-            console.log("after pushing");
-            console.log("widget name = " + _w.name);
+
 			this.addWidget(_w, pageNumber);
-            console.log("after adding");
 		}
 	}
 
