@@ -44,27 +44,28 @@ MultiTouchXY.prototype.init = function() {
 
 MultiTouchXY.prototype.addTouch = function(xPos, yPos, id) {
     var touch = document.createElement('div');
-    //XXX should this be a widget or some sort of widget child?
     $(touch).addClass('widget touch');
     
-    touch.style.display = "block";
-    touch.style.position = "absolute";
-
-    touch.style.border = this.strokeColor + " solid 1px";
-    touch.style.width = (this.width / 8) +"px";
-    touch.style.height = touch.style.width;
-    touch.style.textAlign = "center";
-    touch.style.lineHeight = touch.style.height;  
-    touch.style.verticalAlign = "center";
-
-    touch.style.left = xPos + "px";
-    touch.style.top  = yPos + "px";
-    touch.style.color = this.strokeColor;
-    touch.style.backgroundColor = this.fillColor;
-    touch.style.textShadow = "none";
+	$(touch).css({
+	    "display" 	: "block",
+	    "position" 	: "absolute",
+	    "border" 	: this.strokeColor + " solid 1px",
+	    "width" 	: (this.width / 8) +"px",
+	    "height" 	: touch.style.width,
+	    "text-align" 	: "center",
+	    "line-height" 	: touch.style.height,  
+	    "vertical-align" : "center",
+	    "left" 	: xPos + "px",
+	    "top"  	: yPos + "px",
+	    "color" : this.strokeColor,
+	    "background-color" : this.fillColor,
+	    "text-Shadow" : "none",
+	)};
+	
     touch.id = (this.isMomentary) ? id : gNOT_ACTIVE;
     touch.childID = touch.id;
     touch.isActive = (this.isMomentary);
+	
     if(!this.isMomentary) {
         touch.activeNumber = id + 1;
     }
@@ -111,49 +112,75 @@ MultiTouchXY.prototype.trackTouch = function(xPos, yPos, id) {
     this.lastTouched = touchFound;
 }
 
-MultiTouchXY.prototype.event = function(event) {
-    for (var j = 0; j < event.changedTouches.length; j++) {
-        var touch = event.changedTouches.item(j);
-        
-        switch(event.type) {
-            case "touchstart":
-                if(this.hitTest(touch.pageX, touch.pageY)) {
-                    if(this.isMomentary) 
-                        this.addTouch(touch.pageX , touch.pageY , touch.identifier);
-                    else
-                        this.trackTouch(touch.pageX, touch.pageY , touch.identifier);
+MultiTouchXY.prototype.touchstart = function (touch) {
+    if(this.hitTest(touch.pageX, touch.pageY)) {
+        if(this.isMomentary) 
+            this.addTouch(touch.pageX , touch.pageY , touch.identifier);
+        else
+            this.trackTouch(touch.pageX, touch.pageY , touch.identifier);
                     
-                    eval(this.ontouchstart);
-                }
-                break;
-            case "touchmove":
-                for(var t = 0; t < this.children.length; t++) {
-                    _t = this.children[t];
-                    if(touch.identifier == _t.id) {
-                        this.changeValue(_t, touch.pageX, touch.pageY);
-                        eval(this.ontouchmove);
-                        break;
-                    }
-                }
-                
-                break;
-            case "touchend":
-                for(var t = 0; t < this.children.length; t++) {
-                    _t = this.children[t];
-                    if(touch.identifier == _t.id) {
-                        this.endingTouchID = touch.activeNumber;
-                        eval(this.ontouchend);
-                        if(this.isMomentary) {
-                            this.removeTouch(_t);
-                        }else{
-                            _t.isActive = false;
-                            _t.id = gNOT_ACTIVE;
-                        }
-                    }
-                }							
-                break;
+		if(typeof this.ontouchstart === "string") {
+	        eval(this.ontouchstart);
+		}else if(this.ontouchstart != null){
+			this.ontouchstart();
+		}
+        
+    }
+}
+
+MultiTouchXY.prototype.touchmove = function (touch) {
+    for(var t = 0; t < this.children.length; t++) {
+        _t = this.children[t];
+        if(touch.identifier == _t.id) {
+            this.changeValue(_t, touch.pageX, touch.pageY);
+			
+			if(typeof this.ontouchmove === "string") {
+		        eval(this.ontouchmove);
+			}else if(this.ontouchmove != null){
+				this.ontouchmove();
+			}
+            
+            break;
         }
     }
+}
+
+MultiTouchXY.prototype.touchend = function (touch) {
+    for(var t = 0; t < this.children.length; t++) {
+        _t = this.children[t];
+        if(touch.identifier == _t.id) {
+            this.endingTouchID = touch.activeNumber;
+			
+			if(typeof this.ontouchend === "string") {
+		        eval(this.ontouchend);
+			}else if(this.ontouchend != null){
+				this.ontouchend();
+			}
+            
+            if(this.isMomentary) {
+                this.removeTouch(_t);
+            }else{
+                _t.isActive = false;
+                _t.id = gNOT_ACTIVE;
+            }
+        }
+    }	
+}
+
+MultiTouchXY.prototype.events = { 
+	"touchstart": MultiTouchXY.prototype.touchstart, 
+	"touchmove" : MultiTouchXY.prototype.touchmove, 
+	"touchend"  : MultiTouchXY.prototype.touchend,
+};
+
+MultiTouchXY.prototype.event = function(event) {
+    for (var j = 0; j < event.changedTouches.length; j++){
+        var touch = event.changedTouches.item(j);
+		
+		var breakCheck = this.events[event.type].call(this, touch);
+		
+        if(breakCheck) break;
+	}
 }
 
 MultiTouchXY.prototype.changeValue = function(touch, inputX, inputY) {

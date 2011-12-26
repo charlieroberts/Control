@@ -22,7 +22,7 @@ function Knob(ctx,props) {
 		}
 	}
 	
-	this.rotationValue = (this.value + Math.abs(this.min)) / (this.max - this.min);
+	this.rotationValue  = (this.value + Math.abs(this.min)) / (this.max - this.min);
 	this.knobBuffer = 1;
 	
 	this.lastValue = this.value;

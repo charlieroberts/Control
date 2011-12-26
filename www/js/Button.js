@@ -248,11 +248,10 @@ Button.prototype.touchmove = function(touch, isHit) {
     } else if (rollOff && this.mode == "momentary") {
         this.value = this.min;
         this.isLit = false;
-		if(typeof this.onvaluechange === "string") {
-			eval(this.onvaluechange);
-		}else{
-			this.onvaluechange();
-		}
+		if(typeof this.onvaluechange === "string") 
+            eval(this.onvaluechange);
+		else if(this.onvaluechange != null)
+            this.onvaluechange();
         
         this.output();
         this.draw();
@@ -275,7 +274,10 @@ Button.prototype.touchend = function(touch, isHit) {
                     this.output();
                 }
                             
-                eval(this.ontouchend);
+                if(typeof this.ontouchend === "string") 
+                    eval(this.ontouchend);
+                else if(this.ontouchend != null)
+                    this.ontouchend();
 				
 				return true;
             }
