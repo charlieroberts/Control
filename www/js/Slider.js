@@ -136,7 +136,7 @@ Slider.prototype.touchstart = function(touch) {
 		
 		if(typeof this.ontouchstart === "string") {
 	        eval(this.ontouchstart);
-		}else{
+		}else if(this.ontouchstart != null){
 			this.ontouchstart();
 		}
         

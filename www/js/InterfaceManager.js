@@ -1,54 +1,66 @@
 /* TODO: Defaults should only load if app is updated, otherwise they should stay deleted. Maybe have a button in preferences that reloads them??? */
 
-function InterfaceManager() {
-	this.init = function() {
-		this.selectedListItem = 0;
-		this.interfaceFiles = new Lawnchair('interfaceFiles');
+window.interfaceManager = {
+	init : function() {
+        this.selectedListItem = 0;
+		this.loadedInterfaces = [];
+
         this.currentInterfaceName = null;
         this.currentInterfaceJSON = null;
-        this.interfaceIP = null;
-        interfaceOrientation = null;
-        constants = null;
-        this.interfaceDefaults = ["iphoneLandscapeMixer.js",
-                                  "djcut.js",
-                                  "life.js",
-								  "monome.js",
-								  //"multibutton.js",
-								  "multiXY.js",
-								  "sequencer.js",
-								  "gyro.js",
-                                  "spacetime.js",
-                                  "pitchTracker.js",
-                                  ];
         
-        this.listItemFunctions = [];
-        window.shouldReadFiles = true;
-        window.isLoadingInterfaces = false; // stops database calls from being executed twice, for some reason "get" returns two values.
-    }
-     
-    this.loadScripts = function() {
-        this.shouldLoadInterfaces = new Lawnchair('shouldLoadInterfaces');
-        console.log("LOADING");
-        window.setTimeout(function() {  // needs a timeout for the Lawnchair database to be initialized... ARGGGGHHHH
-            interfaceManager.shouldLoadInterfaces.get("shouldLoad", function(r) { 
-                if(!window.isLoadingInterfaces) {
-                    if(r != null)
-                        window.shouldReadFiles = false; // this means that Control has been launched before, so we should load the interfaces into the database
+        this.interfaceIP = null;
+        constants = null;
+        
+        this.interfaceDefaults = [
+	        "multiXY.js",
+	        "iphoneLandscapeMixer.js",
+	        "djcut.js",
+	        "life.js",
+	        "monome.js",
+	        "multibutton.js",
+	        "sequencer.js",
+	        "gyro.js",
+        //"spacetime.js",
+        ];
 
-                    if(window.shouldReadFiles) {
-                        control.ifCount = 0;
-                        interfaceManager.shouldLoadInterfaces.save({key:"shouldLoad", sl:true});
-                        interfaceManager.readFile(interfaceManager.interfaceDefaults[control.ifCount]);
-                    }else{
-                        interfaceManager.createInterfaceListWithStoredInterfaces();
-                    }
-                    window.isLoadingInterfaces = true;
-                }
-            } )
-        }, 250 );
-    }
+        control.ifCount = 0;
+        if(typeof localStorage.interfaceFiles == "undefined") {
+            this.loadedInterfaces = [];
+            //console.log("INIT LOADING SCRIPTS");
+            //var msg = "now loading default interfaces. this will only happen the first time the app is launched (possibly also after updates) and takes about 8 seconds";
+            //navigator.notification.alert(msg, null, "loading");
+            setTimeout(function() {interfaceManager.loadScripts();}, 1000);
+        }else{
+            //console.log("NOT RELOADING");
+            this.loadedInterfaces = JSON.parse(localStorage.interfaceFiles);
+            this.createInterfaceListWithArray(this.loadedInterfaces);
+        }
+    },
+     
+    loadScripts : function() {    
+        var fileref = document.createElement('script')
+        fileref.setAttribute("type", "text/javascript");
+        fileref.setAttribute("src", "interfaces/" + interfaceManager.interfaceDefaults[control.ifCount]);
+        document.getElementsByTagName('head')[0].appendChild(fileref);
+            
+        window.setTimeout(function() {
+            if(control.ifCount < interfaceManager.interfaceDefaults.length) {
+				//console.log(window.interfaceString);
+                eval(window.interfaceString);
+                // console.log("ARHAIRH" + window.interfaceString]);
+                // console.log("loading " + loadedInterfaceName + " .....................................");                
+                
+                interfaceManager.loadedInterfaces[control.ifCount] = {'name':loadedInterfaceName, 'json':window.interfaceString};
+                control.ifCount++;
+                interfaceManager.loadScripts();
+            }else{
+                localStorage.interfaceFiles = JSON.stringify(interfaceManager.loadedInterfaces);
+                interfaceManager.createInterfaceListWithArray(interfaceManager.loadedInterfaces);
+            }
+        }, 1000);
+    },
     
-    this.readFile = function(filename) {
+    readFile : function(filename) {
 		console.log("reading " + filename)
         var fileref=document.createElement('script')
         fileref.setAttribute("type","text/javascript");
@@ -64,9 +76,9 @@ function InterfaceManager() {
                 interfaceManager.createInterfaceListWithStoredInterfaces();
 			}
         }, 100);
-    }
+    },
 	
-	this.promptForInterfaceDownload = function() {
+	promptForInterfaceDownload : function() {
 		var interfacesDiv = document.getElementById("Interfaces");
 		var promptDiv = document.createElement("div");
 		var input =	document.createElement("input");
@@ -108,16 +120,16 @@ function InterfaceManager() {
         promptDiv.appendChild(submitButton);
 		
 		interfacesDiv.appendChild(promptDiv);
-	}
+	},
     
     	
-	this.downloadInterfaceFromPrompt = function() {
+	downloadInterfaceFromPrompt : function() {
 		var ipAddress = document.getElementById('ipField').value;
         //var shouldReload = document.getElementById('shouldReloadBox').checked;
 		interfaceManager.downloadInterface(ipAddress);
-	}
+	},
 	
-	this.downloadInterface = function(ipAddress) { // EVENT --- CANNOT REFER TO THIS, MUST USE INTERFACE MANAGER
+	downloadInterface : function(ipAddress) { // EVENT --- CANNOT REFER TO THIS, MUST USE INTERFACE MANAGER
         console.log("downloading...");
 		interfaceManager.myRequest = new XMLHttpRequest();    	
 		var loadedInterfaceName = null;
@@ -143,10 +155,10 @@ function InterfaceManager() {
 		//interfaceManager.myRequest.withCredentials = "true";                
 		interfaceManager.myRequest.open("GET", ipAddress, true);
         interfaceManager.myRequest.send(null);
-	}
+	},
 	
 	
-	this.highlight = function (listNumber) {
+	highlight : function (listNumber) {
 		this.selectedListItem = listNumber;
 		var list = document.getElementById('interfaceList');
 		for(var i = 0; i < list.childNodes.length; i++) {
@@ -156,16 +168,18 @@ function InterfaceManager() {
 				list.childNodes[i].style.backgroundColor = "#333";
 			}
 		}
-	}
+	},
     
-    this.createInterfaceListWithStoredInterfaces = function() {
-		$('#interfaceList').empty();
-		interfaceManager.interfaceFiles.all(function(r) { interfaceManager.createInterfaceListWithArray(r); });
+    createInterfaceListWithStoredInterfaces : function() {
+        $('#interfaceList').empty();
+		
+        interfaceManager.createInterfaceListWithArray(interfaceManager.loadedInterfaces);
+		
         window.isLoadingInterfaces = false;
-	}
+	},
     
-	this.createInterfaceListWithArray = function(listArray) {
-		var list = document.getElementById('interfaceList');
+	createInterfaceListWithArray : function(listArray) {
+		var list = $("#interfaceList");
 		var count = 0;
 
 		for(var i = 0; i < listArray.length; i++) {
@@ -175,13 +189,13 @@ function InterfaceManager() {
             function _touchend(_key, _count) { 
                 return function(e) {
                     interfaceManager.highlight(_count);
-                    interfaceManager.selectInterfaceFromList(_key);
+                    interfaceManager.selectInterfaceFromList(_count);
                 }
             }
             
-            $(item).bind("tap", _touchend(r.key, count++));
+            $(item).bind("tap", _touchend(r.name, count++));
 
-            item.innerHTML = r.key;
+            $(item).html(r.name);
                         
             $(item).css({
                         "border-bottom" : "1px solid #666", 
@@ -189,14 +203,14 @@ function InterfaceManager() {
                         });
             
             $(item).addClass('destinationListItem interfaceListItem');
-
-   			list.appendChild(item);
+						
+   			$(list).append(item);
 		}
         
 		$(list).listview('refresh');
-	}
+	},
 
-	this.editInterfaceList = function() {
+	editInterfaceList : function() {
 		var list = document.getElementById('interfaceList');
 		
 		if(list.childNodes.length > 0) {
@@ -232,9 +246,9 @@ function InterfaceManager() {
 				$(item).unbind("tap");		
 			}
 		}
-	}
+	},
 	
-	this.endEditing = function() {
+	endEditing : function() {
 		var list = document.getElementById('interfaceList');
 
 		document.getElementById('interfaceEditBtn').innerHTML = "Edit";
@@ -252,44 +266,61 @@ function InterfaceManager() {
             
 			$(item).bind("tap", _touchend(i, item.innerHTML));
 		}
-	}
+	},
     
-    this.refreshInterface = function() {
-
-        interfaceManager.myRequest = new XMLHttpRequest();    	
+    refreshInterface : function() {
+        interfaceManager.myRequest = new XMLHttpRequest();
         interfaceManager.myRequest.onreadystatechange = function() {
-            if(interfaceManager.myRequest.readyState == 4) {              
+            // console.log("downloading stage " + interfaceManager.myRequest.readyState]);            
+            if (interfaceManager.myRequest.readyState == 4) {
                 interfaceManager.runInterface(interfaceManager.myRequest.responseText);
-                interfaceManager.interfaceFiles.save({key:interfaceManager.currentInterfaceName, json:interfaceManager.myRequest.responseText, address:interfaceManager.interfaceIP});
+                for(var i = 0; i < interfaceManager.loadedInterfaces.length; i++) {
+                    var interface = interfaceManager.loadedInterfaces[i];
+                    if(interface.name == interfaceManager.currentInterfaceName) {
+                        // console.log("SHOULD BE LOADED");
+                        var newInterface = {
+                            name:interfaceManager.currentInterfaceName,
+                            json: interfaceManager.myRequest.responseText,
+                            address: interfaceManager.interfaceIP
+                        };
+                        // console.log(newInterface.json]);
+                        interfaceManager.loadedInterfaces.splice(i,1,newInterface);
+                        
+                        localStorage.interfaceFiles = JSON.stringify(interfaceManager.loadedInterfaces);
+
+                        interfaceManager.runInterface(newInterface.json);
+                        break;
+                    }
+                }
             }
         }
-		//interfaceManager.myRequest.withCredentials = "true";                
-		interfaceManager.myRequest.open("GET", interfaceManager.interfaceIP, true);
+        interfaceManager.myRequest.open("GET", interfaceManager.interfaceIP, true);
         interfaceManager.myRequest.send(null);
-
-    }
+    },
     
-	this.saveInterface = function(interfaceJSON, shouldReloadList, ipAddress) {
-        console.log("SAVING");
-        if(typeof ipAddress == "undefined") ipAddress = "";
+	saveInterface : function(interfaceJSON, shouldReloadList, ipAddress) {
+        if (typeof ipAddress == "undefined") ipAddress = "";
+        
 		var loadedInterfaceName = null;
-        //console.log(interfaceJSON);
-		eval(interfaceJSON);
-        if(loadedInterfaceName != null) {
-            //interfaceManager.interfaceFiles.remove(loadedInterfaceName, 
-                interfaceManager.interfaceFiles.save( {key:loadedInterfaceName, json:interfaceJSON, address:ipAddress},
-                                                       function(r) {
-                                                             //console.log("interface saved");
-                                                            if(shouldReloadList) 
-                                                                interfaceManager.createInterfaceListWithStoredInterfaces();
-                                                       }
-                )
-            //);
+		
+        eval(interfaceJSON);
+		
+        if (loadedInterfaceName != null) {
+            interfaceManager.loadedInterfaces.push({
+                name:    loadedInterfaceName,
+                json:    interfaceJSON,
+                address: ipAddress
+            });
+            
+            localStorage.interfaceFiles = JSON.stringify(interfaceManager.loadedInterfaces);
+            
+            if (shouldReloadList) {
+                interfaceManager.createInterfaceListWithStoredInterfaces();
+            }
         }
-        console.log("END SAVING");
-	}
+	},
 	
-	this.pushInterfaceWithDestination = function(interfaceJSON, nameOfSender, newDestination) {
+	pushInterfaceWithDestination : function(interfaceJSON, nameOfSender, newDestination) {
          if(typeof nameOfSender != "undefined") {
             if(confirm("An interface is being pushed to you by " + nameOfSender + ". Do you accept it?")) {
                 var loadedInterfaceName = null;
@@ -301,9 +332,9 @@ function InterfaceManager() {
                 destinationManager.selectPushedDestination(segments[0], segments[1]);
             }
         }
-    }
+    },
 
-	this.pushInterface = function(interfaceJSON) {
+	pushInterface : function(interfaceJSON) {
 		// TODO: change so it gets rid of the index.html at top of confirm window. Might require a new version of phonegap or else something tricky.
        
         if(confirm("An interface is being pushed to you. Do you accept it?")) {
@@ -313,20 +344,26 @@ function InterfaceManager() {
 
         }
 
-	}
+	},
 	
-	this.removeInterface = function (itemNumber) {
-        
-        var listItem = $('#interfaceList > li:eq(' + itemNumber +')');
-        var arr = listItem.html().split("</div>");
-		var newKey = arr[1];
-        interfaceManager.interfaceFiles.remove(newKey);        
-        console.log("removing " + newKey);
-		listItem.remove();
-        $('#interfaceList').listview('refresh');
-	}
+	removeInterface : function (itemNumber) {
+        var listItem = $('#interfaceList > li:eq(' + itemNumber + ')');
+        var arr = $(listItem).html().split("</div>");
+        var newKey = arr[1];
+       for(var i = 0; i < interfaceManager.loadedInterfaces.length; i++) {
+           var _interface = interfaceManager.loadedInterfaces[i];
+           //console.log("Key = " + newKey + " :: interface.name = " + interface.name]);
+           if(_interface.name == newKey) {
+               interfaceManager.loadedInterfaces.splice(i,1);
+               listItem.remove();
+               localStorage.interfaceFiles = JSON.stringify(interfaceManager.loadedInterfaces);
+               //$('#interfaceList').listview('refresh');
+               break;
+           }
+       }
+	},
     
-    this.runInterface = function(json) {
+    runInterface : function(json) {
 		control.unloadWidgets();
         control.oninit = null;
         constants = null;
@@ -368,19 +405,17 @@ function InterfaceManager() {
             control.changeTab(document.getElementById("selectedInterface"));
             $.mobile.changePage('#SelectedInterfacePage');
 		}
-    }
+    },
 	
-	this.selectInterfaceFromList = function(interfaceName) {
-		interfaceManager.interfaceFiles.get(interfaceName, 
-			function(r){
-                if(typeof r.address != "undefined")
-                    interfaceManager.interfaceIP = r.address;
-                interfaceManager.runInterface(r.json);
-			}
-		);
-	}
-		
-	return this;
+	selectInterfaceFromList : function(interfaceNumber) {
+		console.log("INTERFACE NUMBER = " + interfaceNumber);
+        var r = interfaceManager.loadedInterfaces[interfaceNumber];
+        console.log(r);
+        if (typeof r.address != "undefined")
+            interfaceManager.interfaceIP = r.address;
+        
+        interfaceManager.runInterface(r.json);
+	},
 }
 
 
