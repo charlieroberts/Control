@@ -5,15 +5,25 @@ function DestinationManager() {
 	this.init = function() {
 		this.selectedListItem = 0;
 		this.myRequest = new XMLHttpRequest();
-		this.destinations = new Lawnchair('destinations');
-		this.destinationsSynch = [];
-		this.midiDestinations = [];
+		
+		this.destinationsSynch 		= [];
+		this.midiDestinations 		= [];
+		this.bonjourDestinations 	= [];		
+		
 		this.ipaddress = null;
-		this.bonjourDestinations = new Array();
+		this.destinations = [];
+		
+        if(typeof localStorage.destinations == "undefined") {
+			localStorage.destinations = [];
+        }else{
+			this.destinations = JSON.parse(localStorage.destinations);
+        }
+		
+		console.log("DESTINATIONS = " + this.destinations);
+		
 		Bonjour.start();
-		//setTimeout(function() { window.destinationManager.createDestinationList(); }, 1000);
+		
         window.destinationManager.createDestinationList();        
-
 	}
     
     this.refreshList = function() {
@@ -243,19 +253,18 @@ function DestinationManager() {
 	this.inputEnd = function() { 
 		var ipAddress = document.getElementById('ipField').value;
 		var port = document.getElementById('portField').value;	
-		//console.log("ipaddress = " + ipAddress + " :: port = " + port);
+		
 		document.getElementById("Destinations").removeChild(document.getElementById("promptDiv"));
-		var keyString = ipAddress + ":" + port;
-		destinationManager.destinations.save({key:keyString, ip:""+ipAddress, port:port}, 
-			function(r) {
-				//destinationManager.createDestinationList();
-				destinationManager.addDestination(ipAddress, port, false, false);
-			}
-		);
+		// $("#Destinations").remove("#promptDiv");
+		destinationManager.addDestination(ipAddress, port, false, false);
+
+		destinationManager.destinations.push({"ip":ipAddress, "port":port});
+
+		localStorage.destinations = JSON.stringify(destinationManager.destinations);
 	}
 	
 	this.createDestinationList = function() {
-		this.destinations.each( function(r){ destinationManager.addDestination(r.ip, r.port, false, false); } );
+		$(this.destinations).each( function(index, r){ destinationManager.addDestination(r.ip, r.port, false, false); } );
 	}
 	
 	this.editDestinationList = function() {
@@ -271,7 +280,7 @@ function DestinationManager() {
 					var deleteButton = document.createElement("div"); // -webkit-border-radius:10px;
 					deleteButton.setAttribute("style", "float:left; margin-right: 5px; position:relative; border: #fff 2px solid; -webkit-border-radius:10px; width: 15px; height: 15px; background-color:#f00; color:#fff; font-weight:bold;");
                     deleteButton.innerHTML = "<img style='position:relative; top:-.65em; left:-.65em;' src='images/dash.png'>";
-					deleteButton.setAttribute("ontouchend", "destinationManager.removeDestination("+i+")");
+					deleteButton.setAttribute("ontouchend", "console.log('blhteateataeteatea');destinationManager.removeDestination("+i+")");
 					item.insertBefore(deleteButton, item.firstChild);
 				//}
 			}
@@ -292,11 +301,31 @@ function DestinationManager() {
 	
 	
 	this.removeDestination = function (itemNumber) {
+		console.log("removing " + itemNumber);
 		var listItem = document.getElementById('destinationList').childNodes[itemNumber];
-		var jsonKey = listItem.childNodes[1].innerHTML;
-		console.log("removing "+ jsonKey);
+		var jsonKey = $(listItem).text();
+		console.log("dest = " + jsonKey);
+		var arr = jsonKey.split(':');
+		var obj = { "ip":arr[0], "port":arr[1] };
+		console.log(obj);
+		
+		console.log("remove");
+		
 		document.getElementById('destinationList').removeChild(listItem);
-		destinationManager.destinations.remove(jsonKey);
+		
+		// TODO: The line below doesn't work.... why?
+        for(var i = 0; i < destinationManager.destinations.length; i++) {
+            console.log(destinationManager.destinations[i]);
+        }
+		while(jQuery.inArray(obj, destinationManager.destinations) != -1) {
+            console.log("SOMETHING");
+			var idx = jQuery.inArray(obj, destinationManager.destinations);
+            console.log("DELETING " + idx);
+			destinationManager.destinations.splice(idx, 1);
+		}
+		
+		console.log("new dest " + destinationManager.destinations);
+		localStorage.destinations = JSON.stringify(destinationManager.destinations);
 	}
 	
 	return this;

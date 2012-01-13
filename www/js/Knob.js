@@ -194,6 +194,31 @@ Knob.prototype.event = function(event) {
     }
 }
 
+Knob.prototype.setValue = function(newValue) {
+    this.rotationValue = newValue;
+    
+    if(newValue > this.max) { 
+        newValue = this.max;
+    }else if(newValue < this.min) {
+        newValue = this.min;
+    }
+	
+    this.value = newValue;
+    this.draw();
+	
+	if(typeof this.onvaluechange === "string") {
+        eval(this.onvaluechange);
+	}else if(this.onvaluechange != null){
+		this.onvaluechange();
+	}
+    
+	if(!(arguments[1] === false))
+		this.output();
+    
+    //this.draw();
+
+};
+
 Knob.prototype.changeValue = function(yinput, xinput) {
     this.lastValue = this.value;
     

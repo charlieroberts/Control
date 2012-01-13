@@ -24,7 +24,7 @@ AutoGUI.prototype.placeWidget = function(_widget, sacrosanct) {
         var splitDir = (selectedDiv.bounds[2] > selectedDiv.bounds[3]) ? 0 : 1; // will the cell be split horizontally or vertically?
         
         var widgetWidth, widgetHeight;
-        if(selectedDiv.widget != null) {    // this will only be null on the very first widget addition
+        if(selectedDiv.widget != null) {   // this will only be null on the very first widget addition
             widgetWidth  = (splitDir == 0) ? selectedDiv.bounds[2] / 2 : selectedDiv.bounds[2];
             widgetHeight = (splitDir == 1) ? selectedDiv.bounds[3] / 2 : selectedDiv.bounds[3];
         }else{
@@ -50,17 +50,26 @@ AutoGUI.prototype.placeWidget = function(_widget, sacrosanct) {
             }      
         
             this.divisions.splice( bestDiv, 1, div1, div2 );
+            
+            div1.widget.div = div1;
             div1.widget.setBounds(div1.bounds);
+            
             div2.widget.setBounds(div2.bounds); 
+            div2.widget.div = div;
         }else{
             selectedDiv.widget = _widget;
             _widget.setBounds(div1.bounds);
+            _widget.div = selectedDiv;
         }
     }
 };
 
+AutoGUI.prototype.removeWidget = function(_widget) {
+    _widget.div.widget = null;
+};
+
 window.oscManager = {
-	delegate: this,
+    delegate : null,
 	processOSCMessage : function() {
 		var address = arguments[0];
 		
@@ -72,8 +81,8 @@ window.oscManager = {
 			for(var i = 2; i < arguments.length; i++) {
 				args[i - 2] = arguments[i];
 			}
-
-			this.delegate.processOSC(address, typetags, args);
+            console.log("getting ready to call delegate");
+			this.delegate.processOSC(address, arguments[1], args);            
 		}
 	},	
 	
@@ -111,6 +120,9 @@ window.oscManager = {
             eval("control.addWidget(" + w.name + ", control.currentPage);");
 		},
 		"/control/removeWidget": function(args) {
+            if(typeof this.autogui != "undefined") {
+                this.autogui.removeWidget( control.getWidgetWithName(args[2]) );
+            }
             control.removeWidgetWithName(args[2]);
 		},
         "/control/setBounds": function(args) {
@@ -154,6 +166,7 @@ window.oscManager = {
 	},
 	
 	processOSC : function(oscAddress, typetags, args) {
+        console.log("CALLING DELEGATE METHOD");
 		if(typeof control.constants != "undefined") {
 			for(var i = 0; i < control.constants.length; i++) {
 				var w = control.constants[i];
@@ -179,9 +192,9 @@ window.oscManager = {
 		}
 		for(var i = 0; i < control.widgets.length; i++) {
 			var w = control.widgets[i];
-			//console.log("w.address = " + w.address + " :: address received = " + oscAddress);
+			console.log("w.address = " + w.address + " :: address received = " + oscAddress);
 			if(w.address == oscAddress) {
-				console.log("setting !" + args[0]);
+                                              console.log("SETTING VALUE");
 				w.setValue(args[0], false);
 				break;
 			}else{
@@ -217,3 +230,5 @@ window.oscManager = {
 		PhoneGap.exec(null, null, 'OSCManager', 'send', args);
 	},	
 };
+
+window.oscManager.delegate = window.oscManager;
