@@ -2,8 +2,9 @@
 
 function ControlAccelerometer(props) {
 	//this.name = props.name;
+    console.log("MAKING ACC 0");
     this.make("sensor", props);
-
+        console.log("MAKING ACC 2");
 	this.x = 0;
 	this.y = 0;
 	this.z = 0;
@@ -16,7 +17,7 @@ function ControlAccelerometer(props) {
 	    this.hardwareMax = 9.81;  // says that the range is [0, 1]. But, it seems more like [-1G, 1G]
 	}
     this.hardwareRange = this.hardwareMax - this.hardwareMin;
-    
+    console.log("MAKING ACC 0");
 	if(_protocol == "MIDI") {
 		this.max = (typeof props.midiMax != "undefined") ? props.midiMax : 127;
 		this.min = (typeof props.midiMin != "undefined") ? props.midiMin : 0;

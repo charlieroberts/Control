@@ -1,88 +1,23 @@
-function AutoGUI() {
-    this.divisions = [
-        {"bounds" : [0, 0, 1, .9], "widget" : null, "sacrosanct" : false},
-        {"bounds" : [0,.9, 1, .1], "widget" : null, "sacrosanct" : true },
-    ];
-    return this;
-}
-
-AutoGUI.prototype.placeWidget = function(_widget, sacrosanct) {
-    var maxSize = 0;
-    var bestDiv = -1;
-    for(var i = 0; i < this.divisions.length; i++) {
-        var div = this.divisions[i];
-        if(div.sacrosanct) continue;
-        if(div.bounds[2] + div.bounds[3] > maxSize) {
-            maxSize = div.bounds[2] + div.bounds[3];
-            bestDiv = i;
-        }
-    }
-    
-    if(bestDiv != -1) {
-        var selectedDiv = this.divisions[bestDiv];
-        
-        var splitDir = (selectedDiv.bounds[2] > selectedDiv.bounds[3]) ? 0 : 1; // will the cell be split horizontally or vertically?
-        
-        var widgetWidth, widgetHeight;
-        if(selectedDiv.widget != null) {   // this will only be null on the very first widget addition
-            widgetWidth  = (splitDir == 0) ? selectedDiv.bounds[2] / 2 : selectedDiv.bounds[2];
-            widgetHeight = (splitDir == 1) ? selectedDiv.bounds[3] / 2 : selectedDiv.bounds[3];
-        }else{
-            widgetWidth = selectedDiv.bounds[2];
-            widgetHeight = selectedDiv.bounds[3];            
-        }
-        
-        var w = (selectedDiv.widget == null) ? _widget : selectedDiv.widget;
-        var div1 = {
-            "bounds": [selectedDiv.bounds[0], selectedDiv.bounds[1], widgetWidth, widgetHeight],
-            "widget": w,
-            "sacrosanct": sacrosanct,
-        }
-        
-        if(selectedDiv.widget != null) {
-            var newDivX = (splitDir == 0) ? selectedDiv.bounds[0] + widgetWidth  : selectedDiv.bounds[0];
-            var newDivY = (splitDir == 1) ? selectedDiv.bounds[1] + widgetHeight : selectedDiv.bounds[1];
-                
-            var div2 = {
-                "bounds": [newDivX, newDivY, widgetWidth, widgetHeight],
-                "widget": _widget,
-                "sacrosanct": selectedDiv.sacrosanct,
-            }      
-        
-            this.divisions.splice( bestDiv, 1, div1, div2 );
-            
-            div1.widget.div = div1;
-            div1.widget.setBounds(div1.bounds);
-            
-            div2.widget.setBounds(div2.bounds); 
-            div2.widget.div = div;
-        }else{
-            selectedDiv.widget = _widget;
-            _widget.setBounds(div1.bounds);
-            _widget.div = selectedDiv;
-        }
-    }
-};
-
-AutoGUI.prototype.removeWidget = function(_widget) {
-    _widget.div.widget = null;
-};
-
 window.oscManager = {
     delegate : null,
+    start: function() {
+        console.log("OSC MANAGER START CALLED");
+        return PhoneGap.exec(null, null, "OSCManager", "startPolling", []);
+    },
+
 	processOSCMessage : function() {
 		var address = arguments[0];
 		
 		if(typeof this.callbacks[address] != "undefined") {	// if Control has a defined callback for this address ...
 			this.callbacks[address](arguments);				// ... call the function associated with it ...
+			console.log("CALLED CALLBACK FOR " + address);
 		}else{                                              // ... else call processOSC on the oscManager delegate
 			var args = [];
 
 			for(var i = 2; i < arguments.length; i++) {
 				args[i - 2] = arguments[i];
 			}
-            console.log("getting ready to call delegate");
-			this.delegate.processOSC(address, arguments[1], args);            
+			this.delegate.processOSC(address, arguments[1], args);
 		}
 	},	
 	
@@ -94,10 +29,11 @@ window.oscManager = {
 			var w = {};
             eval("w = " + args[2]);
 			
+			
             var isImportant = false;
 			
-            if(typeof args[3] != "undefined") {                // if there is an options dictionary included with the widget, used for autogui
-                var options = args[3].replace(/\'/gi, "\"");   // replace any single quotes in json string
+            if(typeof args[3] != "undefined") {                     // if there is an options dictionary included with the widget, used for autogui
+                var options = args[3].replace(/\'/gi, "\"");        // replace any single quotes in json string
                 try {
                     options = jQuery.parseJSON(options);            // since this might be an 'important' string, don't fail on json parsing error
                 }catch (e) {}
@@ -114,14 +50,19 @@ window.oscManager = {
             control.widgets.push(_w);
                         
             if(typeof _w.bounds == "undefined") {
-                this.autogui.placeWidget(_w, isImportant);
+                if(!control.isWidgetSensor(w) ) {
+                    window.autogui.placeWidget(_w, isImportant);
+                }
             }
 
             eval("control.addWidget(" + w.name + ", control.currentPage);");
 		},
+		"/control/autogui/redoLayout" : function(args) {
+			window.autogui.redoLayout();
+		},
 		"/control/removeWidget": function(args) {
-            if(typeof this.autogui != "undefined") {
-                this.autogui.removeWidget( control.getWidgetWithName(args[2]) );
+            if(typeof window.autogui != "undefined") {
+                window.autogui.removeWidget( control.getWidgetWithName(args[2]) );
             }
             control.removeWidgetWithName(args[2]);
 		},
@@ -143,8 +84,6 @@ window.oscManager = {
 		},
 		"/control/createBlankInterface": function(args) {
             control.unloadWidgets();
-
-        	this.autogui = new AutoGUI();
 			
             var _json = "loadedInterfaceName = '" + args[2] + "'; interfaceOrientation = '" + args[3] + "'; pages = [[";
             if(typeof args[4] == "undefined" || args[4] == "true") {
@@ -161,12 +100,14 @@ window.oscManager = {
             _json += "]];";
             
             interfaceManager.runInterface(_json);
-            $.mobile.changePage('#SelectedInterfacePage');         
-	    },	
+            $.mobile.changePage('#SelectedInterfacePage');
+			
+			window.autogui.redoLayout();
+	    },
+		// TODO: clear interface?	
 	},
 	
 	processOSC : function(oscAddress, typetags, args) {
-        console.log("CALLING DELEGATE METHOD");
 		if(typeof control.constants != "undefined") {
 			for(var i = 0; i < control.constants.length; i++) {
 				var w = control.constants[i];
@@ -192,9 +133,8 @@ window.oscManager = {
 		}
 		for(var i = 0; i < control.widgets.length; i++) {
 			var w = control.widgets[i];
-			console.log("w.address = " + w.address + " :: address received = " + oscAddress);
+			//console.log("w.address = " + w.address + " :: address received = " + oscAddress);
 			if(w.address == oscAddress) {
-                                              console.log("SETTING VALUE");
 				w.setValue(args[0], false);
 				break;
 			}else{

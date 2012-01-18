@@ -212,7 +212,7 @@ Control.prototype.makeWidget = function(w) {
 	var _w;
 	if(this.isWidgetSensor(w) == false) {
         //_w = window[w.name] = 
-        console.log("w.name = " + w.name + " :: w.type = " + w.type);
+        //console.log("w.name = " + w.name + " :: w.type = " + w.type);
 		_w = eval("window." + w.name + " = new " + w.type + "(interfaceDiv,w);");
 //		_w = eval(w.name + " = new " + w.type + "(interfaceDiv,w,this.ctx);");  
 		if(_w.init != null) { 
