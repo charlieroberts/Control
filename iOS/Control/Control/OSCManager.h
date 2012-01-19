@@ -17,6 +17,7 @@
 class ExamplePacketListener;
 @interface OSCManager : PGPlugin {
     BOOL shouldPoll;
+    BOOL isOutputInitialized;
 	ExamplePacketListener  * listener;
 	UdpListeningReceiveSocket * s;
 	NSMutableDictionary * addresses;

@@ -23,6 +23,8 @@
     if (self) {
 		__identifier = nil;
         [self setWebView:theWebView];
+        NSLog(@"CALLING GET MY IP");
+        [self getMyIP:nil withDict:nil];
 		services = [NSMutableArray new];
 		count = 0;
 	}
@@ -30,6 +32,7 @@
 }
 
 - (void)start:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
+    NSLog(@"STARTING UP BONJOUR SERVICES");
     [self publishService:[NSMutableArray arrayWithObjects:[NSNumber numberWithInt:8080], @"", nil] withDict:nil];
 	
 	self.browser = [NSNetServiceBrowser new];
@@ -41,17 +44,17 @@
     self.isConnected = NO;
 	
     [self browse:nil withDict:nil];
-    [self getMyIP:nil withDict:nil];
 }
 
 - (void)getMyIP:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
+    NSLog(@"GETTING IP ADDRESS");
     if(myIP != nil) [myIP release];
     
 	myIP = [self getIPAddress];
     [myIP retain];
     
     NSString *ipstring = [NSString stringWithFormat:@"window.ipAddress = '%@';", myIP]; // for some reason control.ipAddress doesn't work, maybe control isn't instantiated yet?
-    NSLog(ipstring);
+    NSLog(@"ipstring = %@", ipstring);
     [self.webView stringByEvaluatingJavaScriptFromString:ipstring];
 }
 
@@ -88,10 +91,10 @@
 
 #pragma mark Net Service Browser Delegate Methods
 -(void)netServiceBrowser:(NSNetServiceBrowser *)aBrowser didFindService:(NSNetService *)aService moreComing:(BOOL)more {
-    NSLog(@"found something");
 	[services addObject:aService];
 
 	NSNetService *remoteService = aService;
+    [remoteService retain];
     remoteService.delegate = self;
     [remoteService resolveWithTimeout:0];
 }
@@ -155,6 +158,8 @@
             [self.webView stringByEvaluatingJavaScriptFromString:ipString];
         }
     } @catch(NSException *e) { NSLog(@"error resolving bonjour address"); }
+    
+    [service release];
 }
 
 -(void)netService:(NSNetService *)service didNotResolve:(NSDictionary *)errorDict {

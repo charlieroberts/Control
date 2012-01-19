@@ -20,7 +20,6 @@ protected:
 
     virtual void ProcessMessage( const osc::ReceivedMessage& m, const IpEndpointName& remoteEndpoint ) {
 		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-        NSLog(@"received msg");
 		NSString *oscAddress = [NSString stringWithUTF8String:m.AddressPattern()];
 		if([_oscManager.addresses objectForKey:oscAddress] != nil) {
 			[_oscManager performSelector:NSSelectorFromString([_oscManager.addresses objectForKey:oscAddress]) withObject:[NSValue valueWithPointer:&m]];
@@ -33,13 +32,14 @@ protected:
 
 			for(int i = 0; i < m.ArgumentCount(); i++) {
 					switch(tags[i]) {
-						case 'f':                           [jsString appendString:[NSString stringWithFormat:@"%f", (arg++)->AsFloat()]];
+						case 'f':
+                            [jsString appendString:[NSString stringWithFormat:@"%f", (arg++)->AsFloat()]];
 						break;
-					case 'i':
-						[jsString appendString:[NSString stringWithFormat:@"%i", (arg++)->AsInt32()]];						
+                        case 'i':
+                            [jsString appendString:[NSString stringWithFormat:@"%i", (arg++)->AsInt32()]];						
 						break;
 					case 's':
-						[jsString appendString:[NSString stringWithFormat:@"\"%s\"", (arg++)->AsString()]];
+                            [jsString appendString:[NSString stringWithFormat:@"\"%s\"", (arg++)->AsString()]];
 						break;
 					default:
 						break;
@@ -61,8 +61,12 @@ protected:
 - (PGPlugin*) initWithWebView:(UIWebView*)theWebView {
 
 	if(self = (OSCManager *)[super initWithWebView:theWebView]) {
+        isOutputInitialized = NO;
         shouldPoll = NO;
 		listener = new ExamplePacketListener();
+        self.receivePort = OSC_RECEIVE_PORT;
+        // TODO: the below line should happen with the preferences manager looks up the osc receive port, not automatically
+		[NSThread detachNewThreadSelector:@selector(oscThread) toTarget:self withObject:nil];
 		[NSThread detachNewThreadSelector:@selector(pollJavascriptStart:) toTarget:self withObject:nil];
 		
 		NSArray * keys = [NSArray arrayWithObjects:@"/pushInterface", @"/pushDestination", @"/control/pushInterface", @"/control/pushDestination", nil];
@@ -170,6 +174,8 @@ protected:
 	delete(output);
 	output = new UdpTransmitSocket(*destinationAddress);
 	
+    isOutputInitialized = YES;
+    
     [self startPolling:nil withDict:nil];
 }
 
@@ -188,66 +194,72 @@ protected:
 - (void) pollJavascript:(id)obj {
 	//NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
-	NSString *cmdString = [self.webView stringByEvaluatingJavaScriptFromString:@"control.getValues()"];
-	if([cmdString length] == 0) return;
-	
-	char buffer[OUTPUT_BUFFER_SIZE];
-    osc::OutboundPacketStream p( buffer, OUTPUT_BUFFER_SIZE );		
-	p << osc::BeginBundleImmediate;
-	
-	[self.webView stringByEvaluatingJavaScriptFromString:@"control.clearValuesString()"];
-	NSArray *objects = [cmdString componentsSeparatedByString:@"|"];
+    if(isOutputInitialized) {
+        NSString *cmdString = [self.webView stringByEvaluatingJavaScriptFromString:@"control.getValues()"];
+        if([cmdString length] == 0) return;
+        
+        char buffer[OUTPUT_BUFFER_SIZE];
+        osc::OutboundPacketStream p( buffer, OUTPUT_BUFFER_SIZE );		
+        p << osc::BeginBundleImmediate;
+        
+        [self.webView stringByEvaluatingJavaScriptFromString:@"control.clearValuesString()"];
+        NSArray *objects = [cmdString componentsSeparatedByString:@"|"];
 
-	for(int i = 0; i < [objects count]; i++) {
-		NSString *str = [objects objectAtIndex:i];
-		NSArray  *nameValues = [str componentsSeparatedByString:@":"];
-		
-		if([nameValues count] < 2) continue; // avoids problem caused by starting polling before JavaScript state is ready
-		
-		NSString *oscAddress = [nameValues objectAtIndex:0];
-		NSString *allvalues  = [nameValues objectAtIndex:1];
-		
-		p << osc::BeginMessage( [oscAddress UTF8String] );
+        for(int i = 0; i < [objects count]; i++) {
+            NSString *str = [objects objectAtIndex:i];
+            NSArray  *nameValues = [str componentsSeparatedByString:@":"];
+            
+            if([nameValues count] < 2) continue; // avoids problem caused by starting polling before JavaScript state is ready
+            
+            NSString *oscAddress = [nameValues objectAtIndex:0];
+            NSString *allvalues  = [nameValues objectAtIndex:1];
+            
+            NSLog(@"SENDING %@", oscAddress);
+            
+            p << osc::BeginMessage( [oscAddress UTF8String] );
 
-		NSArray *strValues = [allvalues componentsSeparatedByString:@","];
-		for(int j = 0; j < [strValues count]; j++) {
-			NSString * value = [strValues objectAtIndex:j];
-			p << [value floatValue];
-		}
-		p << osc::EndMessage;
-	}
-	
-	p << osc::EndBundle;
-	output->Send(p.Data(), p.Size());
+            NSArray *strValues = [allvalues componentsSeparatedByString:@","];
+            for(int j = 0; j < [strValues count]; j++) {
+                NSString * value = [strValues objectAtIndex:j];
+                p << [value floatValue];
+            }
+            p << osc::EndMessage;
+        }
+        
+        p << osc::EndBundle;
+        output->Send(p.Data(), p.Size());
+    }
 	
 //	[pool drain];
 //  [pool release];
 }
 
 - (void)send:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
-    NSLog(@"arguments length = %d", [arguments count]);
-    NSLog(@"ARGUMENTS = %@", [arguments description]);
-	char buffer[OUTPUT_BUFFER_SIZE];
-    osc::OutboundPacketStream p( buffer, OUTPUT_BUFFER_SIZE );		
-	p << osc::BeginBundleImmediate << osc::BeginMessage( [[arguments objectAtIndex:1] UTF8String] );
-	
-	NSString *typetags= [arguments objectAtIndex:2];
-	for(int i = 0; i < [typetags length]; i++) {	
-		char c = [typetags characterAtIndex:i];
-		switch(c) {
-			case 'i':
-				p << [[arguments objectAtIndex:i+3] intValue];
-				break;
-			case 'f':
-				p << [[arguments objectAtIndex:i+3] floatValue];
-				break;
-			case 's':
-				p << [[arguments objectAtIndex:i+3] UTF8String];
-				break;
-		 }
-	}
-	p << osc::EndMessage << osc::EndBundle;
-	if(output != NULL) output->Send(p.Data(), p.Size());
+    //NSLog(@"arguments length = %d", [arguments count]);
+    //NSLog(@"ARGUMENTS = %@", [arguments description]);
+    if(isOutputInitialized) {
+        char buffer[OUTPUT_BUFFER_SIZE];
+        osc::OutboundPacketStream p( buffer, OUTPUT_BUFFER_SIZE );		
+        p << osc::BeginBundleImmediate << osc::BeginMessage( [[arguments objectAtIndex:1] UTF8String] );
+        
+        NSString *typetags= [arguments objectAtIndex:2];
+        for(int i = 0; i < [typetags length]; i++) {	
+            char c = [typetags characterAtIndex:i];
+            switch(c) {
+                case 'i':
+                    p << [[arguments objectAtIndex:i+3] intValue];
+                    break;
+                case 'f':
+                    p << [[arguments objectAtIndex:i+3] floatValue];
+                    break;
+                case 's':
+                    p << [[arguments objectAtIndex:i+3] UTF8String];
+                    break;
+             }
+        }
+        p << osc::EndMessage << osc::EndBundle;
+        output->Send(p.Data(), p.Size());
+    }
 }
 
 - (void) dealloc {

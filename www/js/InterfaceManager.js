@@ -387,7 +387,7 @@ window.interfaceManager = {
         }else{
             control.makePages(pages, screen.height, screen.width);
         }
-
+		
         if(constants != null) {
             control.loadConstants(constants);
         }
@@ -408,9 +408,9 @@ window.interfaceManager = {
     },
 	
 	selectInterfaceFromList : function(interfaceNumber) {
-		console.log("INTERFACE NUMBER = " + interfaceNumber);
+		//console.log("INTERFACE NUMBER = " + interfaceNumber);
         var r = interfaceManager.loadedInterfaces[interfaceNumber];
-        console.log(r);
+        //console.log(r);
         if (typeof r.address != "undefined")
             interfaceManager.interfaceIP = r.address;
         

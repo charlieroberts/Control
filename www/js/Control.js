@@ -79,7 +79,6 @@ Control.prototype.removeWidgetWithName = function(widgetName) {
 		for(var j = 0; j < control.pages[page].length; j++) {
 			var widget = control.pages[page][j];
 			if(widget.name == widgetName) {
-                console.log("widget found!");
                 control.pages[page].splice(j,1);
                 widget = null;
 			}
@@ -185,15 +184,15 @@ Control.prototype.loadConstants = function(_constants) {
 	this.isAddingConstants = true;
 	if(_constants != null) {
 		constants = _constants;
-
-		this.constants = new Array();
+		this.constants = [];
+                
 		for(var i = 0; i < constants.length; i++) {
 			var w = constants[i];
-			var _w = this.makeWidget(w);						
-			this.constants.push(_w);
-			eval("this.addConstantWidget(" + w.name + ");"); // PROBLEM
+			var _w = this.makeWidget(w);
+            this.addConstantWidget(_w);
 		}
 	}
+	this.isAddingConstants = false;
 }
 
 Control.prototype.isWidgetSensor = function(w) {
@@ -211,10 +210,8 @@ Control.prototype.isWidgetSensor = function(w) {
 Control.prototype.makeWidget = function(w) {
 	var _w;
 	if(this.isWidgetSensor(w) == false) {
-        //_w = window[w.name] = 
-        //console.log("w.name = " + w.name + " :: w.type = " + w.type);
+        // console.log("w.name = " + w.name + " :: w.type = " + w.type);
 		_w = eval("window." + w.name + " = new " + w.type + "(interfaceDiv,w);");
-//		_w = eval(w.name + " = new " + w.type + "(interfaceDiv,w,this.ctx);");  
 		if(_w.init != null) { 
 			_w.init();
 		}
@@ -243,6 +240,7 @@ Control.prototype.makeWidget = function(w) {
 	}
 	_w.widgetID = this.widgetCount++;
 	_w.name = w.name;
+	
 	return _w;
 }
 
@@ -273,15 +271,14 @@ Control.prototype.getValues = function() { return control.valuesString; }
 Control.prototype.clearValuesString = function() { control.valuesString = ""; }
 
 Control.prototype.addConstantWidget = function(widget) {
-	if(widget.show != null)
-		widget.show();
-	
-	if(widget.draw != null)
-		widget.draw();
-		
+    this.constants.push(widget);
+
+	if(widget.show != null) { widget.show(); }
+	if(widget.draw != null) { widget.draw(); }
+
     if(typeof widget.oninit === "string") {
         eval(widget.oninit);
-    }else{
+    }else if (widget.oninit !== null ){
         widget.oninit();
     }
 }
@@ -289,22 +286,16 @@ Control.prototype.addConstantWidget = function(widget) {
 Control.prototype.addWidget = function(widget, page) {
 	this.pages[page].push(widget);
 	if(page == control.currentPage) {
-		if(widget.show != null)
-			widget.show();
-		
-		if(widget.draw != null)
-			widget.draw();
-
+		if(widget.show != null) { widget.show(); }
+		if(widget.draw != null) { widget.draw(); }
 	}else{
-		if(widget.hide != null)
-			widget.hide();
+		if(widget.hide != null) { widget.hide(); }
 	}
-    eval(widget.oninit);
-//    if(typeof widget.oninit === "string") {
-//        eval(widget.oninit);
-//    }else{
-//        widget.oninit();
-//    }
+    if(typeof widget.oninit === "string") {
+        eval(widget.oninit);
+    }else if (widget.oninit !== null ){
+        widget.oninit();
+    }
 }
 
 

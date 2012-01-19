@@ -86,7 +86,7 @@ function Knob(ctx,props) {
         }
     }
 
-    this.setValue(this.value);
+    this.setValue(this.value, false);
     
     return this;
 }
@@ -215,7 +215,7 @@ Knob.prototype.setValue = function(newValue) {
 	if(!(arguments[1] === false))
 		this.output();
     
-    //this.draw();
+    this.draw();
 
 };
 

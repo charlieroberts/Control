@@ -420,6 +420,7 @@ pages = [ [\
 \"width\": .145,\
 \"height\": .15 * whRatio,\
 \"mode\":\"toggle\",\
+\"isLocal\":true,\
 \"color\": \"#333333\",\
 \"stroke\": \"#aaaaaa\",\
 \"ontouchstart\": \"if(this.value == this.max) { control.showToolbar(); } else { control.hideToolbar(); }\",\

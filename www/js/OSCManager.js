@@ -1,7 +1,6 @@
 window.oscManager = {
     delegate : null,
     start: function() {
-        console.log("OSC MANAGER START CALLED");
         return PhoneGap.exec(null, null, "OSCManager", "startPolling", []);
     },
 
@@ -10,7 +9,6 @@ window.oscManager = {
 		
 		if(typeof this.callbacks[address] != "undefined") {	// if Control has a defined callback for this address ...
 			this.callbacks[address](arguments);				// ... call the function associated with it ...
-			console.log("CALLED CALLBACK FOR " + address);
 		}else{                                              // ... else call processOSC on the oscManager delegate
 			var args = [];
 
@@ -29,23 +27,8 @@ window.oscManager = {
 			var w = {};
             eval("w = " + args[2]);
 			
-			
             var isImportant = false;
 			
-            if(typeof args[3] != "undefined") {                     // if there is an options dictionary included with the widget, used for autogui
-                var options = args[3].replace(/\'/gi, "\"");        // replace any single quotes in json string
-                try {
-                    options = jQuery.parseJSON(options);            // since this might be an 'important' string, don't fail on json parsing error
-                }catch (e) {}
-                
-                if(typeof options == 'object') {                    // will be object if json parsing successful, otherwise will be string
-                    jQuery.each(options, function(key, val) {       // loop through options dict and add all key/value pairs to widget
-						w[key] = val;
-                    });
-                }else{
-                    isImportant = true;
-                }
-			}
             var _w = control.makeWidget(w);
             control.widgets.push(_w);
                         
