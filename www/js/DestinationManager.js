@@ -169,9 +169,11 @@ function DestinationManager() {
 	
 	this.selectIPAddressAndPort = function(address, port) {
         console.log("selecting ip and port");
-		this.ipaddress = address;
-		this.port = port;
-		PhoneGap.exec("OSCManager.setIPAddressAndPort", this.ipaddress, this.port);
+        if(this.ipaddress != address || this.port != port){
+            this.ipaddress = address;
+            this.port = port;
+            PhoneGap.exec("OSCManager.setIPAddressAndPort", this.ipaddress, this.port);
+        }
 	}
 	
 	this.promptForIP = function() { // TODO: NO ABSOLUTE PIXEL VALUES. SHEESH.
