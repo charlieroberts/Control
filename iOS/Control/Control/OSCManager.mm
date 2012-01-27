@@ -48,7 +48,7 @@ protected:
 			}
 			
 			[jsString appendString:@");"];
-            NSLog(jsString);
+            //NSLog(jsString);
 			[_oscManager.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsString waitUntilDone:NO];
 		}
 		[pool drain];
@@ -112,7 +112,7 @@ protected:
 			
 			[jsStringStart replaceOccurrencesOfString:@"\n" withString:@"" options:1 range:NSMakeRange(0, [jsStringStart length])]; // will not work with newlines present
 			
-			NSString *jsString = [NSString stringWithFormat:@"interfaceManager.pushInterface('%@')", jsStringStart];
+			NSString *jsString = [NSString stringWithFormat:@"control.interfaceManager.pushInterface('%@')", jsStringStart];
 
 			[self.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsString waitUntilDone:NO];
 		}else{	// push interface + destination;
@@ -126,7 +126,7 @@ protected:
 			NSString *name = [[NSString alloc] initWithCString:a2 encoding:1];
 			NSString *destination = [[NSString alloc] initWithCString:a3 encoding:1];
 
-			NSString *jsString = [[NSString alloc] initWithFormat:@"interfaceManager.pushInterfaceWithDestination('%@', '%@', '%@')", jsStringStart, name, destination];
+			NSString *jsString = [[NSString alloc] initWithFormat:@"control.interfaceManager.pushInterfaceWithDestination('%@', '%@', '%@')", jsStringStart, name, destination];
 			
 			[self.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsString waitUntilDone:NO];
 		}
@@ -144,7 +144,7 @@ protected:
 		args >> a1 >> osc::EndMessage;
 		NSString *destination = [[NSString alloc] initWithCString:a1 encoding:1];
 
-		NSString *jsString = [[NSString alloc] initWithFormat:@"destinationManager.pushDestination('%@')", destination];
+		NSString *jsString = [[NSString alloc] initWithFormat:@"control.destinationManager.pushDestination('%@')", destination];
 		NSLog(jsString);
 		[_oscManager.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsString waitUntilDone:NO];
 	}catch( osc::Exception& e ){
@@ -155,7 +155,11 @@ protected:
 
 - (void)startPolling:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
     shouldPoll = YES;
-    [NSThread detachNewThreadSelector:@selector(pollJavascriptStart:) toTarget:self withObject:nil];
+    
+    if(pollingThread == nil) {
+        pollingThread = [[NSThread alloc] initWithTarget:self selector:@selector(pollJavascriptStart:) object:nil];
+        [pollingThread start];
+    }
 }
 - (void)stopPolling:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
     shouldPoll = NO;
@@ -168,14 +172,13 @@ protected:
 	char * dest_ip = (char *)[[arguments objectAtIndex:0] UTF8String];
 	int dest_port  = (int)[[arguments objectAtIndex:1] intValue];
 
-	delete(destinationAddress);
+	delete destinationAddress;
 	destinationAddress = new IpEndpointName( dest_ip, dest_port );
 	
-	delete(output);
+	delete output;
 	output = new UdpTransmitSocket(*destinationAddress);
 	
     isOutputInitialized = YES;
-    
     [self startPolling:nil withDict:nil];
 }
 
@@ -214,7 +217,7 @@ protected:
             NSString *oscAddress = [nameValues objectAtIndex:0];
             NSString *allvalues  = [nameValues objectAtIndex:1];
             
-            NSLog(@"SENDING %@", oscAddress);
+//            NSLog(@"SENDING %@", oscAddress);
             
             p << osc::BeginMessage( [oscAddress UTF8String] );
 
@@ -263,6 +266,7 @@ protected:
 }
 
 - (void) dealloc {
+    [pollingThread release];
 	s->Break();
 	delete(s);
 

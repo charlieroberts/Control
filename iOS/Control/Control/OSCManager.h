@@ -24,6 +24,9 @@ class ExamplePacketListener;
 	
 	IpEndpointName    * destinationAddress;
 	UdpTransmitSocket * output;
+
+    NSThread *pollingThread;
+    
 	int receivePort;
 }
 
