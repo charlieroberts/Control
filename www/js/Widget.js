@@ -66,7 +66,7 @@ Widget.prototype.make = function(ctx, props) {
 			this.address = "/" + this.name;
 		}   
 
-		if(_protocol == "MIDI") {
+		if(control.protocol == "MIDI") {
 			if(typeof props.midiRange != "undefined") {
 				props.midiMin = props.midiRange[0];
 				props.midiMax = props.midiRange[1];
@@ -143,12 +143,12 @@ Widget.prototype.setValueNoOutput = function(newValue) {
 }
 
 Widget.prototype.output = function() {
-    if(!this.isLocal && _protocol == "OSC") {
+    if(!this.isLocal && control.protocol == "OSC") {
         var valueString = "|" + this.address;
         valueString += ":" + this.value;
         control.valuesString += valueString;
         //PhoneGap.exec('OSCManager.send', this.address, 'f', this.value);
-    }else if (!this.isLocal && _protocol == "MIDI") {
+    }else if (!this.isLocal && control.protocol == "MIDI") {
         var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.value);
         control.valuesString += valueString;
     }

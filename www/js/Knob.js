@@ -1,8 +1,10 @@
 function Knob(ctx,props) {
 	// MUST COME BEFORE WIDGET INIT SINCE JSON DOESN'T INCLUDE WIDTH AND HEIGHT FOR KNOBS, ONLY RADIUS
-	props.width  = props.radius;
-	props.height = props.radius;
     
+    if(typeof props.radius != 'undefined') {
+        props.width  = props.radius * 2;
+        props.height = props.radius * 2;
+    }
     this.make(ctx, props);
 	
 	if(control.orientation == 0 || control.orientation == 180) {
@@ -11,10 +13,12 @@ function Knob(ctx,props) {
 		this.radius =  Math.round(this.height / 2);
 	}
 	
+    console.log("radius = " + this.radius);
+    
 	this.isInverted		= (typeof props.isInverted != "undefined") ? props.isInverted : false;
 	this.centerZero		= (typeof props.centerZero != "undefined") ? props.centerZero : false;
 	
-	if(_protocol == "MIDI") {
+	if(control.protocol == "MIDI") {
 		if(typeof props.midiStartingValue == "undefined" && this.centerZero) {
 			this.value = 63;
 		}
@@ -35,7 +39,7 @@ function Knob(ctx,props) {
 	this.canvas = document.createElement('canvas');
 	$(this.canvas).addClass('widget knob');
     
-	if(control.orientation == 0 || control.orientation == 180)  
+	if(this.height > this.width)  
 		this.height = this.width;
 	else
 		this.width = this.height;
@@ -85,7 +89,7 @@ function Knob(ctx,props) {
         }
     }
     
-    this.setValue(this.value, false);
+    this.setValue(this.min, false);
 	this.lastRotationValue = .05;
     
     return this;
@@ -266,6 +270,36 @@ Knob.prototype.changeValue = function(yinput, xinput) {
 	//Math.round(number).toFixed(2);
 }
 
+Knob.prototype.setBounds = function(newBounds) {
+    this.width = Math.round(newBounds[2] * control.deviceWidth);
+    this.height = Math.round(newBounds[3] * control.deviceHeight);
+    this.x = Math.round(newBounds[0] * control.deviceWidth);
+    this.y = Math.round(newBounds[1] * control.deviceHeight);
+        
+    console.log("w: " + this.width + " | h: " + this.height + " | x: " + this.x + " | y: " + this.y);
+    
+    if(this.height > this.width) {
+		this.radius =  Math.round(this.width / 2);
+        this.canvas.width  = this.width;
+        this.canvas.height = this.width;
+	}else{
+		this.radius =  Math.round(this.height / 2);
+        this.canvas.width  = this.height;
+        this.canvas.height = this.height;
+	}
+    
+    $(this.canvas).css({
+                    "left"  :   this.x + "px",
+                    "top"   :   this.y + "px",
+    });
+    
+    console.log("finished");
+//    if(typeof this.label != "undefined") {
+//        this.label.setBounds(newBounds);
+//    }
+    this.draw();
+}
+
 Knob.prototype.show = function() {
     this.canvas.style.display = "block";
 }
@@ -275,5 +309,9 @@ Knob.prototype.hide = function() {
 }
 
 Knob.prototype.unload = function() {
+    if(typeof this.label !== 'undefined') {
+        control.removeWidgetWithName(this.name + "Label");
+    }
+
     this.ctx.removeChild(this.canvas);
 }

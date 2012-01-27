@@ -299,6 +299,22 @@ Slider.prototype.setBounds = function(newBounds) {
     }
     
     this.draw();
+	
+	if(typeof this.label != "undefined") {
+		var _width, _height, _x, _y;
+		if(this.isVertical) {
+			_width = newBounds[2] - (8 / control.deviceWidth);
+			_height =  (this.labelSize + 4) / control.deviceHeight;
+			_x = newBounds[0];
+			_y = newBounds[1] + newBounds[3] - _height;
+		}else{
+			_width = (newBounds[2] / 3) - (8 / control.deviceWidth);
+			_height = (this.labelSize + 4) / control.deviceHeight;
+			_x = newBounds[0] + (newBounds[2] / 2) - ((newBounds[2] / 3) / 2);
+			_y = newBounds[1] + newBounds[3] - _height;
+		}
+		this.label.setBounds([_x,_y,_width,_height]);
+	}
 }
 
 Slider.prototype.show = function() {
@@ -322,11 +338,15 @@ Slider.prototype.hide = function() {
 }
 
 Slider.prototype.unload = function() {
-//        this.ctx.clearRect(this.x,this.y,this.width,this.height);
+//  this.ctx.clearRect(this.x,this.y,this.width,this.height);
     if(!this.shouldUseCanvas) {
         this.ctx.removeChild(this.fillDiv);
         this.ctx.removeChild(this.strokeDiv);		
     }else{
+		if(typeof this.label !== 'undefined') {
+			control.removeWidgetWithName(this.name + "Label");
+		}
+		
         this.ctx.removeChild(this.canvas);
     }
 }

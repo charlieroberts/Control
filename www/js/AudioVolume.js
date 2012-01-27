@@ -9,7 +9,7 @@ function AudioVolume(props) {
     this.hardwareMax = 1;
     this.hardwareRange = 1;
     
-    if(_protocol == "MIDI") {
+    if(control.protocol == "MIDI") {
 		this.max = (typeof props.midiMax != "undefined") ? props.midiMax : 127;
 		this.min = (typeof props.midiMin != "undefined") ? props.midiMin : 0;
 	}else{
@@ -40,11 +40,11 @@ AudioVolume.prototype._onVolumeUpdate = function(newVolume) {
         eval(this.onvaluechange);
     }
     
-    if(!this.isLocal && _protocol == "OSC") {
+    if(!this.isLocal && control.protocol == "OSC") {
         var valueString = "|" + this.address;
         valueString += ":" + this.volume;
         control.valuesString += valueString;
-    }else if (!this.isLocal && _protocol == "MIDI") {
+    }else if (!this.isLocal && control.protocol == "MIDI") {
         var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.volume);			
         control.valuesString += valueString;
     }

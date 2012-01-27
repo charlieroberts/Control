@@ -25,11 +25,18 @@ window.oscManager = {
 		},
 		"/control/addWidget": function(args) {
 			var w = {};
-            eval("w = " + args[2]);
+			var json2 = args[2].replace(/\'/gi, "\"");        // replace any single quotes in json string
+
+            try {
+                w  = jQuery.parseJSON(json2);            // since this might be an 'important' string, don't fail on json parsing error
+            }catch (e) {
+				return;
+            }
 			
             var isImportant = false;
 			
             var _w = control.makeWidget(w);
+			_w.page = w.page;
             control.widgets.push(_w);
                         
             if(typeof _w.bounds == "undefined") {
@@ -37,14 +44,15 @@ window.oscManager = {
                     window.autogui.placeWidget(_w, isImportant);
                 }
             }
-
-            eval("control.addWidget(" + w.name + ", control.currentPage);");
+			console.log("PAGE = " + w.page);
+			var widgetPage = (typeof w.page !== "undefined") ? w.page : control.currentPage;
+			control.addWidget(window[w.name], widgetPage);
 		},
 		"/control/autogui/redoLayout" : function(args) {
 			window.autogui.redoLayout();
 		},
 		"/control/removeWidget": function(args) {
-            if(typeof window.autogui != "undefined") {
+            if(typeof window.autogui !== "undefined") {
                 window.autogui.removeWidget( control.getWidgetWithName(args[2]) );
             }
             control.removeWidgetWithName(args[2]);
@@ -68,19 +76,21 @@ window.oscManager = {
 		"/control/createBlankInterface": function(args) {
             control.unloadWidgets();
 			
-            var _json = "loadedInterfaceName = '" + args[2] + "'; interfaceOrientation = '" + args[3] + "'; pages = [[";
+            var _json = "loadedInterfaceName = '" + args[2] + "'; interfaceOrientation = '" + args[3] + "'; constants = [";
             if(typeof args[4] == "undefined" || args[4] == "true") {
                 _json += '{\
-                    "name": "menuButton",\
-                    "type": "Button",\
-                    "bounds": [.8,.9,.2,.1],\
-                    "mode":"toggle",\
-                    "colors": ["#000", "#444", "#aaa"],\
-                    "ontouchstart": "if(this.value == this.max) { control.showToolbar();} else { control.hideToolbar(); }",\
-                    "label": "menu",\
-                },';
+"name": "menuButton",\
+"type": "Button",\
+"bounds": [.8,.9,.2,.1],\
+"mode":"toggle",\
+"colors": ["#000", "#444", "#aaa"],\
+"ontouchstart": "if(this.value == this.max) { control.showToolbar();} else { control.hideToolbar(); }",\
+"label": "menu",\
+},';
             }
-            _json += "]];";
+            _json += "]; pages = [[]];";
+			
+			console.log(_json);
             
             interfaceManager.runInterface(_json);
             $.mobile.changePage('#SelectedInterfacePage');

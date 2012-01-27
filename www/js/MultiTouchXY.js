@@ -228,7 +228,7 @@ MultiTouchXY.prototype.changeValue = function(touch, inputX, inputY) {
     
     var range = this.max - this.min;
     
-    if(_protocol != "MIDI") {
+    if(control.protocol != "MIDI") {
         this.xvalue = this.min + (touch.xpercentage * range);
         this.yvalue = this.min + (touch.ypercentage * range);
     }else{
@@ -284,13 +284,13 @@ MultiTouchXY.prototype.setBounds = function(newBounds) {
 //    }
 MultiTouchXY.prototype.output = function(touch) {
     var valueString = "";
-    if(_protocol == "OSC") {
+    if(control.protocol == "OSC") {
         valueString = "|" + this.address;
         if (this.maxTouches > 1) {
           valueString += "/" + touch.activeNumber;
         }
         valueString += ":" + this.xvalue + "," + this.yvalue;
-    }else if(_protocol == "MIDI") {
+    }else if(control.protocol == "MIDI") {
         var xnum = this.midiNumber + (touch.activeNumber * 2) - 2;
         var ynum = xnum + 1;
             

@@ -48,33 +48,33 @@ MultiButton.prototype.init = function() {
             for(var j = 0; j < this.columns; j++) {
                 var _x = this.buttonWidth * j - (j * pixelWidth);
                 var newProps = {
-                    "x":            this.origX + _x,
-                    "y":            this.origY + _y,
-                    "width":        this.buttonWidth, 
-                    "height":       this.buttonHeight,
+                    "x":                this.origX + _x,
+                    "y":                this.origY + _y,
+                    "width":            this.buttonWidth, 
+                    "height":           this.buttonHeight,
                     
-                    "colors":       [this.backgroundColor, this.fillColor, this.strokeColor],
+                    "colors":           [this.backgroundColor, this.fillColor, this.strokeColor],
                     
-                    "min":          this.min,
-                    "max":          this.max,
-                    "midiMin":      this.min,
-                    "midiMax":      this.max,
+                    "min":              this.min,
+                    "max":              this.max,
+                    "midiMin":          this.min,
+                    "midiMax":          this.max,
             
                     "startingValue":    this.value,
                     "midiStartingValue":this.value,
 
-                    "mode":         this.mode,
+                    "mode":             this.mode,
                     
-                    "ontouchstart": this.ontouchstart,
-                    "ontouchmove":  this.ontouchmove,
-                    "ontouchend":   this.ontouchend,
-                    "onvaluechange":this.onvaluechange,
+                    "ontouchstart":     this.ontouchstart,
+                    "ontouchmove":      this.ontouchmove,
+                    "ontouchend":       this.ontouchend,
+                    "onvaluechange":    this.onvaluechange,
                     
                     "isLocal":          this.isLocal,
                     "requiresTouchDown":this.requiresTouchDown,
                     
-                    "midiType":     (typeof this.midiType == "undefined") ? "cc" : this.midiType,
-                    "channel" :     (typeof this.channel != "undefined") ? this.channel : 1,
+                    "midiType":         (typeof this.midiType == "undefined") ? "cc" : this.midiType,
+                    "channel" :         (typeof this.channel != "undefined") ? this.channel : 1,
                 };
                 
                 if(this.shouldLabel) {

@@ -7,7 +7,7 @@ function ControlCompass(props) {
     this.hardwareMax = 360;
     this.hardwareRange = this.hardwareMax - this.hardwareMin;
     
-	if(_protocol == "MIDI") {
+	if(control.protocol == "MIDI") {
 		this.max = (typeof props.midiMax != "undefined") ? props.midiMax : 127;
 		this.min = (typeof props.midiMin != "undefined") ? props.midiMin : 0;
 	}else{
@@ -24,11 +24,11 @@ ControlCompass.prototype = new Widget();
 ControlCompass.prototype._onCompassUpdate = function(_heading) {
     this.value = this.min + (((0 - this.hardwareMin) + _heading) / this.hardwareRange ) * this.userDefinedRange;
     
-    if(!this.isLocal && _protocol == "OSC") {
+    if(!this.isLocal && control.protocol == "OSC") {
         var valueString = "|" + this.address;
         valueString += ":" + this.value;
         control.valuesString += valueString;
-    }else if (!this.isLocal && _protocol == "MIDI") {
+    }else if (!this.isLocal && control.protocol == "MIDI") {
         var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.value);
         control.valuesString += valueString;
     }

@@ -4,6 +4,7 @@ function Control() {
     this.oninit = null;
 	this.widgetCount = 0;
 	this.pages = [];
+    this.protocol = "OSC";
     this.constants = [];
 	this.currentPage = 0;
 	this.deviceWidth = null;
@@ -188,7 +189,7 @@ Control.prototype.loadConstants = function(_constants) {
                 
 		for(var i = 0; i < constants.length; i++) {
 			var w = constants[i];
-			var _w = this.makeWidget(w);
+			var _w = window.control.makeWidget(w);
             this.addConstantWidget(_w);
 		}
 	}
@@ -210,7 +211,7 @@ Control.prototype.isWidgetSensor = function(w) {
 Control.prototype.makeWidget = function(w) {
 	var _w;
 	if(this.isWidgetSensor(w) == false) {
-        // console.log("w.name = " + w.name + " :: w.type = " + w.type);
+        //console.log("w.name = " + w.name + " :: w.type = " + w.type);
 		_w = eval("window." + w.name + " = new " + w.type + "(interfaceDiv,w);");
 		if(_w.init != null) { 
 			_w.init();
@@ -238,6 +239,7 @@ Control.prototype.makeWidget = function(w) {
 		}
         _w.start();        
 	}
+	
 	_w.widgetID = this.widgetCount++;
 	_w.name = w.name;
 	
@@ -245,7 +247,6 @@ Control.prototype.makeWidget = function(w) {
 }
 
 Control.prototype.loadWidgets = function() {
-	this.isAddingConstants = false;
 	this.widgets = new Array();
 	this.pages = new Array();
 	var oldCurrentPage = this.currentPage;
@@ -275,7 +276,7 @@ Control.prototype.addConstantWidget = function(widget) {
 
 	if(widget.show != null) { widget.show(); }
 	if(widget.draw != null) { widget.draw(); }
-
+	
     if(typeof widget.oninit === "string") {
         eval(widget.oninit);
     }else if (widget.oninit !== null ){
@@ -284,6 +285,13 @@ Control.prototype.addConstantWidget = function(widget) {
 }
 
 Control.prototype.addWidget = function(widget, page) {
+	if(typeof this.pages[page] === "undefined") {		// make sure all previous pages are populated so users can flip through blank pages
+		for(var i = 0; i <= page; i++) {
+			if(typeof this.pages[i] === "undefined") {
+				this.pages[i] = [];
+			}
+		}
+	}
 	this.pages[page].push(widget);
 	if(page == control.currentPage) {
 		if(widget.show != null) { widget.show(); }

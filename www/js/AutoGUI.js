@@ -1,11 +1,44 @@
 window.autogui = {
-    children : [
+	hasPageButtons: false,
+    children : [[
         {"bounds" : [0, 0, 1, .9], "widget" : null, "sacrosanct" : false, "parent": null, "id":  0, "children" : [], },
-	],
+	]],
 	
-	getBestChildForNewWidget : function() {
+	getBestChildForNewWidget : function(page) {
 		var _maxSize = 0;
-		var bestChild = this.children[0];
+
+		if(typeof this.children[page] === "undefined") {
+			this.children[page] = [ {"bounds" : [0, 0, 1, .9], "widget" : null, "sacrosanct" : false, "parent": null, "id":  0, "children" : [], }, ];
+			if(!this.hasPageButtons) {
+				control.isAddingConstants = true;
+				
+				var pf = control.makeWidget({
+					"name": "pageForward",
+					"type": "Button",
+					"mode": "momentary", 
+					"isLocal": "true",
+					"bounds": [.6,.9,.2,.1],
+					"label": "page +",
+					"ontouchstart": function() { control.changePage('next'); },  
+				});
+				var pb = control.makeWidget({
+					"name": "pageBack",
+					"type": "Button",
+					"mode": "momentary",
+					"isLocal": "true",
+					"bounds": [.4,.9,.2,.1],
+					"label": "page -",
+					"ontouchstart": function() { control.changePage('previous'); },  
+				});
+				
+				control.addConstantWidget(pb);
+				control.addConstantWidget(pf);
+				
+				control.isAddingConstants = false;
+				this.hasPageButtons = true;
+			}
+		}
+		var bestChild = this.children[page][0];
 		
 		// TODO include sacrosanct check
 		function check(child) {
@@ -36,11 +69,12 @@ window.autogui = {
 	
 	placeWidget : function(_widget, sacrosanct) {
 		if(_widget === null) console.log("ALERT ALERT ALERT ALERT ALERT ALERT ALERT ALERT ALERT ALERT ALERT ALERT");
+		var page = (typeof _widget.page === "undefined") ? control.currentPage : _widget.page;
 	    var maxSize = 0;
 	    var bestDiv = -1;
 		var bestChild = null;
 		
-		bestChild = this.getBestChildForNewWidget();
+		bestChild = this.getBestChildForNewWidget(page);
 		
 		if(bestChild.widget === null) {
 			bestChild.widget = _widget;
@@ -88,23 +122,24 @@ window.autogui = {
 
 	removeWidget : function(_widget) {
 	    _widget.div.widget = null;
-		
 		var parent = _widget.div.parent;
-		var childNumber = jQuery.inArray(_widget.div, parent.children);
-		
-		// determine if sibling is already empty, if so, remove sibling and self from parent array
-		var siblingNumber = (childNumber === 1) ? 0 : 1;
-
-		if(parent.children[siblingNumber].widget === null) {
-			parent.children = [];
-			parent.widget = null;
+		if(parent != null) {
+			var childNumber = jQuery.inArray(_widget.div, parent.children);
+			// determine if sibling is already empty, if so, remove sibling and self from parent array
+			var siblingNumber = (childNumber === 1) ? 0 : 1;
+			if(parent.children[siblingNumber].widget == null) {
+				parent.children = [];
+				parent.widget = null;
+			}
+		}else{
+			_widget.div.children = [];
 		}
 	},
 	
 	redoLayout : function() {
-		this.children = [
+		this.children = [[
         	{"bounds" : [0, 0, 1, .9], "widget" : null, "sacrosanct" : false, "parent": null, "id":  0, "children" : [], },
-		];
+		]];
 		
 		for(var i = 0; i < control.widgets.length; i++) {
 			var w = control.widgets[i];

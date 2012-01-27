@@ -26,11 +26,16 @@ function Button(ctx, props) {
 			 };
                         
             var _w = control.makeWidget(this.label);
-            control.widgets.push(_w);
-	        if(!control.isAddingConstants)
+            console.log("CONTROL IS ADDING CONSTANTS = " + control.isAddingConstants);
+	        if(!control.isAddingConstants) {
+                console.log(_w.name + " is NOT added as constant");
+                control.widgets.push(_w);                
 	            control.addWidget(_w, control.currentPage); // PROBLEM
-	        else
+	        }else{
+                console.log(_w.name + " is added as constant");
+                control.constants.push(_w);
 	            control.addConstantWidget(_w); // PROBLEM
+            }
           
             this.label = _w;
         }
@@ -304,11 +309,11 @@ Button.prototype.event = function(event) {
 }
 
 Button.prototype.output = function() {
-    if (!this.isLocal && _protocol == "OSC") {
+    if (!this.isLocal && control.protocol == "OSC") {
         var valueString = "|" + this.address;
         valueString += ":" + this.value;
         control.valuesString += valueString;
-    } else if (!this.isLocal && _protocol == "MIDI") {
+    } else if (!this.isLocal && control.protocol == "MIDI") {
         var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber + "," + Math.round(this.value);
         control.valuesString += valueString;
     }
@@ -350,5 +355,9 @@ Button.prototype.hide = function() {
 
 Button.prototype.unload = function() {
     //this.ctx.clearRect(this.x, this.y, this.width, this.height);
+    if(typeof this.label !== 'undefined') {
+        control.removeWidgetWithName(this.name + "Label");
+    }
+
     this.ctx.removeChild(this.fillDiv);
 }

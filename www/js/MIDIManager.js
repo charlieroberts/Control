@@ -49,7 +49,7 @@ window.midiManager = {
 	},
 
 	sendMIDI : function(msgType, channel, number, value) {    
-		if(_protocol == "MIDI") {
+		if(control.protocol == "MIDI") {
 			if(typeof value != "undefined") { // -1 means the value was undefined, ie for a program change message
 				PhoneGap.exec(null, null, 'MIDI.send', msgType, channel, number, value);
 			}else{

@@ -328,8 +328,8 @@ window.interfaceManager = {
                 interfaceManager.runInterface(interfaceJSON);
                 var segments = newDestination.split(":");
                 
-                destinationManager.addDestination(segments[0], segments[1], false, false);
-                destinationManager.selectPushedDestination(segments[0], segments[1]);
+                control.destinationManager.addDestination(segments[0], segments[1], false, false);
+                control.destinationManager.selectPushedDestination(segments[0], segments[1]);
             }
         }
     },
@@ -389,6 +389,7 @@ window.interfaceManager = {
         }
 		
         if(constants != null) {
+            console.log(constants);
             control.loadConstants(constants);
         }
 

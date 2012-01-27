@@ -59,7 +59,7 @@
     <script type="text/javascript" src="js/AudioPitch.js"></script>
     <script type="text/javascript" src="js/AudioVolume.js"></script>        
     <script type="text/javascript" charset="utf-8">
-        var pages, control, interfaceScroller, destinationScroller, interfaceManager, destinationManager, _protocol;
+        var pages, control, interfaceScroller, destinationScroller, interfaceManager;
         
         document.addEventListener("deviceready", onDeviceReady, false);
         
@@ -105,12 +105,11 @@
             window.interfaceManager.init();
             //window.interfaceManager.loadScripts();
 
-            _protocol = "OSC";
             midiManager.start();
             oscManager.start();
             
-            destinationManager = new DestinationManager();
-            destinationManager.init();
+            control.destinationManager = DestinationManager();
+            control.destinationManager.init();
 
             document.addEventListener('orientationChanged', control.onRotation, false);
             
@@ -158,11 +157,11 @@
   
   <div data-role="page" id="Destinations" data-theme="a">
         <div class="ui-bar-a  ui-header" data-role="header" id="header" data-backbtn="false">
-            <a href="#" id="destinationEditBtn" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="destinationManager.editDestinationList()">Edit</a>     
+            <a href="#" id="destinationEditBtn" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="control.destinationManager.editDestinationList()">Edit</a>     
             <h1 class="ui-title">Destinations</h1>
             <div style="display:inline; position:absolute; top:.5em; right:.75em;">
-                <a href="#" data-role="button" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="destinationManager.refreshList()"><img src="css/images/refresh.png"></img></a>            
-                <a href="#" data-role="button" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="destinationManager.promptForIP()"><img src="css/images/add.png"></img></a>
+                <a href="#" data-role="button" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="control.destinationManager.refreshList()"><img src="css/images/refresh.png"></img></a>            
+                <a href="#" data-role="button" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="control.destinationManager.promptForIP()"><img src="css/images/add.png"></img></a>
             </div>
         </div>
         <div data-role="content">
