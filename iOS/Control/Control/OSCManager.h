@@ -42,5 +42,6 @@ class ExamplePacketListener;
 - (void)send:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
 - (void)startPolling:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
 - (void)stopPolling:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
+- (void) pollJavascript:(id)obj;
 
 @end

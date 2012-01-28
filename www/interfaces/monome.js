@@ -120,7 +120,7 @@ pages = [[\
 	\"stroke\":\"#aaa\",\
 	\"isLocal\":true,\
 	\"requiresTouchDown\":false,\
-	\"onvaluechange\": \"oscManager.sendOSC(this.lastChanged.address, 'iii', this.lastChanged.column, this.lastChanged.row, this.lastChanged.value);\",\
+	\"onvaluechange\": \"control.oscManager.sendOSC(this.lastChanged.address, 'iii', this.lastChanged.column, this.lastChanged.row, this.lastChanged.value);\",\
 	\"shouldUseCanvas\":true,\
 	\"oninit\": \"window.monomeInit();\",\
 },\

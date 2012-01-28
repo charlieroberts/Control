@@ -103,7 +103,7 @@ function Slider(ctx, props) {
 	        var _w = control.makeWidget(this.label);
 	        control.widgets.push(_w);
 	        if(!control.isAddingConstants)
-	            control.addWidget(_w, control.currentPage); // PROBLEM
+	            control.addWidget(_w, control.addingPage); // PROBLEM
 	        else
 	            control.addConstantWidget(_w); // PROBLEM
             
@@ -134,9 +134,7 @@ Slider.prototype.touchstart = function(touch) {
             this.changeValue(touch.pageX); 
         }
 		
-		if(typeof this.ontouchstart === "string") {
-	        eval(this.ontouchstart);
-		}else if(this.ontouchstart != null){
+		if(this.ontouchstart != null){
 			this.ontouchstart();
 		}
         
@@ -147,31 +145,36 @@ Slider.prototype.touchstart = function(touch) {
 
 Slider.prototype.touchmove = function(touch) {       
     var shouldChange = false;
-    if(this.requiresTouchDown) {
-        for(var i = 0; i < this.activeTouches.length; i++) {
-            if(touch.identifier == this.activeTouches[i]) shouldChange = true;
+    var isActive = false;
+ 
+    for(var i = 0; i < this.activeTouches.length; i++) {
+        if(touch.identifier == this.activeTouches[i]){
+            shouldChange = true;
+            isActive = true;
+            break;
         }
-    }else{
+    }
+    
+    if(!this.requiresTouchDown) {
         shouldChange = true;
     }
-                
-    if(shouldChange && this.hitTest(touch.pageX, touch.pageY)) {
+    
+    var isHit = this.hitTest(touch.pageX, touch.pageY);
+    if((shouldChange && isHit) || (shouldChange && isActive)) {
         if(this.isVertical) {
             this.changeValue(touch.pageY); 
         }else{
             this.changeValue(touch.pageX); 
         }
 						
-		if(typeof this.ontouchmove === "string") {
-	        eval(this.ontouchmove);
-		}else{
+		if (this.ontouchmove != null) {
 			this.ontouchmove();
 		}
 
 		if(this.displayValue)
 			this.label.setValue(this.value);
 
-			return true;
+        return true;
     }
 	return false;
 };
@@ -181,9 +184,7 @@ Slider.prototype.touchend = function(touch) {
         for(var i = 0; i < this.activeTouches.length; i++) {
             if(touch.identifier == this.activeTouches[i]) {
                 this.activeTouches.splice(i,1);	// remove touch ID from array
-				if(typeof this.ontouchend === "string") {
-			        eval(this.ontouchend);
-				}else{
+				if(this.touchend != null) {
 					this.ontouchend();
 				}
                 
@@ -229,6 +230,7 @@ Slider.prototype.draw = function() {
     if(!this.shouldUseCanvas) {
         if(!this.isVertical) {
             if(!this.isXFader) {
+                //this.fillDiv.style["WebkitTransform"] = "scale3d(" + percent + ", 1, 1)";
                 this.fillDiv.style.width = ((this.width - 1) * percent) + "px";
             }else{
                 this.fillDiv.style.left = (this.x  + (percent * (this.width - this.xFaderWidth))) + "px";
@@ -339,13 +341,14 @@ Slider.prototype.hide = function() {
 
 Slider.prototype.unload = function() {
 //  this.ctx.clearRect(this.x,this.y,this.width,this.height);
+    if(typeof this.label !== 'undefined') {
+        control.removeWidgetWithName(this.name + "Label");
+    }
     if(!this.shouldUseCanvas) {
         this.ctx.removeChild(this.fillDiv);
         this.ctx.removeChild(this.strokeDiv);		
     }else{
-		if(typeof this.label !== 'undefined') {
-			control.removeWidgetWithName(this.name + "Label");
-		}
+
 		
         this.ctx.removeChild(this.canvas);
     }

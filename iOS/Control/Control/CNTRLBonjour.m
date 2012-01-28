@@ -123,7 +123,7 @@
             }
             port = ntohs(socketAddress->sin_port); // ntohs converts from network byte order to host byte order 
             BOOL isMIDI = ([[aService type] isEqualToString:@"_apple-midi._udp."]);
-            NSString *ipString = [NSString stringWithFormat: @"destinationManager.removeDestination(\"%s\", %d);", inet_ntoa(socketAddress->sin_addr), port];
+            NSString *ipString = [NSString stringWithFormat: @"control.destinationManager.removeDestination(\"%s\", %d);", inet_ntoa(socketAddress->sin_addr), port];
 
             [webView stringByEvaluatingJavaScriptFromString:ipString];
         }
@@ -153,7 +153,7 @@
             }
             port = ntohs(socketAddress->sin_port); // ntohs converts from network byte order to host byte order 
             BOOL isMIDI = ([[service type] isEqualToString:@"_apple-midi._udp."]);
-            NSString *ipString = [NSString stringWithFormat: @"destinationManager.addDestination(\"%s\", %d, %d, %d);", inet_ntoa(socketAddress->sin_addr), port, !isMIDI, isMIDI];
+            NSString *ipString = [NSString stringWithFormat: @"control.destinationManager.addDestination(\"%s\", %d, %d, %d);", inet_ntoa(socketAddress->sin_addr), port, !isMIDI, isMIDI];
             NSLog(ipString);
             [self.webView stringByEvaluatingJavaScriptFromString:ipString];
         }

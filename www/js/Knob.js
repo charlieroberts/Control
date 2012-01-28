@@ -81,7 +81,7 @@ function Knob(ctx,props) {
             var _w = control.makeWidget(this.label);
             control.widgets.push(_w);
 	        if(!control.isAddingConstants)
-	            control.addWidget(_w, control.currentPage); // PROBLEM
+	            control.addWidget(_w, control.addingPage); // PROBLEM
 	        else
 	            control.addConstantWidget(_w); // PROBLEM
             

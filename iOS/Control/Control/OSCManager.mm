@@ -26,7 +26,7 @@ protected:
 		}else{
 			osc::ReceivedMessage::const_iterator arg = m.ArgumentsBegin();
 			//NSLog(@"%s %d", m.AddressPattern(), m.ArgumentCount());
-			NSMutableString *jsString = [NSMutableString stringWithFormat:@"oscManager.processOSCMessage(\"%s\", \"%s\", ", m.AddressPattern(), m.TypeTags(), nil];
+			NSMutableString *jsString = [NSMutableString stringWithFormat:@"control.oscManager.processOSCMessage(\"%s\", \"%s\", ", m.AddressPattern(), m.TypeTags(), nil];
             
 			const char * tags = m.TypeTags();
 
@@ -186,7 +186,8 @@ protected:
 - (void) pollJavascriptStart:(id)obj {
 	//NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	while(shouldPoll) {
-		[self performSelectorOnMainThread:@selector(pollJavascript:) withObject:nil waitUntilDone:NO];
+		[self performSelectorOnMainThread:@selector(pollJavascript:) withObject:nil waitUntilDone:YES];
+        //[self pollJavascript:nil];
 		[NSThread sleepForTimeInterval:OSC_POLLING_RATE];
 	}
 	

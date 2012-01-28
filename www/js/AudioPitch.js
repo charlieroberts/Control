@@ -1,4 +1,4 @@
-function AudioPitch(props) {
+function AudioPitch(props) {    
     this.make("sensor", props);
     this.mode = (typeof props.mode != "undefined") ? props.mode : "hps";
     
@@ -39,7 +39,7 @@ AudioPitch.prototype.restart = function() {
     PhoneGap.exec("AudioInput.restart");
 }
 
-AudioPitch.prototype.stop = function() {	
+AudioPitch.prototype.unload = function() {	
     PhoneGap.exec("AudioInput.stop", "pitch");
 }
 

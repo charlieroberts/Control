@@ -28,7 +28,7 @@ AudioVolume.prototype.start = function() {
     PhoneGap.exec("AudioInput.start", "volume", this.mode);
 }	
 
-AudioVolume.prototype.stop = function() {	
+AudioVolume.prototype.unload = function() {	
     PhoneGap.exec("AudioInput.stop", "volume");
 }
 

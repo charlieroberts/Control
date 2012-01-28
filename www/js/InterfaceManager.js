@@ -12,7 +12,7 @@ function InterfaceManager() {
             this.interfaceIP = null;
             constants = null;
             
-            this.interfaceDefaults = [];
+            this.interfaceDefaults = ["djcut.js"];
             //     "multiXY.js",
             //     "iphoneLandscapeMixer.js",
             //     "djcut.js",
@@ -24,17 +24,17 @@ function InterfaceManager() {
             // ];
 
             control.ifCount = 0;
-            if(typeof localStorage.interfaceFiles == "undefined") {
+            //if(typeof localStorage.interfaceFiles == "undefined") {
                 this.loadedInterfaces = [];
                 //console.log("INIT LOADING SCRIPTS");
                 //var msg = "now loading default interfaces. this will only happen the first time the app is launched (possibly also after updates) and takes about 8 seconds";
                 //navigator.notification.alert(msg, null, "loading");
                 setTimeout(function() {control.interfaceManager.loadScripts();}, 1000);
-            }else{
+				//}else{
                 //console.log("NOT RELOADING");
-                this.loadedInterfaces = JSON.parse(localStorage.interfaceFiles);
-                this.createInterfaceListWithArray(this.loadedInterfaces);
-            }
+                //this.loadedInterfaces = JSON.parse(localStorage.interfaceFiles);
+                //this.createInterfaceListWithArray(this.loadedInterfaces);
+				//}
         },
          
         loadScripts : function() {    
@@ -44,13 +44,19 @@ function InterfaceManager() {
             document.getElementsByTagName('head')[0].appendChild(fileref);
                 
             window.setTimeout(function() {
+				//console.log("SOMETHING " + control.ifCount + " : " + control.interfaceManager.interfaceDefaults.length);
                 if(control.ifCount < control.interfaceManager.interfaceDefaults.length) {
-                    //console.log(window.interfaceString);
-                    eval(window.interfaceString);
-                    // console.log("ARHAIRH" + window.interfaceString]);
-                    // console.log("loading " + loadedInterfaceName + " .....................................");                
+					console.log("LOADING " + control.interface.name);
+					
+					var jsonString = "control.data = ";
+					jsonString += (typeof control.data === "undefined") ? "{}" : JSON.stringify(control.data);
+				    jsonString += ";control.functions = ";
+				   	jsonString += (typeof control.functions === "undefined") ? "{}" : JSON.stringify(control.functions);
+				    jsonString += ";control.interface = " + JSON.stringify(control.interface);
+					
+					//console.log(jsonString);           
                     
-                    control.interfaceManager.loadedInterfaces[control.ifCount] = {'name':loadedInterfaceName, 'json':window.interfaceString};
+                    control.interfaceManager.loadedInterfaces[control.ifCount] = {'name':control.interface.name, 'json':jsonString};
                     control.ifCount++;
                     control.interfaceManager.loadScripts();
                 }else{
@@ -94,7 +100,6 @@ function InterfaceManager() {
             input.setAttribute("style", "top: 90px; height:50px; width:90%; font-size:1.25em");
             input.setAttribute("autocorrect", "off");
             input.value = "http://";
-            //input.setAttribute("onchange", "control.interfaceManager.downrunCurrentInterfaceFromPrompt()");
             input.setAttribute("type", "url");
             input.setAttribute("id", "ipField");
             
@@ -105,15 +110,12 @@ function InterfaceManager() {
             submitButton.innerHTML = "Submit";
             submitButton.setAttribute("style", "margin-left: 1em; margin-top: 1em; font-size:1.5em; width: 5em; height: 2em; background-color:#fff; color:#000; border: 1px solid #fff");
             submitButton.setAttribute("ontouchend", "control.interfaceManager.downloadInterfaceFromPrompt()");
-            //submitButton.setAttribute("ontouchend", "document.getElementById('Interfaces').removeChild(document.getElementById('promptDiv'))");
             
             promptDiv.setAttribute("style","z-index:2; left:0px; top:0px; position:absolute; background-color:rgba(0,0,0,.8); width:100%; height:100%;");
             promptDiv.setAttribute("id", "promptDiv");
             promptDiv.appendChild(inputHeader);
             promptDiv.appendChild(input);
             promptDiv.appendChild(document.createElement("br"));
-            //promptDiv.appendChild(shouldReloadBox);
-            //promptDiv.appendChild(shouldReloadText);
             promptDiv.appendChild(document.createElement("br"));
 
             promptDiv.appendChild(cancelButton);
@@ -128,34 +130,6 @@ function InterfaceManager() {
             //var shouldReload = document.getElementById('shouldReloadBox').checked;
             control.interfaceManager.downloadInterface(ipAddress);
         },
-        
-        // downloadInterface : function(ipAddress) { // EVENT --- CANNOT REFER TO THIS, MUST USE INTERFACE MANAGER
-        //     console.log("downloading...");
-        //     control.interfaceManager.myRequest = new XMLHttpRequest();    	
-        //     var loadedInterfaceName = null;
-        //     control.interfaceManager.myRequest.onreadystatechange = function() {
-        //         console.log("downloading..." + control.interfaceManager.myRequest.readyState );
-        //         if(control.interfaceManager.myRequest.readyState == 4) {
-        //             console.log(control.interfaceManager.myRequest.responseText);
-        //             eval(control.interfaceManager.myRequest.responseText);
-        //             if(loadedInterfaceName != null) {
-        //                 if(document.getElementById("promptDiv") != null) {
-        //                     document.getElementById("Interfaces").removeChild(document.getElementById("promptDiv"));
-        //                 }
-        //                 control.interfaceManager.saveInterface(control.interfaceManager.myRequest.responseText, true, ipAddress);
-        //                 control.interfaceManager.interfaceIP = ipAddress;
-        //                 control.interfaceManager.runInterface(control.interfaceManager.myRequest.responseText);
-        //             }else{
-        //                 document.getElementById("inputFieldHeader").innerHTML = "Could not load. Please try another URL";
-        //                 return;
-        //             }
-        //         }
-        //     }
-        //     control.interfaceManager.myRequest.ipAddress = ipAddress;        
-        //     //control.interfaceManager.myRequest.withCredentials = "true";                
-        //     control.interfaceManager.myRequest.open("GET", ipAddress, true);
-        //     control.interfaceManager.myRequest.send(null);
-        // },
 		
         downloadInterface : function(ipAddress) { // EVENT --- CANNOT REFER TO THIS, MUST USE INTERFACE MANAGER
             console.log("downloading...");
@@ -167,18 +141,18 @@ function InterfaceManager() {
                     console.log(control.interfaceManager.myRequest.responseText);
                     //eval(control.interfaceManager.myRequest.responseText);
                     console.log("before parsing");
-					eval("control.interface = " + control.interfaceManager.myRequest.responseText);
+					eval(control.interfaceManager.myRequest.responseText);
                     console.log("after parsing");
 					console.log(control.interface);
                     if(control.interface.name != null) {
                         if(document.getElementById("promptDiv") != null) {
                             document.getElementById("Interfaces").removeChild(document.getElementById("promptDiv"));
                         }
-                        //control.interfaceManager.saveInterface(control.interfaceManager.myRequest.responseText, true, ipAddress);
+                        control.interfaceManager.saveInterface(control.interfaceManager.myRequest.responseText, true, ipAddress);
                         control.interfaceManager.interfaceIP = ipAddress;
                         control.interfaceManager.runInterface(control.interface);
                     }else{
-                        document.getElementById("inputFieldHeader").innerHTML = "Could not load. Please try another URL";
+                        document.getElementById("inputFieldHeader").innerHTML = "Could not load. Please try another URL or check your code for errors.";
                         return;
                     }
                 }
@@ -188,9 +162,7 @@ function InterfaceManager() {
             control.interfaceManager.myRequest.open("GET", ipAddress, true);
             control.interfaceManager.myRequest.send(null);
         },
-		
-        
-        
+
         highlight : function (listNumber) {
             this.selectedListItem = listNumber;
             var list = document.getElementById('interfaceList');
@@ -332,15 +304,13 @@ function InterfaceManager() {
         },
         
         saveInterface : function(interfaceJSON, shouldReloadList, ipAddress) {
-            if (typeof ipAddress == "undefined") ipAddress = "";
-            
-            var loadedInterfaceName = null;
-            
+            if (typeof ipAddress === "undefined") ipAddress = "";
+                        
             eval(interfaceJSON);
             
-            if (loadedInterfaceName != null) {
+            if (control.interface.name != null) {
                 control.interfaceManager.loadedInterfaces.push({
-                    name:    loadedInterfaceName,
+                    name:    control.interface.name,
                     json:    interfaceJSON,
                     address: ipAddress
                 });
@@ -403,32 +373,32 @@ function InterfaceManager() {
             pages = null;
 
             control.oscManager.delegate = control.oscManager;
-            midiManager.delegate = midiManager;
+            control.midiManager.delegate = control.midiManager;
 
-            eval(json);
+            //eval(json);
 
-            this.currentInterfaceName = loadedInterfaceName;
-            this.currentInterfaceJSON = json;
+            this.currentInterfaceName = control.interface.name;//loadedInterfaceName;
+            //this.currentInterfaceJSON = json;
 
-            if(typeof interfaceOrientation != "undefined") {
-                Rotator.setRotation(interfaceOrientation);
+            if(typeof control.interface.orientation != "undefined") {
+                Rotator.setRotation(control.interface.orientation);
             }
 
-            if(interfaceOrientation == "portrait") {
-                control.makePages(pages, screen.width, screen.height);
+            if(control.interface.orientation == "portrait") {
+                control.makePages(control.interface.pages, screen.width, screen.height);
             }else{
-                control.makePages(pages, screen.height, screen.width);
+                control.makePages(control.interface.pages, screen.height, screen.width);
             }
             
-            if(constants != null) {
-                control.loadConstants(constants);
+            if(control.interface.constantsconstants != null) {
+                control.loadConstants(control.interface.constants);
             }
             
             control.loadWidgets();
             
-            if(typeof control.oninit === "string") {
-                eval(control.oninit);
-            }else if(control.oninit != null) {
+            if(typeof control.interface.oninit === "string") {
+                eval(control.interface.oninit);
+            }else if(control.interface.oninit != null) {
                 control.oninit();
             }
             
@@ -443,9 +413,11 @@ function InterfaceManager() {
             //console.log("INTERFACE NUMBER = " + interfaceNumber);
             var r = control.interfaceManager.loadedInterfaces[interfaceNumber];
             //console.log(r);
-            if (typeof r.address != "undefined")
+            if (typeof r.address != "undefined") {
                 control.interfaceManager.interfaceIP = r.address;
+			}
             
+			eval(r.json);
             control.interfaceManager.runInterface(r.json);
         },
     };

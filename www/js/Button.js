@@ -7,7 +7,7 @@ function Button(ctx, props) {
     
     this.activeTouches = new Array();
     
-    this.requiresTouchDown = (typeof props.requiresTouchDown == "undefined") ? true : props.requiresToucDown;
+    this.requiresTouchDown = (typeof props.requiresTouchDown == "undefined") ? true : props.requiresTouchDown;
     
     this.contactOn = false;	// used to trigger flash for contact mode buttons
 	
@@ -26,13 +26,10 @@ function Button(ctx, props) {
 			 };
                         
             var _w = control.makeWidget(this.label);
-            console.log("CONTROL IS ADDING CONSTANTS = " + control.isAddingConstants);
 	        if(!control.isAddingConstants) {
-                console.log(_w.name + " is NOT added as constant");
                 control.widgets.push(_w);                
-	            control.addWidget(_w, control.currentPage); // PROBLEM
+	            control.addWidget(_w, control.addingPage); // PROBLEM
 	        }else{
-                console.log(_w.name + " is added as constant");
                 control.constants.push(_w);
 	            control.addConstantWidget(_w); // PROBLEM
             }
@@ -251,6 +248,7 @@ Button.prototype.touchmove = function(touch, isHit) {
         this.output();
         this.draw();
     } else if (rollOff && this.mode == "momentary") {
+        console.log("rolled off?");
         this.value = this.min;
         this.isLit = false;
 		if(typeof this.onvaluechange === "string") 

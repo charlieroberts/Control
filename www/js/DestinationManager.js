@@ -16,11 +16,12 @@ function DestinationManager() {
         init : function() {
             if(typeof localStorage.destinations == "undefined") {
                 localStorage.destinations = [];
+                this.destinations = [];
             }else{
                 this.destinations = jQuery.parseJSON(localStorage.destinations);
             }
             
-            Bonjour.start();
+            control.bonjour.start();
             
             window.control.destinationManager.createDestinationList();        
         },

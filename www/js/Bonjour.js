@@ -1,18 +1,22 @@
-window.Bonjour = {
-    start: function() {
-        console.log("BONJOUR START CALLED");
-        return PhoneGap.exec(null, null, "Bonjour", "start", []);
-    },
+function Bonjour() {
+    var that = {
+        start: function() {
+            console.log("BONJOUR START CALLED");
+            return PhoneGap.exec(null, null, "Bonjour", "start", []);
+        },
 
-    getMyIP:function() {
-        return PhoneGap.exec(null, null, "Bonjour", "getMyIP", []);
-    },
+        getMyIP:function() {
+            return PhoneGap.exec(null, null, "Bonjour", "getMyIP", []);
+        },
 
-    publishService:function(port, serviceName) {
-        return PhoneGap.exec(null, null, "Bonjour", "publishService", [port, serviceName]);
-    },
+        publishService:function(port, serviceName) {
+            return PhoneGap.exec(null, null, "Bonjour", "publishService", [port, serviceName]);
+        },
 
-    browse:function() {
-        return PhoneGap.exec(null, null, "Bonjour", "browse", []);
-    },
-};
+        browse:function() {
+            return PhoneGap.exec(null, null, "Bonjour", "browse", []);
+        },
+    };
+    
+    return that;
+}

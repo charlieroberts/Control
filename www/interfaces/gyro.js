@@ -221,7 +221,7 @@ pages = [[\
 \
 {\
     \"name\": \"acc\",\
-    \"type\": \"Accelerometer\",\
+    \"type\": \"ControlAccelerometer\",\
 	\"min\":0,\
 	\"max\":127,\
 	\"updateRate\":10,\
@@ -233,7 +233,7 @@ pages = [[\
 \
 {\
     \"name\": \"gyro\",\
-    \"type\": \"Gyro\",\
+    \"type\": \"ControlGyro\",\
 	\"min\":0,\
 	\"max\":127,\
 	\"midiNumber\":3,\
