@@ -15,6 +15,8 @@ function Control() {
 	acc = null;
 	compass = null;
 	gyro = null;
+    audioPitch = null;
+    audioVolume = null;    
 	interfaceDiv = document.getElementById("selectedInterface");
 	this.changeTab(this.currentTab);
 	this.isAddingConstants = false;
@@ -192,11 +194,23 @@ Control.prototype.loadConstants = function(_constants) {
 		}
 	}
 }
+
+Control.prototype.isWidgetSensor = function(w) {
+    var _isWidgetSensor = false;
+    var sensors = [ "Accelerometer", "Compass", "Gyro", "AudioPitch", "AudioVolume" ];
+    for(var i in sensors) {
+        if(w.type == sensors[i]) { 
+            _isWidgetSensor = true;
+            break;
+        }
+    }
+    return _isWidgetSensor;
+}
 	
 Control.prototype.makeWidget = function(w) {
 	var _w;
-	if(w.type != "Accelerometer" && w.type != "Compass" && w.type != "Gyro") {
-		_w = eval(w.name + " = new " + w.type + "(interfaceDiv,w);");
+	if(this.isWidgetSensor(w) == false) {
+		_w = eval("window." + w.name + " = new " + w.type + "(interfaceDiv,w);");
 //		_w = eval(w.name + " = new " + w.type + "(interfaceDiv,w,this.ctx);");  
 		if(_w.init != null) { 
 			_w.init();
@@ -214,6 +228,13 @@ Control.prototype.makeWidget = function(w) {
             //gyro = null;
             _w = eval(w.name + " = new ControlGyro(w);");
             gyro = _w;
+		}else if(w.type == "AudioPitch") {
+            _w = eval(w.name + " = new AudioPitch(w);");
+            audioPitch = _w;
+            console.log("AUDIO PITCH ASSIGNED");
+		}else if(w.type == "AudioVolume") {
+            _w = eval(w.name + " = new AudioVolume(w);");
+            audioVolume = _w;
 		}
         _w.start();        
 	}
@@ -315,7 +336,7 @@ Control.prototype.event = function(event) {
 	//console.log("length = " + control.pages[page].length);
 	for(var i = 0; i < control.pages[page].length; i++) {
 		var widget = control.pages[page][i];
-		//console.log("widget event for " + widget.name);
+		//console.log("widget event for " + widget.name + " type = " + widget.type);
 		widget.event(event);
 	}
 	

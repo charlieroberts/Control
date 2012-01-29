@@ -25,6 +25,7 @@ b { font-weight: bold; }
   /*-webkit-transition: height .2s linear;*/
 }
 
+
 #Interface { display: block; }
 
 li { color: #fff; }
@@ -76,7 +77,7 @@ h3 { font-weight: normal !important; text-shadow: none !important}}
     padding: .5em;
 }
 
-ul li { font-size: 1em; }
+ul li { font-size: 1em; display:block; height:35px;}
 
 .destinationListItem {
     height: 1.75em !important;
@@ -89,8 +90,8 @@ ul li { font-size: 1em; }
 }
 
 .interfaceListItem {
-    height: 1.5em !important;
-    line-height: 1.5em !important;
+    height: 1.75em !important;
+    line-height: 2em !important;
 }
 
 .destinationImage { 

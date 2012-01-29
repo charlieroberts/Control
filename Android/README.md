@@ -1,10 +1,6 @@
-
 Control (Android)
 ========
-
-This is extremely EXTREMELY alpha right now. But you -can- load an interface over the web (there are plenty of interfaces at http://www.charlie-roberts.com/Control/interfaces).
-
-There is a large REFRESH button throughout the app currently that relaods the index.html file. To debug / develop the app on Android, I recommend putting the assest/www folder onto a web server.
+To debug / develop the app on Android, I recommend putting the assest/www folder onto a web server.
 In the src>...>Sample.java file change the super.loadUrl call to load the index on your web server. Now if you make changes to the html / css / .js files you can simply refresh them instead of having to reload everything into your emulator or device.
     
 License

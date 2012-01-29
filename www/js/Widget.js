@@ -1,49 +1,52 @@
 	// TODO: Make Accelerometer, Gyro etc. also work as widgets even though they're not visible. A lot of code could be reused this way
-function Widget(ctx, props) { // x, y, width, height, color, startingValue, stroke, protocol) {
+function Widget() { return this; } // x, y, width, height, color, startingValue, stroke, protocol) {
 
+Widget.prototype.make = function(ctx, props) {
 	if(ctx != null) {
 		this.props = props;
         this.name = props.name;
 		this.ctx = ctx;
 		this.widgetType = props.type;
 		
-		if(typeof props.bounds != "undefined") {
-			props.x = props.bounds[0];
-			props.y = props.bounds[1];
-			if(props.bounds.length > 3) {
-				props.width = props.bounds[2];
-				props.height = props.bounds[3];
-			}else{ // radius
-				props.width = props.bounds[2];
-				props.height = props.bounds[2];
-			}
-		}
-		if(typeof props.width  == "undefined") props.width  = .2;
-		if(typeof props.height == "undefined") props.height = .2;	
-		this.width = Math.round(parseFloat(control.deviceWidth)* props.width);
-		this.height = Math.round(parseFloat(control.deviceHeight) * props.height);
-		if(typeof props.x == "undefined") props.x = 0;
-		if(typeof props.y == "undefined") props.y = 0;		
-		this.x = Math.round(parseFloat(control.deviceWidth) * props.x) + .5;
-		this.y = Math.round(parseFloat(control.deviceHeight) * props.y) + .5;
-		
-		//console.log("x = " + props.x + " :: y = " + props.y + " :: width = " + props.width + " :: height = " + props.height);
+        if(this.ctx != "sensor") {
+            if(typeof props.bounds != "undefined") {
+                props.x = props.bounds[0];
+                props.y = props.bounds[1];
+                if(props.bounds.length > 3) {
+                    props.width = props.bounds[2];
+                    props.height = props.bounds[3];
+                }else{ // radius
+                    props.width = props.bounds[2];
+                    props.height = props.bounds[2];
+                }
+            }
+            if(typeof props.width  == "undefined") props.width  = .2;
+            if(typeof props.height == "undefined") props.height = .2;	
+            this.width = Math.round(parseFloat(control.deviceWidth)* props.width);
+            this.height = Math.round(parseFloat(control.deviceHeight) * props.height);
+            if(typeof props.x == "undefined") props.x = 0;
+            if(typeof props.y == "undefined") props.y = 0;		
+            this.x = Math.round(parseFloat(control.deviceWidth) * props.x) + .5;
+            this.y = Math.round(parseFloat(control.deviceHeight) * props.y) + .5;
+            
+            //console.log("x = " + props.x + " :: y = " + props.y + " :: width = " + props.width + " :: height = " + props.height);
 
-		if(typeof props.colors != "undefined") {
-			this.backgroundColor = props.colors[0];
-			this.fillColor = props.colors[1];
-			this.color = this.fillColor;
-			this.strokeColor = props.colors[2];
-			this.stroke = this.strokeColor;
-		}else{
-			this.color =  props.color || "#ffffff";
-			this.fillColor = props.fillColor || this.color;
-			this.stroke = props.stroke || this.color;
-			this.strokeColor = props.strokeColor || this.stroke;
-			this.backgroundColor = props.backgroundColor || "rgba(0,0,0,0)";
-		}			
-		
-		this.activeTouches = new Array();
+            if(typeof props.colors != "undefined") {
+                this.backgroundColor = props.colors[0];
+                this.fillColor = props.colors[1];
+                this.color = this.fillColor;
+                this.strokeColor = props.colors[2];
+                this.stroke = this.strokeColor;
+            }else{
+                this.color =  props.color || "#ffffff";
+                this.fillColor = props.fillColor || this.color;
+                this.stroke = props.stroke || this.color;
+                this.strokeColor = props.strokeColor || this.stroke;
+                this.backgroundColor = props.backgroundColor || "rgba(0,0,0,0)";
+            }			
+            
+            this.activeTouches = new Array();
+        }
 		
 		this.isLocal = (typeof props.isLocal != "undefined") ? props.isLocal : false;
 		
@@ -146,7 +149,7 @@ Widget.prototype.output = function() {
     
 }
 
-Widget.event = function(event) {
+Widget.prototype.event = function(event) {
   if(event.type != "touchend") {
     touch = event.changedTouches.item(0);
     if(this.hitTest(touch.pageX, touch.pageY)) {

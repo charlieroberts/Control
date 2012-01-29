@@ -13,12 +13,15 @@ function InterfaceManager() {
                                   "djcut.js",
                                   "life.js",
 								  "monome.js",
-								  "multibutton.js",
+								  //"multibutton.js",
 								  "multiXY.js",
 								  "sequencer.js",
 								  "gyro.js",
                                   "spacetime.js",
+                                  "pitchTracker.js",
                                   ];
+        
+        this.listItemFunctions = [];
         window.shouldReadFiles = true;
         window.isLoadingInterfaces = false; // stops database calls from being executed twice, for some reason "get" returns two values.
     }
@@ -160,7 +163,7 @@ function InterfaceManager() {
 		interfaceManager.interfaceFiles.all(function(r) { interfaceManager.createInterfaceListWithArray(r); });
         window.isLoadingInterfaces = false;
 	}
-	
+    
 	this.createInterfaceListWithArray = function(listArray) {
 		var list = document.getElementById('interfaceList');
 		var count = 0;
@@ -169,20 +172,31 @@ function InterfaceManager() {
 			var r = listArray[i];
 			var item = document.createElement('li');
             
-            item.style.borderBottom = "1px solid #666";
-            item.style.fontWeight = "normal";
-            item.setAttribute("ontouchend", "$.mobile.changePage('#SelectedInterfacePage');interfaceManager.highlight("+(count++)+"); interfaceManager.selectInterfaceFromList('" + r.key + "');");
+            function _touchend(_key, _count) { 
+                return function(e) {
+                    interfaceManager.highlight(_count);
+                    interfaceManager.selectInterfaceFromList(_key);
+                }
+            }
+            
+            $(item).bind("tap", _touchend(r.key, count++));
+
             item.innerHTML = r.key;
-            $(item).addClass('destinationListItem');
-            $(item).addClass('interfaceListItem');
+                        
+            $(item).css({
+                        "border-bottom" : "1px solid #666", 
+                        "font-weight"   : "normal"
+                        });
+            
+            $(item).addClass('destinationListItem interfaceListItem');
 
    			list.appendChild(item);
 		}
+        
 		$(list).listview('refresh');
 	}
 
 	this.editInterfaceList = function() {
-		
 		var list = document.getElementById('interfaceList');
 		
 		if(list.childNodes.length > 0) {
@@ -191,12 +205,31 @@ function InterfaceManager() {
 
 			for(var i = 0; i < list.childNodes.length; i++) {
 				var item = list.childNodes[i];
-				var deleteButton = document.createElement("div"); // -webkit-border-radius:10px;
-				deleteButton.setAttribute("style", "float:left; margin-right: 5px; position:relative; top:0px; border: #fff 2px solid; -webkit-border-radius:10px; width: 15px; height: 15px; background-color:#f00; color:#fff; font-weight:bold;");
-				deleteButton.innerHTML = "<img style='position:relative; top:-.7em; left:-.65em;' src='images/dash.png'>";
-				deleteButton.setAttribute("ontouchend", "interfaceManager.removeInterface("+i+")");
-				item.insertBefore(deleteButton, item.firstChild);
-				item.setAttribute("ontouchend", null);		
+				var deleteButton = document.createElement("div");
+				$(deleteButton).css({
+                                    "float":                    "left",
+                                    "margin-right":             "5px",
+                                    "position":                 "relative",
+                                    "top":                      "0px",
+                                    "border":                   "#fff 2px solid",
+                                    "-webkit-border-radius":    "10px",
+                                    "width" :                   "15px",
+                                    "height":                   "15px",
+                                    "background-color":         "#f00",
+                                    "color":                    "#fff",
+                                    "font-weight" :             "bold",
+                                    });
+                
+                function _touchend(interfaceNumber) { 
+                    return function(e) {
+                        interfaceManager.removeInterface(interfaceNumber);
+                    }
+                }
+                
+				$(deleteButton).html("<img style='position:relative; top:-.7em; left:-.65em;' src='images/dash.png'>");
+				$(deleteButton).bind("touchend", _touchend(i), false);
+				$(item).prepend(deleteButton);
+				$(item).unbind("tap");		
 			}
 		}
 	}
@@ -209,11 +242,20 @@ function InterfaceManager() {
 		for(var i = 0; i < list.childNodes.length; i++) {
 			var item = list.childNodes[i];
 			item.removeChild(item.childNodes[0]);
-			item.setAttribute("ontouchend", "interfaceManager.highlight("+ i +"); interfaceManager.selectInterfaceFromList('" + item.innerHTML + "');");		
+            
+            function _touchend(interfaceNumber, itemHTML) { 
+                return function(e) {
+                    interfaceManager.highlight(interfaceNumber);
+                    interfaceManager.selectInterfaceFromList(itemHTML);
+                }
+            }
+            
+			$(item).bind("tap", _touchend(i, item.innerHTML));
 		}
 	}
     
     this.refreshInterface = function() {
+
         interfaceManager.myRequest = new XMLHttpRequest();    	
         interfaceManager.myRequest.onreadystatechange = function() {
             if(interfaceManager.myRequest.readyState == 4) {              
@@ -228,6 +270,7 @@ function InterfaceManager() {
     }
     
 	this.saveInterface = function(interfaceJSON, shouldReloadList, ipAddress) {
+        console.log("SAVING");
         if(typeof ipAddress == "undefined") ipAddress = "";
 		var loadedInterfaceName = null;
         //console.log(interfaceJSON);
@@ -243,6 +286,7 @@ function InterfaceManager() {
                 )
             //);
         }
+        console.log("END SAVING");
 	}
 	
 	this.pushInterfaceWithDestination = function(interfaceJSON, nameOfSender, newDestination) {
@@ -272,11 +316,12 @@ function InterfaceManager() {
 	}
 	
 	this.removeInterface = function (itemNumber) {
+        
         var listItem = $('#interfaceList > li:eq(' + itemNumber +')');
         var arr = listItem.html().split("</div>");
 		var newKey = arr[1];
         interfaceManager.interfaceFiles.remove(newKey);        
-        //console.log("removing " + newKey);
+        console.log("removing " + newKey);
 		listItem.remove();
         $('#interfaceList').listview('refresh');
 	}
@@ -310,6 +355,7 @@ function InterfaceManager() {
         }
         control.loadWidgets();
         if(this.currentTab != document.getElementById("selectedInterface")) {
+            control.shouldPrevent = true;
             control.changeTab(document.getElementById("selectedInterface"));
             $.mobile.changePage('#SelectedInterfacePage');
 		}

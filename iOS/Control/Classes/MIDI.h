@@ -26,10 +26,13 @@
 
 @property (retain) NSDictionary * midiDict;
 
-- (void) start:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
 - (void) pollJavascriptStart:(id)obj;
 - (void) pollJavascript:(id)obj;
+- (void) connectSourceWithName:(NSString *)sourceName;
 
-- (void) send:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
-- (void) rescanForSources;
+- (void) start: (NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
+- (void) send:  (NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
+- (void) browse:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
+
+
 @end

@@ -1,8 +1,21 @@
 function MIDIManager() {
+    console.log("Starting midimanager");
 	this.delegate = this;
-	PhoneGap.exec("MIDI.start");
+
 	return this;
 }
+
+MIDIManager.prototype.startup = function() {
+    PhoneGap.exec(null, null, 'MIDIManager', 'start', []);
+};
+
+PhoneGap.addConstructor( function() {
+	//Register the javascript plugin with PhoneGap
+	PhoneGap.addPlugin('MIDIManager', new MIDIManager());
+	
+	//Register the native class of plugin with PhoneGap
+	PluginManager.addService("MIDIManager","com.charlieroberts.Control.MIDIManager");
+});
 
 MIDIManager.prototype.processMIDIMessage = function(msgType, channel, number, value) {	
 	this.delegate.processMIDI(msgType, channel, number, value);

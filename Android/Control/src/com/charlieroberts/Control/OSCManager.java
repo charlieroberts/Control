@@ -38,9 +38,6 @@ public class OSCManager extends Plugin {
 	
 	public Class dd;
 	
-	//public OSCManager() {}
-		//getLocalIpAddress();}
-	
 	@Override
 	public PluginResult execute(String action, JSONArray data, String callbackId) {
 		PluginResult result = null;

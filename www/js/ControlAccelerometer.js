@@ -1,7 +1,8 @@
 // Accelerometer is a singleton object.
 
 function ControlAccelerometer(props) {
-	this.name = props.name;
+	//this.name = props.name;
+    this.make("sensor", props);
 
 	this.x = 0;
 	this.y = 0;
@@ -20,63 +21,64 @@ function ControlAccelerometer(props) {
 	}
     this.userDefinedRange = this.max - this.min;
     
-	this.isLocal = (typeof props.isLocal != "undefined") ? props.isLocal : false;
+//	this.isLocal = (typeof props.isLocal != "undefined") ? props.isLocal : false;
+//    
+//	this.midiType   = (typeof props.midiType   != "undefined") ? props.midiType   : "cc";
+//	this.channel    = (typeof props.channel    != "undefined") ? props.channel    : 1;
+//	this.midiNumber = (typeof props.midiNumber != "undefined") ? props.midiNumber : 0;
+//	
+//	this.address = (typeof props.address != "undefined") ? props.address : "/" + this.name;
+//	
+//	this.onvaluechange = (typeof props.onvaluechange != "undefined") ? props.onvaluechange : null;
     
-	this.midiType   = (typeof props.midiType   != "undefined") ? props.midiType   : "cc";
-	this.channel    = (typeof props.channel    != "undefined") ? props.channel    : 1;
-	this.midiNumber = (typeof props.midiNumber != "undefined") ? props.midiNumber : 0;
-	
-	this.address = (typeof props.address != "undefined") ? props.address : "/" + this.name;
-	
-	this.onvaluechange = (typeof props.onvaluechange != "undefined") ? props.onvaluechange : null;
-    
-	this._onAccelUpdate = function(x,y,z) {
-        //console.log("x = " + x + " || y = " + y + " || z = " + z);
-        
-        this.x = this.min + (((0 - this.hardwareMin) + x) / this.hardwareRange ) * this.userDefinedRange;
-		this.y = this.min + (((0 - this.hardwareMin) + y) / this.hardwareRange ) * this.userDefinedRange;
-		this.z = this.min + (((0 - this.hardwareMin) + z) / this.hardwareRange ) * this.userDefinedRange;
-		
-        //console.log("this.x = " + this.x + " || this.y = " + this.y + " || z = " + this.z);
-        if(typeof this.onvaluechange != "undefined") {
-			eval(this.onvaluechange);
-		}
-        
-		if(!this.isLocal && _protocol == "OSC") {
-			var valueString = "|" + this.address;
-			valueString += ":" + this.x + "," + this.y + "," + this.z;
-			control.valuesString += valueString;
-		}else if (!this.isLocal && _protocol == "MIDI") {
-			var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.x);			
-			control.valuesString += valueString;
-			valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber+ 1) + "," + Math.round(this.y);			
-			control.valuesString += valueString;
-			valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber+ 2) + "," + Math.round(this.z);			
-			control.valuesString += valueString;	
-		}
-	}
-	
-	this.draw = function() {}
-	
-	this.start = function() {
-		PhoneGap.exec("CNTRL_Accelerometer.start", null);
-		this.setUpdateRate(this.updateRate);
-	}
-		
-	this.unload = function() {
-		PhoneGap.exec("CNTRL_Accelerometer.stop");
-	}
-    
-    this.setUpdateRate = function(rateInHz) {
-		//console.log("setting accelerometer updateRate " + rateInHz);
-        PhoneGap.exec("CNTRL_Accelerometer.setUpdateRate", rateInHz);
+    if(typeof props.updateRate != "undefined") {
+        this.updateRate = props.updateRate;
+    }else{
+        this.updateRate = 10;
     }
-	
-	if(typeof props.updateRate != "undefined") {
-		this.updateRate = props.updateRate;
-	}else{
-		this.updateRate = 10;
-	}
-	
-	return this;
+    return this;
+}
+
+ControlAccelerometer.prototype = new Widget();
+
+ControlAccelerometer.prototype._onAccelUpdate = function(x,y,z) {
+    //console.log("x = " + x + " || y = " + y + " || z = " + z);
+    
+    this.x = this.min + (((0 - this.hardwareMin) + x) / this.hardwareRange ) * this.userDefinedRange;
+    this.y = this.min + (((0 - this.hardwareMin) + y) / this.hardwareRange ) * this.userDefinedRange;
+    this.z = this.min + (((0 - this.hardwareMin) + z) / this.hardwareRange ) * this.userDefinedRange;
+    
+    //console.log("this.x = " + this.x + " || this.y = " + this.y + " || z = " + this.z);
+    if(typeof this.onvaluechange != "undefined") {
+        eval(this.onvaluechange);
+    }
+    
+    if(!this.isLocal && _protocol == "OSC") {
+        var valueString = "|" + this.address;
+        valueString += ":" + this.x + "," + this.y + "," + this.z;
+        control.valuesString += valueString;
+    }else if (!this.isLocal && _protocol == "MIDI") {
+        var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.x);			
+        control.valuesString += valueString;
+        valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber+ 1) + "," + Math.round(this.y);			
+        control.valuesString += valueString;
+        valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber+ 2) + "," + Math.round(this.z);			
+        control.valuesString += valueString;	
+    }
+}
+
+ControlAccelerometer.prototype.draw = function() {}
+
+ControlAccelerometer.prototype.start = function() {
+    PhoneGap.exec("CNTRL_Accelerometer.start", null);
+    this.setUpdateRate(this.updateRate);
+}
+    
+ControlAccelerometer.prototype.unload = function() {
+    PhoneGap.exec("CNTRL_Accelerometer.stop");
+}
+
+ControlAccelerometer.prototype.setUpdateRate = function(rateInHz) {
+    //console.log("setting accelerometer updateRate " + rateInHz);
+    PhoneGap.exec("CNTRL_Accelerometer.setUpdateRate", rateInHz);
 }
