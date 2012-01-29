@@ -11,7 +11,7 @@ Control.interfaceManager = {
         this.interfaceIP = null;
         constants = null;
         
-        this.interfaceDefaults = ["djcut.js","multibutton.js" ];
+        this.interfaceDefaults = ["gyro.js"];
         //     "multiXY.js",
         //     "iphoneLandscapeMixer.js",
         //     "djcut.js",
@@ -104,6 +104,8 @@ Control.interfaceManager = {
                 jsonString += ";Control.functions = ";
                 jsonString += (typeof Control.functions === null) ? "{}" : _functions;
                 jsonString += ";Control.interface = " + _interface;
+				
+				console.log(jsonString);
                 
                 Control.interfaceManager.loadedInterfaces[Control.ifCount] = {'name':Control.interface.name, 'json':jsonString};
                 Control.ifCount++;

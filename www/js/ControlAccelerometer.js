@@ -1,10 +1,5 @@
-// Accelerometer is a singleton object.
-
 Control.Accelerometer = function(props) {
-	//this.name = props.name;
-    console.log("MAKING ACC 0");
     this.make("sensor", props);
-        console.log("MAKING ACC 2");
 	this.x = 0;
 	this.y = 0;
 	this.z = 0;
@@ -17,7 +12,7 @@ Control.Accelerometer = function(props) {
 	    this.hardwareMax = 9.81;  // says that the range is [0, 1]. But, it seems more like [-1G, 1G]
 	}
     this.hardwareRange = this.hardwareMax - this.hardwareMin;
-    console.log("MAKING ACC 0");
+
 	if(Control.protocol == "MIDI") {
 		this.max = (typeof props.midiMax != "undefined") ? props.midiMax : 127;
 		this.min = (typeof props.midiMin != "undefined") ? props.midiMin : 0;
@@ -40,14 +35,18 @@ Control.Accelerometer = function(props) {
 
 Control.Accelerometer.prototype = new Widget();
 
-Control.Accelerometer.prototype._onAccelUpdate = function(x,y,z) {    
+Control.Accelerometer.prototype._onAccelUpdate = function(x,y,z) { 
     this.x = this.min + (((0 - this.hardwareMin) + x) / this.hardwareRange ) * this.userDefinedRange;
     this.y = this.min + (((0 - this.hardwareMin) + y) / this.hardwareRange ) * this.userDefinedRange;
     this.z = this.min + (((0 - this.hardwareMin) + z) / this.hardwareRange ) * this.userDefinedRange;
     
-    //console.log("this.x = " + this.x + " || this.y = " + this.y + " || z = " + this.z);
-    if(typeof this.onvaluechange != "undefined") {
-        eval(this.onvaluechange);
+//    console.log("this.x = " + this.x + " || this.y = " + this.y + " || z = " + this.z);
+    if(this.onvaluechange != null) {
+        if(typeof this.onvaluechange !== "string") {
+            this.onvaluechange();
+        }else{
+            eval(this.onvaluechange);
+        }
     }
     
     if(!this.isLocal && Control.protocol == "OSC") {
@@ -69,14 +68,14 @@ Control.Accelerometer.prototype.draw = function() {}
 Control.Accelerometer.prototype.event = function() {}
 
 function onSuccess(acceleration) {
-    acc._onAccelUpdate(acceleration.x, acceleration.y, acceleration.z);
+    Control.acc._onAccelUpdate(acceleration.x, acceleration.y, acceleration.z);
 }		
 	
 Control.Accelerometer.prototype.start = function() {
-    // console.log("********************************* STARTING ACC");    
+    //console.log("********************************* STARTING ACC");    
     var options = {frequency: Math.round(this.delay)};
 
-    // console.log("************************ ACC FREQ = " + options.frequency);
+    //console.log("************************ ACC FREQ = " + options.frequency);
     this.watchID = navigator.accelerometer.watchAcceleration(
         onSuccess, 
         function(ex) {
@@ -84,7 +83,7 @@ Control.Accelerometer.prototype.start = function() {
         }, 
 		options
 	);
-    console.log("started accelerometer: "  +this.watchID);	        
+    //console.log("started accelerometer: "  + this.watchID);	        
 }
 			
 Control.Accelerometer.prototype.unload = function() {

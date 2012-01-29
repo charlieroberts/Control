@@ -172,11 +172,11 @@ window["Control"] = {
         }else{
             _w = new Control[w.type](w);
             switch(w.type) {
-                case "ControlAccelerometer"	: Control.acc = _w; 		break;
-                case "ControlCompass"		: Control.compass = _w; 	break;					
-                case "ControlGyro"			: Control.gyro = _w; 		break;
-                case "AudioPitch"			: Control.audioPitch  = _w; break;
-                case "AudioVolume"			: Control.audioVolume = _w; break;																
+                case "Accelerometer"	: Control.acc = _w; 		break;
+                case "Compass"          : Control.compass = _w; 	break;					
+                case "Gyro"             : Control.gyro = _w; 		break;
+                case "AudioPitch"		: Control.audioPitch  = _w; break;
+                case "AudioVolume"		: Control.audioVolume = _w; break;																
             }
             _w.start();        
         }
