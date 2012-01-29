@@ -1,4 +1,4 @@
-function Slider(ctx, props) {
+Control.Slider = function(ctx, props) {
     this.make(ctx, props);
 	this.ctx = ctx;
 	
@@ -18,12 +18,12 @@ function Slider(ctx, props) {
     
     this.prevValue = this.value;
 	
-	this.pixelWidth  = 1 / control.deviceWidth;
-	this.pixelHeight = 1 / control.deviceHeight;
+	this.pixelWidth  = 1 / Control.deviceWidth;
+	this.pixelHeight = 1 / Control.deviceHeight;
 	
 	if(!this.shouldUseCanvas) {
 		this.fillDiv   = document.createElement("div");
-		$(this.fillDiv).addClass('widget slider');
+		$(this.fillDiv).addClass('widget Control.Slider');
 
 		$(this.fillDiv).css({
 			"position": "absolute", 
@@ -38,7 +38,7 @@ function Slider(ctx, props) {
 		this.ctx.appendChild(this.fillDiv);
 		
 		this.strokeDiv   = document.createElement("div");
-		$(this.strokeDiv).addClass('widget slider_stroke');
+		$(this.strokeDiv).addClass('widget Control.Slider_stroke');
 		
 		$(this.strokeDiv).css({
 			"width": this.width - 2 + "px",
@@ -54,7 +54,7 @@ function Slider(ctx, props) {
 		this.ctx.appendChild(this.strokeDiv);
 	}else{
 		this.canvas = document.createElement('canvas');
-		$(this.canvas).addClass('widget slider');
+		$(this.canvas).addClass('widget Control.Slider');
 
 		this.canvas.width = this.width;						// DO NOT USE STYLES TO RESIZE CANVAS OBJECT
 		this.canvas.height = this.height;					// DO NOT USE STYLES TO RESIZE CANVAS OBJECT
@@ -79,13 +79,13 @@ function Slider(ctx, props) {
 	    {   //remove for canvas
 			var _width, _height, _x, _y;
 			if(this.isVertical) {
-				_width = props.width - (8 / control.deviceWidth);
-				_height =  (this.labelSize + 4) / control.deviceHeight;
+				_width = props.width - (8 / Control.deviceWidth);
+				_height =  (this.labelSize + 4) / Control.deviceHeight;
 				_x = props.x;
 				_y = props.y + props.height - _height;
 			}else{
-				_width = (props.width / 3) - (8 / control.deviceWidth);
-				_height = (this.labelSize + 4) / control.deviceHeight;
+				_width = (props.width / 3) - (8 / Control.deviceWidth);
+				_height = (this.labelSize + 4) / Control.deviceHeight;
 				_x = props.x + (props.width / 2) - ((props.width / 3) / 2);
 				_y = props.y + props.height - _height;
 			}
@@ -100,12 +100,12 @@ function Slider(ctx, props) {
 				"size":  props.labelSize || 12, 
 			 };
                         
-	        var _w = control.makeWidget(this.label);
-	        control.widgets.push(_w);
-	        if(!control.isAddingConstants)
-	            control.addWidget(_w, control.addingPage); // PROBLEM
+	        var _w = Control.makeWidget(this.label);
+	        Control.widgets.push(_w);
+	        if(!Control.isAddingConstants)
+	            Control.addWidget(_w, Control.addingPage); // PROBLEM
 	        else
-	            control.addConstantWidget(_w); // PROBLEM
+	            Control.addConstantWidget(_w); // PROBLEM
             
 	        this.label = _w;
 			$(this.label.label).css("padding", "0px 4px 0px 4px");
@@ -123,9 +123,9 @@ function Slider(ctx, props) {
     return this;
 }
 
-Slider.prototype = new Widget();
+Control.Slider.prototype = new Widget();
 
-Slider.prototype.touchstart = function(touch) {
+Control.Slider.prototype.touchstart = function(touch) {
     if(this.hitTest(touch.pageX, touch.pageY)) {
         this.activeTouches.push(touch.identifier);
         if(this.isVertical) {
@@ -143,7 +143,7 @@ Slider.prototype.touchstart = function(touch) {
 	return false;
 };
 
-Slider.prototype.touchmove = function(touch) {       
+Control.Slider.prototype.touchmove = function(touch) {       
     var shouldChange = false;
     var isActive = false;
  
@@ -179,7 +179,7 @@ Slider.prototype.touchmove = function(touch) {
 	return false;
 };
 
-Slider.prototype.touchend = function(touch) {
+Control.Slider.prototype.touchend = function(touch) {
     if(this.activeTouches.length > 0) {
         for(var i = 0; i < this.activeTouches.length; i++) {
             if(touch.identifier == this.activeTouches[i]) {
@@ -195,13 +195,13 @@ Slider.prototype.touchend = function(touch) {
 	return false;
 };
     
-Slider.prototype.events = { 
-	"touchstart": Slider.prototype.touchstart, 
-	"touchmove" : Slider.prototype.touchmove, 
-	"touchend"  : Slider.prototype.touchend,
+Control.Slider.prototype.events = { 
+	"touchstart": Control.Slider.prototype.touchstart, 
+	"touchmove" : Control.Slider.prototype.touchmove, 
+	"touchend"  : Control.Slider.prototype.touchend,
 };
 
-Slider.prototype.event = function(event) {
+Control.Slider.prototype.event = function(event) {
     for (var j = 0; j < event.changedTouches.length; j++){
         var touch = event.changedTouches.item(j);
 		
@@ -211,7 +211,7 @@ Slider.prototype.event = function(event) {
     }
 };
 
-Slider.prototype.changeValue = function(val) { 
+Control.Slider.prototype.changeValue = function(val) { 
     this.prevValue = this.value;
     if(!this.isVertical) {
         this.value = 1 - ((this.x + this.width) - val) / (this.width);
@@ -222,7 +222,7 @@ Slider.prototype.changeValue = function(val) {
     this.setValue( this.min + ( this.value * ( this.max - this.min ) ) );
 }
 
-Slider.prototype.draw = function() {
+Control.Slider.prototype.draw = function() {
     var range = this.max - this.min;
     var percent = (this.value + (0 - this.min)) / range;
     var prevPercent = (this.prevValue + (0 - this.min)) / range;
@@ -262,7 +262,7 @@ Slider.prototype.draw = function() {
     }
 }
 
-Slider.prototype.setColors = function(newColors) {
+Control.Slider.prototype.setColors = function(newColors) {
     this.backgroundColor = newColors[0];
     this.fillColor = newColors[1];
     this.strokeColor = newColors[2];
@@ -272,11 +272,11 @@ Slider.prototype.setColors = function(newColors) {
     this.strokeDiv.style.backgroundColor = this.backgroundColor;
 }
 
-Slider.prototype.setBounds = function(newBounds) {
-    this.width = Math.round(newBounds[2] * control.deviceWidth);
-    this.height = Math.round(newBounds[3] * control.deviceHeight);
-    this.x = Math.round(newBounds[0] * control.deviceWidth);
-    this.y = Math.round(newBounds[1] * control.deviceHeight);
+Control.Slider.prototype.setBounds = function(newBounds) {
+    this.width = Math.round(newBounds[2] * Control.deviceWidth);
+    this.height = Math.round(newBounds[3] * Control.deviceHeight);
+    this.x = Math.round(newBounds[0] * Control.deviceWidth);
+    this.y = Math.round(newBounds[1] * Control.deviceHeight);
     
 	$(this.fillDiv).css({
 	    "width" 	: this.width - 2 + "px",
@@ -305,13 +305,13 @@ Slider.prototype.setBounds = function(newBounds) {
 	if(typeof this.label != "undefined") {
 		var _width, _height, _x, _y;
 		if(this.isVertical) {
-			_width = newBounds[2] - (8 / control.deviceWidth);
-			_height =  (this.labelSize + 4) / control.deviceHeight;
+			_width = newBounds[2] - (8 / Control.deviceWidth);
+			_height =  (this.labelSize + 4) / Control.deviceHeight;
 			_x = newBounds[0];
 			_y = newBounds[1] + newBounds[3] - _height;
 		}else{
-			_width = (newBounds[2] / 3) - (8 / control.deviceWidth);
-			_height = (this.labelSize + 4) / control.deviceHeight;
+			_width = (newBounds[2] / 3) - (8 / Control.deviceWidth);
+			_height = (this.labelSize + 4) / Control.deviceHeight;
 			_x = newBounds[0] + (newBounds[2] / 2) - ((newBounds[2] / 3) / 2);
 			_y = newBounds[1] + newBounds[3] - _height;
 		}
@@ -319,7 +319,7 @@ Slider.prototype.setBounds = function(newBounds) {
 	}
 }
 
-Slider.prototype.show = function() {
+Control.Slider.prototype.show = function() {
     if(!this.shouldUseCanvas) {
         this.fillDiv.style.display = "block";
         this.strokeDiv.style.display = "block";
@@ -329,7 +329,7 @@ Slider.prototype.show = function() {
     this.draw();
 }
 
-Slider.prototype.hide = function() {
+Control.Slider.prototype.hide = function() {
     //this.ctx.clearRect(this.x,this.y,this.width,this.height);
     if(!this.shouldUseCanvas) {
         this.fillDiv.style.display = "none";
@@ -339,10 +339,10 @@ Slider.prototype.hide = function() {
     }
 }
 
-Slider.prototype.unload = function() {
+Control.Slider.prototype.unload = function() {
 //  this.ctx.clearRect(this.x,this.y,this.width,this.height);
     if(typeof this.label !== 'undefined') {
-        control.removeWidgetWithName(this.name + "Label");
+        Control.removeWidgetWithName(this.name + "Label");
     }
     if(!this.shouldUseCanvas) {
         this.ctx.removeChild(this.fillDiv);

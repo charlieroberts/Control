@@ -228,7 +228,7 @@ MultiTouchXY.prototype.changeValue = function(touch, inputX, inputY) {
     
     var range = this.max - this.min;
     
-    if(control.protocol != "MIDI") {
+    if(Control.protocol != "MIDI") {
         this.xvalue = this.min + (touch.xpercentage * range);
         this.yvalue = this.min + (touch.ypercentage * range);
     }else{
@@ -256,10 +256,10 @@ MultiTouchXY.prototype.setColors = function(newColors) {
 }
 
 MultiTouchXY.prototype.setBounds = function(newBounds) {
-    this.width = Math.round(newBounds[2] * control.deviceWidth);
-    this.height = Math.round(newBounds[3] * control.deviceHeight);
-    this.x = Math.round(newBounds[0] * control.deviceWidth);
-    this.y = Math.round(newBounds[1] * control.deviceHeight);
+    this.width = Math.round(newBounds[2] * Control.deviceWidth);
+    this.height = Math.round(newBounds[3] * Control.deviceHeight);
+    this.x = Math.round(newBounds[0] * Control.deviceWidth);
+    this.y = Math.round(newBounds[1] * Control.deviceHeight);
     
     this.container.style.width  = this.width - 2 + "px";
     this.container.style.height = this.height - 2 + "px";
@@ -284,20 +284,20 @@ MultiTouchXY.prototype.setBounds = function(newBounds) {
 //    }
 MultiTouchXY.prototype.output = function(touch) {
     var valueString = "";
-    if(control.protocol == "OSC") {
+    if(Control.protocol == "OSC") {
         valueString = "|" + this.address;
         if (this.maxTouches > 1) {
           valueString += "/" + touch.activeNumber;
         }
         valueString += ":" + this.xvalue + "," + this.yvalue;
-    }else if(control.protocol == "MIDI") {
+    }else if(Control.protocol == "MIDI") {
         var xnum = this.midiNumber + (touch.activeNumber * 2) - 2;
         var ynum = xnum + 1;
             
         valueString  = "|" + this.midiType + "," + (this.channel - 1) + "," + xnum + "," + Math.round(this.xvalue);
         valueString += "|" + this.midiType + "," + (this.channel - 1) + "," + ynum + "," + Math.round(this.yvalue);
     }
-    control.valuesString += valueString;
+    Control.valuesString += valueString;
 
 }
 

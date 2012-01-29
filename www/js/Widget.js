@@ -22,12 +22,12 @@ Widget.prototype.make = function(ctx, props) {
             }
             if(typeof props.width  == "undefined") props.width  = .2;
             if(typeof props.height == "undefined") props.height = .2;	
-            this.width = Math.round(parseFloat(control.deviceWidth)* props.width);
-            this.height = Math.round(parseFloat(control.deviceHeight) * props.height);
+            this.width = Math.round(parseFloat(Control.deviceWidth)* props.width);
+            this.height = Math.round(parseFloat(Control.deviceHeight) * props.height);
             if(typeof props.x == "undefined") props.x = 0;
             if(typeof props.y == "undefined") props.y = 0;		
-            this.x = Math.round(parseFloat(control.deviceWidth) * props.x) + .5;
-            this.y = Math.round(parseFloat(control.deviceHeight) * props.y) + .5;
+            this.x = Math.round(parseFloat(Control.deviceWidth) * props.x) + .5;
+            this.y = Math.round(parseFloat(Control.deviceHeight) * props.y) + .5;
             
             //console.log("x = " + props.x + " :: y = " + props.y + " :: width = " + props.width + " :: height = " + props.height);
 
@@ -66,7 +66,7 @@ Widget.prototype.make = function(ctx, props) {
 			this.address = "/" + this.name;
 		}   
 
-		if(control.protocol == "MIDI") {
+		if(Control.protocol == "MIDI") {
 			if(typeof props.midiRange != "undefined") {
 				props.midiMin = props.midiRange[0];
 				props.midiMax = props.midiRange[1];
@@ -143,14 +143,14 @@ Widget.prototype.setValueNoOutput = function(newValue) {
 }
 
 Widget.prototype.output = function() {
-    if(!this.isLocal && control.protocol == "OSC") {
+    if(!this.isLocal && Control.protocol == "OSC") {
         var valueString = "|" + this.address;
         valueString += ":" + this.value;
-        control.valuesString += valueString;
+        Control.valuesString += valueString;
         //PhoneGap.exec('OSCManager.send', this.address, 'f', this.value);
-    }else if (!this.isLocal && control.protocol == "MIDI") {
+    }else if (!this.isLocal && Control.protocol == "MIDI") {
         var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.value);
-        control.valuesString += valueString;
+        Control.valuesString += valueString;
     }
     
 }

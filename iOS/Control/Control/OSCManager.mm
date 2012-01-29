@@ -26,7 +26,7 @@ protected:
 		}else{
 			osc::ReceivedMessage::const_iterator arg = m.ArgumentsBegin();
 			//NSLog(@"%s %d", m.AddressPattern(), m.ArgumentCount());
-			NSMutableString *jsString = [NSMutableString stringWithFormat:@"control.oscManager.processOSCMessage(\"%s\", \"%s\", ", m.AddressPattern(), m.TypeTags(), nil];
+			NSMutableString *jsString = [NSMutableString stringWithFormat:@"Control.oscManager.processOSCMessage(\"%s\", \"%s\", ", m.AddressPattern(), m.TypeTags(), nil];
             
 			const char * tags = m.TypeTags();
 
@@ -69,7 +69,7 @@ protected:
 		[NSThread detachNewThreadSelector:@selector(oscThread) toTarget:self withObject:nil];
 		[NSThread detachNewThreadSelector:@selector(pollJavascriptStart:) toTarget:self withObject:nil];
 		
-		NSArray * keys = [NSArray arrayWithObjects:@"/pushInterface", @"/pushDestination", @"/control/pushInterface", @"/control/pushDestination", nil];
+		NSArray * keys = [NSArray arrayWithObjects:@"/pushInterface", @"/pushDestination", @"/Control/pushInterface", @"/Control/pushDestination", nil];
 		NSArray * objects = [NSArray arrayWithObjects:NSStringFromSelector(@selector(pushInterface:)), NSStringFromSelector(@selector(pushDestination:)), NSStringFromSelector(@selector(pushInterface:)), NSStringFromSelector(@selector(pushDestination:)), nil];
 		addresses = [[NSMutableDictionary alloc] initWithObjects:objects forKeys:keys];		
 	}
@@ -112,7 +112,7 @@ protected:
 			
 			[jsStringStart replaceOccurrencesOfString:@"\n" withString:@"" options:1 range:NSMakeRange(0, [jsStringStart length])]; // will not work with newlines present
 			
-			NSString *jsString = [NSString stringWithFormat:@"control.interfaceManager.pushInterface('%@')", jsStringStart];
+			NSString *jsString = [NSString stringWithFormat:@"Control.interfaceManager.pushInterface('%@')", jsStringStart];
 
 			[self.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsString waitUntilDone:NO];
 		}else{	// push interface + destination;
@@ -126,7 +126,7 @@ protected:
 			NSString *name = [[NSString alloc] initWithCString:a2 encoding:1];
 			NSString *destination = [[NSString alloc] initWithCString:a3 encoding:1];
 
-			NSString *jsString = [[NSString alloc] initWithFormat:@"control.interfaceManager.pushInterfaceWithDestination('%@', '%@', '%@')", jsStringStart, name, destination];
+			NSString *jsString = [[NSString alloc] initWithFormat:@"Control.interfaceManager.pushInterfaceWithDestination('%@', '%@', '%@')", jsStringStart, name, destination];
 			
 			[self.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsString waitUntilDone:NO];
 		}
@@ -144,7 +144,7 @@ protected:
 		args >> a1 >> osc::EndMessage;
 		NSString *destination = [[NSString alloc] initWithCString:a1 encoding:1];
 
-		NSString *jsString = [[NSString alloc] initWithFormat:@"control.destinationManager.pushDestination('%@')", destination];
+		NSString *jsString = [[NSString alloc] initWithFormat:@"Control.destinationManager.pushDestination('%@')", destination];
 		NSLog(jsString);
 		[_oscManager.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsString waitUntilDone:NO];
 	}catch( osc::Exception& e ){
@@ -199,14 +199,14 @@ protected:
 	//NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
     if(isOutputInitialized) {
-        NSString *cmdString = [self.webView stringByEvaluatingJavaScriptFromString:@"control.getValues()"];
+        NSString *cmdString = [self.webView stringByEvaluatingJavaScriptFromString:@"Control.getValues()"];
         if([cmdString length] == 0) return;
         
         char buffer[OUTPUT_BUFFER_SIZE];
         osc::OutboundPacketStream p( buffer, OUTPUT_BUFFER_SIZE );		
         p << osc::BeginBundleImmediate;
         
-        [self.webView stringByEvaluatingJavaScriptFromString:@"control.clearValuesString()"];
+        [self.webView stringByEvaluatingJavaScriptFromString:@"Control.clearValuesString()"];
         NSArray *objects = [cmdString componentsSeparatedByString:@"|"];
 
         for(int i = 0; i < [objects count]; i++) {

@@ -12,9 +12,6 @@
 
 #import "PGPlugin.h"
 
-
-
-
 enum MediaError {
 	MEDIA_ERR_ABORTED = 1,
 	MEDIA_ERR_NETWORK = 2,

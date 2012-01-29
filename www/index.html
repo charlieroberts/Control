@@ -52,20 +52,12 @@
     <script type="text/javascript" src="js/AudioPitch.js"></script>
     <script type="text/javascript" src="js/AudioVolume.js"></script>
 
-    <script type="text/javascript" charset="utf-8">
-        var control;
-        
-        document.addEventListener("deviceready", init, false);
-        
-        function init() {
-            control = Control();
-            control.init();            
-            
-            wrapMe();
-        }
-        
+    <script type="text/javascript" charset="utf-8">        
         function preventBehavior(e) { // prevent scrolling
-            if(control.shouldPrevent) { e.preventDefault(); return; }
+            if(Control.shouldPrevent) { 
+                e.preventDefault(); 
+                return;
+            }
             if($(e.target).is("div")) {
                 e.preventDefault();
             }else{
@@ -74,6 +66,20 @@
                     e.preventDefault();
                 }
             }
+        }
+        
+        $("body").bind('touchmove touchstart touchend', window.preventBehavior);
+        $("html").bind('touchmove touchstart touchend', window.preventBehavior); // why the hell is this getting events???? must be bug in webkit      
+        $("#selectedInterface").bind('touchmove touchstart touchend', window.preventBehavior);            
+        $("#SelectedInterfacePage").bind('touchmove touchstart touchend', window.preventBehavior);
+
+        function onDeviceReady() { init(); }
+        document.addEventListener("deviceready", function() {init();}, false);
+
+        function init() {
+            Control.init();
+
+            wrapMe();
         }
 
         function wrapMe() {
@@ -87,11 +93,11 @@
   
   <div data-role="page" id="Interfaces" data-theme="a">
         <div class="ui-bar-a  ui-header " data-role="header" id="header" data-backbtn="false" style="z-index:100">
-            <a href="#" id="interfaceEditBtn" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="control.interfaceManager.editInterfaceList()">Edit</a>
+            <a href="#" id="interfaceEditBtn" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="Control.interfaceManager.editInterfaceList()">Edit</a>
             <h1 class="ui-title">Interfaces</h1>
             <div style="display:inline; position:absolute; top:.5em; right:.75em;">
-                <a href="#" data-role="button" data-icon="plus" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="control.interfaceManager.createInterfaceListWithStoredInterfaces()"><img src="css/images/refresh.png"></img></a>            
-                <a href="#" data-role="button" data-icon="plus" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="control.interfaceManager.promptForInterfaceDownload()"><img src="css/images/add.png"></img></a>
+                <a href="#" data-role="button" data-icon="plus" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="Control.interfaceManager.createInterfaceListWithStoredInterfaces()"><img src="css/images/refresh.png"></img></a>            
+                <a href="#" data-role="button" data-icon="plus" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="Control.interfaceManager.promptForInterfaceDownload()"><img src="css/images/add.png"></img></a>
             </div>
         </div>
         
@@ -102,11 +108,11 @@
   
   <div data-role="page" id="Destinations" data-theme="a">
         <div class="ui-bar-a  ui-header" data-role="header" id="header" data-backbtn="false">
-            <a href="#" id="destinationEditBtn" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="control.destinationManager.editDestinationList()">Edit</a>     
+            <a href="#" id="destinationEditBtn" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="Control.destinationManager.editDestinationList()">Edit</a>     
             <h1 class="ui-title">Destinations</h1>
             <div style="display:inline; position:absolute; top:.5em; right:.75em;">
-                <a href="#" data-role="button" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="control.destinationManager.refreshList()"><img src="css/images/refresh.png"></img></a>            
-                <a href="#" data-role="button" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="control.destinationManager.promptForIP()"><img src="css/images/add.png"></img></a>
+                <a href="#" data-role="button" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="Control.destinationManager.refreshList()"><img src="css/images/refresh.png"></img></a>            
+                <a href="#" data-role="button" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="Control.destinationManager.promptForIP()"><img src="css/images/add.png"></img></a>
             </div>
         </div>
         <div data-role="content">
@@ -118,9 +124,9 @@
     <div data-role="header" id="header" data-backbtn="false"><h1>Preferences</h1></div>
     <div data-role="content">
         <ul id="preferencesList" data-role="listview" data-theme="g">
-            <li data-icon="false" class="preferencesListItem"><a id="autolockToggle" href="#" ontouchend="control.preferencesManager.autolockToggle()">Turn Autolock <b>On</b></a></li>
+            <li data-icon="false" class="preferencesListItem"><a id="autolockToggle" href="#" ontouchend="Control.preferencesManager.autolockToggle()">Turn Autolock <b>On</b></a></li>
             <li class="preferencesListItem">OSC Receive Port : 
-                <input id="portField" style="display:inline; width:150px;" type="number" id="receivePortSelector" name="portField" value="8080" onchange="portField.blur();control.preferencesManager.changePort(portField.value);console.log('EVENT SUBMIT');">
+                <input id="portField" style="display:inline; width:150px;" type="number" id="receivePortSelector" name="portField" value="8080" onchange="portField.blur();Control.preferencesManager.changePort(portField.value);console.log('EVENT SUBMIT');">
             </li>
         </ul>
     </div>
@@ -168,22 +174,22 @@
       <div data-role="navbar" class="ui-navbar ui-navbar-noicons" role="navigation">
           <ul class="ui-navbar-noicons ui-grid-c"  style="border-top-width:0;">
               <li class="ui-block-a" style=" border-top-width:0;">
-                  <a href="#" ontouchend="$.mobile.changePage('#Interfaces'); control.shouldPrevent = false;" class="ui-btn ui-btn-up-a" style=" border-top-width:0;" data-theme="a">
+                  <a href="#" ontouchend="$.mobile.changePage('#Interfaces'); Control.shouldPrevent = false;" class="ui-btn ui-btn-up-a" style=" border-top-width:0;" data-theme="a">
                       <span class="ui-btn-inner"><span class="ui-btn-text" style="font-size:1em">Interfaces</span></span>
                   </a>
               </li>
               <li class="ui-block-b">
-                  <a href="#Destinations" ontouchstart="control.changeTab(document.getElementById('Destinations'));$.mobile.changePage('#Destinations');" data-theme="a" class="ui-btn ui-btn-up-a">
+                  <a href="#Destinations" ontouchstart="Control.changeTab(document.getElementById('Destinations'));$.mobile.changePage('#Destinations');" data-theme="a" class="ui-btn ui-btn-up-a">
                       <span class="ui-btn-inner" style="padding-left:0; padding-right:0;"><span class="ui-btn-text" >Destinations</span></span>
                   </a>
               </li>
               <li class="ui-block-b">
-                  <a href="#Preferences" ontouchstart="control.changeTab(document.getElementById('Preferences'))[$.mobile.changePage('#Preferences');" data-theme="a" class="ui-btn ui-btn-up-a">
+                  <a href="#Preferences" ontouchstart="Control.changeTab(document.getElementById('Preferences'))[$.mobile.changePage('#Preferences');" data-theme="a" class="ui-btn ui-btn-up-a">
                       <span class="ui-btn-inner" style="padding-left:0; padding-right:0;"><span class="ui-btn-text">Preferences</span></span>
                   </a>
               </li>
               <li class="ui-block-b">
-                  <a href="#Info" ontouchstart="control.changeTab(document.getElementById('Info'));$.mobile.changePage('#Info');" data-theme="a" class="ui-btn ui-btn-up-a">
+                  <a href="#Info" ontouchstart="Control.changeTab(document.getElementById('Info'));$.mobile.changePage('#Info');" data-theme="a" class="ui-btn ui-btn-up-a">
                       <span class="ui-btn-inner"><span class="ui-btn-text">Info</span></span>
                   </a>
               </li>

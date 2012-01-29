@@ -307,6 +307,9 @@ function InterfaceManager() {
                         };
                         // PhoneGap.exec(null, null, "DeviceFeatures", "print", [newInterface.json]);
                         interfaceManager.loadedInterfaces.splice(i,1,newInterface);
+                        
+                        localStorage.interfaceFiles = JSON.stringify(interfaceManager.loadedInterfaces);
+
                         interfaceManager.runInterface(newInterface.json);
                         break;
                     }

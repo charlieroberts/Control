@@ -32,7 +32,6 @@
 }
 
 - (void)start:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
-    NSLog(@"STARTING UP BONJOUR SERVICES");
     [self publishService:[NSMutableArray arrayWithObjects:[NSNumber numberWithInt:8080], @"", nil] withDict:nil];
 	
 	self.browser = [NSNetServiceBrowser new];
@@ -53,7 +52,7 @@
 	myIP = [self getIPAddress];
     [myIP retain];
     
-    NSString *ipstring = [NSString stringWithFormat:@"window.ipAddress = '%@';", myIP]; // for some reason control.ipAddress doesn't work, maybe control isn't instantiated yet?
+    NSString *ipstring = [NSString stringWithFormat:@"window.ipAddress = '%@';", myIP]; // for some reason Control.ipAddress doesn't work, maybe Control isn't instantiated yet?
     NSLog(@"ipstring = %@", ipstring);
     [self.webView stringByEvaluatingJavaScriptFromString:ipstring];
 }
@@ -123,7 +122,7 @@
             }
             port = ntohs(socketAddress->sin_port); // ntohs converts from network byte order to host byte order 
             BOOL isMIDI = ([[aService type] isEqualToString:@"_apple-midi._udp."]);
-            NSString *ipString = [NSString stringWithFormat: @"control.destinationManager.removeDestination(\"%s\", %d);", inet_ntoa(socketAddress->sin_addr), port];
+            NSString *ipString = [NSString stringWithFormat: @"Control.destinationManager.removeDestination(\"%s\", %d);", inet_ntoa(socketAddress->sin_addr), port];
 
             [webView stringByEvaluatingJavaScriptFromString:ipString];
         }
@@ -147,14 +146,12 @@
             struct sockaddr_in *socketAddress  = (struct sockaddr_in *) [d bytes];
             //NSString *name = [service name];
             char * ipaddress = inet_ntoa(socketAddress->sin_addr);
-			NSLog(@"bonjour address = %s", ipaddress);
             if(strcmp(ipaddress, "0.0.0.0") == 0 || strcmp(ipaddress, [myIP UTF8String]) == 0) { 
                 continue;
             }
             port = ntohs(socketAddress->sin_port); // ntohs converts from network byte order to host byte order 
             BOOL isMIDI = ([[service type] isEqualToString:@"_apple-midi._udp."]);
-            NSString *ipString = [NSString stringWithFormat: @"control.destinationManager.addDestination(\"%s\", %d, %d, %d);", inet_ntoa(socketAddress->sin_addr), port, !isMIDI, isMIDI];
-            NSLog(ipString);
+            NSString *ipString = [NSString stringWithFormat: @"Control.destinationManager.addDestination(\"%s\", %d, %d, %d);", inet_ntoa(socketAddress->sin_addr), port, !isMIDI, isMIDI];
             [self.webView stringByEvaluatingJavaScriptFromString:ipString];
         }
     } @catch(NSException *e) { NSLog(@"error resolving bonjour address"); }

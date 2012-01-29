@@ -15,7 +15,7 @@ function ControlGyro(props) {
     this.yawHardwareMax = 3.14;
     this.yawHardwareRange = this.yawHardwareMax - this.yawHardwareMin;
 	
-	if(control.protocol == "MIDI") {
+	if(Control.protocol == "MIDI") {
 		this.max = (typeof props.midiMax != "undefined") ? props.midiMax : 127;
 		this.min = (typeof props.midiMin != "undefined") ? props.midiMin : 0;
 	}else{
@@ -55,23 +55,23 @@ ControlGyro.prototype._onGyroUpdate = function(rotationRate, euler) {           
         eval(this.onvaluechange);
     }
     
-    if(!this.isLocal && control.protocol == "OSC") {
+    if(!this.isLocal && Control.protocol == "OSC") {
         var valueString = "|" + this.address;
         valueString += ":" + this.xRotationRate + "," + this.yRotationRate + "," + this.zRotationRate + "," + this.pitch + "," + this.roll + "," + this.yaw;
-        control.valuesString += valueString;
-    }else if (!this.isLocal && control.protocol == "MIDI") {
+        Control.valuesString += valueString;
+    }else if (!this.isLocal && Control.protocol == "MIDI") {
         var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.xRotationRate);			
-        control.valuesString += valueString;
+        Control.valuesString += valueString;
         valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber+ 1) + "," + Math.round(this.yRotationRate);			
-        control.valuesString += valueString;
+        Control.valuesString += valueString;
         valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber+ 2) + "," + Math.round(this.zRotationRate);			
-        control.valuesString += valueString;
+        Control.valuesString += valueString;
         valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber+ 3) + "," + Math.round(this.pitch);			
-        control.valuesString += valueString;
+        Control.valuesString += valueString;
         valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber+ 4) + "," + Math.round(this.roll);			
-        control.valuesString += valueString;
+        Control.valuesString += valueString;
         valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber+ 5) + "," + Math.round(this.yaw);			
-        control.valuesString += valueString;
+        Control.valuesString += valueString;
     }
 
 }

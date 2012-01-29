@@ -21,8 +21,8 @@ MultiSlider.prototype = new Widget();
 
 MultiSlider.prototype.init = function() {
     var sliderWidth, sliderHeight;
-    var pixelWidth = 1 / control.deviceWidth;
-    var pixelHeight = 1 / control.deviceHeight;
+    var pixelWidth = 1 / Control.deviceWidth;
+    var pixelHeight = 1 / Control.deviceHeight;
     if(this.isVertical) {
         sliderWidth =  this.widthInPercentage / this.numberOfSliders;// + pixelWidth;
         sliderHeight = this.heightInPercentage;

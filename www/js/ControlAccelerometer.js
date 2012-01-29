@@ -18,7 +18,7 @@ function ControlAccelerometer(props) {
 	}
     this.hardwareRange = this.hardwareMax - this.hardwareMin;
     console.log("MAKING ACC 0");
-	if(control.protocol == "MIDI") {
+	if(Control.protocol == "MIDI") {
 		this.max = (typeof props.midiMax != "undefined") ? props.midiMax : 127;
 		this.min = (typeof props.midiMin != "undefined") ? props.midiMin : 0;
 	}else{
@@ -50,17 +50,17 @@ ControlAccelerometer.prototype._onAccelUpdate = function(x,y,z) {
         eval(this.onvaluechange);
     }
     
-    if(!this.isLocal && control.protocol == "OSC") {
+    if(!this.isLocal && Control.protocol == "OSC") {
         var valueString = "|" + this.address;
         valueString += ":" + this.x + "," + this.y + "," + this.z;
-        control.valuesString += valueString;
-    }else if (!this.isLocal && control.protocol == "MIDI") {
+        Control.valuesString += valueString;
+    }else if (!this.isLocal && Control.protocol == "MIDI") {
         var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.x);			
-        control.valuesString += valueString;
+        Control.valuesString += valueString;
         valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber+ 1) + "," + Math.round(this.y);			
-        control.valuesString += valueString;
+        Control.valuesString += valueString;
         valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber+ 2) + "," + Math.round(this.z);			
-        control.valuesString += valueString;	
+        Control.valuesString += valueString;	
     }
 }
 

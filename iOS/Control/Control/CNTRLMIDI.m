@@ -45,7 +45,7 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 	if(packet->length == 3)
 		value = packet->data[2];
 
-	NSString * jsString = [NSString stringWithFormat:@"control.midiManager.processMIDIMessage(\"%s\", %d, %d, %d);", [msgType UTF8String], channel, number, value];	
+	NSString * jsString = [NSString stringWithFormat:@"Control.midiManager.processMIDIMessage(\"%s\", %d, %d, %d);", [msgType UTF8String], channel, number, value];	
 	[me.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsString waitUntilDone:NO];
 	
 	[pool drain];
@@ -108,7 +108,7 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 		MIDIObjectGetStringProperty(dest, kMIDIPropertyName, &pName);
         NSString *n = (NSString *)pName;
         if([n isEqualToString:@"Session 1"]) continue;
-		NSString *ipString = [NSString stringWithFormat: @"control.destinationManager.addMIDIDestination(\"%@\");", (NSString *)pName];
+		NSString *ipString = [NSString stringWithFormat: @"Control.destinationManager.addMIDIDestination(\"%@\");", (NSString *)pName];
 		NSLog(@"%@", ipString);
         [self.webView stringByEvaluatingJavaScriptFromString:ipString];
     }
@@ -195,10 +195,10 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 // form should be |type,channel,val1,?val2|
 - (void) pollJavascript:(id)obj {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSString *cmdString = [self.webView stringByEvaluatingJavaScriptFromString:@"control.getValues()"];
+	NSString *cmdString = [self.webView stringByEvaluatingJavaScriptFromString:@"Control.getValues()"];
     
 	if(![cmdString isEqualToString:@""] && cmdString != nil) {	
-		[self.webView stringByEvaluatingJavaScriptFromString:@"control.clearValuesString()"];
+		[self.webView stringByEvaluatingJavaScriptFromString:@"Control.clearValuesString()"];
 		NSMutableArray *objects = [[NSMutableArray alloc] initWithArray:[cmdString componentsSeparatedByString:@"|"]];
 
 		[objects removeObjectAtIndex:0];

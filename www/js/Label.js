@@ -1,4 +1,4 @@
-function Label(ctx, props) { //x, y, width, height, color, value, size, align) {
+Control.Label = function(ctx, props) {
     this.make(ctx, props);
     
 	this.size  = (typeof props.size != "undefined") ? props.size : 12;
@@ -35,9 +35,9 @@ function Label(ctx, props) { //x, y, width, height, color, value, size, align) {
     return this;
 }
 
-Label.prototype = new Widget();
+Control.Label.prototype = new Widget();
 
-Label.prototype.draw = function() {
+Control.Label.prototype.draw = function() {
     this.changeValue(this.value);
 }
 
@@ -49,7 +49,7 @@ Label.prototype.draw = function() {
 //        this.ctx.fillText(this.value, this.x + this.width / 2 , this.y + this.height / 2);
 //    }
 
-Label.prototype.setColors = function(newColors) {
+Control.Label.prototype.setColors = function(newColors) {
     this.backgroundColor = newColors[0];
     this.fillColor = newColors[1];
     this.strokeColor = newColors[2];
@@ -59,23 +59,23 @@ Label.prototype.setColors = function(newColors) {
 }
 
 
-Label.prototype.event = function(event, eventType) {}
+Control.Label.prototype.event = function(event, eventType) {}
 
-Label.prototype.changeValue = function(x) {
+Control.Label.prototype.changeValue = function(x) {
     this.value = x;
     //$(this.label).text(this.value);
     this.label.innerHTML = this.value;
 }
 
-Label.prototype.setValue = function(x) {
+Control.Label.prototype.setValue = function(x) {
     this.changeValue(x);
 }
 
-Label.prototype.setBounds = function(newBounds) {
-    this.width = Math.round(newBounds[2] * control.deviceWidth);
-    this.height = Math.round(newBounds[3] * control.deviceHeight);
-    this.x = Math.round(newBounds[0] * control.deviceWidth);
-    this.y = Math.round(newBounds[1] * control.deviceHeight);
+Control.Label.prototype.setBounds = function(newBounds) {
+    this.width = Math.round(newBounds[2] * Control.deviceWidth);
+    this.height = Math.round(newBounds[3] * Control.deviceHeight);
+    this.x = Math.round(newBounds[0] * Control.deviceWidth);
+    this.y = Math.round(newBounds[1] * Control.deviceHeight);
     
     $(this.label).css({
         "width":    this.width,
@@ -86,16 +86,16 @@ Label.prototype.setBounds = function(newBounds) {
     });
 }
 
-Label.prototype.output = function() { }
+Control.Label.prototype.output = function() { }
 
-Label.prototype.show = function() {
+Control.Label.prototype.show = function() {
     this.label.style.display = "block";
 }
 
-Label.prototype.hide = function() {
+Control.Label.prototype.hide = function() {
     this.label.style.display = "none";
 }
 
-Label.prototype.unload = function() {
+Control.Label.prototype.unload = function() {
     this.ctx.removeChild(this.label);
 }

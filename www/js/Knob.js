@@ -7,7 +7,7 @@ function Knob(ctx,props) {
     }
     this.make(ctx, props);
 	
-	if(control.orientation == 0 || control.orientation == 180) {
+	if(Control.orientation == 0 || Control.orientation == 180) {
 		this.radius =  Math.round(this.width / 2);
 	}else{
 		this.radius =  Math.round(this.height / 2);
@@ -18,7 +18,7 @@ function Knob(ctx,props) {
 	this.isInverted		= (typeof props.isInverted != "undefined") ? props.isInverted : false;
 	this.centerZero		= (typeof props.centerZero != "undefined") ? props.centerZero : false;
 	
-	if(control.protocol == "MIDI") {
+	if(Control.protocol == "MIDI") {
 		if(typeof props.midiStartingValue == "undefined" && this.centerZero) {
 			this.value = 63;
 		}
@@ -64,7 +64,7 @@ function Knob(ctx,props) {
 			var _width, _height, _x, _y;
 			
 			_width = .1 + (props.radius * .15);
-			_height = (this.labelSize + 4) / control.deviceHeight;
+			_height = (this.labelSize + 4) / Control.deviceHeight;
 			_x = props.x + (props.radius / 2) - (_width / 2);
 			_y = props.y + (props.radius / 3) - _height / 2;
             
@@ -78,12 +78,12 @@ function Knob(ctx,props) {
  				"backgroundColor": "rgba(127, 127, 127, .75)",				
 			};
             
-            var _w = control.makeWidget(this.label);
-            control.widgets.push(_w);
-	        if(!control.isAddingConstants)
-	            control.addWidget(_w, control.addingPage); // PROBLEM
+            var _w = Control.makeWidget(this.label);
+            Control.widgets.push(_w);
+	        if(!Control.isAddingConstants)
+	            Control.addWidget(_w, Control.addingPage); // PROBLEM
 	        else
-	            control.addConstantWidget(_w); // PROBLEM
+	            Control.addConstantWidget(_w); // PROBLEM
             
             this.label = _w;
         }
@@ -161,17 +161,17 @@ Knob.prototype.setColors = function(newColors) {
 }
 
 Knob.prototype.setBounds = function(newBounds) {
-    this.width = Math.round(newBounds[2] * control.deviceWidth);
-    this.height = Math.round(newBounds[3] * control.deviceHeight);
-    this.x = Math.round(newBounds[0] * control.deviceWidth);
-    this.y = Math.round(newBounds[1] * control.deviceHeight);
+    this.width = Math.round(newBounds[2] * Control.deviceWidth);
+    this.height = Math.round(newBounds[3] * Control.deviceHeight);
+    this.x = Math.round(newBounds[0] * Control.deviceWidth);
+    this.y = Math.round(newBounds[1] * Control.deviceHeight);
     
     this.canvas.width = this.width;						// DO NOT USE STYLES TO RESIZE CANVAS OBJECT
     this.canvas.height = this.width;					// DO NOT USE STYLES TO RESIZE CANVAS OBJECT
     this.canvas.style.top = this.y + "px";
     this.canvas.style.left = this.x + "px";
     
-    if(control.orientation == 0 || control.orientation == 180) {
+    if(Control.orientation == 0 || Control.orientation == 180) {
         this.radius =  Math.round(this.width / 2);
     }else{
         this.radius =  Math.round(this.height / 2);
@@ -271,10 +271,10 @@ Knob.prototype.changeValue = function(yinput, xinput) {
 }
 
 Knob.prototype.setBounds = function(newBounds) {
-    this.width = Math.round(newBounds[2] * control.deviceWidth);
-    this.height = Math.round(newBounds[3] * control.deviceHeight);
-    this.x = Math.round(newBounds[0] * control.deviceWidth);
-    this.y = Math.round(newBounds[1] * control.deviceHeight);
+    this.width = Math.round(newBounds[2] * Control.deviceWidth);
+    this.height = Math.round(newBounds[3] * Control.deviceHeight);
+    this.x = Math.round(newBounds[0] * Control.deviceWidth);
+    this.y = Math.round(newBounds[1] * Control.deviceHeight);
         
     console.log("w: " + this.width + " | h: " + this.height + " | x: " + this.x + " | y: " + this.y);
     
@@ -310,7 +310,7 @@ Knob.prototype.hide = function() {
 
 Knob.prototype.unload = function() {
     if(typeof this.label !== 'undefined') {
-        control.removeWidgetWithName(this.name + "Label");
+        Control.removeWidgetWithName(this.name + "Label");
     }
 
     this.ctx.removeChild(this.canvas);

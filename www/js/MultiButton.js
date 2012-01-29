@@ -1,5 +1,5 @@
 // TODO: Allow Canvas drawing instead of individual children... for large numbers of children this gets too slow.
-function MultiButton(ctx, props) {
+Control.MultiButton = function(ctx, props) {
     this.make(ctx,props);
 	this.ctx = ctx;
 
@@ -15,8 +15,8 @@ function MultiButton(ctx, props) {
 	this.rows    = (typeof props.rows    != "undefined") ? props.rows    : 2;
 	this.columns = (typeof props.columns != "undefined") ? props.columns : 2;
 	
-	this.pixelWidth  = 1 / control.deviceWidth;
-	this.pixelHeight = 1 / control.deviceHeight;
+	this.pixelWidth  = 1 / Control.deviceWidth;
+	this.pixelHeight = 1 / Control.deviceHeight;
 	
 	this.buttonWidth  = this.widthInPercentage  / this.columns + this.pixelWidth;
 	this.buttonHeight = this.heightInPercentage / this.rows + this.pixelHeight;
@@ -36,12 +36,12 @@ function MultiButton(ctx, props) {
     return this;
 }
 
-MultiButton.prototype = new Widget();
+Control.MultiButton.prototype = new Widget();
 
-MultiButton.prototype.init = function() {
+Control.MultiButton.prototype.init = function() {
     if(!this.shouldUseCanvas) {
-        var pixelWidth  = 1 / control.deviceWidth;
-        var pixelHeight = 1 / control.deviceHeight;
+        var pixelWidth  = 1 / Control.deviceWidth;
+        var pixelHeight = 1 / Control.deviceHeight;
         for(var i = 0; i < this.rows; i++) {
             var _y = this.buttonHeight * i - (i * pixelHeight);
             
@@ -82,7 +82,7 @@ MultiButton.prototype.init = function() {
                     newProps.labelSize  = this.labelSize;
                 }
                 
-                var _w = new Button(this.ctx, newProps);
+                var _w = new Control.Button(this.ctx, newProps);
                 _w.address    = this.address + "/" + ((i * this.columns) + j);
                 _w.midiNumber = this.midiNumber + ((i * this.columns) + j);
                 _w.childID = ((i * this.columns) + j);
@@ -117,7 +117,7 @@ MultiButton.prototype.init = function() {
     }
 }
 
-MultiButton.prototype.draw = function() {
+Control.MultiButton.prototype.draw = function() {
     if(!this.shouldUseCanvas) {
         for(var i = 0; i < this.children.length; i++) {
             var _w = this.children[i];
@@ -130,7 +130,7 @@ MultiButton.prototype.draw = function() {
     }
 }
 
-MultiButton.prototype.drawButton = function(buttonNumber) {
+Control.MultiButton.prototype.drawButton = function(buttonNumber) {
     //console.log("drawing button " + buttonNumber + " value :: " + this.children[buttonNumber].value);
     var row = Math.floor(buttonNumber / this.columns);
     var col = buttonNumber % this.columns;
@@ -145,7 +145,7 @@ MultiButton.prototype.drawButton = function(buttonNumber) {
 
 }
 
-MultiButton.prototype.show = function() {
+Control.MultiButton.prototype.show = function() {
     if(!this.shouldUseCanvas) {
     
         for(var i = 0; i < this.children.length; i++) {
@@ -155,7 +155,7 @@ MultiButton.prototype.show = function() {
     }
 }
 
-MultiButton.prototype.hide = function() {
+Control.MultiButton.prototype.hide = function() {
     if(!this.shouldUseCanvas) {
 
         for(var i = 0; i < this.children.length; i++) {
@@ -169,7 +169,7 @@ MultiButton.prototype.hide = function() {
 // for ontouchmove -also- call the event using the same method as ontouchstart. This checks to see if buttons have been rolled on to; the array will check to see if they've
 // been rolled off of.
 
-MultiButton.prototype.touchstart = function(touch) {
+Control.MultiButton.prototype.touchstart = function(touch) {
     for (var j = 0; j < event.changedTouches.length; j++) {
         var touch = event.changedTouches.item(j);
 	    if(this.shouldUseCanvas == false) {
@@ -204,7 +204,7 @@ MultiButton.prototype.touchstart = function(touch) {
 	}
 }
 
-MultiButton.prototype.touchmove = function(event) {
+Control.MultiButton.prototype.touchmove = function(event) {
     if(this.shouldUseCanvas == false) {	
 	    for(var i = 0; i < this.children.length; i++) {
 	        var _w = this.children[i];
@@ -266,7 +266,7 @@ MultiButton.prototype.touchmove = function(event) {
     }
 }
 
-MultiButton.prototype.touchend = function(touch) {
+Control.MultiButton.prototype.touchend = function(touch) {
     if(this.shouldUseCanvas == false) {	
 	    for(var i = 0; i < this.children.length; i++) {
 	        var _w = this.children[i];
@@ -291,16 +291,16 @@ MultiButton.prototype.touchend = function(touch) {
 	}
 }
 
-MultiButton.prototype.events = { 
-	"touchstart": MultiButton.prototype.touchstart, 
-	"touchmove" : MultiButton.prototype.touchmove, 
-	"touchend"  : MultiButton.prototype.touchend,
+Control.MultiButton.prototype.events = { 
+	"touchstart": Control.MultiButton.prototype.touchstart, 
+	"touchmove" : Control.MultiButton.prototype.touchmove, 
+	"touchend"  : Control.MultiButton.prototype.touchend,
 };
 
-MultiButton.prototype.event = function(event) {
+Control.MultiButton.prototype.event = function(event) {
 	this.events[event.type].call(this, event);
 }
-MultiButton.prototype.setColors = function(newColors) {
+Control.MultiButton.prototype.setColors = function(newColors) {
     this.backgroundColor = newColors[0];
     this.fillColor = newColors[1];
     this.strokeColor = newColors[2];
@@ -313,7 +313,7 @@ MultiButton.prototype.setColors = function(newColors) {
         this.draw();
     }
 }
-MultiButton.prototype.setValue = function(buttonNumber, value) {
+Control.MultiButton.prototype.setValue = function(buttonNumber, value) {
     if(!this.shouldUseCanvas) {
         var _w = this.children[buttonNumber];
         if(arguments[2] === false) {
@@ -332,7 +332,7 @@ MultiButton.prototype.setValue = function(buttonNumber, value) {
     }
 }
 
-MultiButton.prototype.unload = function() {
+Control.MultiButton.prototype.unload = function() {
     if(!this.shouldUseCanvas) {
         for(var i = 0; i < this.children.length; i++) {
             this.children[i].unload();
@@ -342,7 +342,7 @@ MultiButton.prototype.unload = function() {
     }
 }
 
-MultiButton.prototype.show = function() {
+Control.MultiButton.prototype.show = function() {
     if(!this.shouldUseCanvas) {
         for(var i = 0; i < this.children.length; i++) {
             this.children[i].show();
@@ -352,7 +352,7 @@ MultiButton.prototype.show = function() {
     }
 }
 
-MultiButton.prototype.hide = function() {
+Control.MultiButton.prototype.hide = function() {
     if(!this.shouldUseCanvas) {
         for(var i = 0; i < this.children.length; i++) {
             this.children[i].hide();
