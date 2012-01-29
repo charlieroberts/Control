@@ -84,6 +84,8 @@ Control.interfaceManager = {
 									} 
 									_value += "]";
 									value = _value;
+								}else if(typeof value === "function") {
+									value = value.toString();
 								}
 								_interface += key + " : " + value + ",";
 							});													// end member loop
@@ -96,10 +98,7 @@ Control.interfaceManager = {
 				
 				_interface = _interface.replace(/[\n\t]/g, '');
 				_interface = _interface.replace(/\s{2,}/g, '');	
-				
-				//console.log(_interface);
-				
-                
+
                 var jsonString = "Control.data = ";
                 jsonString += (typeof Control.data === null) ? "{}" : JSON.stringify(Control.data);
                 jsonString += ";Control.functions = ";
