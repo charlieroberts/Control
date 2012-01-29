@@ -11,13 +11,17 @@ Control.interfaceManager = {
         this.interfaceIP = null;
         constants = null;
         
-        this.interfaceDefaults = [];
+        this.interfaceDefaults = [
+            "djcut.js",
+            "multibutton.js",
+            "multiXY.js" ,
+        ];
         //     "multiXY.js",
         //     "iphoneLandscapeMixer.js",
-        //     "djcut.js",
+        //     
         //     "life.js",
         //     "monome.js",
-        //     "multibutton.js",
+        //     
         //     "sequencer.js",
         //     "gyro.js",
         // ];
