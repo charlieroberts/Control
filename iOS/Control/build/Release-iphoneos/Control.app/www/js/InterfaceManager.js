@@ -11,7 +11,7 @@ Control.interfaceManager = {
         this.interfaceIP = null;
         constants = null;
         
-        this.interfaceDefaults = ["djcut.js", "multibutton.js"];
+        this.interfaceDefaults = [];
         //     "multiXY.js",
         //     "iphoneLandscapeMixer.js",
         //     "djcut.js",
@@ -36,35 +36,86 @@ Control.interfaceManager = {
             //}
     },
      
-    loadScripts : function() {    
+    loadScripts : function() {
+		Control.data = null;
+		Control.functions = null;
         var fileref = document.createElement('script')
         fileref.setAttribute("type", "text/javascript");
-        console.log("trying to load " + Control.interfaceManager.interfaceDefaults[Control.ifCount]);
+        //console.log("trying to load " + Control.interfaceManager.interfaceDefaults[Control.ifCount]);
         fileref.setAttribute("src", "interfaces/" + Control.interfaceManager.interfaceDefaults[Control.ifCount]);
         document.getElementsByTagName('head')[0].appendChild(fileref);
             
         window.setTimeout(function() {
-            //console.log("SOMETHING " + Control.ifCount + " : " + Control.interfaceManager.interfaceDefaults.length);
             if(Control.ifCount < Control.interfaceManager.interfaceDefaults.length) {
                 console.log("LOADING " + Control.interface.name);
-                
+				
+				// HERE LIES RIDICULOUSLY OBNOXIOUS CODE TO PARSE EVALUATED JAVASCRIPT INTO A STRING.
+				// BUT, IMPROBABLY, IT IS BETTER THAN THE WAY I USED TO HANDLE STOCK INTERFACES THAT CAME WITH CONTROL. - Charlie
+				
+				var _functions = "{";
+				if(Control.functions != null) {
+					$.each(Control.functions, function(key, value) {
+						_functions += key + " : " + value + ",";
+					})
+				}
+				_functions += "}"
+				_functions = _functions.replace(/[\n\t]/g, '');
+				_functions = _functions.replace(/\s{2,}/g, '');				
+				
+				var _interface = "{";
+				if(Control.interface != null) {
+					_interface += "name : \"" + Control.interface.name + "\","; 
+					_interface += "orientation : \"" + Control.interface.orientation + "\","; 
+					_interface += "pages : [";
+				
+					for(var i = 0; i < Control.interface.pages.length; i++) {	// for each page
+						var page = Control.interface.pages[i];
+						_interface += "[";
+						for(var j = 0; j < page.length; j++) {					// for each object on a page
+							_interface += "{";
+							$.each(page[j], function(key , value) {				// for each member of each object on a page
+								if(typeof value === "string") {
+									value = "\"" + value + "\"";
+								}else if(typeof value === "object" && value instanceof Array) {
+									var _value = "[";
+									for(var k = 0; k < value.length; k++) {		// for each member of an array that is a member of an object on the page
+										_value += (typeof value[k] === "string") ? "\""+value[k]+"\"" : value[k];
+										_value += ",";
+									} 
+									_value += "]";
+									value = _value;
+								}else if(typeof value === "function") {
+									value = value.toString();
+								}
+								_interface += key + " : " + value + ",";
+							});													// end member loop
+							_interface += "},";	
+						}														// end page loop
+						_interface += "],";		
+					}															// end pages loop
+				}
+				_interface += "]}";												// end interface
+				
+				_interface = _interface.replace(/[\n\t]/g, '');
+				_interface = _interface.replace(/\s{2,}/g, '');	
+
                 var jsonString = "Control.data = ";
-                jsonString += (typeof Control.data === "undefined") ? "{}" : JSON.stringify(Control.data);
+                jsonString += (typeof Control.data === null) ? "{}" : JSON.stringify(Control.data);
                 jsonString += ";Control.functions = ";
-                jsonString += (typeof Control.functions === "undefined") ? "{}" : JSON.stringify(Control.functions);
-                jsonString += ";Control.interface = " + JSON.stringify(Control.interface);
-                
-                //console.log(jsonString);           
+                jsonString += (typeof Control.functions === null) ? "{}" : _functions;
+                jsonString += ";Control.interface = " + _interface;
+				
+				//console.log(jsonString);
                 
                 Control.interfaceManager.loadedInterfaces[Control.ifCount] = {'name':Control.interface.name, 'json':jsonString};
                 Control.ifCount++;
-                //console.log("ifCount = " + Control.ifCount);
+
                 Control.interfaceManager.loadScripts();
             }else{
                 localStorage.interfaceFiles = JSON.stringify(Control.interfaceManager.loadedInterfaces);
                 Control.interfaceManager.createInterfaceListWithArray(Control.interfaceManager.loadedInterfaces);
             }
-        }, 2000);
+        }, 500);
     },
     
     promptForInterfaceDownload : function() {
@@ -121,19 +172,19 @@ Control.interfaceManager = {
         Control.interfaceManager.myRequest.onreadystatechange = function() {
             console.log("downloading..." + Control.interfaceManager.myRequest.readyState );
             if(Control.interfaceManager.myRequest.readyState == 4) {
-                console.log(Control.interfaceManager.myRequest.responseText);
+                //console.log(Control.interfaceManager.myRequest.responseText);
                 //eval(Control.interfaceManager.myRequest.responseText);
-                console.log("before parsing");
+                //console.log("before parsing");
                 eval(Control.interfaceManager.myRequest.responseText);
-                console.log("after parsing");
-                console.log(Control.interface);
+                //console.log("after parsing");
+                //console.log(Control.interface);
                 if(Control.interface.name != null) {
                     if(document.getElementById("promptDiv") != null) {
                         document.getElementById("Interfaces").removeChild(document.getElementById("promptDiv"));
                     }
                     Control.interfaceManager.saveInterface(Control.interfaceManager.myRequest.responseText, true, ipAddress);
                     Control.interfaceManager.interfaceIP = ipAddress;
-                    Control.interfaceManager.runInterface(Control.interface);
+                    Control.interfaceManager.runInterface(Control.interfaceManager.myRequest.responseText);
                 }else{
                     document.getElementById("inputFieldHeader").innerHTML = "Could not load. Please try another URL or check your code for errors.";
                     return;
@@ -261,7 +312,6 @@ Control.interfaceManager = {
         Control.interfaceManager.myRequest.onreadystatechange = function() {
             // console.log("downloading stage " + Control.interfaceManager.myRequest.readyState]);            
             if (Control.interfaceManager.myRequest.readyState == 4) {
-				eval(Control.interfaceManager.myRequest.responseText);
                 Control.interfaceManager.runInterface(Control.interfaceManager.myRequest.responseText);
                 for(var i = 0; i < Control.interfaceManager.loadedInterfaces.length; i++) {
                     var interface = Control.interfaceManager.loadedInterfaces[i];
@@ -277,7 +327,7 @@ Control.interfaceManager = {
                         
                         localStorage.interfaceFiles = JSON.stringify(Control.interfaceManager.loadedInterfaces);
 
-                        Control.interfaceManager.runInterface(newInterface.json);
+                        //Control.interfaceManager.runInterface(Control.interfaceManager.myRequest.responseText);
                         break;
                     }
                 }
@@ -350,7 +400,7 @@ Control.interfaceManager = {
        }
     },
     
-    runInterface : function(json) {
+    runInterface : function(js) {
         Control.unloadWidgets();
         Control.oninit = null;
         constants = null;
@@ -359,7 +409,7 @@ Control.interfaceManager = {
         Control.oscManager.delegate = Control.oscManager;
         Control.midiManager.delegate = Control.midiManager;
 
-        //eval(json);
+        eval(js);
 
         this.currentInterfaceName = Control.interface.name;//loadedInterfaceName;
         //this.currentInterfaceJSON = json;
@@ -374,11 +424,13 @@ Control.interfaceManager = {
             Control.makePages(Control.interface.pages, screen.height, screen.width);
         }
         
-        if(Control.interface.constantsconstants != null) {
+        console.log(0);
+        if(Control.interface.constants != null) {
             Control.loadConstants(Control.interface.constants);
         }
-        
+                console.log(1);
         Control.loadWidgets();
+                console.log(2);
         
         if(typeof Control.interface.oninit === "string") {
             eval(Control.interface.oninit);
@@ -401,7 +453,6 @@ Control.interfaceManager = {
             Control.interfaceManager.interfaceIP = r.address;
         }
         
-        eval(r.json);
         Control.interfaceManager.runInterface(r.json);
     },
 };

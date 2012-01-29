@@ -10,7 +10,7 @@ Control.preferencesManager = {
             localStorage.preferences = JSON.stringify(this.preferences);
         }else{
             this.preferences = jQuery.parseJSON(localStorage.preferences);
-            console.log(this.preferences);
+            //console.log(this.preferences);
         }
         
         var autolockToggleLink = document.getElementById("autolockToggle");

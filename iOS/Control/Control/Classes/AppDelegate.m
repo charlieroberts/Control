@@ -66,16 +66,13 @@
 - (void)webViewDidFinishLoad:(UIWebView *)theWebView 
 {
 	// only valid if Control.plist specifies a protocol to handle
-    NSLog(@"DEVICE IS READY????");
 	if(self.invokeString)
 	{
 		// this is passed before the deviceready event is fired, so you can access it in js when you receive deviceready
 		NSString* jsString = [NSString stringWithFormat:@"var invokeString = \"%@\";", self.invokeString];
-        NSLog(jsString);
+
 		[theWebView stringByEvaluatingJavaScriptFromString:jsString];
-        NSLog(@"after evaluating invocation string");
 	}
-    NSLog(@"SKIPPED");
 	return [ super webViewDidFinishLoad:theWebView ];
 }
 

@@ -127,12 +127,11 @@ window["Control"] = {
     loadConstants : function(_constants) {
         this.isAddingConstants = true;
         if(_constants != null) {
-            constants = _constants;
             this.constants = [];
             
-            for(var i = 0; i < constants.length; i++) {
-                var w = constants[i];
-                var _w = window.control.makeWidget(w);
+            for(var i = 0; i < _constants.length; i++) {
+                var w = _constants[i];
+                var _w = this.makeWidget(w);
                 this.addConstantWidget(_w);
             }
         }

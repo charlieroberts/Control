@@ -11,7 +11,7 @@ Control.interfaceManager = {
         this.interfaceIP = null;
         constants = null;
         
-        this.interfaceDefaults = ["gyro.js"];
+        this.interfaceDefaults = [];
         //     "multiXY.js",
         //     "iphoneLandscapeMixer.js",
         //     "djcut.js",
@@ -105,7 +105,7 @@ Control.interfaceManager = {
                 jsonString += (typeof Control.functions === null) ? "{}" : _functions;
                 jsonString += ";Control.interface = " + _interface;
 				
-				console.log(jsonString);
+				//console.log(jsonString);
                 
                 Control.interfaceManager.loadedInterfaces[Control.ifCount] = {'name':Control.interface.name, 'json':jsonString};
                 Control.ifCount++;
@@ -172,19 +172,19 @@ Control.interfaceManager = {
         Control.interfaceManager.myRequest.onreadystatechange = function() {
             console.log("downloading..." + Control.interfaceManager.myRequest.readyState );
             if(Control.interfaceManager.myRequest.readyState == 4) {
-                console.log(Control.interfaceManager.myRequest.responseText);
+                //console.log(Control.interfaceManager.myRequest.responseText);
                 //eval(Control.interfaceManager.myRequest.responseText);
-                console.log("before parsing");
+                //console.log("before parsing");
                 eval(Control.interfaceManager.myRequest.responseText);
-                console.log("after parsing");
-                console.log(Control.interface);
+                //console.log("after parsing");
+                //console.log(Control.interface);
                 if(Control.interface.name != null) {
                     if(document.getElementById("promptDiv") != null) {
                         document.getElementById("Interfaces").removeChild(document.getElementById("promptDiv"));
                     }
                     Control.interfaceManager.saveInterface(Control.interfaceManager.myRequest.responseText, true, ipAddress);
                     Control.interfaceManager.interfaceIP = ipAddress;
-                    Control.interfaceManager.runInterface(Control.interface);
+                    Control.interfaceManager.runInterface(Control.interfaceManager.myRequest.responseText);
                 }else{
                     document.getElementById("inputFieldHeader").innerHTML = "Could not load. Please try another URL or check your code for errors.";
                     return;
@@ -312,7 +312,6 @@ Control.interfaceManager = {
         Control.interfaceManager.myRequest.onreadystatechange = function() {
             // console.log("downloading stage " + Control.interfaceManager.myRequest.readyState]);            
             if (Control.interfaceManager.myRequest.readyState == 4) {
-				eval(Control.interfaceManager.myRequest.responseText);
                 Control.interfaceManager.runInterface(Control.interfaceManager.myRequest.responseText);
                 for(var i = 0; i < Control.interfaceManager.loadedInterfaces.length; i++) {
                     var interface = Control.interfaceManager.loadedInterfaces[i];
@@ -328,7 +327,7 @@ Control.interfaceManager = {
                         
                         localStorage.interfaceFiles = JSON.stringify(Control.interfaceManager.loadedInterfaces);
 
-                        Control.interfaceManager.runInterface(newInterface.json);
+                        //Control.interfaceManager.runInterface(Control.interfaceManager.myRequest.responseText);
                         break;
                     }
                 }
@@ -401,7 +400,7 @@ Control.interfaceManager = {
        }
     },
     
-    runInterface : function(json) {
+    runInterface : function(js) {
         Control.unloadWidgets();
         Control.oninit = null;
         constants = null;
@@ -410,7 +409,7 @@ Control.interfaceManager = {
         Control.oscManager.delegate = Control.oscManager;
         Control.midiManager.delegate = Control.midiManager;
 
-        //eval(json);
+        eval(js);
 
         this.currentInterfaceName = Control.interface.name;//loadedInterfaceName;
         //this.currentInterfaceJSON = json;
@@ -425,10 +424,10 @@ Control.interfaceManager = {
             Control.makePages(Control.interface.pages, screen.height, screen.width);
         }
         
-        if(Control.interface.constantsconstants != null) {
+        if(Control.interface.constants != null) {
             Control.loadConstants(Control.interface.constants);
         }
-        
+
         Control.loadWidgets();
         
         if(typeof Control.interface.oninit === "string") {
@@ -452,7 +451,6 @@ Control.interfaceManager = {
             Control.interfaceManager.interfaceIP = r.address;
         }
         
-        eval(r.json);
         Control.interfaceManager.runInterface(r.json);
     },
 };

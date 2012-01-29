@@ -579,7 +579,7 @@ BOOL gSplashScreenShown = NO;
         [result appendFormat:@"\nwindow.Settings = %@;", [temp JSONString]];
     }
     
-    NSLog(@"Device initialization: %@", result);
+    //NSLog(@"Device initialization: %@", result);
     [theWebView stringByEvaluatingJavaScriptFromString:result];
     [result release];
     

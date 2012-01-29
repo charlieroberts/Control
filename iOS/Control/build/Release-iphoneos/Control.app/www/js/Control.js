@@ -127,12 +127,11 @@ window["Control"] = {
     loadConstants : function(_constants) {
         this.isAddingConstants = true;
         if(_constants != null) {
-            constants = _constants;
             this.constants = [];
             
-            for(var i = 0; i < constants.length; i++) {
-                var w = constants[i];
-                var _w = window.control.makeWidget(w);
+            for(var i = 0; i < _constants.length; i++) {
+                var w = _constants[i];
+                var _w = this.makeWidget(w);
                 this.addConstantWidget(_w);
             }
         }
@@ -172,11 +171,11 @@ window["Control"] = {
         }else{
             _w = new Control[w.type](w);
             switch(w.type) {
-                case "ControlAccelerometer"	: Control.acc = _w; 		break;
-                case "ControlCompass"		: Control.compass = _w; 	break;					
-                case "ControlGyro"			: Control.gyro = _w; 		break;
-                case "AudioPitch"			: Control.audioPitch  = _w; break;
-                case "AudioVolume"			: Control.audioVolume = _w; break;																
+                case "Accelerometer"	: Control.acc = _w; 		break;
+                case "Compass"          : Control.compass = _w; 	break;					
+                case "Gyro"             : Control.gyro = _w; 		break;
+                case "AudioPitch"		: Control.audioPitch  = _w; break;
+                case "AudioVolume"		: Control.audioVolume = _w; break;																
             }
             _w.start();        
         }

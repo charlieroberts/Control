@@ -7,8 +7,9 @@ Control.oscManager = {
     },
     
     setReceivePort : function(newPort) {
-        receivePort = newPort;
-        PhoneGap.exec(null, null, "OSCManager", "setOSCReceivePort", [receivePort]);			  
+        this.receivePort = newPort;
+        //console.log("SETTING PORT " + this.receivePort);
+        PhoneGap.exec(null, null, "OSCManager", "setOSCReceivePort", [8080]);			  
     },
 
     processOSCMessage : function() {
@@ -82,7 +83,7 @@ Control.oscManager = {
         "/control/createBlankInterface": function(args) {
             Control.unloadWidgets();
         
-            var _json = "loadedInterfaceName = '" + args[2] + "'; interfaceOrientation = '" + args[3] + "'; constants = [";
+            var _json = "Control.data = {}; Control.functions = {}; Control.interface = { name: '" + args[2] + "', orientation :'" + args[3] + "', constants : [";
             if(typeof args[4] == "undefined" || args[4] == "true") {
                 _json += '{\
 "name": "menuButton",\
@@ -94,11 +95,11 @@ Control.oscManager = {
 "label": "menu",\
 },';
             }
-            _json += "]; pages = [[]];";
-                    
+            _json += "], pages : [[]], };";
+            
             Control.interfaceManager.runInterface(_json);
             $.mobile.changePage('#SelectedInterfacePage');
-        
+            
             Control.autogui.redoLayout();
         },
         // TODO: clear interface?	

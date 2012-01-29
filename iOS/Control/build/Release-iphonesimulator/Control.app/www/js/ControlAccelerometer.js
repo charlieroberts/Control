@@ -1,6 +1,6 @@
 // Accelerometer is a singleton object.
 
-function ControlAccelerometer(props) {
+Control.Accelerometer = function(props) {
 	//this.name = props.name;
     console.log("MAKING ACC 0");
     this.make("sensor", props);
@@ -38,9 +38,9 @@ function ControlAccelerometer(props) {
     return this;
 }
 
-ControlAccelerometer.prototype = new Widget();
+Control.Accelerometer.prototype = new Widget();
 
-ControlAccelerometer.prototype._onAccelUpdate = function(x,y,z) {    
+Control.Accelerometer.prototype._onAccelUpdate = function(x,y,z) {    
     this.x = this.min + (((0 - this.hardwareMin) + x) / this.hardwareRange ) * this.userDefinedRange;
     this.y = this.min + (((0 - this.hardwareMin) + y) / this.hardwareRange ) * this.userDefinedRange;
     this.z = this.min + (((0 - this.hardwareMin) + z) / this.hardwareRange ) * this.userDefinedRange;
@@ -64,15 +64,15 @@ ControlAccelerometer.prototype._onAccelUpdate = function(x,y,z) {
     }
 }
 
-ControlAccelerometer.prototype.draw = function() {}
+Control.Accelerometer.prototype.draw = function() {}
 	
-ControlAccelerometer.prototype.event = function() {}
+Control.Accelerometer.prototype.event = function() {}
 
 function onSuccess(acceleration) {
     acc._onAccelUpdate(acceleration.x, acceleration.y, acceleration.z);
 }		
 	
-ControlAccelerometer.prototype.start = function() {
+Control.Accelerometer.prototype.start = function() {
     // console.log("********************************* STARTING ACC");    
     var options = {frequency: Math.round(this.delay)};
 
@@ -87,7 +87,7 @@ ControlAccelerometer.prototype.start = function() {
     console.log("started accelerometer: "  +this.watchID);	        
 }
 			
-ControlAccelerometer.prototype.unload = function() {
+Control.Accelerometer.prototype.unload = function() {
     // console.log("stopping accelerometer");
 	//PhoneGap.exec("CNTRL_Accelerometer.stop");
     if (this.watchID) {
@@ -96,7 +96,7 @@ ControlAccelerometer.prototype.unload = function() {
     }	    
 }
     
-ControlAccelerometer.prototype.setUpdateRate = function(rateInHz) {
+Control.Accelerometer.prototype.setUpdateRate = function(rateInHz) {
     // console.log("********************************* SETTING UPDATE RATE");    
     this.unload();
     this.delay = (1/rateInHz) * 1000;

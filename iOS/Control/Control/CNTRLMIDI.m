@@ -71,10 +71,10 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 
 - (void) start:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
 	session = [MIDINetworkSession defaultSession];
-    NSLog(@"SESSION NAME = %@", session.localName);
+    //NSLog(@"SESSION NAME = %@", session.localName);
 	session.enabled = YES;
 	session.connectionPolicy = MIDINetworkConnectionPolicy_Anyone; // MIDINetworkConnectionPolicy_NoOne; // 
-    NSLog(@"session.contacts = %@", session.contacts);
+    //NSLog(@"session.contacts = %@", session.contacts);
 
 	//NSLog([arguments description]);
 	[self browse:nil withDict:nil];
