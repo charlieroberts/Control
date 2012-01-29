@@ -11,7 +11,7 @@ Control.interfaceManager = {
         this.interfaceIP = null;
         constants = null;
         
-        this.interfaceDefaults = ["djcut.js"];
+        this.interfaceDefaults = [];
         //     "multiXY.js",
         //     "iphoneLandscapeMixer.js",
         //     "djcut.js",
@@ -170,7 +170,7 @@ Control.interfaceManager = {
         Control.interfaceManager.myRequest = new XMLHttpRequest();    	
         var loadedInterfaceName = null;
         Control.interfaceManager.myRequest.onreadystatechange = function() {
-            console.log("downloading..." + Control.interfaceManager.myRequest.readyState );
+            //console.log("downloading..." + Control.interfaceManager.myRequest.readyState );
             if(Control.interfaceManager.myRequest.readyState == 4) {
                 //console.log(Control.interfaceManager.myRequest.responseText);
                 //eval(Control.interfaceManager.myRequest.responseText);
@@ -411,8 +411,7 @@ Control.interfaceManager = {
 
         eval(js);
 
-        this.currentInterfaceName = Control.interface.name;//loadedInterfaceName;
-        //this.currentInterfaceJSON = json;
+        this.currentInterfaceName = Control.interface.name;
 
         if(typeof Control.interface.orientation != "undefined") {
             Control.device.setRotation(Control.interface.orientation);

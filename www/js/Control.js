@@ -180,7 +180,8 @@ window["Control"] = {
             _w.start();        
         }
         this.widgets.push(_w);			
-        _w.widgetID = this.widgetCount++;	
+        _w.widgetID = this.widgetCount++;
+
         return _w;
     },
     
