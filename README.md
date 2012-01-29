@@ -3,8 +3,9 @@ Control
 
 THIS IS THE DEVELOPMENT VERSION AND LOTS OF STUFF CURRENTLY DOESN'T WORK.
 
-Right now I know OSC and MIDI transmission / reception works. Buttons, Sliders, Knobs, MultiButtons all work as of 1/28/2012. 
+Right now I know OSC and MIDI transmission / reception works. Buttons, Sliders, Knobs, MultiButtons, MultiSliders and the Accelerometer all work as of 1/28/2012. 
 
+CHANGES
 There are no more globals except for the Control object. So, oscManager is now Control.oscManager.
 
 The interface format has changed. Here is a sample interface:
