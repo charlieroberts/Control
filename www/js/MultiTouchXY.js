@@ -4,6 +4,8 @@ function MultiTouchXY(ctx, props) {
     this.make(ctx, props);
 	this.xvalue = this.min;
 	this.yvalue = this.min;
+     this.zvalue = false;
+    this.sendZValue = (typeof props.sendZValue == "undefined") ? false : props.sendZValue;
 	this.half = (this.width / 8) / 2;
 	this.maxTouches = props.maxTouches > 0 ? props.maxTouches : 1;
 	this.children = [];
@@ -74,7 +76,7 @@ MultiTouchXY.prototype.addTouch = function(xPos, yPos, id) {
     touch.activeNumber = this.children.length;
     $(touch).text(touch.activeNumber);    
     this.container.appendChild(touch);
-    //this.changeValue(touch, xPos, yPos);
+    this.changeValue(touch, xPos, yPos, 1);
 }
 
 MultiTouchXY.prototype.removeTouch = function(touchToRemove) {
@@ -107,7 +109,7 @@ MultiTouchXY.prototype.trackTouch = function(xPos, yPos, id) {
     touchFound.id = id;
     touchFound.isActive = true;
     if(touchFound != null)
-        this.changeValue(touchFound, xPos, yPos);
+        this.changeValue(touchFound, xPos, yPos, 1);
     
     this.lastTouched = touchFound;
 }
@@ -132,15 +134,13 @@ MultiTouchXY.prototype.touchmove = function (touch) {
     for(var t = 0; t < this.children.length; t++) {
         _t = this.children[t];
         if(touch.identifier == _t.id) {
-            this.changeValue(_t, touch.pageX, touch.pageY);
+            this.changeValue(_t, touch.pageX, touch.pageY, 1);
 			
 			if(typeof this.ontouchmove === "string") {
 		        eval(this.ontouchmove);
 			}else if(this.ontouchmove != null){
 				this.ontouchmove();
 			}
-            
-            break;
         }
     }
 }
@@ -150,7 +150,9 @@ MultiTouchXY.prototype.touchend = function (touch) {
         _t = this.children[t];
         if(touch.identifier == _t.id) {
             this.endingTouchID = touch.activeNumber;
-			
+			if(this.sendZValue){
+                this.changeValue(_t, touch.pageX, touch.pageY, 0);
+            }
 			if(typeof this.ontouchend === "string") {
 		        eval(this.ontouchend);
 			}else if(this.ontouchend != null){
@@ -183,7 +185,9 @@ MultiTouchXY.prototype.event = function(event) {
 	}
 }
 
-MultiTouchXY.prototype.changeValue = function(touch, inputX, inputY) {
+
+MultiTouchXY.prototype.changeValue = function(touch, inputX, inputY, inputZ) {
+
     var xLeft   = inputX - this.half;
     var xRight  = inputX + this.half;
     var yTop    = inputY - this.half;
@@ -235,6 +239,7 @@ MultiTouchXY.prototype.changeValue = function(touch, inputX, inputY) {
         this.xvalue = Math.round(this.min + (touch.xpercentage * range));
         this.yvalue = Math.round(this.min + (touch.ypercentage * range));
     }
+    this.zvalue = inputZ;
     
     if(this.onvaluechange != null) eval(this.onvaluechange);
     if(!this.isLocal) this.output(touch);
@@ -290,7 +295,11 @@ MultiTouchXY.prototype.output = function(touch) {
           valueString += "/" + touch.activeNumber;
         }
         valueString += ":" + this.xvalue + "," + this.yvalue;
-    }else if(Control.protocol == "MIDI") {
+
+        if(this.sendZValue){
+            valueString += ","+this.zvalue;	
+        }
+    }else if(_protocol == "MIDI") {
         var xnum = this.midiNumber + (touch.activeNumber * 2) - 2;
         var ynum = xnum + 1;
             
