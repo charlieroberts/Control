@@ -32,8 +32,15 @@ Control.Slider = function(ctx, props) {
 			"left": this.x + 1 + "px", 
 			"top": this.y + 1 + "px",
 			"background-color": this.fillColor,
-			"z-index": 10,  
+			"z-index": 10,
+
 		});
+        
+        if(this.isVertical) {
+            this.fillDiv.style.webkitTransformOriginY = "100%";
+        }else if(!this.isXFader) {
+            this.fillDiv.style.webkitTransformOriginY = "100%";
+        }
 
 		this.ctx.appendChild(this.fillDiv);
 		
@@ -231,13 +238,18 @@ Control.Slider.prototype.draw = function() {
         if(!this.isVertical) {
             if(!this.isXFader) {
                 //this.fillDiv.style["WebkitTransform"] = "scale3d(" + percent + ", 1, 1)";
-                this.fillDiv.style.width = ((this.width - 1) * percent) + "px";
+                //this.fillDiv.style.width = ((this.width - 1) * percent) + "px";
+
+                this.fillDiv.style.webkitTransform = "scale3d(" + percent + ", 1, 1 )"; 
             }else{
-                this.fillDiv.style.left = (this.x  + (percent * (this.width - this.xFaderWidth))) + "px";
+                var scale = "translate3d("+ (percent * (this.width - this.xFaderWidth)) + ", 1, 1)";
+                this.fillDiv.style.webkitTransform = "translate3d("+ (percent * (this.width - this.xFaderWidth)) + "px, 0, 0)";
+                //this.fillDiv.style.left = (this.x  + (percent * (this.width - this.xFaderWidth))) + "px";
             }
         }else{
-            this.fillDiv.style.height = Math.ceil(((this.height - 2) * percent )) + "px";
-            this.fillDiv.style.top = this.y + ((this.height - 1) - (percent * (this.height - 2))) + "px";
+            this.fillDiv.style.webkitTransform = "scale3d(1, " + percent  + ", 1)"; 
+            //this.fillDiv.style.height = Math.ceil(((this.height - 2) * percent )) + "px";
+            //this.fillDiv.style.top = this.y + ((this.height - 1) - (percent * (this.height - 2))) + "px";
         }
     }else{
         this.ctx.fillStyle = this.backgroundColor;

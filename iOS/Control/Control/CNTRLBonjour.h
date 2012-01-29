@@ -29,7 +29,7 @@
 }
 
 @property (assign) BOOL isConnected;
-@property (readwrite, retain) NSNetServiceBrowser *browser, *midiBrowser;
+@property (readwrite, assign) NSNetServiceBrowser *browser, *midiBrowser;
 @property (readwrite, retain) NSMutableArray *services;
 @property (readwrite, retain) NSNetService *connectedService;
 

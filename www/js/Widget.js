@@ -147,7 +147,8 @@ Widget.prototype.output = function() {
         var valueString = "|" + this.address;
         valueString += ":" + this.value;
         Control.valuesString += valueString;
-        //PhoneGap.exec('OSCManager.send', this.address, 'f', this.value);
+        //Control.oscManager.sendOSC(this.addresss, 'f', this.value);
+        //PhoneGap.exec(null, null, 'OSCManager', 'send', [this.address, 'f', this.value]);
     }else if (!this.isLocal && Control.protocol == "MIDI") {
         var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.value);
         Control.valuesString += valueString;

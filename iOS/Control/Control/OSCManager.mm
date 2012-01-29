@@ -64,8 +64,7 @@ protected:
         shouldPoll = NO;
 		listener = new ExamplePacketListener();
         self.receivePort = -1;
-        // TODO: the below line should happen with the preferences manager looks up the osc receive port, not automatically
-		//[NSThread detachNewThreadSelector:@selector(oscThread) toTarget:self withObject:nil];
+
 		[NSThread detachNewThreadSelector:@selector(pollJavascriptStart:) toTarget:self withObject:nil];
 		
 		NSArray * keys = [NSArray arrayWithObjects:@"/pushInterface", @"/pushDestination", @"/control/pushInterface", @"/control/pushDestination", nil];
@@ -120,13 +119,13 @@ protected:
 			const char * a1, *a2, *a3;
 			args >> a1 >> a2 >> a3 >> osc::EndMessage;
 
-			NSMutableString *jsStringStart = [[NSMutableString alloc] initWithCString:a1 encoding:1];
+			NSMutableString *jsStringStart = [NSMutableString stringWithCString:a1 encoding:1];
 			[jsStringStart replaceOccurrencesOfString:@"\n" withString:@"" options:1 range:NSMakeRange(0, [jsStringStart length])]; // will not work with newlines present
 			
-			NSString *name = [[NSString alloc] initWithCString:a2 encoding:1];
-			NSString *destination = [[NSString alloc] initWithCString:a3 encoding:1];
+			NSString *name = [NSString stringWithCString:a2 encoding:1];
+			NSString *destination = [NSString stringWithCString:a3 encoding:1];
 
-			NSString *jsString = [[NSString alloc] initWithFormat:@"Control.interfaceManager.pushInterfaceWithDestination('%@', '%@', '%@')", jsStringStart, name, destination];
+			NSString *jsString = [NSString stringWithFormat:@"Control.interfaceManager.pushInterfaceWithDestination('%@', '%@', '%@')", jsStringStart, name, destination];
 			
 			[self.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsString waitUntilDone:NO];
 		}
@@ -142,9 +141,9 @@ protected:
 		osc::ReceivedMessage::const_iterator arg = msg.ArgumentsBegin();
 		const char * a1;
 		args >> a1 >> osc::EndMessage;
-		NSString *destination = [[NSString alloc] initWithCString:a1 encoding:1];
+		NSString *destination = [NSString stringWithCString:a1 encoding:1];
 
-		NSString *jsString = [[NSString alloc] initWithFormat:@"Control.destinationManager.pushDestination('%@')", destination];
+		NSString *jsString = [NSString stringWithFormat:@"Control.destinationManager.pushDestination('%@')", destination];
 		[_oscManager.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsString waitUntilDone:NO];
 	}catch( osc::Exception& e ){
 		NSLog(@"an exception occurred");

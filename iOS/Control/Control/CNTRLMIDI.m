@@ -122,7 +122,7 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 	host = [MIDINetworkHost hostWithName:@"Control" address:midiIP port:port];	
 	MIDINetworkConnection *connection = [MIDINetworkConnection connectionWithHost:host];
 	
-	BOOL connectTest = [session addConnection:connection];
+	[session addConnection:connection];
 	
 	src = [session sourceEndpoint];
 	dst = [session destinationEndpoint];
@@ -233,7 +233,7 @@ static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefC
 			if([bytes count] > 3)
 				packet->data[2] = [[bytes objectAtIndex:3] intValue];
 		}
-        
+        [objects release];
         MIDISend(outPort, dst, &myList);
 
 	}

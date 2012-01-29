@@ -11,7 +11,7 @@ Control.interfaceManager = {
         this.interfaceIP = null;
         constants = null;
         
-        this.interfaceDefaults = [];
+        this.interfaceDefaults = ["djcut.js"];
         //     "multiXY.js",
         //     "iphoneLandscapeMixer.js",
         //     "djcut.js",
