@@ -29,7 +29,7 @@ The interface format has changed. Here is a sample interface:
 			ontouchstart: Control.functions.sliderTouch,
 		},
 		{
-		    name: refresh,
+		    name: "refresh",
 		    type: "Button",
 			bounds : [0,.8,.2,.2],
 		    isLocal: true,
