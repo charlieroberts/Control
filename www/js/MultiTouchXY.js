@@ -6,14 +6,14 @@ Control.MultiTouchXY = function(ctx, props) {
     this.yvalue = this.min;
     this.zvalue = false;
     this.sendZValue = (typeof props.sendZValue == "undefined") ? false : props.sendZValue;
-    this.half = (this.width / 8) / 2;
     this.maxTouches = props.maxTouches > 0 ? props.maxTouches : 1;
     this.children = [];
     this.valuesX = [];
     this.valuesY = [];
     this.isMomentary = (typeof props.isMomentary == "undefined") ? true : props.isMomentary;
     this.lastTouched = null;
-
+    this.touchSize = props.touchSize || (this.width / 8);
+    this.half = this.touchSize / 2;
     this.container = document.createElement('div');
     $(this.container).addClass('widget multiTouchXY');
 
@@ -25,10 +25,12 @@ Control.MultiTouchXY = function(ctx, props) {
     this.container.style.left = this.x + "px";
     this.container.style.backgroundColor = this.backgroundColor;
     this.ctx.appendChild(this.container);
+    
 
     this.touchCount = 0;
     this.container.style.border = "1px solid " + this.strokeColor;
-
+    
+    this.touchColors = ["rgba(255,0,0,.25)","rgba(255,255,0,.25)","rgba(0,255,0,.25)","rgba(0,255,255,.25)","rgba(0,0,255,.25)","rgba(255,0,255,.25)"];
     //this.touchColors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFFFFF', '#80FF00', '#8000FF', '#0080FF', '#FF8080'];
     return this;
 }
@@ -48,25 +50,6 @@ Control.MultiTouchXY.prototype.addTouch = function(xPos, yPos, id) {
     var touch = document.createElement('div');
     $(touch).addClass('widget touch');
     
-	var size = (this.width / 8) +"px";
-	$(touch).css({
-	    "display" 	: "block",
-	    "position" 	: "absolute",
-	    "border" 	: this.strokeColor + " solid 1px",
-	    "width" 	: size,
-	    "height" 	: size,
-	    "text-align" 	: "center",
-	    "line-height" 	: size,  
-	    "vertical-align" : "center",
-	    "left" 	: 0 + "px",
-	    "top"  	: 0 + "px",
-	    "color" : this.strokeColor,
-	    "background-color" : this.fillColor,
-	    "text-shadow" : "none",
-		"-webkit-transform-origin-x": 0 + "px",
-		"-webkit-transform-origin-y": 0 + "px",		 
-	});
-	
     touch.id = (this.isMomentary) ? id : gNOT_ACTIVE;
     touch.childID = touch.id;
     touch.isActive = (this.isMomentary);
@@ -77,6 +60,28 @@ Control.MultiTouchXY.prototype.addTouch = function(xPos, yPos, id) {
     
     this.children.push(touch);
     touch.activeNumber = this.children.length;
+    
+	$(touch).css({
+	    "display" 	: "block",
+	    "position" 	: "absolute",
+	    "border" 	: this.strokeColor + " solid 0px",
+	    "width" 	: this.touchSize + "px",
+	    "height" 	: this.touchSize + "px",
+	    "text-align" 	: "center",
+	    "line-height" 	: this.touchSize + "px",  
+	    "vertical-align" : "center",
+	    "left" 	: 0 + "px",
+	    "top"  	: 0 + "px",
+	    "color" : this.strokeColor,
+	    "background-color" : this.touchColors[touch.activeNumber % this.touchColors.length],
+	    "text-shadow" : "none",
+		"-webkit-transform-origin-x": this.x + "px",
+		"-webkit-transform-origin-y": this.y + "px",
+        "border-radius": this.half + "px",
+	});
+	
+	touch.x = 0;
+	touch.y = 0;
     $(touch).text(touch.activeNumber);    
     this.container.appendChild(touch);
     this.changeValue(touch, xPos, yPos, 1);
@@ -99,8 +104,9 @@ Control.MultiTouchXY.prototype.trackTouch = function(xPos, yPos, id) {
     var touchNum = null;
     for(var i = 0; i < this.children.length; i++) {
         var touch = this.children[i];
-        var xdiff = Math.abs((xPos - this.x) - (parseInt(touch.style.left) + (parseInt(touch.style.width)  / 2)));
-        var ydiff = Math.abs((yPos - this.y) - (parseInt(touch.style.top)  + (parseInt(touch.style.height) / 2)));
+        var xdiff = Math.abs(touch.x - (xPos - this.x) + this.half);
+        var ydiff = Math.abs(touch.y - (yPos - this.y) + this.half);
+
         if(!touch.isActive) {
             if(xdiff + ydiff < closestDiff) {
                 closestDiff = xdiff + ydiff;
@@ -195,7 +201,6 @@ Control.MultiTouchXY.prototype.event = function(event) {
 
 
 Control.MultiTouchXY.prototype.changeValue = function(touch, inputX, inputY, inputZ) {
-
     var xLeft   = inputX - this.half;
     var xRight  = inputX + this.half - 2;
     var yTop    = inputY - this.half;
@@ -206,39 +211,34 @@ Control.MultiTouchXY.prototype.changeValue = function(touch, inputX, inputY, inp
     //console.log("x touch = " + inputX + " :: xLeft = " + xLeft + " :: xRight = " + xRight + " :: x = " + this.x + " :: width = " + this.width);
 
     // adjust x?
-    if(xLeft > this.x && xRight < this.x + this.width) {
-        inputX -= this.half;
-        xPos = inputX + "px";
-    }else{
-        if(xLeft < this.x) {
-            xPos = "0px";
+    if((!inputX > this.x && inputX < this.x + this.width)) {
+        if(inputX < this.x) {
             inputX = 0;
-        } else {
-            xPos = this.width - (this.half * 2) - 4 + "px";
-            inputX = (this.x + this.width) - this.half * 2;
+        } else {;
+            inputX = (this.x + this.width);
         }
     }
     
     // adjust y?
-    if(yTop > this.y && yBottom < this.y + this.height) {
-        inputY -= this.half;
-        yPos = (inputY - this.y) + "px";
-    }else{
-        if(yBottom < this.y + this.height) {
-            yPos = "0px";
+    if(!(inputY >= this.y && inputY <= this.y + this.height)) {
+        if(inputY < this.y) {
             inputY = 0;
         }else{
-            yPos = this.height - (this.half * 2) - 4 + "px";
-            inputY = this.height - this.half * 2;
+            inputY = (this.y + this.height);
         }
     }
     
-	
     touch.xpercentage = (inputX - (this.x )) / (this.width);
     touch.ypercentage = (inputY - (this.y )) / (this.height);
+    
+    if(touch.xpercentage < 0) touch.xpercentage = 0; else if (touch.xpercentage > 1) touch.xpercentage = 1;
+    if(touch.ypercentage < 0) touch.ypercentage = 0; else if (touch.ypercentage > 1) touch.ypercentage = 1;
+
+	touch.x = ((touch.xpercentage * (this.width  - 4)) - this.half);
+	touch.y = ((touch.ypercentage * (this.height - 4)) - this.half);
 	
-	touch.style.webkitTransform = "translate3d("+ (touch.xpercentage * (this.width - 4)) + "px," + (touch.ypercentage * (this.height - 4)) + "px, 0)";
-	
+	var translate = "translate3d("+ touch.x + "px," + touch.y + "px, 0)";
+	touch.style.webkitTransform = translate;
     
     if(touch.xpercentage < 0) touch.xpercentage = 0; // needed to account for the - this.half * 2 above TODO: NOT PRECISE ON EDGES, SHOULD FIX
     if(touch.ypercentage < 0) touch.ypercentage = 0;
