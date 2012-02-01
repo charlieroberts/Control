@@ -39,13 +39,13 @@ Control.Slider = function(ctx, props) {
         if(this.isVertical) {
             this.fillDiv.style.webkitTransformOriginY = "100%";
         }else if(!this.isXFader) {
-            this.fillDiv.style.webkitTransformOriginY = "100%";
+            this.fillDiv.style.webkitTransformOriginX = "0";
         }
 
 		this.ctx.appendChild(this.fillDiv);
 		
 		this.strokeDiv   = document.createElement("div");
-		$(this.strokeDiv).addClass('widget Control.Slider_stroke');
+		$(this.strokeDiv).addClass('widget slider_stroke');
 		
 		$(this.strokeDiv).css({
 			"width": this.width - 2 + "px",
@@ -242,7 +242,6 @@ Control.Slider.prototype.draw = function() {
 
                 this.fillDiv.style.webkitTransform = "scale3d(" + percent + ", 1, 1 )"; 
             }else{
-                var scale = "translate3d("+ (percent * (this.width - this.xFaderWidth)) + ", 1, 1)";
                 this.fillDiv.style.webkitTransform = "translate3d("+ (percent * (this.width - this.xFaderWidth)) + "px, 0, 0)";
                 //this.fillDiv.style.left = (this.x  + (percent * (this.width - this.xFaderWidth))) + "px";
             }
