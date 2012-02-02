@@ -30,20 +30,24 @@ window["Control"] = {
         this.changeTab(this.currentTab);
         
         this.sensors = [this.acc, this.compass, this.gyro, this.audioPitch, this.audioVolume];
-                
+        
+        this.preferencesManager.init();
+
 		this.interfaceManager.init();
        
        	this.destinationManager.init();
-
+        
+        this.bonjour.start();
+        
         this.oscManager.delegate = Control.oscManager;
         this.oscManager.start();
 
+        
 		this.midiManager.delegate = Control.midiManager;
 		this.midiManager.start();
 
 		this.device.setRotation("portrait");
 
-        this.preferencesManager.init();
         
         document.addEventListener('orientationChanged', Control.onRotation, false);
     },
@@ -144,13 +148,13 @@ window["Control"] = {
         
         var oldCurrentPage = this.currentPage;
 
-        for(var pageNumber = 0; pageNumber < pages.length; pageNumber++) {
+        for(var pageNumber = 0; pageNumber < this.interface.pages.length; pageNumber++) {
             this.addingPage = pageNumber;				
             this.pages.push([]);
-            var page = pages[pageNumber];
+            var page = this.interface.pages[pageNumber];
             for(var i=0; i < page.length; i++) {
                 var w = page[i];
-
+                console.log("making " + w.name);
                 var _w = this.makeWidget(w);
 
                 this.widgets.push(_w);
