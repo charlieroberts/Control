@@ -7,12 +7,14 @@ Control.oscManager = {
     },
     
     setReceivePort : function(newPort) {
-        receivePort = newPort;
-        PhoneGap.exec(null, null, "OSCManager", "setOSCReceivePort", [receivePort]);			  
+        this.receivePort = newPort;
+        console.log("SETTING PORT " + this.receivePort);
+        PhoneGap.exec(null, null, "OSCManager", "setOSCReceivePort", [newPort]);			  
     },
 
     processOSCMessage : function() {
         var address = arguments[0];
+        //console.log(arguments[0] + ":" + arguments[2]);
     
         if(typeof this.callbacks[address] != "undefined") {	// if Control has a defined callback for this address ...
             this.callbacks[address](arguments);				// ... call the function associated with it ...
@@ -41,7 +43,12 @@ Control.oscManager = {
             }
         
             var isImportant = false;
-        
+        	
+			if(typeof w.page === "undefined") {
+				w.page = Control.currentPage;
+			}
+			
+			Control.addingPage = w.page;
             var _w = Control.makeWidget(w);
             _w.page = w.page;
                     
@@ -82,7 +89,7 @@ Control.oscManager = {
         "/control/createBlankInterface": function(args) {
             Control.unloadWidgets();
         
-            var _json = "loadedInterfaceName = '" + args[2] + "'; interfaceOrientation = '" + args[3] + "'; constants = [";
+            var _json = "Control.data = {}; Control.functions = {}; Control.interface = { name: '" + args[2] + "', orientation :'" + args[3] + "', constants : [";
             if(typeof args[4] == "undefined" || args[4] == "true") {
                 _json += '{\
 "name": "menuButton",\
@@ -94,11 +101,11 @@ Control.oscManager = {
 "label": "menu",\
 },';
             }
-            _json += "]; pages = [[]];";
-                    
+            _json += "], pages : [[]], };";
+            
             Control.interfaceManager.runInterface(_json);
             $.mobile.changePage('#SelectedInterfacePage');
-        
+            
             Control.autogui.redoLayout();
         },
         // TODO: clear interface?	
@@ -156,13 +163,14 @@ Control.oscManager = {
     sendOSC : function() {
         var address  = arguments[0];
         var typetags = arguments[1];
-
+        console.log(arguments[2]);
+        console.log(arguments);
         var args = [address, typetags];
         for(var i = 0; i < typetags.length; i++) {
             var arg = arguments[i + 2];
             args.push(arg);
         }
-        //console.log("args length :" + args.length + " contents: " + args);
+        console.log("args length :" + args.length + " contents: " + args);
 
         PhoneGap.exec(null, null, 'OSCManager', 'send', args);
     },	

@@ -1,4 +1,4 @@
-function Knob(ctx,props) {
+Control.Knob = function(ctx,props) {
 	// MUST COME BEFORE WIDGET INIT SINCE JSON DOESN'T INCLUDE WIDTH AND HEIGHT FOR KNOBS, ONLY RADIUS
     
     if(typeof props.radius != 'undefined') {

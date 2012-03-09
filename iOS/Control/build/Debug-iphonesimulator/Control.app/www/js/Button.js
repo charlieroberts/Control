@@ -134,6 +134,7 @@ Control.Button.prototype.touchstart = function(touch, isHit) {
         this.xOffset = (touch.pageX - this.x) / (this.width - this.x);
         this.yOffset = (touch.pageY - this.y) / (this.height - this.y);
         this.activeTouches.push(touch.identifier);
+        var newValue;
         switch (this.mode) {
             case "toggle":
                 newValue = (this.value == this.min) ? this.max: this.min;
@@ -153,12 +154,13 @@ Control.Button.prototype.touchstart = function(touch, isHit) {
         }
         this.setValue(newValue);
 		
-		if(typeof this.ontouchstart === "string") {
-	        eval(this.ontouchstart);
-		}else{
-            console.log(this.ontouchstart);
-			this.ontouchstart();
-		} 
+        if(this.ontouchstart != null) {
+            if(typeof this.ontouchstart === "string") {
+                eval(this.ontouchstart);
+            }else{
+                this.ontouchstart();
+            }
+        }
 		return true;      
     }
 	return false;
@@ -167,6 +169,7 @@ Control.Button.prototype.touchstart = function(touch, isHit) {
 Control.Button.prototype.touchmove = function(touch, isHit) {
     var shouldChange = true;
     var rollOff = false;
+    var newValue;
     if (!this.requiresTouchDown) {
         var touchFound = false;
         var l = this.activeTouches.length;
@@ -196,53 +199,38 @@ Control.Button.prototype.touchmove = function(touch, isHit) {
     if (shouldChange && isHit && !this.requiresTouchDown) {
         switch (this.mode) {
             case "toggle":
-                this.value = (this.value == this.min) ? this.max: this.min;
-                this.isLit = (this.value == this.max);
+                newValue = (this.value == this.min) ? this.max: this.min;
                 break;
             case "visualToggle":
-                this.value = this.max;
-                this.isLit = !this.isLit;
+                newVAlue = this.max;
                 break;
             case "latch":
-                this.value = this.max;
-                this.isLit = true;
+                newValue = this.max;
                 break;
             case "momentary":
                 if (!rollOff) {
-                    this.value = this.max;
-                    this.isLit = true;
+                    newValue = this.max;
                 } else {
-                    this.value = this.min;
-                    this.isLit = false;
+                    newValue = this.min;
                 }
                 break;
             case "contact":
-                this.value = this.max;
+                newValue = this.max;
                 break;
         }
+        this.setValue(newValue);
 		
-		if(typeof this.ontouchmove === "string")
-	        eval(this.ontouchmove);
-		else if(this.ontouchmove != null)
-			this.ontouchmove();
-			
-		if(typeof this.onvaluechange === "string") 
-			eval(this.onvaluechange);
-		else if(this.ontouchmove != null)
-			this.onvaluechange();
-
-        this.output();
-        this.draw();
-    } else if (rollOff && this.mode == "momentary") {
-        this.value = this.min;
-        this.isLit = false;
-		if(typeof this.onvaluechange === "string") 
-            eval(this.onvaluechange);
-		else if(this.onvaluechange != null)
-            this.onvaluechange();
+        if(this.ontouchmove != null) {
+            if(typeof this.ontouchmove === "string") {
+                eval(this.ontouchmove);
+            }else{
+                this.ontouchmove();
+            }
+        }
         
-        this.output();
-        this.draw();
+    } else if (rollOff && this.mode == "momentary") {
+        newValue = this.min;
+        this.setValue(newValue);
     }
 	return false;
 }
@@ -255,17 +243,16 @@ Control.Button.prototype.touchend = function(touch, isHit) {
                 // remove touch ID from array
                             
                 if (this.mode == "latch" || this.mode == "momentary") {
-                    this.isLit = false;
-                    this.value = this.min;
-                    eval(this.onvaluechange);
-                    this.draw();
-                    this.output();
+                    this.setValue(this.min);
                 }
                             
-                if(typeof this.ontouchend === "string") 
-                    eval(this.ontouchend);
-                else if(this.ontouchend != null)
-                    this.ontouchend();
+                if(this.ontouchend != null) {
+                    if(typeof this.ontouchend === "string") {
+                        eval(this.ontouchend);
+                    }else{
+                        this.ontouchend();
+                    }
+                }
 				
 				return true;
             }
@@ -315,12 +302,20 @@ Control.Button.prototype.setValue = function(newValue) {
         case "momentary":
             this.isLit = (this.value == this.max);
             break;
+        default:break;
     }
     
     //this.label.draw();
     this.draw();
-    if (! (arguments[1] === false))
-        eval(this.onvaluechange);
+    if (! (arguments[1] === false)) {
+        if(this.onvaluechange != null) {
+            if(typeof this.onvaluechange === "string") {
+                eval(this.onvaluechange);
+            }else{
+                this.onvaluechange();
+            }
+        }
+    }
     if (! (arguments[1] === false)) {
         this.output();
     }

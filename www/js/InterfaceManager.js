@@ -12,9 +12,11 @@ Control.interfaceManager = {
         constants = null;
         
         this.interfaceDefaults = [
+            "gyro.js",                                  
             "djcut.js",
             "multibutton.js",
             "multiXY.js" ,
+
         ];
         //     "multiXY.js",
         //     "iphoneLandscapeMixer.js",
@@ -27,17 +29,17 @@ Control.interfaceManager = {
         // ];
 
         Control.ifCount = 0;
-        //if(typeof localStorage.interfaceFiles == "undefined") {
+        if(typeof localStorage.interfaceFiles == "undefined") {
             this.loadedInterfaces = [];
             //console.log("INIT LOADING SCRIPTS");
             //var msg = "now loading default interfaces. this will only happen the first time the app is launched (possibly also after updates) and takes about 8 seconds";
             //navigator.notification.alert(msg, null, "loading");
             setTimeout(function() {Control.interfaceManager.loadScripts();}, 1000);
-            //}else{
-            //console.log("NOT RELOADING");
-            //this.loadedInterfaces = JSON.parse(localStorage.interfaceFiles);
-            //this.createInterfaceListWithArray(this.loadedInterfaces);
-            //}
+        }else{
+            console.log("NOT RELOADING");
+            this.loadedInterfaces = JSON.parse(localStorage.interfaceFiles);
+            this.createInterfaceListWithArray(this.loadedInterfaces);
+        }
     },
      
     loadScripts : function() {
@@ -176,12 +178,12 @@ Control.interfaceManager = {
         Control.interfaceManager.myRequest.onreadystatechange = function() {
             //console.log("downloading..." + Control.interfaceManager.myRequest.readyState );
             if(Control.interfaceManager.myRequest.readyState == 4) {
-                //console.log(Control.interfaceManager.myRequest.responseText);
+                console.log(Control.interfaceManager.myRequest.responseText);
                 //eval(Control.interfaceManager.myRequest.responseText);
-                //console.log("before parsing");
+                console.log("before parsing");
                 eval(Control.interfaceManager.myRequest.responseText);
-                //console.log("after parsing");
-                //console.log(Control.interface);
+                console.log("after parsing");
+                console.log(Control.interface);
                 if(Control.interface.name != null) {
                     if(document.getElementById("promptDiv") != null) {
                         document.getElementById("Interfaces").removeChild(document.getElementById("promptDiv"));
@@ -314,29 +316,31 @@ Control.interfaceManager = {
     refreshInterface : function() {
         Control.interfaceManager.myRequest = new XMLHttpRequest();
         Control.interfaceManager.myRequest.onreadystatechange = function() {
-            // console.log("downloading stage " + Control.interfaceManager.myRequest.readyState]);            
+            /* console.log("downloading stage " + Control.interfaceManager.myRequest.readyState]); */           
             if (Control.interfaceManager.myRequest.readyState == 4) {
                 Control.interfaceManager.runInterface(Control.interfaceManager.myRequest.responseText);
                 for(var i = 0; i < Control.interfaceManager.loadedInterfaces.length; i++) {
                     var interface = Control.interfaceManager.loadedInterfaces[i];
                     if(interface.name == Control.interfaceManager.currentInterfaceName) {
-                        // console.log("SHOULD BE LOADED");
+                        //console.log("SHOULD BE REPLACING " + i + " : " + Control.interface.name);
+                        /* console.log("SHOULD BE LOADED"); */
                         var newInterface = {
-                            name:control.interfaceManager.currentInterfaceName,
+                            name:Control.interface.name,
                             json: Control.interfaceManager.myRequest.responseText,
                             address: Control.interfaceManager.interfaceIP
                         };
-                        // console.log(newInterface.json]);
+                        /* console.log(newInterface.json]); */
                         Control.interfaceManager.loadedInterfaces.splice(i,1,newInterface);
                         
                         localStorage.interfaceFiles = JSON.stringify(Control.interfaceManager.loadedInterfaces);
 
-                        //Control.interfaceManager.runInterface(Control.interfaceManager.myRequest.responseText);
+                        /*Control.interfaceManager.runInterface(Control.interfaceManager.myRequest.responseText);*/
                         break;
                     }
                 }
             }
         }
+        console.log("getting from " +  Control.interfaceManager.interfaceIP);
         Control.interfaceManager.myRequest.open("GET", Control.interfaceManager.interfaceIP, true);
         Control.interfaceManager.myRequest.send(null);
     },
@@ -409,7 +413,7 @@ Control.interfaceManager = {
         Control.oninit = null;
         constants = null;
         pages = null;
-
+        
         Control.oscManager.delegate = Control.oscManager;
         Control.midiManager.delegate = Control.midiManager;
 

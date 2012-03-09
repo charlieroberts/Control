@@ -1,4 +1,4 @@
-Control.MultiSlider = function(ctx, props) {//x, y, width, height, color, stroke, min, max, startingValue, ontouchstart, ontouchmove, ontouchend, protocol, address, isVertical, numberOfSliders) { 
+Control.MultiSlider = function(ctx, props) {
 	// MUST BE BEFORE WIDGET INIT
     this.widthInPercentage  = props.width  || props.bounds[2];
     this.heightInPercentage = props.height || props.bounds[3];
@@ -6,7 +6,8 @@ Control.MultiSlider = function(ctx, props) {//x, y, width, height, color, stroke
     this.make(ctx, props);
 		
     this.numberOfSliders   = (typeof props.numberOfSliders   != "undefined") ? props.numberOfSliders   : 4;
-    this.requiresTouchDown = (typeof props.requiresTouchDown != "undefined") ? props.requiresTouchDown : false;
+    this.requiresTouchDown = (typeof props.requiresTouchDown != "undefined") ? props.requiresTouchDown : true;
+    console.log("REQUIRE TOUCHDOWN = " + this.requiresTouchDown);
     this.children = [];
 
     this.origX = props.x;
@@ -69,7 +70,7 @@ Control.MultiSlider.prototype.init = function() {
             "midiType":this.midiType,
             "channel":this.channel,
         };
-        
+        console.log("SLIDER " + i + " REQUIRES TOUCHDOWN = " + newProps.requiresTouchDown);
         var _w = new Control.Slider(this.ctx, newProps, this.ctx);
         _w.address = this.address + "/" + i;
         _w.midiNumber = this.midiNumber+ i;
@@ -105,7 +106,7 @@ Control.MultiSlider.prototype.event = function(event) {
     if(this.hitTest(touch.pageX, touch.pageY) || event.type == "touchend") {
         for(var i = 0; i < this.numberOfSliders; i++) {
             _w = this.children[i];
-            _w.event(event);
+            _w.event.call(_w,event);
         }
     }
 }

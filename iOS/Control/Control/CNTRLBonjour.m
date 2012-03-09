@@ -46,13 +46,12 @@
 }
 
 - (void)getMyIP:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
-    NSLog(@"GETTING IP ADDRESS");
     if(myIP != nil) [myIP release];
     
 	myIP = [self getIPAddress];
     [myIP retain];
     
-    NSString *ipstring = [NSString stringWithFormat:@"window.ipAddress = '%@';", myIP]; // for some reason Control.ipAddress doesn't work, maybe Control isn't instantiated yet?
+    NSString *ipstring = [NSString stringWithFormat:@"window.Control.ipAddress = '%@';", myIP]; // for some reason Control.ipAddress doesn't work, maybe Control isn't instantiated yet?
     NSLog(@"ipstring = %@", ipstring);
     [self.webView stringByEvaluatingJavaScriptFromString:ipstring];
 }
@@ -181,7 +180,10 @@
           // Get NSString from C String
           address = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
 		  NSLog(@"ipaddress = %@", address);
+        }else{
+            NSLog(@"%@", [NSString stringWithUTF8String:temp_addr->ifa_name]);  
         }
+            
       }
       temp_addr = temp_addr->ifa_next;
     }

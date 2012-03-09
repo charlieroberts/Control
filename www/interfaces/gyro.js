@@ -26,19 +26,7 @@ Control.interface = {
 	    "align": "left",
 	    "value": "CORE MOTION (ACCEL + GYRO)",
 	},
-	{
-	    "name": "refreshButton",
-	    "type": "Button",
-	    "x": 0,
-	    "y": .85,
-	    "width": .15,
-	    "height": .15 * Control.data.whRatio,
-	    "mode": "momentary",
-	    "color": "#0000aa",
-	    "stroke": "#aaaaaa",
-	    "ontouchstart": function() { Control.interfaceManager.refreshInterface(); },
-	},
-	{
+    {
 	    "name": "pitchLabel",
 	    "type": "Label",
 	    "bounds": [0,.2,.33,.05],     
@@ -80,7 +68,7 @@ Control.interface = {
 	    "min": 1,
 	    "max": 100,
 	    "startingValue": 10,
-	    "ontouchend": function() { Control.functions.changeGyroSpeed(); },
+	    "ontouchend": Control.functions.changeGyroSpeed,
 	},
     
 	{
@@ -162,7 +150,7 @@ Control.interface = {
 	    "min": 1,
 	    "max": 100,
 	    "startingValue": 10,
-	    "ontouchend": function() { Control.functions.changeAccelerometerSpeed(); },
+	    "ontouchend": Control.functions.changeAccelerometerSpeed,
 	    "oninit": function() { accelerometerSpeed.setValue(10); },
 	},
 	
@@ -187,8 +175,7 @@ Control.interface = {
 	    "mode": "toggle",
 	    "color": "#333333",
 	    "stroke": "#aaaaaa",
-	    "protocol": "local",
-	    "ontouchstart": function() { if(this.value == 1) { Control.showToolbar(); } else { Control.hideToolbar(); } },
+	    "ontouchstart": Control.toggleToolbar,
 	    "label": "menu",
 	},
 	
@@ -216,7 +203,7 @@ Control.interface = {
 		"isLocal": true, 
 	    "min": 0,
 	    "max": 1,
-	    "onvaluechange": function() { accSliders.setSequentialValues(this.x, this.y, this.z); },
+	    "onvaluechange": "accSliders.setSequentialValues(this.x, this.y, this.z);",
 	},
 	
 	{
@@ -226,7 +213,7 @@ Control.interface = {
 		"updateRate":10,
 	    "min": 0,
 	    "max": 1,
-	    "onvaluechange": function() { gyroSliders.setSequentialValues(this.pitch, this.roll, this.yaw); },
+	    "onvaluechange": "gyroSliders.setSequentialValues(this.pitch, this.roll, this.yaw);",
 	},
 	
 	],
@@ -253,7 +240,7 @@ Control.interface = {
 	    "mode": "contact",
 	    "color": "#333333",
 	    "stroke": "#aaaaaa",
-	    "protocol": "local",
+		"isLocal": true, 
 	    "ontouchstart": function() { Control.changePage(0) },
 	    "label": "back", 
 	},

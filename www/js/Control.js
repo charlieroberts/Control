@@ -318,4 +318,12 @@ window["Control"] = {
         this.tabBarHidden = true;
         $(".ftr").css("visibility", "hidden");	
     },
+
+    toggleToolbar : function() {
+       if(this.value == this.max) { 
+           Control.showToolbar(); 
+       } else { 
+           Control.hideToolbar();
+       } 
+    }
 };

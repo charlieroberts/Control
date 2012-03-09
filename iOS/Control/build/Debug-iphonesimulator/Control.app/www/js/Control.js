@@ -30,20 +30,24 @@ window["Control"] = {
         this.changeTab(this.currentTab);
         
         this.sensors = [this.acc, this.compass, this.gyro, this.audioPitch, this.audioVolume];
-                
+        
+        this.preferencesManager.init();
+
 		this.interfaceManager.init();
        
        	this.destinationManager.init();
-
+        
+        this.bonjour.start();
+        
         this.oscManager.delegate = Control.oscManager;
         this.oscManager.start();
 
+        
 		this.midiManager.delegate = Control.midiManager;
 		this.midiManager.start();
 
 		this.device.setRotation("portrait");
 
-        this.preferencesManager.init();
         
         document.addEventListener('orientationChanged', Control.onRotation, false);
     },
@@ -127,12 +131,11 @@ window["Control"] = {
     loadConstants : function(_constants) {
         this.isAddingConstants = true;
         if(_constants != null) {
-            constants = _constants;
             this.constants = [];
             
-            for(var i = 0; i < constants.length; i++) {
-                var w = constants[i];
-                var _w = window.control.makeWidget(w);
+            for(var i = 0; i < _constants.length; i++) {
+                var w = _constants[i];
+                var _w = this.makeWidget(w);
                 this.addConstantWidget(_w);
             }
         }
@@ -145,13 +148,13 @@ window["Control"] = {
         
         var oldCurrentPage = this.currentPage;
 
-        for(var pageNumber = 0; pageNumber < pages.length; pageNumber++) {
+        for(var pageNumber = 0; pageNumber < this.interface.pages.length; pageNumber++) {
             this.addingPage = pageNumber;				
             this.pages.push([]);
-            var page = pages[pageNumber];
+            var page = this.interface.pages[pageNumber];
             for(var i=0; i < page.length; i++) {
                 var w = page[i];
-
+                console.log("making " + w.name);
                 var _w = this.makeWidget(w);
 
                 this.widgets.push(_w);
@@ -164,6 +167,7 @@ window["Control"] = {
     
     makeWidget : function(w) {
         var _w;
+        console.log("making " + w.name);
         if(!this.isWidgetSensor(w)) {
             _w = window[w.name] = new Control[w.type](this.interfaceDiv, w);
             if(_w.init != null) { 
@@ -172,16 +176,17 @@ window["Control"] = {
         }else{
             _w = new Control[w.type](w);
             switch(w.type) {
-                case "ControlAccelerometer"	: Control.acc = _w; 		break;
-                case "ControlCompass"		: Control.compass = _w; 	break;					
-                case "ControlGyro"			: Control.gyro = _w; 		break;
-                case "AudioPitch"			: Control.audioPitch  = _w; break;
-                case "AudioVolume"			: Control.audioVolume = _w; break;																
+                case "Accelerometer"	: Control.acc = _w; 		break;
+                case "Compass"          : Control.compass = _w; 	break;					
+                case "Gyro"             : Control.gyro = _w; 		break;
+                case "AudioPitch"		: Control.audioPitch  = _w; break;
+                case "AudioVolume"		: Control.audioVolume = _w; break;																
             }
             _w.start();        
         }
         this.widgets.push(_w);			
-        _w.widgetID = this.widgetCount++;	
+        _w.widgetID = this.widgetCount++;
+
         return _w;
     },
     
@@ -314,4 +319,12 @@ window["Control"] = {
         this.tabBarHidden = true;
         $(".ftr").css("visibility", "hidden");	
     },
+
+    toggleToolbar : function() {
+       if(this.value == this.max) { 
+           Control.showToolbar(); 
+       } else { 
+           Control.hideToolbar();
+       } 
+    }
 };

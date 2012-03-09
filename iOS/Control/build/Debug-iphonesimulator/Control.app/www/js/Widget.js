@@ -38,9 +38,9 @@ Widget.prototype.make = function(ctx, props) {
                 this.strokeColor = props.colors[2];
                 this.stroke = this.strokeColor;
             }else{
-                this.color =  props.color || "#ffffff";
+                this.color =  props.color || "#cccccc";
                 this.fillColor = props.fillColor || this.color;
-                this.stroke = props.stroke || this.color;
+                this.stroke = props.stroke || "#ffffff";
                 this.strokeColor = props.strokeColor || this.stroke;
                 this.backgroundColor = props.backgroundColor || "rgba(0,0,0,0)";
             }			
@@ -147,7 +147,8 @@ Widget.prototype.output = function() {
         var valueString = "|" + this.address;
         valueString += ":" + this.value;
         Control.valuesString += valueString;
-        //PhoneGap.exec('OSCManager.send', this.address, 'f', this.value);
+        //Control.oscManager.sendOSC(this.addresss, 'f', this.value);
+        //PhoneGap.exec(null, null, 'OSCManager', 'send', [this.address, 'f', this.value]);
     }else if (!this.isLocal && Control.protocol == "MIDI") {
         var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.value);
         Control.valuesString += valueString;

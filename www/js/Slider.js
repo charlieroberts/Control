@@ -110,9 +110,9 @@ Control.Slider = function(ctx, props) {
 	        var _w = Control.makeWidget(this.label);
 	        Control.widgets.push(_w);
 	        if(!Control.isAddingConstants)
-	            Control.addWidget(_w, Control.addingPage); // PROBLEM
+	            Control.addWidget(_w, Control.addingPage);
 	        else
-	            Control.addConstantWidget(_w); // PROBLEM
+	            Control.addConstantWidget(_w);
             
 	        this.label = _w;
 			$(this.label.label).css("padding", "0px 4px 0px 4px");
@@ -152,12 +152,12 @@ Control.Slider.prototype.touchstart = function(touch) {
 
 Control.Slider.prototype.touchmove = function(touch) {       
     var shouldChange = false;
-    var isActive = false;
- 
+ 	var touchNumber = -1;
+	
     for(var i = 0; i < this.activeTouches.length; i++) {
         if(touch.identifier == this.activeTouches[i]){
+			touchNumber = i;
             shouldChange = true;
-            isActive = true;
             break;
         }
     }
@@ -167,21 +167,24 @@ Control.Slider.prototype.touchmove = function(touch) {
     }
     
     var isHit = this.hitTest(touch.pageX, touch.pageY);
-    if((shouldChange && isHit) || (shouldChange && isActive)) {
-        if(this.isVertical) {
-            this.changeValue(touch.pageY); 
-        }else{
-            this.changeValue(touch.pageX); 
-        }
+    if(shouldChange) {
+		if(isHit) {
+			if(this.isVertical) {
+				this.changeValue(touch.pageY); 
+	        }else{
+	        	this.changeValue(touch.pageX); 
+	        }
 						
-		if (this.ontouchmove != null) {
-			this.ontouchmove();
+			if (this.ontouchmove != null) {
+				this.ontouchmove();
+			}
+
+			if(this.displayValue) { this.label.setValue(this.value); }
+
+	        return true;
+		}else{
+			if(touchNumber != -1) { this.activeTouches.splice(touchNumber, 1); }	
 		}
-
-		if(this.displayValue)
-			this.label.setValue(this.value);
-
-        return true;
     }
 	return false;
 };

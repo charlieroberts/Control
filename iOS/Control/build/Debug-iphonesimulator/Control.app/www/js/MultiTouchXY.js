@@ -1,67 +1,56 @@
 gNOT_ACTIVE = -10000;
 // TODO: touches don't adjust position when range is set via osc
-function MultiTouchXY(ctx, props) {
+Control.MultiTouchXY = function(ctx, props) {
     this.make(ctx, props);
-	this.xvalue = this.min;
-	this.yvalue = this.min;
-	this.half = (this.width / 8) / 2;
-	this.maxTouches = props.maxTouches > 0 ? props.maxTouches : 1;
-	this.children = [];
-	this.valuesX = [];
-	this.valuesY = [];
-	this.isMomentary = (typeof props.isMomentary == "undefined") ? true : props.isMomentary;
-    this.lastTouchhed = null;
-	
-	this.container = document.createElement('div');
-	$(this.container).addClass('widget multiTouchXY');
+    this.xvalue = this.min;
+    this.yvalue = this.min;
+    this.zvalue = false;
+    this.sendZValue = (typeof props.sendZValue == "undefined") ? false : props.sendZValue;
+    this.maxTouches = props.maxTouches > 0 ? props.maxTouches : 1;
+    this.children = [];
+    this.valuesX = [];
+    this.valuesY = [];
+    this.isMomentary = (typeof props.isMomentary == "undefined") ? true : props.isMomentary;
+    this.lastTouched = null;
+    this.touchSize = props.touchSize || (this.width / 8);
+    this.half = parseInt(this.touchSize) / 2;
+    this.container = document.createElement('div');
+	this.rainbow = (typeof props.rainbow == "undefined") ? false : props.rainbow;
+    $(this.container).addClass('widget multiTouchXY');
 
-	this.container.style.position = "absolute";
-	this.container.style.display = "block";
-	this.container.style.width  = this.width  - 2 + "px";
-	this.container.style.height = this.height - 2 + "px";
-	this.container.style.top = this.y + "px";
-	this.container.style.left = this.x + "px";
-	this.container.style.backgroundColor = this.backgroundColor;
-	this.ctx.appendChild(this.container);
-	
+    this.container.style.position = "absolute";
+    this.container.style.display = "block";
+    this.container.style.width = this.width - 2 + "px";
+    this.container.style.height = this.height - 2 + "px";
+    this.container.style.top = this.y + "px";
+    this.container.style.left = this.x + "px";
+    this.container.style.backgroundColor = this.backgroundColor;
+    this.ctx.appendChild(this.container);
+    
+
     this.touchCount = 0;
-	this.container.style.border = "1px solid " + this.strokeColor;
-	
-	//this.touchColors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFFFFF', '#80FF00', '#8000FF', '#0080FF', '#FF8080'];
-	
+    this.container.style.border = "1px solid " + this.strokeColor;
+    
+    this.touchColors = ["rgba(255,0,0,.25)","rgba(255,255,0,.25)","rgba(0,255,0,.25)","rgba(0,255,255,.25)","rgba(0,0,255,.25)","rgba(255,0,255,.25)"];
+    //this.touchColors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFFFFF', '#80FF00', '#8000FF', '#0080FF', '#FF8080'];
     return this;
 }
 
-MultiTouchXY.prototype = new Widget();
+Control.MultiTouchXY.prototype = new Widget();
 
-MultiTouchXY.prototype.init = function() {
+
+Control.MultiTouchXY.prototype.init = function() {
     if(!this.isMomentary) {
         for(var i = 0; i < this.maxTouches; i++) {
-            this.addTouch(this.x + (i * 15), this.y + (i * 15), i);
+            this.addTouch(0, 0, i);
         }
     }
 }
 
-MultiTouchXY.prototype.addTouch = function(xPos, yPos, id) {
+Control.MultiTouchXY.prototype.addTouch = function(xPos, yPos, id) {
     var touch = document.createElement('div');
     $(touch).addClass('widget touch');
     
-	$(touch).css({
-	    "display" 	: "block",
-	    "position" 	: "absolute",
-	    "border" 	: this.strokeColor + " solid 1px",
-	    "width" 	: (this.width / 8) +"px",
-	    "height" 	: touch.style.width,
-	    "text-align" 	: "center",
-	    "line-height" 	: touch.style.height,  
-	    "vertical-align" : "center",
-	    "left" 	: xPos + "px",
-	    "top"  	: yPos + "px",
-	    "color" : this.strokeColor,
-	    "background-color" : this.fillColor,
-	    "text-Shadow" : "none",
-	)};
-	
     touch.id = (this.isMomentary) ? id : gNOT_ACTIVE;
     touch.childID = touch.id;
     touch.isActive = (this.isMomentary);
@@ -70,14 +59,40 @@ MultiTouchXY.prototype.addTouch = function(xPos, yPos, id) {
         touch.activeNumber = id + 1;
     }
     
-    this.children.push(touch);
     touch.activeNumber = this.children.length;
-    $(touch).text(touch.activeNumber);    
+    
+	var bgcolor = (this.rainbow) ? this.touchColors[touch.activeNumber % this.touchColors.length] : this.color;
+	
+	$(touch).css({
+	    "display" 	: "block",
+	    "position" 	: "absolute",
+	    "border" 	: this.strokeColor + " solid 0px",
+	    "width" 	: this.touchSize + "px",
+	    "height" 	: this.touchSize + "px",
+	    "text-align" 	: "center",
+	    "line-height" 	: this.touchSize + "px",  
+	    "vertical-align" : "center",
+	    "left" 	: 0 + "px",
+	    "top"  	: 0 + "px",
+	    "color" : this.strokeColor,
+	    "background-color" : bgcolor,
+	    "text-shadow" : "none",
+		"-webkit-transform-origin-x": this.x + "px",
+		"-webkit-transform-origin-y": this.y + "px",
+        "border-radius": this.half + "px",
+	});
+	
+	touch._x = 0;
+	touch._y = 0;
+    $(touch).text(touch.activeNumber);
+    
+    this.children.push(touch);
+    console.log(this.children);
     this.container.appendChild(touch);
-    //this.changeValue(touch, xPos, yPos);
+    this.changeValue(touch, xPos, yPos, 1);
 }
 
-MultiTouchXY.prototype.removeTouch = function(touchToRemove) {
+Control.MultiTouchXY.prototype.removeTouch = function(touchToRemove) {
     for(var i = 0; i < this.children.length; i++) {
         var touch = this.children[i];
         if(touchToRemove.id == touch.id) {
@@ -88,14 +103,15 @@ MultiTouchXY.prototype.removeTouch = function(touchToRemove) {
     }
 }
     
-MultiTouchXY.prototype.trackTouch = function(xPos, yPos, id) {
+Control.MultiTouchXY.prototype.trackTouch = function(xPos, yPos, id) {
     var closestDiff = 10000;
     var touchFound = null;
     var touchNum = null;
     for(var i = 0; i < this.children.length; i++) {
         var touch = this.children[i];
-        var xdiff = Math.abs((xPos - this.x) - (parseInt(touch.style.left) + (parseInt(touch.style.width)  / 2)));
-        var ydiff = Math.abs((yPos - this.y) - (parseInt(touch.style.top)  + (parseInt(touch.style.height) / 2)));
+        var xdiff = Math.abs(touch._x - (xPos - this.x) + this.half);
+        var ydiff = Math.abs(touch._y - (yPos - this.y) + this.half);
+
         if(!touch.isActive) {
             if(xdiff + ydiff < closestDiff) {
                 closestDiff = xdiff + ydiff;
@@ -107,56 +123,61 @@ MultiTouchXY.prototype.trackTouch = function(xPos, yPos, id) {
     touchFound.id = id;
     touchFound.isActive = true;
     if(touchFound != null)
-        this.changeValue(touchFound, xPos, yPos);
+        this.changeValue(touchFound, xPos, yPos, 1);
     
     this.lastTouched = touchFound;
 }
 
-MultiTouchXY.prototype.touchstart = function (touch) {
+Control.MultiTouchXY.prototype.touchstart = function (touch) {
     if(this.hitTest(touch.pageX, touch.pageY)) {
         if(this.isMomentary) 
             this.addTouch(touch.pageX , touch.pageY , touch.identifier);
         else
             this.trackTouch(touch.pageX, touch.pageY , touch.identifier);
-                    
-		if(typeof this.ontouchstart === "string") {
-	        eval(this.ontouchstart);
-		}else if(this.ontouchstart != null){
-			this.ontouchstart();
-		}
         
-    }
-}
-
-MultiTouchXY.prototype.touchmove = function (touch) {
-    for(var t = 0; t < this.children.length; t++) {
-        _t = this.children[t];
-        if(touch.identifier == _t.id) {
-            this.changeValue(_t, touch.pageX, touch.pageY);
-			
-			if(typeof this.ontouchmove === "string") {
-		        eval(this.ontouchmove);
-			}else if(this.ontouchmove != null){
-				this.ontouchmove();
+		if(this.ontouchstart != null){            
+			if(typeof this.ontouchstart === "string") {
+		        eval(this.ontouchstart);
+			}else{
+				this.ontouchstart();
 			}
-            
-            break;
         }
     }
 }
 
-MultiTouchXY.prototype.touchend = function (touch) {
+Control.MultiTouchXY.prototype.touchmove = function (touch) {
+    for(var t = 0; t < this.children.length; t++) {
+        _t = this.children[t];
+        if(touch.identifier == _t.id) {
+            this.changeValue(_t, touch.pageX, touch.pageY, 1);
+			
+			if(this.ontouchmove != null){            
+				if(typeof this.ontouchmove === "string") {
+			        eval(this.ontouchmove);
+				}else{
+					this.ontouchmove();
+				}
+	        }
+        }
+    }
+}
+
+Control.MultiTouchXY.prototype.touchend = function (touch) {
     for(var t = 0; t < this.children.length; t++) {
         _t = this.children[t];
         if(touch.identifier == _t.id) {
             this.endingTouchID = touch.activeNumber;
-			
-			if(typeof this.ontouchend === "string") {
-		        eval(this.ontouchend);
-			}else if(this.ontouchend != null){
-				this.ontouchend();
-			}
-            
+			if(this.sendZValue){
+                this.changeValue(_t, touch.pageX, touch.pageY, 0);
+            }
+			if(this.ontouchend != null){            
+				if(typeof this.ontouchend === "string") {
+			        eval(this.ontouchend);
+				}else{
+					this.ontouchend();
+				}
+	        }
+
             if(this.isMomentary) {
                 this.removeTouch(_t);
             }else{
@@ -167,13 +188,13 @@ MultiTouchXY.prototype.touchend = function (touch) {
     }	
 }
 
-MultiTouchXY.prototype.events = { 
-	"touchstart": MultiTouchXY.prototype.touchstart, 
-	"touchmove" : MultiTouchXY.prototype.touchmove, 
-	"touchend"  : MultiTouchXY.prototype.touchend,
+Control.MultiTouchXY.prototype.events = { 
+	"touchstart": Control.MultiTouchXY.prototype.touchstart, 
+	"touchmove" : Control.MultiTouchXY.prototype.touchmove, 
+	"touchend"  : Control.MultiTouchXY.prototype.touchend,
 };
 
-MultiTouchXY.prototype.event = function(event) {
+Control.MultiTouchXY.prototype.event = function(event) {
     for (var j = 0; j < event.changedTouches.length; j++){
         var touch = event.changedTouches.item(j);
 		
@@ -183,64 +204,75 @@ MultiTouchXY.prototype.event = function(event) {
 	}
 }
 
-MultiTouchXY.prototype.changeValue = function(touch, inputX, inputY) {
+
+Control.MultiTouchXY.prototype.changeValue = function(touch, inputX, inputY, inputZ) {
     var xLeft   = inputX - this.half;
-    var xRight  = inputX + this.half;
+    var xRight  = inputX + this.half - 2;
     var yTop    = inputY - this.half;
-    var yBottom = inputY + this.half;
+    var yBottom = inputY + this.half - 2;
     
+	var xPos = "0px";
+	var yPos = "0px";
     //console.log("x touch = " + inputX + " :: xLeft = " + xLeft + " :: xRight = " + xRight + " :: x = " + this.x + " :: width = " + this.width);
 
     // adjust x?
-    if(xLeft > this.x && xRight < this.x + this.width) {
-        inputX -= this.half;
-        touch.style.left = (inputX - this.x) + "px";
-    }else{
-        if(xLeft < this.x) {
-            touch.style.left = "0px";
+    if((!inputX > this.x && inputX < this.x + this.width)) {
+        if(inputX < this.x) {
             inputX = 0;
-        } else {
-            touch.style.left = this.width - (this.half * 2) - 2 + "px";
-            inputX = (this.x + this.width) - this.half * 2;
+        } else {;
+            inputX = (this.x + this.width);
         }
     }
-    
     
     // adjust y?
-    if(yTop > this.y && yBottom < this.y + this.height) {
-        inputY -= this.half;
-        touch.style.top = (inputY - this.y) + "px";
-    }else{
-        if(yBottom < this.y + this.height) {
-            touch.style.top = "0px";
+    if(!(inputY >= this.y && inputY <= this.y + this.height)) {
+        if(inputY < this.y) {
             inputY = 0;
         }else{
-            touch.style.top = this.height - (this.half * 2) - 2 + "px";
-            inputY = this.height - this.half * 2;
+            inputY = (this.y + this.height);
         }
     }
     
-    touch.xpercentage = (inputX - (this.x )) / (this.width  - this.half * 2);
-    touch.ypercentage = (inputY - (this.y )) / (this.height - this.half * 2);
+    touch._xpercentage = (inputX - (this.x )) / (this.width);
+    touch._ypercentage = (inputY - (this.y )) / (this.height);
     
-    if(touch.xpercentage < 0) touch.xpercentage = 0; // needed to account for the - this.half * 2 above TODO: NOT PRECISE ON EDGES, SHOULD FIX
-    if(touch.ypercentage < 0) touch.ypercentage = 0;
+    if(touch._xpercentage < 0) touch._xpercentage = 0; else if (touch._xpercentage > 1) touch._xpercentage = 1;
+    if(touch._ypercentage < 0) touch._ypercentage = 0; else if (touch._ypercentage > 1) touch._ypercentage = 1;
+
+	touch._x = ((touch._xpercentage * (this.width  - 4)) - this.half);
+	touch._y = ((touch._ypercentage * (this.height - 4)) - this.half);
+	
+    console.log(touch._x + " :: " + touch._y);
+    
+	var translate = "translate3d("+ touch._x + "px," + touch._y + "px, 0)";
+	touch.style.webkitTransform = translate;
+    
+    if(touch._xpercentage < 0) touch._xpercentage = 0; // needed to account for the - this.half * 2 above TODO: NOT PRECISE ON EDGES, SHOULD FIX
+    if(touch._ypercentage < 0) touch._ypercentage = 0;
     
     var range = this.max - this.min;
     
     if(Control.protocol != "MIDI") {
-        this.xvalue = this.min + (touch.xpercentage * range);
-        this.yvalue = this.min + (touch.ypercentage * range);
+        this.xvalue = this.min + (touch._xpercentage * range);
+        this.yvalue = this.min + (touch._ypercentage * range);
     }else{
-        this.xvalue = Math.round(this.min + (touch.xpercentage * range));
-        this.yvalue = Math.round(this.min + (touch.ypercentage * range));
+        this.xvalue = Math.round(this.min + (touch._xpercentage * range));
+        this.yvalue = Math.round(this.min + (touch._ypercentage * range));
+    }
+    this.zvalue = inputZ;
+    
+	if(this.onvaluechange != null){            
+		if(typeof this.onvaluechange === "string") {
+	        eval(this.onvaluechange);
+		}else{
+			this.onvaluechange();
+		}
     }
     
-    if(this.onvaluechange != null) eval(this.onvaluechange);
     if(!this.isLocal) this.output(touch);
 }
 
-MultiTouchXY.prototype.setColors = function(newColors) {
+Control.MultiTouchXY.prototype.setColors = function(newColors) {
     this.backgroundColor = newColors[0];
     this.fillColor = newColors[1];
     this.strokeColor = newColors[2];
@@ -255,7 +287,7 @@ MultiTouchXY.prototype.setColors = function(newColors) {
     }
 }
 
-MultiTouchXY.prototype.setBounds = function(newBounds) {
+Control.MultiTouchXY.prototype.setBounds = function(newBounds) {
     this.width = Math.round(newBounds[2] * Control.deviceWidth);
     this.height = Math.round(newBounds[3] * Control.deviceHeight);
     this.x = Math.round(newBounds[0] * Control.deviceWidth);
@@ -271,18 +303,20 @@ MultiTouchXY.prototype.setBounds = function(newBounds) {
     }
 }
 
+//	TODO: this should move all the touches to a position reflecting (possibly) updated values
 //    this.setRange = function(min, max) {
 //        this.min = min;
 //        this.max = max;
 //        
 //        for(var i = 0; i < this.maxTouches; i++) {
 //            var touch = this.children[i];
-//            touch.style.left = ( touch.xpercentage * parseInt(this.container.style.width ) ) + "px";
-//            touch.style.top  = ( touch.ypercentage * parseInt(this.container.style.height) ) + "px";
+//            touch.style.left = ( touch._xpercentage * parseInt(this.container.style.width ) ) + "px";
+//            touch.style.top  = ( touch._ypercentage * parseInt(this.container.style.height) ) + "px";
 //        }
 //
 //    }
-MultiTouchXY.prototype.output = function(touch) {
+
+Control.MultiTouchXY.prototype.output = function(touch) {
     var valueString = "";
     if(Control.protocol == "OSC") {
         valueString = "|" + this.address;
@@ -290,7 +324,11 @@ MultiTouchXY.prototype.output = function(touch) {
           valueString += "/" + touch.activeNumber;
         }
         valueString += ":" + this.xvalue + "," + this.yvalue;
-    }else if(Control.protocol == "MIDI") {
+
+        if(this.sendZValue){
+            valueString += ","+this.zvalue;	
+        }
+    }else if(_protocol == "MIDI") {
         var xnum = this.midiNumber + (touch.activeNumber * 2) - 2;
         var ynum = xnum + 1;
             
@@ -301,7 +339,7 @@ MultiTouchXY.prototype.output = function(touch) {
 
 }
 
-MultiTouchXY.prototype.show = function() {
+Control.MultiTouchXY.prototype.show = function() {
     this.container.style.display = "block";
     if(!this.isMomentary) {
         for(var i = 0; i < this.maxTouches; i++) {
@@ -311,7 +349,7 @@ MultiTouchXY.prototype.show = function() {
     }
 }
 
-MultiTouchXY.prototype.hide = function() {
+Control.MultiTouchXY.prototype.hide = function() {
     this.container.style.display = "none";
     if(!this.isMomentary) {		
         for(var i = 0; i < this.maxTouches; i++) {
@@ -321,7 +359,7 @@ MultiTouchXY.prototype.hide = function() {
     }
 }
 
-MultiTouchXY.prototype.setValue = function(touchNumber, xValue, yValue) {
+Control.MultiTouchXY.prototype.setValue = function(touchNumber, xValue, yValue) {
     var xPercentageOfRange = (xValue - (this.min )) / (this.max - this.min);
     var yPercentageOfRange = (yValue - (this.min )) / (this.max - this.min);
     
@@ -330,8 +368,8 @@ MultiTouchXY.prototype.setValue = function(touchNumber, xValue, yValue) {
     touch.style.top  = ( yPercentageOfRange * parseInt(this.container.style.height) ) + "px";
 }
 
-MultiTouchXY.prototype.draw = function() {}
+Control.MultiTouchXY.prototype.draw = function() {}
 
-MultiTouchXY.prototype.unload = function() {
+Control.MultiTouchXY.prototype.unload = function() {
     this.ctx.removeChild(this.container);
 }

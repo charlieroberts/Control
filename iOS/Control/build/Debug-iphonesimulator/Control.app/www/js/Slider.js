@@ -32,13 +32,20 @@ Control.Slider = function(ctx, props) {
 			"left": this.x + 1 + "px", 
 			"top": this.y + 1 + "px",
 			"background-color": this.fillColor,
-			"z-index": 10,  
+			"z-index": 10,
+
 		});
+        
+        if(this.isVertical) {
+            this.fillDiv.style.webkitTransformOriginY = "100%";
+        }else if(!this.isXFader) {
+            this.fillDiv.style.webkitTransformOriginX = "0";
+        }
 
 		this.ctx.appendChild(this.fillDiv);
 		
 		this.strokeDiv   = document.createElement("div");
-		$(this.strokeDiv).addClass('widget Control.Slider_stroke');
+		$(this.strokeDiv).addClass('widget slider_stroke');
 		
 		$(this.strokeDiv).css({
 			"width": this.width - 2 + "px",
@@ -103,9 +110,9 @@ Control.Slider = function(ctx, props) {
 	        var _w = Control.makeWidget(this.label);
 	        Control.widgets.push(_w);
 	        if(!Control.isAddingConstants)
-	            Control.addWidget(_w, Control.addingPage); // PROBLEM
+	            Control.addWidget(_w, Control.addingPage);
 	        else
-	            Control.addConstantWidget(_w); // PROBLEM
+	            Control.addConstantWidget(_w);
             
 	        this.label = _w;
 			$(this.label.label).css("padding", "0px 4px 0px 4px");
@@ -145,12 +152,12 @@ Control.Slider.prototype.touchstart = function(touch) {
 
 Control.Slider.prototype.touchmove = function(touch) {       
     var shouldChange = false;
-    var isActive = false;
- 
+ 	var touchNumber = -1;
+	
     for(var i = 0; i < this.activeTouches.length; i++) {
         if(touch.identifier == this.activeTouches[i]){
+			touchNumber = i;
             shouldChange = true;
-            isActive = true;
             break;
         }
     }
@@ -160,21 +167,24 @@ Control.Slider.prototype.touchmove = function(touch) {
     }
     
     var isHit = this.hitTest(touch.pageX, touch.pageY);
-    if((shouldChange && isHit) || (shouldChange && isActive)) {
-        if(this.isVertical) {
-            this.changeValue(touch.pageY); 
-        }else{
-            this.changeValue(touch.pageX); 
-        }
+    if(shouldChange) {
+		if(isHit) {
+			if(this.isVertical) {
+				this.changeValue(touch.pageY); 
+	        }else{
+	        	this.changeValue(touch.pageX); 
+	        }
 						
-		if (this.ontouchmove != null) {
-			this.ontouchmove();
+			if (this.ontouchmove != null) {
+				this.ontouchmove();
+			}
+
+			if(this.displayValue) { this.label.setValue(this.value); }
+
+	        return true;
+		}else{
+			if(touchNumber != -1) { this.activeTouches.splice(touchNumber, 1); }	
 		}
-
-		if(this.displayValue)
-			this.label.setValue(this.value);
-
-        return true;
     }
 	return false;
 };
@@ -231,13 +241,17 @@ Control.Slider.prototype.draw = function() {
         if(!this.isVertical) {
             if(!this.isXFader) {
                 //this.fillDiv.style["WebkitTransform"] = "scale3d(" + percent + ", 1, 1)";
-                this.fillDiv.style.width = ((this.width - 1) * percent) + "px";
+                //this.fillDiv.style.width = ((this.width - 1) * percent) + "px";
+
+                this.fillDiv.style.webkitTransform = "scale3d(" + percent + ", 1, 1 )"; 
             }else{
-                this.fillDiv.style.left = (this.x  + (percent * (this.width - this.xFaderWidth))) + "px";
+                this.fillDiv.style.webkitTransform = "translate3d("+ (percent * (this.width - this.xFaderWidth)) + "px, 0, 0)";
+                //this.fillDiv.style.left = (this.x  + (percent * (this.width - this.xFaderWidth))) + "px";
             }
         }else{
-            this.fillDiv.style.height = Math.ceil(((this.height - 2) * percent )) + "px";
-            this.fillDiv.style.top = this.y + ((this.height - 1) - (percent * (this.height - 2))) + "px";
+            this.fillDiv.style.webkitTransform = "scale3d(1, " + percent  + ", 1)"; 
+            //this.fillDiv.style.height = Math.ceil(((this.height - 2) * percent )) + "px";
+            //this.fillDiv.style.top = this.y + ((this.height - 1) - (percent * (this.height - 2))) + "px";
         }
     }else{
         this.ctx.fillStyle = this.backgroundColor;

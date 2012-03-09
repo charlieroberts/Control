@@ -59,13 +59,14 @@ protected:
 - (PGPlugin*) initWithWebView:(UIWebView*)theWebView {
 
 	if(self = (OSCManager *)[super initWithWebView:theWebView]) {
+        NSLog(@"INITIALIZED OSCMANGER");
         isOutputInitialized = NO;
         isInputInitialized = NO;        
         shouldPoll = NO;
 		listener = new ExamplePacketListener();
         self.receivePort = -1;
 
-		[NSThread detachNewThreadSelector:@selector(pollJavascriptStart:) toTarget:self withObject:nil];
+		//[NSThread detachNewThreadSelector:@selector(pollJavascriptStart:) toTarget:self withObject:nil];
 		
 		NSArray * keys = [NSArray arrayWithObjects:@"/pushInterface", @"/pushDestination", @"/control/pushInterface", @"/control/pushDestination", nil];
 		NSArray * objects = [NSArray arrayWithObjects:NSStringFromSelector(@selector(pushInterface:)), NSStringFromSelector(@selector(pushDestination:)), NSStringFromSelector(@selector(pushInterface:)), NSStringFromSelector(@selector(pushDestination:)), nil];
@@ -76,20 +77,21 @@ protected:
 }
 
 - (void)oscThread {
+    NSLog(@"OSC THREAD");
 	s = new UdpListeningReceiveSocket( IpEndpointName( IpEndpointName::ANY_ADDRESS, self.receivePort ),listener );
 	s->RunUntilSigInt();
 }
 
 - (void)setOSCReceivePort:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
-    //NSLog([arguments description]);
-    //NSLog(@"CALLED %d %d", self.receivePort, [[arguments objectAtIndex:1] intValue]);
+    NSLog([arguments description]);
+    NSLog(@"CALLED %d %d", self.receivePort, [[arguments objectAtIndex:1] intValue]);
 	if([[arguments objectAtIndex:1] intValue] != self.receivePort || !isInputInitialized) {
         if (s != NULL) {
             //NSLog(@"deleting socket");
             s->AsynchronousBreak();
             //delete(s);   // causes error for some reason...
         }
-        //NSLog(@"started with %d",[[arguments objectAtIndex:0] intValue]);
+        NSLog(@"started with %d",[[arguments objectAtIndex:1] intValue]);
         isInputInitialized = YES;
 		self.receivePort = [[arguments objectAtIndex:1] intValue];
 		[NSThread detachNewThreadSelector:@selector(oscThread) toTarget:self withObject:nil];
@@ -144,6 +146,7 @@ protected:
 		NSString *destination = [NSString stringWithCString:a1 encoding:1];
 
 		NSString *jsString = [NSString stringWithFormat:@"Control.destinationManager.pushDestination('%@')", destination];
+        NSLog(jsString);
 		[_oscManager.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsString waitUntilDone:NO];
 	}catch( osc::Exception& e ){
 		NSLog(@"an exception occurred");
@@ -169,7 +172,8 @@ protected:
 - (void)setIPAddressAndPort:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
 	char * dest_ip = (char *)[[arguments objectAtIndex:0] UTF8String];
 	int dest_port  = (int)[[arguments objectAtIndex:1] intValue];
-
+    NSLog(@"SETTING OUTPUT PORT %d ip %s", dest_port, dest_ip);
+    
 	delete destinationAddress;
 	destinationAddress = new IpEndpointName( dest_ip, dest_port );
 	
@@ -188,7 +192,6 @@ protected:
         //[self pollJavascript:nil];
 		[NSThread sleepForTimeInterval:OSC_POLLING_RATE];
 	}
-	
 	//[pool drain];
 }
 
@@ -199,7 +202,7 @@ protected:
     if(isOutputInitialized) {
         NSString *cmdString = [self.webView stringByEvaluatingJavaScriptFromString:@"Control.getValues()"];
         if([cmdString length] == 0) return;
-        
+
         char buffer[OUTPUT_BUFFER_SIZE];
         osc::OutboundPacketStream p( buffer, OUTPUT_BUFFER_SIZE );		
         p << osc::BeginBundleImmediate;
@@ -235,8 +238,8 @@ protected:
 }
 
 - (void)send:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
-    //NSLog(@"arguments length = %d", [arguments count]);
-    //NSLog(@"ARGUMENTS = %@", [arguments description]);
+    NSLog(@"arguments length = %d", [arguments count]);
+    NSLog(@"ARGUMENTS = %@", [arguments description]);
     if(isOutputInitialized) {
         char buffer[OUTPUT_BUFFER_SIZE];
         osc::OutboundPacketStream p( buffer, OUTPUT_BUFFER_SIZE );		

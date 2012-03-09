@@ -14,7 +14,7 @@ Control.destinationManager = {
     
     init : function() {
         if(typeof localStorage.destinations == "undefined") {
-            localStorage.destinations = [];
+            //localStorage.destinations = [];
             this.destinations = [];
         }else{
             this.destinations = jQuery.parseJSON(localStorage.destinations);
@@ -30,9 +30,9 @@ Control.destinationManager = {
         this.destinationsSynch = [];
         this.midiDestinations = [];
         
-        Bonjour.browse();
+        Control.bonjour.browse();
 
-        window.control.destinationManager.createDestinationList();        
+        Control.destinationManager.createDestinationList();        
     },
 
     clearList : function() {
@@ -74,7 +74,7 @@ Control.destinationManager = {
         var item = document.createElement('li');
         $(item).addClass('destinationListItem');
 
-        //console.log("address: " + address + " | port : " + port + " | isBonjour | " + isBonjour);
+        console.log("address: " + address + " | port : " + port + " | isBonjour | " + isBonjour);
         
         function selectAddressAndPort(itemNumber, _address, _port, _isMIDI) {
             return function(e) {					
@@ -88,13 +88,14 @@ Control.destinationManager = {
                 }
             }
         }
+        console.log(0);
          
         $(item).bind("touchend",  selectAddressAndPort(list.childNodes.length, address, port, isMIDI));	
 
         var innerDiv = document.createElement('div');
         $(innerDiv).css('display', 'inline');
         $(innerDiv).append(document.createTextNode("" + address + ":" + port));
-
+        
         if(isBonjour || isMIDI) {
             var _img = document.createElement('img');
             $(_img).addClass('destinationImage');
@@ -105,11 +106,11 @@ Control.destinationManager = {
             
             $(innerDiv).append(_img);
         }
-
+        
         $(item).append(innerDiv);        
         list.appendChild(item);
 
-        $('#destinationList').listview('refresh');        
+        //$('#destinationList').listview('refresh');        
     },
     
     addMIDIDestination : function(destName) {
@@ -150,7 +151,6 @@ Control.destinationManager = {
     },
     
     selectHardwareMIDI : function(destName) {
-        console.log("JS CALLING HARDWARE MIDI CONNECT" + destName);
         PhoneGap.exec('MIDI.connectMIDI', destName);
     },
     
@@ -158,12 +158,10 @@ Control.destinationManager = {
     // takes a recently pushed destination (pushed via OSC), highlights it and mimics its selection 
     
     selectPushedDestination : function(address, port) {
-        console.log("selecting");
         var list = document.getElementById('destinationList');
         Control.destinationManager.highlight(list.childNodes.length - 1);
         _protocol = "OSC";
         Control.destinationManager.selectIPAddressAndPort(address, port);
-        console.log("selected");        
     },
     
     selectMIDIIPAddressAndPort : function(address,port) {
@@ -256,12 +254,12 @@ Control.destinationManager = {
         var port = document.getElementById('portField').value;	
         
         document.getElementById("Destinations").removeChild(document.getElementById("promptDiv"));
-
+        
         Control.destinationManager.addDestination(ipAddress, port, false, false);
-
         Control.destinationManager.destinations.push({"ip":ipAddress, "port":port});
-
-        localStorage.destinations = JSON.stringify(Control.destinationManager.destinations);
+        
+        var results  = JSON.stringify(Control.destinationManager.destinations);
+        localStorage.destinations = results;
     },
     
     createDestinationList : function() {
@@ -328,9 +326,7 @@ Control.destinationManager = {
         for(var i = 0; i < Control.destinationManager.destinations.length; i++) {
             var dest = Control.destinationManager.destinations[i];
             if(dest.ip === obj.ip && dest.port === obj.port) {
-                console.log("SPLICING " + i);
                 Control.destinationManager.destinations.splice(i, 1);
-                console.log("DONE SPLICING");
             }
         }
 

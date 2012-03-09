@@ -60,6 +60,8 @@
 		<string>CNTRLBonjour</string>
 		<key>MIDI</key>
 		<string>CNTRLMIDI</string>
+		<key>Gyro</key>
+		<string>Gyro</string>
 	</dict>
 </dict>
 </plist>

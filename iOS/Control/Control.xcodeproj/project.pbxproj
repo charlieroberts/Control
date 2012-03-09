@@ -73,6 +73,7 @@
 		CB023961149AAD9D001AC32A /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB02395E149AAD9D001AC32A /* Accelerate.framework */; };
 		CB023962149AAD9D001AC32A /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB02395F149AAD9D001AC32A /* CoreMotion.framework */; };
 		CB023963149AAD9D001AC32A /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB023960149AAD9D001AC32A /* CoreMIDI.framework */; };
+		CB737F1214DA8729003416AF /* Gyro.m in Sources */ = {isa = PBXBuildFile; fileRef = CB737F1114DA8729003416AF /* Gyro.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -193,6 +194,8 @@
 		CB02395E149AAD9D001AC32A /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		CB02395F149AAD9D001AC32A /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		CB023960149AAD9D001AC32A /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
+		CB737F1014DA8729003416AF /* Gyro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gyro.h; sourceTree = "<group>"; };
+		CB737F1114DA8729003416AF /* Gyro.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Gyro.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -359,10 +362,12 @@
 				CB02390514980170001AC32A /* CNTRLBonjour.m */,
 				CB0238FC14973581001AC32A /* CNTRLDevice.h */,
 				CB0238FD14973581001AC32A /* CNTRLDevice.m */,
-				CB0238D614973011001AC32A /* OSCManager.h */,
-				CB0238D714973011001AC32A /* OSCManager.mm */,
 				CB02395B149AA86B001AC32A /* CNTRLMIDI.h */,
 				CB02395C149AA86B001AC32A /* CNTRLMIDI.m */,
+				CB737F1014DA8729003416AF /* Gyro.h */,
+				CB737F1114DA8729003416AF /* Gyro.m */,
+				CB0238D614973011001AC32A /* OSCManager.h */,
+				CB0238D714973011001AC32A /* OSCManager.mm */,
 				CB0238C714972BE5001AC32A /* README */,
 			);
 			name = Plugins;
@@ -611,6 +616,7 @@
 				CB02395914981832001AC32A /* Reachability.m in Sources */,
 				CB02395A14981832001AC32A /* Sound.m in Sources */,
 				CB02395D149AA86C001AC32A /* CNTRLMIDI.m in Sources */,
+				CB737F1214DA8729003416AF /* Gyro.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

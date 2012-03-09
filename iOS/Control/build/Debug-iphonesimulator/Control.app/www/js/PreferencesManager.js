@@ -4,13 +4,12 @@ Control.preferencesManager = {
     init : function() {
         if(typeof localStorage.preferences == "undefined") {
             this.preferences = {
-                autolock: false,
-                oscReceivePort: 8080, 
+                "autolock": false,
+                "oscReceivePort": 8080, 
             }
             localStorage.preferences = JSON.stringify(this.preferences);
         }else{
             this.preferences = jQuery.parseJSON(localStorage.preferences);
-            console.log(this.preferences);
         }
         
         var autolockToggleLink = document.getElementById("autolockToggle");

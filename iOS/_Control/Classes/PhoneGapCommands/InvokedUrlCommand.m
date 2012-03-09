@@ -43,10 +43,10 @@
 	else if ([fullUrl hasSuffix:@"/"] && pathLength > 0)
 		pathLength -= 1; // 1 is the "/" char 
 	
-    NSString *path = [fullUrl substringWithRange:NSMakeRange(prefixLength, pathLength)];
-	
+    //NSString *path = [fullUrl substringWithRange:NSMakeRange(prefixLength, pathLength)];
+    NSLog(fullUrl);
 	// Array of arguments
-	NSMutableArray* arguments = [NSMutableArray arrayWithArray:[path componentsSeparatedByString:@"/"]];
+	NSMutableArray* arguments = [NSMutableArray arrayWithArray:[fullUrl componentsSeparatedByString:@"/"]];
 	int i, arguments_count = [arguments count];
 	for (i = 0; i < arguments_count; i++) {
 		[arguments replaceObjectAtIndex:i withObject:[(NSString *)[arguments objectAtIndex:i]

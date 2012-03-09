@@ -110,7 +110,7 @@ Control.destinationManager = {
         $(item).append(innerDiv);        
         list.appendChild(item);
 
-        $('#destinationList').listview('refresh');        
+        //$('#destinationList').listview('refresh');        
     },
     
     addMIDIDestination : function(destName) {

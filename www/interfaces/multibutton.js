@@ -18,10 +18,10 @@ Control.functions = {
 	    }
 	},
     
-	requireTouchDown : function(val) {
+	requireTouchDown : function() {
 	    for (var i = 0; i < multi.children.length; i++) {
 	        var btn = multi.children[i];
-	        if (val == 1) {
+	        if (this.value == 1) {
 	            btn.requiresTouchDown = true;
 	        } else {
 	            btn.requiresTouchDown = false;
@@ -142,7 +142,7 @@ Control.interface = {
 	    "max": 1,
 	    "isLocal": true,
 		"label": "require touchdown", 
-	    "ontouchstart": function() { Control.functions.requireTouchDown(this.value); },
+	    "ontouchstart": Control.functions.requireTouchDown,
 	},
     
 	{

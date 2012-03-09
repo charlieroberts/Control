@@ -18,10 +18,10 @@ Control.functions = {
 	    }
 	},
     
-	requireTouchDown : function(val) {
+	requireTouchDown : function() {
 	    for (var i = 0; i < multi.children.length; i++) {
 	        var btn = multi.children[i];
-	        if (val == 1) {
+	        if (this.value == 1) {
 	            btn.requiresTouchDown = true;
 	        } else {
 	            btn.requiresTouchDown = false;
@@ -45,7 +45,7 @@ Control.interface = {
 	    "width": .99,
 	    "height": .6,
 	    "startingValue": 0,
-	    "color": "#999900",
+	    "color": "#990000",
 	    "stroke": "#dd0000",
 	    "min": 0,
 	    "max": 127,
@@ -142,7 +142,7 @@ Control.interface = {
 	    "max": 1,
 	    "isLocal": true,
 		"label": "require touchdown", 
-	    "ontouchstart": function() { Control.functions.requireTouchDown(this.value); },
+	    "ontouchstart": Control.functions.requireTouchDown,
 	},
     
 	{
