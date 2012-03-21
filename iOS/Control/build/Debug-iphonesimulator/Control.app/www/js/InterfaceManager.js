@@ -322,9 +322,10 @@ Control.interfaceManager = {
                 for(var i = 0; i < Control.interfaceManager.loadedInterfaces.length; i++) {
                     var interface = Control.interfaceManager.loadedInterfaces[i];
                     if(interface.name == Control.interfaceManager.currentInterfaceName) {
+                        //console.log("SHOULD BE REPLACING " + i + " : " + Control.interface.name);
                         /* console.log("SHOULD BE LOADED"); */
                         var newInterface = {
-                            name:control.interfaceManager.currentInterfaceName,
+                            name:Control.interface.name,
                             json: Control.interfaceManager.myRequest.responseText,
                             address: Control.interfaceManager.interfaceIP
                         };
@@ -339,6 +340,7 @@ Control.interfaceManager = {
                 }
             }
         }
+        console.log("getting from " +  Control.interfaceManager.interfaceIP);
         Control.interfaceManager.myRequest.open("GET", Control.interfaceManager.interfaceIP, true);
         Control.interfaceManager.myRequest.send(null);
     },
@@ -412,8 +414,6 @@ Control.interfaceManager = {
         constants = null;
         pages = null;
         
-        console.log(js);
-
         Control.oscManager.delegate = Control.oscManager;
         Control.midiManager.delegate = Control.midiManager;
 

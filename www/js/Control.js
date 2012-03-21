@@ -47,8 +47,7 @@ window["Control"] = {
 		this.midiManager.start();
 
 		this.device.setRotation("portrait");
-
-        
+                
         document.addEventListener('orientationChanged', Control.onRotation, false);
     },
 

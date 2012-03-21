@@ -163,14 +163,13 @@ Control.oscManager = {
     sendOSC : function() {
         var address  = arguments[0];
         var typetags = arguments[1];
-        console.log(arguments[2]);
-        console.log(arguments);
+
         var args = [address, typetags];
         for(var i = 0; i < typetags.length; i++) {
             var arg = arguments[i + 2];
             args.push(arg);
         }
-        console.log("args length :" + args.length + " contents: " + args);
+        //console.log("args length :" + args.length + " contents: " + args);
 
         PhoneGap.exec(null, null, 'OSCManager', 'send', args);
     },	

@@ -47,7 +47,8 @@ window["Control"] = {
 		this.midiManager.start();
 
 		this.device.setRotation("portrait");
-
+        
+        this.guiAssist.test();
         
         document.addEventListener('orientationChanged', Control.onRotation, false);
     },
@@ -167,7 +168,6 @@ window["Control"] = {
     
     makeWidget : function(w) {
         var _w;
-        console.log("making " + w.name);
         if(!this.isWidgetSensor(w)) {
             _w = window[w.name] = new Control[w.type](this.interfaceDiv, w);
             if(_w.init != null) { 

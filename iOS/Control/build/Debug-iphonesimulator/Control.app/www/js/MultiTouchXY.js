@@ -241,9 +241,7 @@ Control.MultiTouchXY.prototype.changeValue = function(touch, inputX, inputY, inp
 
 	touch._x = ((touch._xpercentage * (this.width  - 4)) - this.half);
 	touch._y = ((touch._ypercentage * (this.height - 4)) - this.half);
-	
-    console.log(touch._x + " :: " + touch._y);
-    
+	     
 	var translate = "translate3d("+ touch._x + "px," + touch._y + "px, 0)";
 	touch.style.webkitTransform = translate;
     
