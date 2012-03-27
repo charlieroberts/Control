@@ -20,6 +20,17 @@ OSCManager.prototype.processOSCMessage = function() {
             eval("control.addWidget(" + w.name + ", control.currentPage);");
         return;
         break;
+        case "/control/addWidgetKV":
+            var w = {};
+            for (var i = 2; i < arguments.length; i+=2)
+            {
+                w[arguments[i]]=arguments[i+1];
+            }
+            var _w = control.makeWidget(w);
+            control.widgets.push(_w);
+            eval("control.addWidget(" + w.name + ", control.currentPage);");
+            return;
+        break;
         case "/control/removeWidget":
             control.removeWidgetWithName(arguments[2]);
             return;
