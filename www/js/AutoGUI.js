@@ -135,6 +135,12 @@ Control.autogui = {
             _widget.div.children = [];
         }
     },
+	
+	reset : function() {
+        this.children = [[
+            {"bounds" : [0, 0, 1, .9], "widget" : null, "sacrosanct" : false, "parent": null, "id":  0, "children" : [], },
+        ]];
+	},
     
     redoLayout : function() {
         this.children = [[

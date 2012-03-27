@@ -31,7 +31,7 @@ Control.interfaceManager = {
         Control.ifCount = 0;
         if(typeof localStorage.interfaceFiles == "undefined") {
             this.loadedInterfaces = [];
-            //console.log("INIT LOADING SCRIPTS");
+            console.log("INIT LOADING SCRIPTS");
             //var msg = "now loading default interfaces. this will only happen the first time the app is launched (possibly also after updates) and takes about 8 seconds";
             //navigator.notification.alert(msg, null, "loading");
             setTimeout(function() {Control.interfaceManager.loadScripts();}, 1000);
@@ -121,6 +121,7 @@ Control.interfaceManager = {
                 localStorage.interfaceFiles = JSON.stringify(Control.interfaceManager.loadedInterfaces);
                 Control.interfaceManager.createInterfaceListWithArray(Control.interfaceManager.loadedInterfaces);
             }
+            
         }, 500);
     },
     
@@ -145,11 +146,17 @@ Control.interfaceManager = {
         
         cancelButton.innerHTML = "Cancel";
         cancelButton.setAttribute("style", "margin-top: 1em; font-size:1.5em; width: 5em; height: 2em; background-color:black; color:#fff; border: 1px solid #fff");
-        cancelButton.setAttribute("ontouchend", "document.getElementById('Interfaces').removeChild(document.getElementById('promptDiv'))");
+        $(cancelButton).bind("touchend", function(e) {
+                                document.getElementById('Interfaces').removeChild(document.getElementById('promptDiv'));
+                                e.preventDefault();
+                             });
         
         submitButton.innerHTML = "Submit";
         submitButton.setAttribute("style", "margin-left: 1em; margin-top: 1em; font-size:1.5em; width: 5em; height: 2em; background-color:#fff; color:#000; border: 1px solid #fff");
-        submitButton.setAttribute("ontouchend", "Control.interfaceManager.downloadInterfaceFromPrompt()");
+        $(submitButton).bind("touchend", 
+                             function(e) {
+                                Control.interfaceManager.downloadInterfaceFromPrompt(); e.preventDefault(); 
+                             });
         
         promptDiv.setAttribute("style","z-index:2; left:0px; top:0px; position:absolute; background-color:rgba(0,0,0,.8); width:100%; height:100%;");
         promptDiv.setAttribute("id", "promptDiv");
@@ -172,18 +179,17 @@ Control.interfaceManager = {
     },
     
     downloadInterface : function(ipAddress) { // EVENT --- CANNOT REFER TO THIS, MUST USE INTERFACE MANAGER
-        console.log("downloading...");
         Control.interfaceManager.myRequest = new XMLHttpRequest();    	
         var loadedInterfaceName = null;
         Control.interfaceManager.myRequest.onreadystatechange = function() {
             //console.log("downloading..." + Control.interfaceManager.myRequest.readyState );
             if(Control.interfaceManager.myRequest.readyState == 4) {
-                console.log(Control.interfaceManager.myRequest.responseText);
+                //console.log(Control.interfaceManager.myRequest.responseText);
                 //eval(Control.interfaceManager.myRequest.responseText);
-                console.log("before parsing");
+                //console.log("before parsing");
                 eval(Control.interfaceManager.myRequest.responseText);
-                console.log("after parsing");
-                console.log(Control.interface);
+                //console.log("after parsing");
+                //console.log(Control.interface);
                 if(Control.interface.name != null) {
                     if(document.getElementById("promptDiv") != null) {
                         document.getElementById("Interfaces").removeChild(document.getElementById("promptDiv"));
@@ -346,23 +352,24 @@ Control.interfaceManager = {
     },
     
     saveInterface : function(interfaceJSON, shouldReloadList, ipAddress) {
-        if (typeof ipAddress === "undefined") ipAddress = "";
-                    
-        eval(interfaceJSON);
-        
-        if (Control.interface.name != null) {
-            Control.interfaceManager.loadedInterfaces.push({
-                name:    Control.interface.name,
-                json:    interfaceJSON,
-                address: ipAddress
-            });
-            
-            localStorage.interfaceFiles = JSON.stringify(Control.interfaceManager.loadedInterfaces);
-            
-            if (shouldReloadList) {
-                Control.interfaceManager.createInterfaceListWithStoredInterfaces();
-            }
-        }
+//        if (typeof ipAddress === "undefined") ipAddress = "";
+//                    
+//        //eval(interfaceJSON);
+//        console.log("SAVING INTERFACE " + Control.interface.name);
+//        
+//        if (Control.interface.name != null) {
+//            Control.interfaceManager.loadedInterfaces.push({
+//                name:    Control.interface.name,
+//                json:    interfaceJSON,
+//                address: ipAddress
+//            });
+//            
+//            localStorage.interfaceFiles = JSON.stringify(Control.interfaceManager.loadedInterfaces);
+//            
+//            if (shouldReloadList) {
+//                Control.interfaceManager.createInterfaceListWithStoredInterfaces();
+//            }
+//        }
     },
     
     pushInterfaceWithDestination : function(interfaceJSON, nameOfSender, newDestination) {
@@ -410,7 +417,6 @@ Control.interfaceManager = {
     
     runInterface : function(js) {
         Control.unloadWidgets();
-        Control.oninit = null;
         constants = null;
         pages = null;
         
@@ -420,6 +426,7 @@ Control.interfaceManager = {
         eval(js);
 
         this.currentInterfaceName = Control.interface.name;
+        console.log("NAME = " + this.currentInterfaceName);
 
         if(typeof Control.interface.orientation != "undefined") {
             Control.device.setRotation(Control.interface.orientation);
@@ -440,7 +447,7 @@ Control.interfaceManager = {
         if(typeof Control.interface.oninit === "string") {
             eval(Control.interface.oninit);
         }else if(Control.interface.oninit != null) {
-            Control.oninit();
+            Control.interface.oninit();
         }
         
         if(this.currentTab != document.getElementById("selectedInterface")) {
@@ -451,7 +458,6 @@ Control.interfaceManager = {
     },
     
     selectInterfaceFromList : function(interfaceNumber) {
-        //console.log("INTERFACE NUMBER = " + interfaceNumber);
         var r = Control.interfaceManager.loadedInterfaces[interfaceNumber];
         //console.log(r);
         if (typeof r.address != "undefined") {

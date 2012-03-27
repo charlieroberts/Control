@@ -47,9 +47,7 @@ window["Control"] = {
 		this.midiManager.start();
 
 		this.device.setRotation("portrait");
-        
-        this.guiAssist.test();
-        
+                
         document.addEventListener('orientationChanged', Control.onRotation, false);
     },
 
@@ -60,6 +58,9 @@ window["Control"] = {
         this.deviceWidth = width;
         this.deviceHeight = height;
         this.ctx = null;
+        
+        $("#selectedInterface").css("width", "100%");
+        $("#selectedInterface").css("height", "100%");
         
         this.interfaceDiv.addEventListener('touchend', Control.event, false);			
         this.interfaceDiv.addEventListener('touchstart', Control.event, false);

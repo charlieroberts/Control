@@ -59,6 +59,9 @@ window["Control"] = {
         this.deviceHeight = height;
         this.ctx = null;
         
+        $("#selectedInterface").css("width", "100%");
+        $("#selectedInterface").css("height", "100%");
+        
         this.interfaceDiv.addEventListener('touchend', Control.event, false);			
         this.interfaceDiv.addEventListener('touchstart', Control.event, false);
         this.interfaceDiv.addEventListener('touchmove', Control.event, false);

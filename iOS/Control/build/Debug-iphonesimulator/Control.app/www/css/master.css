@@ -9,11 +9,14 @@ body {
   padding:0;
   border-top:1px solid #393939;
   text-shadow:none !important;
+  
 }
 
 b { font-weight: bold; }
 
-#selectedInterface, #Interfaces, #Destinations, #Preferences, #Info {
+
+
+#selectedInterface, #Interfaces, #Destinations, #Preferences, #Info, #SelectedInterfacePage {
   position:absolute;
   left:0em;
   top:0em;

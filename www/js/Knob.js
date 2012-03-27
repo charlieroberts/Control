@@ -214,7 +214,6 @@ Knob.prototype.setValue = function(newValue) {
     }
 	
     this.value = newValue;
-    this.draw();
 	
 	if(typeof this.onvaluechange === "string") {
         eval(this.onvaluechange);
