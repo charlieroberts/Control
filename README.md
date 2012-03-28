@@ -1,6 +1,8 @@
-
 Control
 ========
+
+**IMPORTANT**: If you are planning on developing / submitting patches, please use the Development branch which has been
+completely refactored and is moving towards a 2.0 release.
 
 Control is an app for mobile devices that lets users define their own interfaces for controlling music, art and virtual
 reality software. It is based on web-standards and communicates with other devices using OSC or wireless MIDI.
