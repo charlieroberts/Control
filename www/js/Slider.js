@@ -23,7 +23,7 @@ Control.Slider = function(ctx, props) {
 	
 	if(!this.shouldUseCanvas) {
 		this.fillDiv   = document.createElement("div");
-		$(this.fillDiv).addClass('widget Control.Slider');
+		$(this.fillDiv).addClass('widget slider_fill');
 
 		$(this.fillDiv).css({
 			"position": "absolute", 
@@ -108,7 +108,6 @@ Control.Slider = function(ctx, props) {
 			 };
                         
 	        var _w = Control.makeWidget(this.label);
-	        Control.widgets.push(_w);
 	        if(!Control.isAddingConstants)
 	            Control.addWidget(_w, Control.addingPage);
 	        else

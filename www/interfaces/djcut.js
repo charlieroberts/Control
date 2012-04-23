@@ -81,7 +81,6 @@ Control.interface = {
 	        "number": 49,
 	        "requiresTouchDown": true,
 	        "label": "cue", 
-               "ontouchstart": function() { Control.interfaceManager.refreshInterface(); },
 	    },
 	    {
 	        "name": "rightCue",

@@ -8,13 +8,11 @@ Control.oscManager = {
     
     setReceivePort : function(newPort) {
         this.receivePort = newPort;
-        console.log("SETTING PORT " + this.receivePort);
         PhoneGap.exec(null, null, "OSCManager", "setOSCReceivePort", [newPort]);			  
     },
 
     processOSCMessage : function() {
         var address = arguments[0];
-        //console.log(arguments[0] + ":" + arguments[2]);
     
         if(typeof this.callbacks[address] != "undefined") {	// if Control has a defined callback for this address ...
             this.callbacks[address](arguments);				// ... call the function associated with it ...

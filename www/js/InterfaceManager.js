@@ -16,12 +16,11 @@ Control.interfaceManager = {
             "djcut.js",
             "multibutton.js",
             "multiXY.js" ,
-
+            "life.js",
         ];
         //     "multiXY.js",
         //     "iphoneLandscapeMixer.js",
         //     
-        //     "life.js",
         //     "monome.js",
         //     
         //     "sequencer.js",
@@ -184,11 +183,10 @@ Control.interfaceManager = {
         Control.interfaceManager.myRequest.onreadystatechange = function() {
             //console.log("downloading..." + Control.interfaceManager.myRequest.readyState );
             if(Control.interfaceManager.myRequest.readyState == 4) {
-                //console.log(Control.interfaceManager.myRequest.responseText);
-                //eval(Control.interfaceManager.myRequest.responseText);
-                //console.log("before parsing");
+//                console.log(Control.interfaceManager.myRequest.responseText);
+//                console.log("before parsing");
                 eval(Control.interfaceManager.myRequest.responseText);
-                //console.log("after parsing");
+//                console.log("after parsing");
                 //console.log(Control.interface);
                 if(Control.interface.name != null) {
                     if(document.getElementById("promptDiv") != null) {
@@ -320,27 +318,28 @@ Control.interfaceManager = {
     },
     
     refreshInterface : function() {
+        console.log("IP = " + Control.interfaceManager.interfaceIP);
         Control.interfaceManager.myRequest = new XMLHttpRequest();
         Control.interfaceManager.myRequest.onreadystatechange = function() {
-            /* console.log("downloading stage " + Control.interfaceManager.myRequest.readyState]); */           
+            console.log("downloading stage " + Control.interfaceManager.myRequest.readyState);
             if (Control.interfaceManager.myRequest.readyState == 4) {
-                Control.interfaceManager.runInterface(Control.interfaceManager.myRequest.responseText);
+                //Control.interfaceManager.runInterface(Control.interfaceManager.myRequest.responseText);
                 for(var i = 0; i < Control.interfaceManager.loadedInterfaces.length; i++) {
                     var interface = Control.interfaceManager.loadedInterfaces[i];
                     if(interface.name == Control.interfaceManager.currentInterfaceName) {
-                        //console.log("SHOULD BE REPLACING " + i + " : " + Control.interface.name);
-                        /* console.log("SHOULD BE LOADED"); */
+                        console.log("SHOULD BE REPLACING " + i + " : " + Control.interface.name);
                         var newInterface = {
                             name:Control.interface.name,
                             json: Control.interfaceManager.myRequest.responseText,
                             address: Control.interfaceManager.interfaceIP
                         };
-                        /* console.log(newInterface.json]); */
+                        console.log(Control.interfaceManager.myRequest.responseText);
                         Control.interfaceManager.loadedInterfaces.splice(i,1,newInterface);
                         
                         localStorage.interfaceFiles = JSON.stringify(Control.interfaceManager.loadedInterfaces);
 
-                        /*Control.interfaceManager.runInterface(Control.interfaceManager.myRequest.responseText);*/
+                        Control.interfaceManager.runInterface(Control.interfaceManager.myRequest.responseText);
+                        
                         break;
                     }
                 }
@@ -352,24 +351,24 @@ Control.interfaceManager = {
     },
     
     saveInterface : function(interfaceJSON, shouldReloadList, ipAddress) {
-//        if (typeof ipAddress === "undefined") ipAddress = "";
-//                    
-//        //eval(interfaceJSON);
-//        console.log("SAVING INTERFACE " + Control.interface.name);
-//        
-//        if (Control.interface.name != null) {
-//            Control.interfaceManager.loadedInterfaces.push({
-//                name:    Control.interface.name,
-//                json:    interfaceJSON,
-//                address: ipAddress
-//            });
-//            
-//            localStorage.interfaceFiles = JSON.stringify(Control.interfaceManager.loadedInterfaces);
-//            
-//            if (shouldReloadList) {
-//                Control.interfaceManager.createInterfaceListWithStoredInterfaces();
-//            }
-//        }
+        if (typeof ipAddress === "undefined") ipAddress = "";
+                    
+        //eval(interfaceJSON);
+        console.log("SAVING INTERFACE " + Control.interface.name);
+        
+        if (Control.interface.name != null) {
+            Control.interfaceManager.loadedInterfaces.push({
+                name:    Control.interface.name,
+                json:    interfaceJSON,
+                address: ipAddress
+            });
+            
+            localStorage.interfaceFiles = JSON.stringify(Control.interfaceManager.loadedInterfaces);
+            
+            if (shouldReloadList) {
+                Control.interfaceManager.createInterfaceListWithStoredInterfaces();
+            }
+        }
     },
     
     pushInterfaceWithDestination : function(interfaceJSON, nameOfSender, newDestination) {
@@ -422,7 +421,7 @@ Control.interfaceManager = {
         
         Control.oscManager.delegate = Control.oscManager;
         Control.midiManager.delegate = Control.midiManager;
-
+        
         eval(js);
 
         this.currentInterfaceName = Control.interface.name;
@@ -436,6 +435,12 @@ Control.interfaceManager = {
             Control.makePages(Control.interface.pages, screen.width, screen.height);
         }else{
             Control.makePages(Control.interface.pages, screen.height, screen.width);
+        }
+        
+        if(typeof Control.interface.onpreinit === "string") {
+            eval(Control.interface.onpreinit);
+        }else if(Control.interface.onpreinit != null) {
+            Control.interface.onpreinit();
         }
         
         if(Control.interface.constants != null) {

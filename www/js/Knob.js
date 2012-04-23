@@ -79,7 +79,6 @@ Control.Knob = function(ctx,props) {
 			};
             
             var _w = Control.makeWidget(this.label);
-            Control.widgets.push(_w);
 	        if(!Control.isAddingConstants)
 	            Control.addWidget(_w, Control.addingPage); // PROBLEM
 	        else
