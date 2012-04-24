@@ -157,7 +157,7 @@ window["Control"] = {
             var page = this.interface.pages[pageNumber];
             for(var i=0; i < page.length; i++) {
                 var w = page[i];
-                console.log("making " + w.name);
+                //console.log("making " + w.name);
                 var _w = this.makeWidget(w);
 
                 this.addWidget(_w, pageNumber);

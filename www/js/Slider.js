@@ -193,7 +193,7 @@ Control.Slider.prototype.touchend = function(touch) {
         for(var i = 0; i < this.activeTouches.length; i++) {
             if(touch.identifier == this.activeTouches[i]) {
                 this.activeTouches.splice(i,1);	// remove touch ID from array
-				if(this.touchend != null) {
+				if(this.ontouchend != null) {
 					this.ontouchend();
 				}
                 

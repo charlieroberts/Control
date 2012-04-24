@@ -52,9 +52,7 @@ Control.Button = function(ctx, props) {
         
         this.ctx.appendChild(this.fillDiv);
     }
-    
-    console.log("WIDTH : " + this.width + " || X : " + this.x);
-    
+        
     this.yOffset = 0;
     this.xOffset = 0;
     

@@ -24,7 +24,7 @@ Widget.prototype.make = function(ctx, props) {
             if(typeof props.height == "undefined") props.height = .2;	
 //            this.width = Math.round(parseFloat(Control.deviceWidth)* props.width);
 //            this.height = Math.round(parseFloat(Control.deviceHeight) * props.height);
-            console.log("DIV HEIGHT " + $("#selectedInterface").height());
+//            console.log("DIV HEIGHT " + $("#selectedInterface").height());
 //            this.width  = ($("#selectedInterface").width() / 100) * Control.deviceWidth * props.width;
 //            this.height = ($("#selectedInterface").height() / 100) * Control.deviceHeight * props.height;
             

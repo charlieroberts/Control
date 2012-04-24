@@ -12,19 +12,17 @@ Control.Knob = function(ctx,props) {
 	}else{
 		this.radius =  Math.round(this.height / 2);
 	}
-	
-    console.log("radius = " + this.radius);
     
 	this.isInverted		= (typeof props.isInverted != "undefined") ? props.isInverted : false;
 	this.centerZero		= (typeof props.centerZero != "undefined") ? props.centerZero : false;
-	
-	if(Control.protocol == "MIDI") {
-		if(typeof props.midiStartingValue == "undefined" && this.centerZero) {
-			this.value = 63;
-		}
-	}
-	
+    
 	this.rotationValue  = (this.value - this.min) / (this.max - this.min);
+    if(this.rotationValue < .05) {
+        this.rotationValue = .05;
+    }else if(this.rotationValue > .95) {
+        this.rotationValue = .95;
+    }
+
 	this.knobBuffer = 1;
 	
 	this.lastValue = this.value;
@@ -39,7 +37,7 @@ Control.Knob = function(ctx,props) {
 	this.canvas = document.createElement('canvas');
 	$(this.canvas).addClass('widget knob');
     
-	if(this.height > this.width)  
+	if(this.height < this.width)  
 		this.height = this.width;
 	else
 		this.width = this.height;
@@ -53,6 +51,8 @@ Control.Knob = function(ctx,props) {
 	this.canvas.style.left = this.x + "px";
 	this.canvas.style.position = "absolute";
 	
+    console.log("left : " + this.canvas.style.left + " || top : " + this.canvas.style.top);
+    
 	this.displayValue = props.displayValue;
 	
 	this.canvasCtx = this.canvas.getContext('2d');
@@ -118,17 +118,17 @@ Control.Knob.prototype.draw = function() {
 	
     if(this.centerZero) {
         var angle3 = Math.PI * 1.5;
-        var angle4 = Math.PI * (1.5 + (.9 * (-1 + (this.rotationValue * 2))));
+        var angle4 = Math.PI * (1.5 + (-1 + (this.rotationValue * 2)));
         
         this.canvasCtx.beginPath();
         this.canvasCtx.arc(this.radius , this.radius, this.radius -  this.knobBuffer, angle3, angle4, (this.rotationValue < .5));
         this.canvasCtx.arc(this.radius , this.radius, (this.radius - this.knobBuffer) * 0.3,  angle4, angle3, (this.rotationValue > .5));
         this.canvasCtx.closePath();
-        /*if(this.rotationValue == .5) { // draw circle if centered?
-         this.canvasCtx.beginPath();
-         this.canvasCtx.arc(this.radius , this.radius, (this.radius -  this.knobBuffer) * .3, 0, Math.PI*2, true); 
-         this.canvasCtx.closePath();
-         }*/
+        if(this.rotationValue > .495 && this.rotationValue < .505) { // draw circle if centered?
+            this.canvasCtx.beginPath();
+            this.canvasCtx.arc(this.radius , this.radius, (this.radius -  this.knobBuffer) * .3, 0, Math.PI*2, true); 
+            this.canvasCtx.closePath();
+        }
         this.canvasCtx.fill();
     } else {
         if(!this.isInverted)   
