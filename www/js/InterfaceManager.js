@@ -11,12 +11,12 @@ Control.interfaceManager = {
         this.interfaceIP = null;
         constants = null;
 
-        this.interfaceDefaults = ["gyro.js", "djcut.js", "multibutton.js", "multiXY.js", "life.js", "iphoneLandscapeMixer.js" ];
+        this.interfaceDefaults = ["gyro.js", "djcut.js", "multibutton.js", "multiXY.js", "life.js", "iphoneLandscapeMixer.js","sequencer.js" ];
 		// 
         //     "monome.js",
-        //     "sequencer.js",
+        //     
         // ];
-        delete localStorage.interfaceFiles;
+        //delete localStorage.interfaceFiles;
         Control.ifCount = 0;
         if (typeof localStorage.interfaceFiles == "undefined") {
             this.loadedInterfaces = [];
@@ -436,10 +436,15 @@ Control.interfaceManager = {
         Control.unloadWidgets();
         constants = null;
         pages = null;
-
+        
         Control.oscManager.delegate = Control.oscManager;
         Control.midiManager.delegate = Control.midiManager;
-
+        
+        if(Control.timeout !== null) {
+            window.clearTimeout(Control.timeout);
+            Control.timeout = null;
+        }
+        
         eval(js);
 
         this.currentInterfaceName = Control.interface.name;

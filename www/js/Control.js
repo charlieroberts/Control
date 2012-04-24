@@ -23,6 +23,7 @@ window["Control"] = {
     shouldPrevent	: false,
     interfaceDiv 	: null,
     isAddingConstants : false,
+    timeout         : null,
 
     init : function() {
         this.currentTab = document.getElementById("Interfaces");
