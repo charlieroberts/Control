@@ -23,7 +23,7 @@ Control.Slider = function(ctx, props) {
 	
 	if(!this.shouldUseCanvas) {
 		this.fillDiv   = document.createElement("div");
-		$(this.fillDiv).addClass('widget Control.Slider');
+		$(this.fillDiv).addClass('widget slider_fill');
 
 		$(this.fillDiv).css({
 			"position": "absolute", 
@@ -108,7 +108,6 @@ Control.Slider = function(ctx, props) {
 			 };
                         
 	        var _w = Control.makeWidget(this.label);
-	        Control.widgets.push(_w);
 	        if(!Control.isAddingConstants)
 	            Control.addWidget(_w, Control.addingPage);
 	        else
@@ -141,9 +140,13 @@ Control.Slider.prototype.touchstart = function(touch) {
             this.changeValue(touch.pageX); 
         }
 		
-		if(this.ontouchstart != null){
-			this.ontouchstart();
-		}
+        if(this.ontouchstart != null) {
+            if(typeof this.ontouchstart === "string") {
+                eval(this.ontouchstart);
+            }else{
+                this.ontouchstart(touch);
+            }
+        }
         
 		return true;
     }
@@ -175,9 +178,13 @@ Control.Slider.prototype.touchmove = function(touch) {
 	        	this.changeValue(touch.pageX); 
 	        }
 						
-			if (this.ontouchmove != null) {
-				this.ontouchmove();
-			}
+            if(this.ontouchmove != null) {
+                if(typeof this.ontouchmove === "string") {
+                    eval(this.ontouchmove);
+                }else{
+                    this.ontouchmove(touch);
+                }
+            }
 
 			if(this.displayValue) { this.label.setValue(this.value); }
 
@@ -194,9 +201,13 @@ Control.Slider.prototype.touchend = function(touch) {
         for(var i = 0; i < this.activeTouches.length; i++) {
             if(touch.identifier == this.activeTouches[i]) {
                 this.activeTouches.splice(i,1);	// remove touch ID from array
-				if(this.touchend != null) {
-					this.ontouchend();
-				}
+                if(this.ontouchend != null) {
+                    if(typeof this.ontouchend === "string") {
+                        eval(this.ontouchend);
+                    }else{
+                        this.ontouchend(touch);
+                    }
+                }
                 
 				return true;
             }

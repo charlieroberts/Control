@@ -58,7 +58,6 @@ window.stop = function() {
 };
 
 window.setTempo = function(newTempo) {
-	console.log("SETTING TEMPO" + newTempo);
 	window.tempo = 250 / (newTempo / 60);
 };
 

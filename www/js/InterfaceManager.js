@@ -11,11 +11,8 @@ Control.interfaceManager = {
         this.interfaceIP = null;
         constants = null;
 
-        this.interfaceDefaults = ["gyro.js", "djcut.js", "multibutton.js", "multiXY.js", "life.js", "iphoneLandscapeMixer.js","sequencer.js" ];
-		// 
-        //     "monome.js",
-        //     
-        // ];
+        this.interfaceDefaults = ["gyro.js", "djcut.js", "multibutton.js", "multiXY.js", "life.js", "iphoneLandscapeMixer.js", "sequencer.js", "monome.js" ];
+		
         //delete localStorage.interfaceFiles;
         Control.ifCount = 0;
         if (typeof localStorage.interfaceFiles == "undefined") {
@@ -446,6 +443,7 @@ Control.interfaceManager = {
         }
         
         eval(js);
+        console.log(js);
 
         this.currentInterfaceName = Control.interface.name;
 

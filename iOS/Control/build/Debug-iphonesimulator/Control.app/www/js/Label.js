@@ -72,10 +72,10 @@ Control.Label.prototype.setValue = function(x) {
 }
 
 Control.Label.prototype.setBounds = function(newBounds) {
-    this.width = Math.round(newBounds[2] * Control.deviceWidth);
-    this.height = Math.round(newBounds[3] * Control.deviceHeight);
-    this.x = Math.round(newBounds[0] * Control.deviceWidth);
-    this.y = Math.round(newBounds[1] * Control.deviceHeight);
+    this.width = Math.round(newBounds[2] * $("#selectedInterface").width());
+    this.height = Math.round(newBounds[3] * $("#selectedInterface").height());
+    this.x = Math.round(newBounds[0] * $("#selectedInterface").width());
+    this.y = Math.round(newBounds[1] * $("#selectedInterface").height());
     
     $(this.label).css({
         "width":    this.width,

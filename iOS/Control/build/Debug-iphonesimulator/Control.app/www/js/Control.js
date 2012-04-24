@@ -23,6 +23,7 @@ window["Control"] = {
     shouldPrevent	: false,
     interfaceDiv 	: null,
     isAddingConstants : false,
+    timeout         : null,
 
     init : function() {
         this.currentTab = document.getElementById("Interfaces");
@@ -58,9 +59,10 @@ window["Control"] = {
         this.deviceWidth = width;
         this.deviceHeight = height;
         this.ctx = null;
-        
-        $("#selectedInterface").css("width", "100%");
-        $("#selectedInterface").css("height", "100%");
+        $("#selectedInterface").css("width", width);
+        //$("#selectedInterface").css("width", "100%");
+        $("#selectedInterface").css("height", height);
+        //$("#selectedInterface").css("height", "100%");
         
         this.interfaceDiv.addEventListener('touchend', Control.event, false);			
         this.interfaceDiv.addEventListener('touchstart', Control.event, false);
@@ -156,10 +158,9 @@ window["Control"] = {
             var page = this.interface.pages[pageNumber];
             for(var i=0; i < page.length; i++) {
                 var w = page[i];
-                console.log("making " + w.name);
+                //console.log("making " + w.name);
                 var _w = this.makeWidget(w);
 
-                this.widgets.push(_w);
                 this.addWidget(_w, pageNumber);
             }
         }

@@ -27,7 +27,6 @@ Control.Button = function(ctx, props) {
                         
             var _w = Control.makeWidget(this.label);
 	        if(!Control.isAddingConstants) {
-                Control.widgets.push(_w);                
 	            Control.addWidget(_w, Control.addingPage); // PROBLEM
 	        }else{
                 Control.constants.push(_w);
@@ -53,7 +52,7 @@ Control.Button = function(ctx, props) {
         
         this.ctx.appendChild(this.fillDiv);
     }
-    
+        
     this.yOffset = 0;
     this.xOffset = 0;
     
@@ -102,10 +101,10 @@ Control.Button.prototype.setColors = function(newColors) {
 }
 
 Control.Button.prototype.setBounds = function(newBounds) {
-    this.width = Math.round(newBounds[2] * Control.deviceWidth);
-    this.height = Math.round(newBounds[3] * Control.deviceHeight);
-    this.x = Math.round(newBounds[0] * Control.deviceWidth);
-    this.y = Math.round(newBounds[1] * Control.deviceHeight);
+    this.width = Math.round(newBounds[2] * $("#selectedInterface").width());
+    this.height = Math.round(newBounds[3] * $("#selectedInterface").height());
+    this.x = Math.round(newBounds[0] * $("#selectedInterface").width());
+    this.y = Math.round(newBounds[1] * $("#selectedInterface").height());
     
     this.fillDiv.style.width  = this.width - 2 + "px";
     this.fillDiv.style.height = this.height - 2 + "px";
@@ -158,7 +157,7 @@ Control.Button.prototype.touchstart = function(touch, isHit) {
             if(typeof this.ontouchstart === "string") {
                 eval(this.ontouchstart);
             }else{
-                this.ontouchstart();
+                this.ontouchstart(touch);
             }
         }
 		return true;      
@@ -196,13 +195,13 @@ Control.Button.prototype.touchmove = function(touch, isHit) {
         }
     }
                 
-    if (shouldChange && isHit && !this.requiresTouchDown) {
+    if (shouldChange && isHit) {
         switch (this.mode) {
             case "toggle":
                 newValue = (this.value == this.min) ? this.max: this.min;
                 break;
             case "visualToggle":
-                newVAlue = this.max;
+                newValue = this.max;
                 break;
             case "latch":
                 newValue = this.max;
@@ -224,7 +223,7 @@ Control.Button.prototype.touchmove = function(touch, isHit) {
             if(typeof this.ontouchmove === "string") {
                 eval(this.ontouchmove);
             }else{
-                this.ontouchmove();
+                this.ontouchmove(touch);
             }
         }
         
@@ -250,7 +249,7 @@ Control.Button.prototype.touchend = function(touch, isHit) {
                     if(typeof this.ontouchend === "string") {
                         eval(this.ontouchend);
                     }else{
-                        this.ontouchend();
+                        this.ontouchend(touch);
                     }
                 }
 				

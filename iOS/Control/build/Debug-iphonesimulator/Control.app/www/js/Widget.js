@@ -24,17 +24,19 @@ Widget.prototype.make = function(ctx, props) {
             if(typeof props.height == "undefined") props.height = .2;	
 //            this.width = Math.round(parseFloat(Control.deviceWidth)* props.width);
 //            this.height = Math.round(parseFloat(Control.deviceHeight) * props.height);
+//            console.log("DIV HEIGHT " + $("#selectedInterface").height());
+//            this.width  = ($("#selectedInterface").width() / 100) * Control.deviceWidth * props.width;
+//            this.height = ($("#selectedInterface").height() / 100) * Control.deviceHeight * props.height;
             
-            this.width  = ($("#selectedInterface").width() / 100) * Control.deviceWidth * props.width;
-            this.height = ($("#selectedInterface").height() / 100) * Control.deviceHeight * props.height;
-            
-//            this.width = $("#selectedInterface").width() * props.width;
-//            this.height = $("#selectedInterface").height() * props.height;
+            this.width = $("#selectedInterface").width() * props.width;
+            this.height = $("#selectedInterface").height() * props.height;
             if(typeof props.x == "undefined") props.x = 0;
             if(typeof props.y == "undefined") props.y = 0;	
             
-            this.x = ( ($("#selectedInterface").width() /  100) * Control.deviceWidth  * props.x) + .5;
-            this.y = ( ($("#selectedInterface").height() / 100) * Control.deviceHeight * props.y) + .5;
+//            this.x = ( ($("#selectedInterface").width() /  100) * Control.deviceWidth  * props.x) + .5;
+//            this.y = ( ($("#selectedInterface").height() / 100) * Control.deviceHeight * props.y) + .5;
+            this.x = ($("#selectedInterface").width() * props.x) + .5;
+            this.y = ($("#selectedInterface").height()* props.y) + .5;            
             
             //console.log("x = " + props.x + " :: y = " + props.y + " :: width = " + props.width + " :: height = " + props.height);
 

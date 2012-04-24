@@ -8,13 +8,11 @@ Control.oscManager = {
     
     setReceivePort : function(newPort) {
         this.receivePort = newPort;
-        console.log("SETTING PORT " + this.receivePort);
         PhoneGap.exec(null, null, "OSCManager", "setOSCReceivePort", [newPort]);			  
     },
 
     processOSCMessage : function() {
         var address = arguments[0];
-        //console.log(arguments[0] + ":" + arguments[2]);
     
         if(typeof this.callbacks[address] != "undefined") {	// if Control has a defined callback for this address ...
             this.callbacks[address](arguments);				// ... call the function associated with it ...
@@ -48,7 +46,6 @@ Control.oscManager = {
 				w.page = Control.currentPage;
 			}
 			
-			Control.addingPage = w.page;
             var _w = Control.makeWidget(w);
             _w.page = w.page;
                     
@@ -58,6 +55,30 @@ Control.oscManager = {
                 }
             }
         
+            var widgetPage = (typeof w.page !== "undefined") ? w.page : Control.currentPage;
+            Control.addWidget(window[w.name], widgetPage);
+        },
+        "/control/addWidgetKV" : function(args) {
+            var w = {};
+            for (var i = 2; i < args.length; i+=2) {
+                w[args[i]]=args[i+1];
+            }
+                                        
+            var isImportant = false;
+            
+            if(typeof w.page === "undefined") {
+                w.page = Control.currentPage;
+            }
+            
+            var _w = Control.makeWidget(w);
+            _w.page = w.page;
+            
+            if(typeof _w.bounds == "undefined") {
+                if(!Control.isWidgetSensor(w) ) {
+                    Control.autogui.placeWidget(_w, isImportant);
+                }
+            }
+            
             var widgetPage = (typeof w.page !== "undefined") ? w.page : Control.currentPage;
             Control.addWidget(window[w.name], widgetPage);
         },

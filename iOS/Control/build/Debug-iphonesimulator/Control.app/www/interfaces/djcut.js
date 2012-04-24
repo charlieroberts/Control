@@ -81,7 +81,6 @@ Control.interface = {
 	        "number": 49,
 	        "requiresTouchDown": true,
 	        "label": "cue", 
-               "ontouchstart": function() { Control.interfaceManager.refreshInterface(); },
 	    },
 	    {
 	        "name": "rightCue",
@@ -271,7 +270,7 @@ Control.interface = {
 	        "height": .15 * Control.data.whRatio,
 	        "mode":"toggle",
 	        "colors": ["#000", "#444", "#aaa"],        
-	        "ontouchstart": "if(this.value == this.max) { Control.showToolbar(); tabLabel.changeValue(\'Hide Tabs\');} else { Control.hideToolbar(); tabLabel.changeValue(\'Show Tabs\'); }",
+	        "ontouchstart": "Control.toggleToolbar();",
 	        "label": "menu", 
 	    },
 		{

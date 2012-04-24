@@ -12,19 +12,17 @@ Control.Knob = function(ctx,props) {
 	}else{
 		this.radius =  Math.round(this.height / 2);
 	}
-	
-    console.log("radius = " + this.radius);
     
 	this.isInverted		= (typeof props.isInverted != "undefined") ? props.isInverted : false;
 	this.centerZero		= (typeof props.centerZero != "undefined") ? props.centerZero : false;
-	
-	if(Control.protocol == "MIDI") {
-		if(typeof props.midiStartingValue == "undefined" && this.centerZero) {
-			this.value = 63;
-		}
-	}
-	
-	this.rotationValue  = (this.value + Math.abs(this.min)) / (this.max - this.min);
+    
+	this.rotationValue  = (this.value - this.min) / (this.max - this.min);
+    if(this.rotationValue < .05) {
+        this.rotationValue = .05;
+    }else if(this.rotationValue > .95) {
+        this.rotationValue = .95;
+    }
+
 	this.knobBuffer = 1;
 	
 	this.lastValue = this.value;
@@ -39,7 +37,7 @@ Control.Knob = function(ctx,props) {
 	this.canvas = document.createElement('canvas');
 	$(this.canvas).addClass('widget knob');
     
-	if(this.height > this.width)  
+	if(this.height < this.width)  
 		this.height = this.width;
 	else
 		this.width = this.height;
@@ -53,6 +51,8 @@ Control.Knob = function(ctx,props) {
 	this.canvas.style.left = this.x + "px";
 	this.canvas.style.position = "absolute";
 	
+    console.log("left : " + this.canvas.style.left + " || top : " + this.canvas.style.top);
+    
 	this.displayValue = props.displayValue;
 	
 	this.canvasCtx = this.canvas.getContext('2d');
@@ -79,7 +79,6 @@ Control.Knob = function(ctx,props) {
 			};
             
             var _w = Control.makeWidget(this.label);
-            Control.widgets.push(_w);
 	        if(!Control.isAddingConstants)
 	            Control.addWidget(_w, Control.addingPage); // PROBLEM
 	        else
@@ -96,9 +95,9 @@ Control.Knob = function(ctx,props) {
 }
 
 
-Knob.prototype = new Widget();
+Control.Knob.prototype = new Widget();
 
-Knob.prototype.draw = function() {
+Control.Knob.prototype.draw = function() {
     this.canvasCtx.clearRect(0, 0, this.width,this.height);
     this.canvasCtx.strokeStyle = this.strokeColor;
     this.canvasCtx.lineWidth = 1.5;
@@ -115,22 +114,21 @@ Knob.prototype.draw = function() {
     this.canvasCtx.fill();
     
     this.canvasCtx.stroke();
-    
     this.canvasCtx.fillStyle = this.fillColor;	// now draw foreground...
 	
     if(this.centerZero) {
         var angle3 = Math.PI * 1.5;
-        var angle4 = Math.PI * (1.5 + (.9 * (-1 + (this.rotationValue * 2))));
+        var angle4 = Math.PI * (1.5 + (-1 + (this.rotationValue * 2)));
         
         this.canvasCtx.beginPath();
         this.canvasCtx.arc(this.radius , this.radius, this.radius -  this.knobBuffer, angle3, angle4, (this.rotationValue < .5));
         this.canvasCtx.arc(this.radius , this.radius, (this.radius - this.knobBuffer) * 0.3,  angle4, angle3, (this.rotationValue > .5));
         this.canvasCtx.closePath();
-        /*if(this.rotationValue == .5) { // draw circle if centered?
-         this.canvasCtx.beginPath();
-         this.canvasCtx.arc(this.radius , this.radius, (this.radius -  this.knobBuffer) * .3, 0, Math.PI*2, true); 
-         this.canvasCtx.closePath();
-         }*/
+        if(this.rotationValue > .495 && this.rotationValue < .505) { // draw circle if centered?
+            this.canvasCtx.beginPath();
+            this.canvasCtx.arc(this.radius , this.radius, (this.radius -  this.knobBuffer) * .3, 0, Math.PI*2, true); 
+            this.canvasCtx.closePath();
+        }
         this.canvasCtx.fill();
     } else {
         if(!this.isInverted)   
@@ -152,7 +150,7 @@ Knob.prototype.draw = function() {
     }
 }
 
-Knob.prototype.setColors = function(newColors) {
+Control.Knob.prototype.setColors = function(newColors) {
     this.backgroundColor = newColors[0];
     this.fillColor = newColors[1];
     this.strokeColor = newColors[2];
@@ -160,7 +158,7 @@ Knob.prototype.setColors = function(newColors) {
     this.draw();
 }
 
-Knob.prototype.setBounds = function(newBounds) {
+Control.Knob.prototype.setBounds = function(newBounds) {
     this.width = Math.round(newBounds[2] * Control.deviceWidth);
     this.height = Math.round(newBounds[3] * Control.deviceHeight);
     this.x = Math.round(newBounds[0] * Control.deviceWidth);
@@ -179,7 +177,7 @@ Knob.prototype.setBounds = function(newBounds) {
     this.draw();
 }
 
-Knob.prototype.event = function(event) {
+Control.Knob.prototype.event = function(event) {
     touch = event.changedTouches.item(0);
     
     if(event.type == "touchstart" && this.hitTest(touch.pageX, touch.pageY)) { // if touch starts over this widget
@@ -204,8 +202,8 @@ Knob.prototype.event = function(event) {
     }
 }
 
-Knob.prototype.setValue = function(newValue) {
-    this.rotationValue = newValue;
+Control.Knob.prototype.setValue = function(newValue) {
+    //this.rotationValue = newValue;
     
     if(newValue > this.max) { 
         newValue = this.max;
@@ -228,7 +226,7 @@ Knob.prototype.setValue = function(newValue) {
     
 };
 
-Knob.prototype.changeValue = function(yinput, xinput) {
+Control.Knob.prototype.changeValue = function(yinput, xinput) {
 	// TODO: accommodate !usesRotation and centeredRotation.
     this.lastValue = this.value;
     
@@ -242,7 +240,7 @@ Knob.prototype.changeValue = function(yinput, xinput) {
         var angle = 180 + Math.atan2(ydiff, xdiff) * (180 / Math.PI);
         this.rotationValue =  ((angle + 270) % 360) / 360;
     }
-    console.log(this.rotationValue);
+    //console.log(this.rotationValue);
     if (this.rotationValue > .95) this.rotationValue = .95;
     if (this.rotationValue < .05) this.rotationValue = .05;
     
@@ -253,7 +251,6 @@ Knob.prototype.changeValue = function(yinput, xinput) {
 		this.rotationValue = .05;
 		return;
 	}
-    //console.log("rotationValue = " + this.rotationValue);
 	this.lastRotationValue = this.rotationValue;
     this.lastPosition = yinput;
     
@@ -269,7 +266,7 @@ Knob.prototype.changeValue = function(yinput, xinput) {
 	//Math.round(number).toFixed(2);
 }
 
-Knob.prototype.setBounds = function(newBounds) {
+Control.Knob.prototype.setBounds = function(newBounds) {
     this.width = Math.round(newBounds[2] * Control.deviceWidth);
     this.height = Math.round(newBounds[3] * Control.deviceHeight);
     this.x = Math.round(newBounds[0] * Control.deviceWidth);
@@ -299,15 +296,15 @@ Knob.prototype.setBounds = function(newBounds) {
     this.draw();
 }
 
-Knob.prototype.show = function() {
+Control.Knob.prototype.show = function() {
     this.canvas.style.display = "block";
 }
 
-Knob.prototype.hide = function() {
+Control.Knob.prototype.hide = function() {
     this.canvas.style.display = "none";
 }
 
-Knob.prototype.unload = function() {
+Control.Knob.prototype.unload = function() {
     if(typeof this.label !== 'undefined') {
         Control.removeWidgetWithName(this.name + "Label");
     }
