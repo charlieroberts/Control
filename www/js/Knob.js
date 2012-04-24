@@ -24,7 +24,7 @@ Control.Knob = function(ctx,props) {
 		}
 	}
 	
-	this.rotationValue  = (this.value + Math.abs(this.min)) / (this.max - this.min);
+	this.rotationValue  = (this.value - this.min) / (this.max - this.min);
 	this.knobBuffer = 1;
 	
 	this.lastValue = this.value;
@@ -95,9 +95,9 @@ Control.Knob = function(ctx,props) {
 }
 
 
-Knob.prototype = new Widget();
+Control.Knob.prototype = new Widget();
 
-Knob.prototype.draw = function() {
+Control.Knob.prototype.draw = function() {
     this.canvasCtx.clearRect(0, 0, this.width,this.height);
     this.canvasCtx.strokeStyle = this.strokeColor;
     this.canvasCtx.lineWidth = 1.5;
@@ -114,7 +114,6 @@ Knob.prototype.draw = function() {
     this.canvasCtx.fill();
     
     this.canvasCtx.stroke();
-    
     this.canvasCtx.fillStyle = this.fillColor;	// now draw foreground...
 	
     if(this.centerZero) {
@@ -151,7 +150,7 @@ Knob.prototype.draw = function() {
     }
 }
 
-Knob.prototype.setColors = function(newColors) {
+Control.Knob.prototype.setColors = function(newColors) {
     this.backgroundColor = newColors[0];
     this.fillColor = newColors[1];
     this.strokeColor = newColors[2];
@@ -159,7 +158,7 @@ Knob.prototype.setColors = function(newColors) {
     this.draw();
 }
 
-Knob.prototype.setBounds = function(newBounds) {
+Control.Knob.prototype.setBounds = function(newBounds) {
     this.width = Math.round(newBounds[2] * Control.deviceWidth);
     this.height = Math.round(newBounds[3] * Control.deviceHeight);
     this.x = Math.round(newBounds[0] * Control.deviceWidth);
@@ -178,7 +177,7 @@ Knob.prototype.setBounds = function(newBounds) {
     this.draw();
 }
 
-Knob.prototype.event = function(event) {
+Control.Knob.prototype.event = function(event) {
     touch = event.changedTouches.item(0);
     
     if(event.type == "touchstart" && this.hitTest(touch.pageX, touch.pageY)) { // if touch starts over this widget
@@ -203,8 +202,8 @@ Knob.prototype.event = function(event) {
     }
 }
 
-Knob.prototype.setValue = function(newValue) {
-    this.rotationValue = newValue;
+Control.Knob.prototype.setValue = function(newValue) {
+    //this.rotationValue = newValue;
     
     if(newValue > this.max) { 
         newValue = this.max;
@@ -227,7 +226,7 @@ Knob.prototype.setValue = function(newValue) {
     
 };
 
-Knob.prototype.changeValue = function(yinput, xinput) {
+Control.Knob.prototype.changeValue = function(yinput, xinput) {
 	// TODO: accommodate !usesRotation and centeredRotation.
     this.lastValue = this.value;
     
@@ -241,7 +240,7 @@ Knob.prototype.changeValue = function(yinput, xinput) {
         var angle = 180 + Math.atan2(ydiff, xdiff) * (180 / Math.PI);
         this.rotationValue =  ((angle + 270) % 360) / 360;
     }
-    console.log(this.rotationValue);
+    //console.log(this.rotationValue);
     if (this.rotationValue > .95) this.rotationValue = .95;
     if (this.rotationValue < .05) this.rotationValue = .05;
     
@@ -252,7 +251,6 @@ Knob.prototype.changeValue = function(yinput, xinput) {
 		this.rotationValue = .05;
 		return;
 	}
-    //console.log("rotationValue = " + this.rotationValue);
 	this.lastRotationValue = this.rotationValue;
     this.lastPosition = yinput;
     
@@ -268,7 +266,7 @@ Knob.prototype.changeValue = function(yinput, xinput) {
 	//Math.round(number).toFixed(2);
 }
 
-Knob.prototype.setBounds = function(newBounds) {
+Control.Knob.prototype.setBounds = function(newBounds) {
     this.width = Math.round(newBounds[2] * Control.deviceWidth);
     this.height = Math.round(newBounds[3] * Control.deviceHeight);
     this.x = Math.round(newBounds[0] * Control.deviceWidth);
@@ -298,15 +296,15 @@ Knob.prototype.setBounds = function(newBounds) {
     this.draw();
 }
 
-Knob.prototype.show = function() {
+Control.Knob.prototype.show = function() {
     this.canvas.style.display = "block";
 }
 
-Knob.prototype.hide = function() {
+Control.Knob.prototype.hide = function() {
     this.canvas.style.display = "none";
 }
 
-Knob.prototype.unload = function() {
+Control.Knob.prototype.unload = function() {
     if(typeof this.label !== 'undefined') {
         Control.removeWidgetWithName(this.name + "Label");
     }
