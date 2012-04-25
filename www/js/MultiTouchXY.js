@@ -15,7 +15,7 @@ Control.MultiTouchXY = function(ctx, props) {
     this.touchSize = props.touchSize || (this.width / 8);
     this.half = parseInt(this.touchSize) / 2;
     this.container = document.createElement('div');
-	this.rainbow = (typeof props.rainbow == "undefined") ? false : props.rainbow;
+	this.rainbow = (typeof props.rainbow == "undefined") ? true : props.rainbow;
     $(this.container).addClass('widget multiTouchXY');
 
     this.container.style.position = "absolute";

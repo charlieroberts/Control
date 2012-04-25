@@ -17,14 +17,12 @@ Control.interfaceManager = {
         Control.ifCount = 0;
         if (typeof localStorage.interfaceFiles == "undefined") {
             this.loadedInterfaces = [];
-            console.log("INIT LOADING SCRIPTS");
             //var msg = "now loading default interfaces. this will only happen the first time the app is launched (possibly also after updates) and takes about 8 seconds";
             //navigator.notification.alert(msg, null, "loading");
             setTimeout(function() {
                 Control.interfaceManager.loadScripts();
             }, 1000);
         } else {
-            console.log("NOT RELOADING");
             this.loadedInterfaces = JSON.parse(localStorage.interfaceFiles);
             this.createInterfaceListWithArray(this.loadedInterfaces);
         }
@@ -35,7 +33,6 @@ Control.interfaceManager = {
         Control.functions = null;
         var fileref = document.createElement('script')
         fileref.setAttribute("type", "text/javascript");
-        //console.log("trying to load " + Control.interfaceManager.interfaceDefaults[Control.ifCount]);
         fileref.setAttribute("src", "interfaces/" + Control.interfaceManager.interfaceDefaults[Control.ifCount]);
         document.getElementsByTagName('head')[0].appendChild(fileref);
 

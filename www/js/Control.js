@@ -16,7 +16,7 @@ window["Control"] = {
     tabBarHidden	: false,
     orientation 	: 0,
     acc 			: null,
-    compass 		: null,
+    magnetometer 	: null,
     gyro 			: null,
     audioPitch 		: null,
     audioVolume 	: null,
@@ -30,7 +30,7 @@ window["Control"] = {
         this.interfaceDiv = document.getElementById("selectedInterface");
         this.changeTab(this.currentTab);
         
-        this.sensors = [this.acc, this.compass, this.gyro, this.audioPitch, this.audioVolume];
+        this.sensors = [this.acc, this.magnetometer, this.gyro, this.audioPitch, this.audioVolume];
         
         this.preferencesManager.init();
 
@@ -178,11 +178,11 @@ window["Control"] = {
         }else{
             _w = new Control[w.type](w);
             switch(w.type) {
-                case "Accelerometer"	: Control.acc = _w; 		break;
-                case "Compass"          : Control.compass = _w; 	break;					
-                case "Gyro"             : Control.gyro = _w; 		break;
-                case "AudioPitch"		: Control.audioPitch  = _w; break;
-                case "AudioVolume"		: Control.audioVolume = _w; break;																
+                case "Accelerometer"	: Control.acc = _w;             break;
+                case "Magnetometer"     : Control.magnetometer = _w;    break;					
+                case "Gyro"             : Control.gyro = _w;            break;
+                case "AudioPitch"		: Control.audioPitch  = _w;     break;
+                case "AudioVolume"		: Control.audioVolume = _w;     break;																
             }
             _w.start();        
         }
@@ -194,7 +194,7 @@ window["Control"] = {
     
     isWidgetSensor : function(w) {
         var _isWidgetSensor = false;
-        var sensors = [ "Accelerometer", "Compass", "Gyro", "AudioPitch", "AudioVolume" ];
+        var sensors = [ "Accelerometer", "Magnetometer", "Gyro", "AudioPitch", "AudioVolume" ];
         for(var i in sensors) {
             if(w.type == sensors[i]) { 
                 _isWidgetSensor = true;

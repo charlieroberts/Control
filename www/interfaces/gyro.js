@@ -56,7 +56,6 @@ Control.interface = {
 	    "max": 1,
 	    "address": "/gyro",
 	},
-	
 	{
 	    "name": "gyroSpeed",
 	    "type": "Slider",
