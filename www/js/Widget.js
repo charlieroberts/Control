@@ -57,6 +57,8 @@ Widget.prototype.make = function(ctx, props) {
             this.activeTouches = new Array();
         }
 		
+        //this.events = $.extend(this.__proto__.events);
+        
 		this.isLocal = (typeof props.isLocal != "undefined") ? props.isLocal : false;
 		
 		if(typeof props.midi != "undefined") {
@@ -99,6 +101,32 @@ Widget.prototype.make = function(ctx, props) {
 		this.ontouchend    = (typeof props.ontouchend    != "undefined") ? props.ontouchend    : null;
         this.onvaluechange = (typeof props.onvaluechange != "undefined") ? props.onvaluechange : null;
         this.oninit		   = (typeof props.oninit        != "undefined") ? props.oninit        : null;
+        
+		this.form = {
+			"name": "widget name", 
+			"width": "width", 
+			"height": "height", 
+			"x": "x",
+			"y": "y", 
+			"backgroundColor": "background color", 
+			"fillColor": "fill color", 
+			"strokeColor": "stroke color", 
+			// "min": "osc minimum value", 
+			// "max": "osc maximum value",
+			// "address": "osc address", 
+			// "midiMin": "MIDI minimum value", 
+			// "midiMax": "MIDI maximum value", 
+			// "midiType": "MIDI message type", 
+			// "channel": "MIDI Channel", 
+			// "midiNumber": "MIDI Number", 
+			// "value": "starting value",
+			// "ontouchstart": "ontouchstart",  
+			// "ontouchmove": "ontouchmove", 
+			// "ontouchend": "ontouchend", 
+			// "onvaluechange": "onvaluechange", 
+			// "oninit": "oninit", 
+		};
+		
 	}		
 	
 	return this;

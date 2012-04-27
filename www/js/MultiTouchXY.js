@@ -12,7 +12,7 @@ Control.MultiTouchXY = function(ctx, props) {
     this.valuesY = [];
     this.isMomentary = (typeof props.isMomentary == "undefined") ? true : props.isMomentary;
     this.lastTouched = null;
-    this.touchSize = props.touchSize || (this.width / 8);
+    this.touchSize = props.touchSize || (this.width / 6);
     this.half = parseInt(this.touchSize) / 2;
     this.container = document.createElement('div');
 	this.rainbow = (typeof props.rainbow == "undefined") ? true : props.rainbow;
@@ -27,6 +27,11 @@ Control.MultiTouchXY = function(ctx, props) {
     this.container.style.backgroundColor = this.backgroundColor;
     this.ctx.appendChild(this.container);
     
+    this.events = { 
+        "touchstart": Control.MultiTouchXY.prototype.touchstart, 
+        "touchmove" : Control.MultiTouchXY.prototype.touchmove, 
+        "touchend"  : Control.MultiTouchXY.prototype.touchend,
+    };
 
     this.touchCount = 0;
     this.container.style.border = "1px solid " + this.strokeColor;
@@ -286,10 +291,10 @@ Control.MultiTouchXY.prototype.setColors = function(newColors) {
 }
 
 Control.MultiTouchXY.prototype.setBounds = function(newBounds) {
-    this.width = Math.round(newBounds[2] * Control.deviceWidth);
-    this.height = Math.round(newBounds[3] * Control.deviceHeight);
-    this.x = Math.round(newBounds[0] * Control.deviceWidth);
-    this.y = Math.round(newBounds[1] * Control.deviceHeight);
+    this.width = Math.round(newBounds[2] * $("#selectedInterface").width());
+    this.height = Math.round(newBounds[3] * $("#selectedInterface").height());
+    this.x = Math.round(newBounds[0] * $("#selectedInterface").width());
+    this.y = Math.round(newBounds[1] * $("#selectedInterface").height());
     
     this.container.style.width  = this.width - 2 + "px";
     this.container.style.height = this.height - 2 + "px";
@@ -299,6 +304,22 @@ Control.MultiTouchXY.prototype.setBounds = function(newBounds) {
     if(typeof this.label != "undefined") {
         this.label.setBounds(newBounds);
     }
+    
+    this.touchSize = this.props.touchSize || (this.width / 6);
+    this.half = parseInt(this.touchSize) / 2;
+
+    $(".touch").css({
+	    "width" 	: this.touchSize + "px",
+	    "height" 	: this.touchSize + "px",
+	    "line-height" 	: this.touchSize + "px",  
+//	    "left" 	: 0 + "px",
+//	    "top"  	: 0 + "px",
+	    "color" : this.strokeColor,
+		"-webkit-transform-origin-x": this.x + "px",
+		"-webkit-transform-origin-y": this.y + "px",
+        "border-radius": this.half + "px",
+        "border-radius": this.half + "px",
+	});
 }
 
 //	TODO: this should move all the touches to a position reflecting (possibly) updated values

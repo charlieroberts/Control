@@ -7,6 +7,8 @@ Control.Slider = function(ctx, props) {
     else
         this.isVertical = (this.width < this.height);
     
+    this.form.isVertical = "vertical slider";
+    
 	this.requiresTouchDown = (typeof props.requiresTouchDown != "undefined") ? props.requiresTouchDown : true;
 	
 	this.isXFader = (typeof props.isXFader != "undefined") ? props.isXFader : false;
@@ -20,7 +22,7 @@ Control.Slider = function(ctx, props) {
 	
 	this.pixelWidth  = 1 / Control.deviceWidth;
 	this.pixelHeight = 1 / Control.deviceHeight;
-	
+    	
 	if(!this.shouldUseCanvas) {
 		this.fillDiv   = document.createElement("div");
 		$(this.fillDiv).addClass('widget slider_fill');
@@ -125,6 +127,12 @@ Control.Slider = function(ctx, props) {
 			this.fillDiv.style.left = (this.x + (this.value * this.width)) + 1 + "px";
 		}
 	}
+    
+    this.events = { 
+        "touchstart": Control.Slider.prototype.touchstart, 
+        "touchmove" : Control.Slider.prototype.touchmove, 
+        "touchend"  : Control.Slider.prototype.touchend,
+    };
 	
     return this;
 }
@@ -215,13 +223,13 @@ Control.Slider.prototype.touchend = function(touch) {
     }
 	return false;
 };
-    
-Control.Slider.prototype.events = { 
-	"touchstart": Control.Slider.prototype.touchstart, 
-	"touchmove" : Control.Slider.prototype.touchmove, 
-	"touchend"  : Control.Slider.prototype.touchend,
-};
 
+Control.Slider.prototype.events = { 
+    "touchstart": Control.Slider.prototype.touchstart, 
+    "touchmove" : Control.Slider.prototype.touchmove, 
+    "touchend"  : Control.Slider.prototype.touchend,
+};
+    
 Control.Slider.prototype.event = function(event) {
     for (var j = 0; j < event.changedTouches.length; j++){
         var touch = event.changedTouches.item(j);
@@ -296,12 +304,12 @@ Control.Slider.prototype.setColors = function(newColors) {
     this.strokeDiv.style.border = "1px solid" + this.strokeColor;
     this.strokeDiv.style.backgroundColor = this.backgroundColor;
 }
-
+    
 Control.Slider.prototype.setBounds = function(newBounds) {
-    this.width = Math.round(newBounds[2] * Control.deviceWidth);
-    this.height = Math.round(newBounds[3] * Control.deviceHeight);
-    this.x = Math.round(newBounds[0] * Control.deviceWidth);
-    this.y = Math.round(newBounds[1] * Control.deviceHeight);
+    this.width = Math.round(newBounds[2] * $("#selectedInterface").width());
+    this.height = Math.round(newBounds[3] * $("#selectedInterface").height());
+    this.x = Math.round(newBounds[0] * $("#selectedInterface").width());
+    this.y = Math.round(newBounds[1] * $("#selectedInterface").height());
     
 	$(this.fillDiv).css({
 	    "width" 	: this.width - 2 + "px",

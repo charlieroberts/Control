@@ -195,10 +195,10 @@ Control.interfaceManager = {
         Control.interfaceManager.myRequest.onreadystatechange = function() {
             //console.log("downloading..." + Control.interfaceManager.myRequest.readyState );
             if (Control.interfaceManager.myRequest.readyState == 4) {
-                console.log(Control.interfaceManager.myRequest.responseText);
-                console.log("before parsing");
+                //console.log(Control.interfaceManager.myRequest.responseText);
+                //console.log("before parsing");
                 eval(Control.interfaceManager.myRequest.responseText);
-                console.log("after parsing");
+                //console.log("after parsing");
                 //console.log(Control.interface);
                 if (Control.interface.name != null) {
                     if (document.getElementById("promptDiv") != null) {
@@ -331,7 +331,7 @@ Control.interfaceManager = {
     },
 
     refreshInterface: function() {
-        console.log("IP = " + Control.interfaceManager.interfaceIP);
+        //console.log("IP = " + Control.interfaceManager.interfaceIP);
         Control.interfaceManager.myRequest = new XMLHttpRequest();
         Control.interfaceManager.myRequest.onreadystatechange = function() {
             console.log("downloading stage " + Control.interfaceManager.myRequest.readyState);
@@ -340,13 +340,13 @@ Control.interfaceManager = {
                 for (var i = 0; i < Control.interfaceManager.loadedInterfaces.length; i++) {
                     var interface = Control.interfaceManager.loadedInterfaces[i];
                     if (interface.name == Control.interfaceManager.currentInterfaceName) {
-                        console.log("SHOULD BE REPLACING " + i + " : " + Control.interface.name);
+                        //console.log("SHOULD BE REPLACING " + i + " : " + Control.interface.name);
                         var newInterface = {
                             name: Control.interface.name,
                             json: Control.interfaceManager.myRequest.responseText,
                             address: Control.interfaceManager.interfaceIP
                         };
-                        console.log(Control.interfaceManager.myRequest.responseText);
+                        //console.log(Control.interfaceManager.myRequest.responseText);
                         Control.interfaceManager.loadedInterfaces.splice(i, 1, newInterface);
 
                         localStorage.interfaceFiles = JSON.stringify(Control.interfaceManager.loadedInterfaces);
@@ -358,7 +358,7 @@ Control.interfaceManager = {
                 }
             }
         }
-        console.log("getting from " + Control.interfaceManager.interfaceIP);
+        //console.log("getting from " + Control.interfaceManager.interfaceIP);
         Control.interfaceManager.myRequest.open("GET", Control.interfaceManager.interfaceIP, true);
         Control.interfaceManager.myRequest.send(null);
     },
@@ -440,7 +440,6 @@ Control.interfaceManager = {
         }
         
         eval(js);
-        console.log(js);
 
         this.currentInterfaceName = Control.interface.name;
 

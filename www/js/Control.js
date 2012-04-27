@@ -122,7 +122,14 @@ window["Control"] = {
         this.widgets	= [];
         this.pages 		= [];
         this.constants 	= [];
-        $("#selectedInterface").empty();		
+        $("#selectedInterface").empty();
+        
+        if(typeof Control.editor !== "undefined") {
+            if(Control.editor.gui != null) {
+                $(Control.editor.gui).remove();
+                Control.editor.gui = null;
+            }
+        }
         
         for(var i = 0; i < this.sensors.length; i++) {
             var sensor = this.sensors[i];
