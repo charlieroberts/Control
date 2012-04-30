@@ -171,11 +171,11 @@ Control.Button.prototype.setColors = function(newColors) {
 }
 
 Control.Button.prototype.setBounds = function(newBounds) {
-    this.width = Math.round(newBounds[2] * $("#selectedInterface").width());
-    this.height = Math.round(newBounds[3] * $("#selectedInterface").height());
-    this.x = Math.round(newBounds[0] * $("#selectedInterface").width());
-    this.y = Math.round(newBounds[1] * $("#selectedInterface").height());
-    
+    this.width = (newBounds[2] <= 1) ? Math.round(newBounds[2]  * $("#selectedInterface").width()) : newBounds[2];
+    this.height = (newBounds[3] <= 1) ? Math.round(newBounds[3] * $("#selectedInterface").height()) : newBounds[3];
+    this.x = (newBounds[0] <= 1) ? Math.round(newBounds[0] * $("#selectedInterface").width()) : newBounds[0]; 
+    this.y = (newBounds[1] <= 1) ? Math.round(newBounds[1] * $("#selectedInterface").height()): newBounds[1];
+    //console.log(this.width + " : " + this.height + " : "  +this.x + " : " + this.y);
     this.fillDiv.style.width  = this.width - 2 + "px";
     this.fillDiv.style.height = this.height - 2 + "px";
     this.fillDiv.style.left = this.x  + "px";

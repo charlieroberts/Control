@@ -6,8 +6,6 @@
 //  Copyright 2010 One More Muse. All rights reserved.
 //
 
-// TODO : Run in a block using CMGyroHandler and CMGyroData -- is motionManager better?
-
 #import "Gyro.h"
 
 
@@ -28,6 +26,10 @@
 	referenceAttitude = [motionManager.deviceMotion.attitude retain];
 }
 
+- (void)streamMagneticField:(NSMutableArray *)arguments withDict:(NSMutableDictionary *) options {
+    
+}
+
 - (void)start:(NSMutableArray *)arguments withDict:(NSMutableDictionary *) options {
 	
 	if (motionManager == nil) {
@@ -39,6 +41,7 @@
 	referenceAttitude = [motionManager.deviceMotion.attitude retain];
 
 	opQ = [[NSOperationQueue currentQueue] retain];
+    
 	deviceMotionHandler = ^ (CMDeviceMotion *motion, NSError *error) {
 		CMDeviceMotion *deviceMotion = motionManager.deviceMotion;
 		CMRotationRate rr = deviceMotion.rotationRate;
@@ -51,21 +54,19 @@
 		if (referenceAttitude != nil) {
 			[attitude multiplyByInverseOfAttitude:referenceAttitude];
 		}
-		//NSLog(@"yaw = %lf", attitude.yaw);
-		//rotation = attitude.rotationMatrix;
 		
 		/*userAcceleration = deviceMotion.userAcceleration;
 		 [userAccelerationLpf addAcceleration:userAcceleration withTimestamp:deviceMotion.timestamp];*/
-		
-		// The user acceleration we want to use is the one computed by userAccelerationLpf
-		/*userAcceleration.x = userAccelerationLpf.x;
-		 userAcceleration.y = userAccelerationLpf.y;
-		 userAcceleration.z = userAccelerationLpf.z;
-		*/
+
 		NSString * jsCallBack;
-		jsCallBack = [[NSString alloc] initWithFormat:@"Control.gyro._onGyroUpdate({'xRotationRate':%f,'yRotationRate':%f,'zRotationRate':%f},{'pitch':%f,'roll':%f,'yaw':%f});", rr.x, rr.y, rr.z, attitude.pitch, attitude.roll, attitude.yaw];
-		//NSLog(jsCallBack);
+		jsCallBack = [[NSString alloc] 
+                      initWithFormat:@"Control.gyro.onUpdate({'xRotationRate':%f,'yRotationRate':%f,'zRotationRate':%f},{'pitch':%f,'roll':%f,'yaw':%f});",
+                      rr.x, rr.y, rr.z, attitude.pitch, attitude.roll, attitude.yaw];
 		
+        //printf("%f\t%f\t%f\n", motion.magneticField.field.x, motion.magneticField.field.y, motion.magneticField.field.z);
+        //CMMagneticFieldCalibrationAccuracy acc = motion.magneticField.accuracy;
+        
+        
 		[self.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsCallBack waitUntilDone:NO];
 		[jsCallBack release];
 		

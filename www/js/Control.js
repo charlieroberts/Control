@@ -18,6 +18,7 @@ window["Control"] = {
     acc 			: null,
     magnetometer 	: null,
     gyro 			: null,
+    speech          : null,
     audioPitch 		: null,
     audioVolume 	: null,
     shouldPrevent	: false,
@@ -177,6 +178,7 @@ window["Control"] = {
     
     makeWidget : function(w) {
         var _w;
+        console.log("Making widget " + w.name);
         if(!this.isWidgetSensor(w)) {
             _w = window[w.name] = new Control[w.type](this.interfaceDiv, w);
             if(_w.init != null) { 
@@ -189,7 +191,8 @@ window["Control"] = {
                 case "Magnetometer"     : Control.magnetometer = _w;    break;					
                 case "Gyro"             : Control.gyro = _w;            break;
                 case "AudioPitch"		: Control.audioPitch  = _w;     break;
-                case "AudioVolume"		: Control.audioVolume = _w;     break;																
+                case "AudioVolume"		: Control.audioVolume = _w;     break;
+                case "Speech"           : Control.speech = _w;          break;
             }
             _w.start();        
         }
@@ -201,7 +204,7 @@ window["Control"] = {
     
     isWidgetSensor : function(w) {
         var _isWidgetSensor = false;
-        var sensors = [ "Accelerometer", "Magnetometer", "Gyro", "AudioPitch", "AudioVolume" ];
+        var sensors = [ "Accelerometer", "Magnetometer", "Gyro", "AudioPitch", "AudioVolume", "Speech" ];
         for(var i in sensors) {
             if(w.type == sensors[i]) { 
                 _isWidgetSensor = true;

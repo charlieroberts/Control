@@ -19,6 +19,9 @@
 	CMAttitude *referenceAttitude;
 	NSOperationQueue *opQ;
 	CMDeviceMotionHandler deviceMotionHandler;
+    BOOL shouldSendMagneticField;
+    BOOL shouldSendRotationRate;
+    BOOL shouldSendOrientation;
 }
 
 - (void)setReferenceAttitude:(NSMutableArray *)arguments withDict:(NSMutableDictionary *) options;

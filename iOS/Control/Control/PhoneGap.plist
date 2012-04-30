@@ -62,6 +62,12 @@
 		<string>CNTRLMIDI</string>
 		<key>Gyro</key>
 		<string>Gyro</string>
+		<key>Magnetometer</key>
+		<string>CNTRLMagnetometer</string>
+		<key>Video</key>
+		<string>CNTRLVideo</string>
+		<key>Speech</key>
+		<string>CNTRLSpeech</string>
 	</dict>
 </dict>
 </plist>
