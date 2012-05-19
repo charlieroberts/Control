@@ -68,10 +68,10 @@
 		CB023961149AAD9D001AC32A /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB02395E149AAD9D001AC32A /* Accelerate.framework */; };
 		CB023962149AAD9D001AC32A /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB02395F149AAD9D001AC32A /* CoreMotion.framework */; };
 		CB023963149AAD9D001AC32A /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB023960149AAD9D001AC32A /* CoreMIDI.framework */; };
+		CB55B7A2154F3EED002CF96C /* Control-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CB55B7A1154F3EED002CF96C /* Control-Info.plist */; };
 		CB64B49B154CE9AE00D403A4 /* CNTRLSpeech.m in Sources */ = {isa = PBXBuildFile; fileRef = CB64B49A154CE9AE00D403A4 /* CNTRLSpeech.m */; };
 		CB64B49D154CF0F100D403A4 /* cmu07a.dic in Resources */ = {isa = PBXBuildFile; fileRef = CB64B49C154CF0F100D403A4 /* cmu07a.dic */; };
 		CB737F1214DA8729003416AF /* Gyro.m in Sources */ = {isa = PBXBuildFile; fileRef = CB737F1114DA8729003416AF /* Gyro.m */; };
-		CB76D59D154CF9F9006DF5DC /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB76D59C154CF9F9006DF5DC /* OpenEars.framework */; };
 		CB76D5A6154CFD39006DF5DC /* feat.params in Resources */ = {isa = PBXBuildFile; fileRef = CB76D59F154CFD39006DF5DC /* feat.params */; };
 		CB76D5A7154CFD39006DF5DC /* mdef in Resources */ = {isa = PBXBuildFile; fileRef = CB76D5A0154CFD39006DF5DC /* mdef */; };
 		CB76D5A8154CFD39006DF5DC /* means in Resources */ = {isa = PBXBuildFile; fileRef = CB76D5A1154CFD39006DF5DC /* means */; };
@@ -79,6 +79,7 @@
 		CB76D5AA154CFD39006DF5DC /* sendump in Resources */ = {isa = PBXBuildFile; fileRef = CB76D5A3154CFD39006DF5DC /* sendump */; };
 		CB76D5AB154CFD39006DF5DC /* transition_matrices in Resources */ = {isa = PBXBuildFile; fileRef = CB76D5A4154CFD39006DF5DC /* transition_matrices */; };
 		CB76D5AC154CFD39006DF5DC /* variances in Resources */ = {isa = PBXBuildFile; fileRef = CB76D5A5154CFD39006DF5DC /* variances */; };
+		CB76D5CC154F2B95006DF5DC /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB76D5CB154F2B95006DF5DC /* OpenEars.framework */; };
 		CBB033BC154C8F5600FC4156 /* CNTRLVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = CBB033BB154C8F5600FC4156 /* CNTRLVideo.m */; };
 		CBB033C9154C987900FC4156 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBB033C8154C987900FC4156 /* CoreVideo.framework */; };
 		CBFA18EE1547703B00809024 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = CBFA18EC1547703B00809024 /* Default.png */; };
@@ -107,7 +108,6 @@
 		CB02389814972BE5001AC32A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		CB02389A14972BE5001AC32A /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		CB02389C14972BE5001AC32A /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
-		CB0238A014972BE5001AC32A /* Control-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Control-Info.plist"; sourceTree = "<group>"; };
 		CB0238A214972BE5001AC32A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CB0238A414972BE5001AC32A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CB0238A614972BE5001AC32A /* Control-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Control-Prefix.pch"; sourceTree = "<group>"; };
@@ -205,12 +205,12 @@
 		CB02395E149AAD9D001AC32A /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		CB02395F149AAD9D001AC32A /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		CB023960149AAD9D001AC32A /* CoreMIDI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMIDI.framework; path = System/Library/Frameworks/CoreMIDI.framework; sourceTree = SDKROOT; };
+		CB55B7A1154F3EED002CF96C /* Control-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Control-Info.plist"; sourceTree = "<group>"; };
 		CB64B499154CE9AE00D403A4 /* CNTRLSpeech.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNTRLSpeech.h; sourceTree = "<group>"; };
 		CB64B49A154CE9AE00D403A4 /* CNTRLSpeech.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNTRLSpeech.m; sourceTree = "<group>"; };
 		CB64B49C154CF0F100D403A4 /* cmu07a.dic */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cmu07a.dic; sourceTree = "<group>"; };
 		CB737F1014DA8729003416AF /* Gyro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gyro.h; sourceTree = "<group>"; };
 		CB737F1114DA8729003416AF /* Gyro.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Gyro.m; sourceTree = "<group>"; };
-		CB76D59C154CF9F9006DF5DC /* OpenEars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OpenEars.framework; sourceTree = "<group>"; };
 		CB76D59F154CFD39006DF5DC /* feat.params */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = feat.params; sourceTree = "<group>"; };
 		CB76D5A0154CFD39006DF5DC /* mdef */ = {isa = PBXFileReference; lastKnownFileType = file; path = mdef; sourceTree = "<group>"; };
 		CB76D5A1154CFD39006DF5DC /* means */ = {isa = PBXFileReference; lastKnownFileType = file; path = means; sourceTree = "<group>"; };
@@ -218,6 +218,7 @@
 		CB76D5A3154CFD39006DF5DC /* sendump */ = {isa = PBXFileReference; lastKnownFileType = file; path = sendump; sourceTree = "<group>"; };
 		CB76D5A4154CFD39006DF5DC /* transition_matrices */ = {isa = PBXFileReference; lastKnownFileType = file; path = transition_matrices; sourceTree = "<group>"; };
 		CB76D5A5154CFD39006DF5DC /* variances */ = {isa = PBXFileReference; lastKnownFileType = file; path = variances; sourceTree = "<group>"; };
+		CB76D5CB154F2B95006DF5DC /* OpenEars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenEars.framework; path = "../../../OpenEarsDistribution/OpenEars/build/Debug-iphoneos/OpenEars.framework"; sourceTree = "<group>"; };
 		CBB033BA154C8F5600FC4156 /* CNTRLVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNTRLVideo.h; sourceTree = "<group>"; };
 		CBB033BB154C8F5600FC4156 /* CNTRLVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNTRLVideo.m; sourceTree = "<group>"; };
 		CBB033C8154C987900FC4156 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
@@ -255,7 +256,7 @@
 				CB023962149AAD9D001AC32A /* CoreMotion.framework in Frameworks */,
 				CB023963149AAD9D001AC32A /* CoreMIDI.framework in Frameworks */,
 				CBB033C9154C987900FC4156 /* CoreVideo.framework in Frameworks */,
-				CB76D59D154CF9F9006DF5DC /* OpenEars.framework in Frameworks */,
+				CB76D5CC154F2B95006DF5DC /* OpenEars.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,7 +292,7 @@
 		CB02388314972BE5001AC32A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				CB76D59C154CF9F9006DF5DC /* OpenEars.framework */,
+				CB76D5CB154F2B95006DF5DC /* OpenEars.framework */,
 				CB0238DE14973255001AC32A /* ip */,
 				CB0238E814973255001AC32A /* osc */,
 				CBB033C8154C987900FC4156 /* CoreVideo.framework */,
@@ -329,7 +330,7 @@
 		CB02389F14972BE5001AC32A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				CB0238A014972BE5001AC32A /* Control-Info.plist */,
+				CB55B7A1154F3EED002CF96C /* Control-Info.plist */,
 				CB0238A114972BE5001AC32A /* InfoPlist.strings */,
 				CB0238A414972BE5001AC32A /* main.m */,
 				CB0238A614972BE5001AC32A /* Control-Prefix.pch */,
@@ -604,6 +605,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB55B7A2154F3EED002CF96C /* Control-Info.plist in Resources */,
 				CB0238A314972BE5001AC32A /* InfoPlist.strings in Resources */,
 				CB0238AD14972BE5001AC32A /* Localizable.strings in Resources */,
 				CB0238BF14972BE5001AC32A /* Capture.bundle in Resources */,
@@ -740,6 +742,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -754,7 +757,8 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -764,6 +768,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -772,7 +777,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -787,6 +792,9 @@
 					/Users/Shared/PhoneGap/Frameworks,
 					"\"$(SRCROOT)/../../../OpenEarsDistribution/OpenEars/framework\"",
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/../../../OpenEarsDistribution/OpenEars/build/Release-iphoneos\"",
+					"\"$(SRCROOT)/../../../OpenEarsDistribution/OpenEars/build/Debug-iphoneos\"",
+					"\"$(SRCROOT)/../../../OpenEarsDistribution/OpenEars/build/Debug-iphoneos/OpenEars.embeddedframework\"",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -821,6 +829,9 @@
 					/Users/Shared/PhoneGap/Frameworks,
 					"\"$(SRCROOT)/../../../OpenEarsDistribution/OpenEars/framework\"",
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/../../../OpenEarsDistribution/OpenEars/build/Release-iphoneos\"",
+					"\"$(SRCROOT)/../../../OpenEarsDistribution/OpenEars/build/Debug-iphoneos\"",
+					"\"$(SRCROOT)/../../../OpenEarsDistribution/OpenEars/build/Debug-iphoneos/OpenEars.embeddedframework\"",
 				);
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

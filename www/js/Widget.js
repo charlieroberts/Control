@@ -2,7 +2,6 @@
 function Widget() { return this; } // x, y, width, height, color, startingValue, stroke, protocol) {
 
 Widget.prototype.make = function(ctx, props) {
-    console.log("inside make for " + props.name);
 	if(ctx != null) {
 		this.props = props;
         this.name = props.name;

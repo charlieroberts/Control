@@ -16,8 +16,9 @@ window["Control"] = {
     tabBarHidden	: false,
     orientation 	: 0,
     acc 			: null,
-    compass 		: null,
+    magnetometer 	: null,
     gyro 			: null,
+    speech          : null,
     audioPitch 		: null,
     audioVolume 	: null,
     shouldPrevent	: false,
@@ -30,7 +31,7 @@ window["Control"] = {
         this.interfaceDiv = document.getElementById("selectedInterface");
         this.changeTab(this.currentTab);
         
-        this.sensors = [this.acc, this.compass, this.gyro, this.audioPitch, this.audioVolume];
+        this.sensors = [this.acc, this.magnetometer, this.gyro, this.audioPitch, this.audioVolume];
         
         this.preferencesManager.init();
 
@@ -122,7 +123,14 @@ window["Control"] = {
         this.widgets	= [];
         this.pages 		= [];
         this.constants 	= [];
-        $("#selectedInterface").empty();		
+        $("#selectedInterface").empty();
+        
+        if(typeof Control.editor !== "undefined") {
+            if(Control.editor.gui != null) {
+                $(Control.editor.gui).remove();
+                Control.editor.gui = null;
+            }
+        }
         
         for(var i = 0; i < this.sensors.length; i++) {
             var sensor = this.sensors[i];
@@ -170,6 +178,7 @@ window["Control"] = {
     
     makeWidget : function(w) {
         var _w;
+        console.log("Making widget " + w.name);
         if(!this.isWidgetSensor(w)) {
             _w = window[w.name] = new Control[w.type](this.interfaceDiv, w);
             if(_w.init != null) { 
@@ -178,11 +187,12 @@ window["Control"] = {
         }else{
             _w = new Control[w.type](w);
             switch(w.type) {
-                case "Accelerometer"	: Control.acc = _w; 		break;
-                case "Compass"          : Control.compass = _w; 	break;					
-                case "Gyro"             : Control.gyro = _w; 		break;
-                case "AudioPitch"		: Control.audioPitch  = _w; break;
-                case "AudioVolume"		: Control.audioVolume = _w; break;																
+                case "Accelerometer"	: Control.acc = _w;             break;
+                case "Magnetometer"     : Control.magnetometer = _w;    break;					
+                case "Gyro"             : Control.gyro = _w;            break;
+                case "AudioPitch"		: Control.audioPitch  = _w;     break;
+                case "AudioVolume"		: Control.audioVolume = _w;     break;
+                case "Speech"           : Control.speech = _w;          break;
             }
             _w.start();        
         }
@@ -194,7 +204,7 @@ window["Control"] = {
     
     isWidgetSensor : function(w) {
         var _isWidgetSensor = false;
-        var sensors = [ "Accelerometer", "Compass", "Gyro", "AudioPitch", "AudioVolume" ];
+        var sensors = [ "Accelerometer", "Magnetometer", "Gyro", "AudioPitch", "AudioVolume", "Speech" ];
         for(var i in sensors) {
             if(w.type == sensors[i]) { 
                 _isWidgetSensor = true;

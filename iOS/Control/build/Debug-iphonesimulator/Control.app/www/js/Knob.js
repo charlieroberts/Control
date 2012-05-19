@@ -91,6 +91,12 @@ Control.Knob = function(ctx,props) {
     this.setValue(this.min, false);
 	this.lastRotationValue = .05;
     
+    this.events = { 
+        "touchstart": Control.Knob.prototype.touchstart, 
+        "touchmove" : Control.Knob.prototype.touchmove, 
+        "touchend"  : Control.Knob.prototype.touchend,
+    };
+    
     return this;
 }
 
@@ -178,29 +184,81 @@ Control.Knob.prototype.setBounds = function(newBounds) {
 }
 
 Control.Knob.prototype.event = function(event) {
-    touch = event.changedTouches.item(0);
-    
-    if(event.type == "touchstart" && this.hitTest(touch.pageX, touch.pageY)) { // if touch starts over this widget
+    for (var j = 0; j < event.changedTouches.length; j++){
+        var touch = event.changedTouches.item(j);
+        
+		var breakCheck = this.events[event.type].call(this, touch);
+		
+        if(breakCheck) break;
+    }
+}
+
+Control.Knob.prototype.touchstart = function(touch) {
+	if (this.hitTest(touch.pageX, touch.pageY)) { // if touch starts over this widget
 		this.newTouch = true;
         this.activeTouches.push(touch.identifier);
         this.lastPosition = touch.pageY;
         this.changeValue(touch.pageY, touch.pageX);
-        eval(this.ontouchstart);		
-    } else {
-        for(i in this.activeTouches) {
-            if(event.type == "touchmove" && touch.identifier == this.activeTouches[i]) {		// if moved touch ID is in the list of active touches
-				this.newTouch = false;
-                this.changeValue(touch.pageY, touch.pageX);
-                eval(this.ontouchmove);
-            }else if(event.type == "touchend" && touch.identifier == this.activeTouches[i]) {	// if ended touch ID is in the list of active touches
-				this.newTouch = false;
-                this.activeTouches.splice(i,1);	// remove touch ID from array
-                this.lastPosition = -1;
-                eval(this.ontouchend);
-            }
+        eval(this.ontouchstart);
+		
+		return true;
+	}
+	return false;	
+};
+
+Control.Knob.prototype.touchmove  = function(touch) {
+    for(i in this.activeTouches) {
+        if(touch.identifier == this.activeTouches[i]) {		// if moved touch ID is in the list of active touches
+            this.newTouch = false;
+            this.changeValue(touch.pageY, touch.pageX);
+            eval(this.ontouchmove);
         }
     }
-}
+	return false;
+};
+
+Control.Knob.prototype.touchend   = function(touch) {
+    for(i in this.activeTouches) {
+        if(touch.identifier == this.activeTouches[i]) {	// if ended touch ID is in the list of active touches
+            this.newTouch = false;
+            this.activeTouches.splice(i,1);	// remove touch ID from array
+            this.lastPosition = -1;
+            eval(this.ontouchend);
+        }
+    }
+	return false;
+};
+
+Control.Knob.prototype.events = { 
+	"touchstart": Control.Knob.prototype.touchstart, 
+	"touchmove" : Control.Knob.prototype.touchmove, 
+	"touchend"  : Control.Knob.prototype.touchend,
+};
+
+// Control.Knob.prototype.event = function(event) {
+//     touch = event.changedTouches.item(0);
+//     
+//     if(event.type == "touchstart" && this.hitTest(touch.pageX, touch.pageY)) { // if touch starts over this widget
+// 		this.newTouch = true;
+//         this.activeTouches.push(touch.identifier);
+//         this.lastPosition = touch.pageY;
+//         this.changeValue(touch.pageY, touch.pageX);
+//         eval(this.ontouchstart);		
+//     } else {
+//         for(i in this.activeTouches) {
+//             if(event.type == "touchmove" && touch.identifier == this.activeTouches[i]) {		// if moved touch ID is in the list of active touches
+// 				this.newTouch = false;
+//                 this.changeValue(touch.pageY, touch.pageX);
+//                 eval(this.ontouchmove);
+//             }else if(event.type == "touchend" && touch.identifier == this.activeTouches[i]) {	// if ended touch ID is in the list of active touches
+// 				this.newTouch = false;
+//                 this.activeTouches.splice(i,1);	// remove touch ID from array
+//                 this.lastPosition = -1;
+//                 eval(this.ontouchend);
+//             }
+//         }
+//     }
+// }
 
 Control.Knob.prototype.setValue = function(newValue) {
     //this.rotationValue = newValue;
@@ -267,12 +325,12 @@ Control.Knob.prototype.changeValue = function(yinput, xinput) {
 }
 
 Control.Knob.prototype.setBounds = function(newBounds) {
-    this.width = Math.round(newBounds[2] * Control.deviceWidth);
-    this.height = Math.round(newBounds[3] * Control.deviceHeight);
-    this.x = Math.round(newBounds[0] * Control.deviceWidth);
-    this.y = Math.round(newBounds[1] * Control.deviceHeight);
+    this.width = Math.round(newBounds[2] * $("#selectedInterface").width());
+    this.height = Math.round(newBounds[3] * $("#selectedInterface").height());
+    this.x = Math.round(newBounds[0] * $("#selectedInterface").width());
+    this.y = Math.round(newBounds[1] * $("#selectedInterface").height());
         
-    console.log("w: " + this.width + " | h: " + this.height + " | x: " + this.x + " | y: " + this.y);
+    //console.log("w: " + this.width + " | h: " + this.height + " | x: " + this.x + " | y: " + this.y);
     
     if(this.height > this.width) {
 		this.radius =  Math.round(this.width / 2);
@@ -289,7 +347,6 @@ Control.Knob.prototype.setBounds = function(newBounds) {
                     "top"   :   this.y + "px",
     });
     
-    console.log("finished");
 //    if(typeof this.label != "undefined") {
 //        this.label.setBounds(newBounds);
 //    }

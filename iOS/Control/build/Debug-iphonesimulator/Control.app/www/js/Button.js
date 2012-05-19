@@ -52,13 +52,82 @@ Control.Button = function(ctx, props) {
         
         this.ctx.appendChild(this.fillDiv);
     }
-        
+	/*
+	(function(obj) {
+		var that = obj;
+		var width = that.width;
+		var height = that.height;
+		var x = that.x;
+		var y = that.y;
+		
+	    Object.defineProperties(that, {
+			"width" : {
+		        get: function() {
+		            return width;
+		        },
+		        set: function(value) {
+		            if(value < 1) {
+		            	var newWidth = value * $("#selectedInterface").width();
+						$(that.fillDiv).css("width", newWidth);
+		            }else{
+		            	$(that.fillDiv).css("width", value);
+		            }
+		        }
+			},
+			"height" : {
+		        get: function() {
+		            return height;
+		        },
+		        set: function(value) {
+		            if(value < 1) {
+		            	var newHeight = value * $("#selectedInterface").height();
+						$(that.fillDiv).css("height", newHeight);
+		            }else{
+		            	$(that.fillDiv).css("height", value);
+		            }
+		        }
+			},
+			"x" : {
+		        get: function() {
+		            return x;
+		        },
+		        set: function(value) {
+		            if(value < 1) {
+		            	var newX = value * $("#selectedInterface").width();
+						$(that.fillDiv).css("left", newX);
+		            }else{
+		            	$(that.fillDiv).css("left", value);
+		            }
+		        }
+			},
+			"y" : {
+		        get: function() {
+		            return y;
+		        },
+		        set: function(value) {
+		            if(value < 1) {
+		            	var newY = value * $("#selectedInterface").height();
+						$(that.fillDiv).css("top", newY);
+		            }else{
+		            	$(that.fillDiv).css("top", value);
+		            }
+		        }
+			},
+	    });
+	})(this);
+    */
     this.yOffset = 0;
     this.xOffset = 0;
     
     if (props.mode == "visualToggle") this.visualToggleLit = (this.value == this.max);
     
     this.isLit = (this.value == this.max);
+    
+    this.events = { 
+        "touchstart": Control.Button.prototype.touchstart, 
+        "touchmove" : Control.Button.prototype.touchmove, 
+        "touchend"  : Control.Button.prototype.touchend,
+    };
     
     return this;
 }
@@ -82,6 +151,8 @@ Control.Button.prototype.draw = function() {
 			var flashFunction = Control.Button.prototype.flash(this);
 			setTimeout(flashFunction, 50);
         }
+        this.fillDiv.style.border = "1px solid " + this.strokeColor;
+
         if(this.label != null) this.label.draw();
     }
 
@@ -93,19 +164,18 @@ Control.Button.prototype.draw = function() {
 
 Control.Button.prototype.setColors = function(newColors) {
     this.backgroundColor = newColors[0];
-    this.fillColor = newColors[1];
-    this.strokeColor = newColors[2];
+    this.fillColor = newColors[1] || this.fillColor;
+    this.strokeColor = newColors[2] || this.strokeColor;
     
-    this.fillDiv.style.border = "1px solid " + this.strokeColor;
     this.draw();
 }
 
 Control.Button.prototype.setBounds = function(newBounds) {
-    this.width = Math.round(newBounds[2] * $("#selectedInterface").width());
-    this.height = Math.round(newBounds[3] * $("#selectedInterface").height());
-    this.x = Math.round(newBounds[0] * $("#selectedInterface").width());
-    this.y = Math.round(newBounds[1] * $("#selectedInterface").height());
-    
+    this.width = (newBounds[2] <= 1) ? Math.round(newBounds[2]  * $("#selectedInterface").width()) : newBounds[2];
+    this.height = (newBounds[3] <= 1) ? Math.round(newBounds[3] * $("#selectedInterface").height()) : newBounds[3];
+    this.x = (newBounds[0] <= 1) ? Math.round(newBounds[0] * $("#selectedInterface").width()) : newBounds[0]; 
+    this.y = (newBounds[1] <= 1) ? Math.round(newBounds[1] * $("#selectedInterface").height()): newBounds[1];
+    //console.log(this.width + " : " + this.height + " : "  +this.x + " : " + this.y);
     this.fillDiv.style.width  = this.width - 2 + "px";
     this.fillDiv.style.height = this.height - 2 + "px";
     this.fillDiv.style.left = this.x  + "px";
@@ -261,11 +331,10 @@ Control.Button.prototype.touchend = function(touch, isHit) {
 }
 
 Control.Button.prototype.events = { 
-	"touchstart": Control.Button.prototype.touchstart, 
-	"touchmove" : Control.Button.prototype.touchmove, 
-	"touchend"  : Control.Button.prototype.touchend,
+    "touchstart": Control.Button.prototype.touchstart, 
+    "touchmove" : Control.Button.prototype.touchmove, 
+    "touchend"  : Control.Button.prototype.touchend,
 };
-
 Control.Button.prototype.event = function(event) {
     for (var j = 0; j < event.changedTouches.length; j++){
         var touch = event.changedTouches.item(j);

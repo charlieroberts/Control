@@ -133,9 +133,6 @@ Control.functions = {
         }
     },
     processOSC : function(oscAddress, typetags, args) {
-        if(oscAddress != "/level/led_col") {
-            console.log("msgs! " + oscAddress);
-        }
         var monome = window.monome;
         switch(oscAddress) {
             case Control.data.oscPrefix + "/led" :
@@ -183,12 +180,10 @@ Control.functions = {
                 }
                 break;
             case "/sys/prefix":
-                console.log("PREFIXING");
                 Control.data.oscPrefix = args[0];
                 Control.functions.changeAddresses();
             default:
                 break;
         }
     },
-
 };

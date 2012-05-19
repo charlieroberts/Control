@@ -33,7 +33,17 @@ Control.Speech.prototype.start = function() {
     PhoneGap.exec("Speech.start", { "commands": this.commands } );
 }
 
+Control.Speech.prototype.suspend = function() {
+	console.log("PAUSE");
+    PhoneGap.exec("Speech.stopListening", {});
+	
+}
+Control.Speech.prototype.resume = function() {
+	console.log("UNPAUSE");
+    PhoneGap.exec("Speech.listen", {});
+}
+
 Control.Speech.prototype.unload = function() {
     console.log("ENDING SPEECH");
-    PhoneGap.exec("Speech.stop", null); // tells pocketsphinx to stop listening
+    PhoneGap.exec("Speech.stop", {}); // tells pocketsphinx to stop listening
 }

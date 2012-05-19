@@ -49,15 +49,17 @@
     <script type="text/javascript" src="js/MultiTouchXY.js"></script> 
     <script type="text/javascript" src="js/Knob.js"></script>
     <script type="text/javascript" src="js/ControlAccelerometer.js"></script>
-    <script type="text/javascript" src="js/ControlCompass.js"></script>
+    <script type="text/javascript" src="js/ControlMagnetometer.js"></script>
     <script type="text/javascript" src="js/ControlGyro.js"></script>
+    <script type="text/javascript" src="js/ControlVideo.js"></script>    
+    <script type="text/javascript" src="js/ControlSpeech.js"></script>            
     <script type="text/javascript" src="js/AudioPitch.js"></script>
     <script type="text/javascript" src="js/AudioVolume.js"></script>
         
 
     <script type="text/javascript" charset="utf-8">        
         function preventBehavior(e) { // prevent scrolling
-            if(Control.shouldPrevent) { 
+            if(Control.shouldPrevent && (e.target.tagName != 'SELECT') && (e.target.tagName != 'INPUT') ) { 
                 e.preventDefault(); 
                 return;
             }
