@@ -1,16 +1,16 @@
 
 body {
-  background:#222 none repeat scroll 0 0;
-  color:#666;
-  font-family:Helvetica;
-  font-size:72%;
-  line-height:1.5em;
-  margin:0;
-  padding:0;
-  border-top:1px solid #393939;
-  text-shadow:none !important;
+    background:#000 none repeat scroll 0 0;
+    color:#666;
+    font-family:Helvetica;
+    font-size:72%;
+    line-height:1.5em;
+    margin:0;
+    padding:0;
+    border-top:1px solid #393939;
+    text-shadow:none !important;
     overflow:hidden;
-  
+    
 }
 
 b { font-weight: bold; }
@@ -18,34 +18,34 @@ b { font-weight: bold; }
 
 
 #selectedInterface, #Interfaces, #Destinations, #Preferences, #Info, #SelectedInterfacePage {
-  position:absolute;
-  left:0em;
-  top:0em;
-  height:100%;
-  width:100%;
-  /*overflow:hidden;*/
-  background-color:#000;
-  /*display:none;*/
-  /*-webkit-transition: height .2s linear;*/
+position:absolute;
+left:0em;
+top:0em;
+height:100%;
+width:100%;
+/*overflow:hidden;*/
+background-color:#000;
+/*display:none;*/
+/*-webkit-transition: height .2s linear;*/
 }
 
 
 #Interface { display: block; }
 
 li { color: #fff; }
-
-#selectedInterface { background-color:#000; }
-
-canvas { margin: 0; padding: 0;}
-
-h3 { font-weight: normal !important; text-shadow: none !important}}
+    
+    #selectedInterface { background-color:#000; }
+    
+    canvas { margin: 0; padding: 0;}
+    
+    h3 { font-weight: normal !important; text-shadow: none !important}}
 
 #Info { overflow:scroll; height:85%}
 
 #Info p {
-	padding:0em 1em;
-	color:#ccc;
-	font-size:1em;
+padding:0em 1em;
+color:#ccc;
+font-size:1em;
 }
 
 #Info a { color:#ccc; }
@@ -71,14 +71,14 @@ h3 { font-weight: normal !important; text-shadow: none !important}}
 .add  { position:absolute; right:.5em; font-weight:bold;width:3em; height:1.5em;	font-size:.9em; float:right;}
 
 #_footer {
-    border-width:0;
-    color-stop(0, 	#222222),
-    color-stop(1, 	#000000));
-    position:fixed; bottom:0px; width:100%; height:35px; display:block;
+border-width:0;
+color-stop(0, 	#222222),
+color-stop(1, 	#000000));
+position:fixed; bottom:0px; width:100%; height:35px; display:block;
 }
 
 #_footer a {
-    padding: .5em;
+padding: .5em;
 }
 
 ul li { font-size: 1em; display:block; height:35px;}
@@ -116,5 +116,6 @@ ul li { font-size: 1em; display:block; height:35px;}
 /* jQuery overrides */
 .ui-btn-text   { text-overflow: clip; font-weight:normal; };
 .ui-btn-down-a { background-image:-webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #333333), color-stop(0.05, #333333), color-stop(1, #000000)); }
-.ui-btn-up-a   { background-image:-webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #333333), color-stop(0.05, #333333), color-stop(1, #000000)); }
-.ui-btn-inner  { border-top-width:0; border-left-width:0; border-right-width:1px; }
+    .ui-btn-up-a   { background-image:-webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #333333), color-stop(0.05, #333333), color-stop(1, #000000)); }
+        .ui-btn-inner  { border-top-width:0; border-left-width:0; border-right-width:1px; }
+        .ui-content { background-color: #000; }

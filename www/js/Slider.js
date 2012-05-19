@@ -251,6 +251,17 @@ Control.Slider.prototype.changeValue = function(val) {
     this.setValue( this.min + ( this.value * ( this.max - this.min ) ) );
 }
 
+Control.Slider.prototype.multiOutput = function() {
+    if (!this.isLocal && Control.protocol == "OSC") {
+        var valueString = "|" + this.address;
+        valueString += ":" + this.childID + "," + this.value;
+        Control.valuesString += valueString;
+    } else if (!this.isLocal && Control.protocol == "MIDI") {
+        var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber + "," + Math.round(this.value);
+        Control.valuesString += valueString;
+    }
+}
+
 Control.Slider.prototype.draw = function() {
     var range = this.max - this.min;
     var percent = (this.value + (0 - this.min)) / range;

@@ -80,10 +80,11 @@ Control.MultiSlider.prototype.init = function() {
         console.log("SLIDER " + i + " REQUIRES TOUCHDOWN = " + newProps.requiresTouchDown);
         var _w = new Control.Slider(this.ctx, newProps, this.ctx);
         _w.name = this.name + i;
-        _w.address = this.address + "/" + i;
+        _w.address = this.address;// + "/" + i;
         _w.midiNumber = this.midiNumber+ i;
         _w.childID = i;
         _w.requiresTouchDown = false;
+        _w.output = _w.multiOutput;
         this.children.push(_w);
     }
     console.log("DONE MAKING SLIDERS");
@@ -121,6 +122,7 @@ Control.MultiSlider.prototype.event = function(event) {
         }
     }
 }
+
 
 Control.MultiSlider.prototype.setColors = function(newColors) {
     this.backgroundColor = newColors[0];

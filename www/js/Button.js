@@ -357,6 +357,17 @@ Control.Button.prototype.output = function() {
     }
 }
 
+Control.Button.prototype.multiOutput = function() {
+    if (!this.isLocal && Control.protocol == "OSC") {
+        var valueString = "|" + this.address;
+        valueString += ":" + this.childID + "," + this.value;
+        Control.valuesString += valueString;
+    } else if (!this.isLocal && Control.protocol == "MIDI") {
+        var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber + "," + Math.round(this.value);
+        Control.valuesString += valueString;
+    }
+}
+
 Control.Button.prototype.setValue = function(newValue) {
     this.value = newValue;
     switch (this.mode) {

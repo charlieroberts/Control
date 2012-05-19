@@ -83,9 +83,10 @@ Control.MultiButton.prototype.init = function() {
                 }
                 
                 var _w = new Control.Button(this.ctx, newProps);
-                _w.address    = this.address + "/" + ((i * this.columns) + j);
+                _w.address    = this.address; // + "/" + ((i * this.columns) + j);
                 _w.midiNumber = this.midiNumber + ((i * this.columns) + j);
                 _w.childID = ((i * this.columns) + j);
+                _w.output = _w.multiOutput;
                 this.children.push(_w);
             }						
         }
@@ -329,6 +330,38 @@ Control.MultiButton.prototype.setValue = function(buttonNumber, value) {
             eval(this.lastChanged.onvaluechange);
         }
         this.drawButton(buttonNumber);
+    }
+}
+
+Control.MultiButton.prototype.setBounds = function(bounds) {
+    var buttonWidth, buttonHeight;
+    var pixelWidth = 1 / Control.deviceWidth;
+    var pixelHeight = 1 / Control.deviceHeight;
+    
+    this.origX = bounds[0];
+	this.origY = bounds[1];
+    this.widthInPercentage  = bounds[2];
+	this.heightInPercentage = bounds[3];
+    
+    this.x = ($("#selectedInterface").width() * bounds[0]);
+    this.y = ($("#selectedInterface").height()* bounds[1]);
+    this.width = $("#selectedInterface").width() * bounds[2];
+    this.height = $("#selectedInterface").height() * bounds[3];
+    
+	this.buttonWidth  = this.widthInPercentage  / this.columns;
+	this.buttonHeight = this.heightInPercentage / this.rows;
+	
+	this.buttonWidthInPixels  = Math.round(parseInt(this.width)  / this.columns);
+	this.buttonHeightInPixels = Math.round(parseInt(this.height) / this.rows);
+    
+    for(var i = 0; i < this.rows; i++) {
+        var _y = this.buttonHeight * i; //- (i * this.pixelHeight);
+        
+        for(var j = 0; j < this.columns; j++) {
+            var _x = this.buttonWidth * j; // - (j * this.pixelWidth);
+            this.children[(i * this.columns) + j].setBounds([ this.origX + _x, this.origY + _y, this.buttonWidth, this.buttonHeight]);
+            console.log(this.origX + _x, this.origY + _y, this.buttonWidth, this.buttonHeight);
+        }
     }
 }
 
