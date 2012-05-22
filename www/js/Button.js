@@ -10,7 +10,6 @@ Control.Button = function(ctx, props) {
     this.requiresTouchDown = (typeof props.requiresTouchDown == "undefined") ? true : props.requiresTouchDown;
     
     this.contactOn = false;	// used to trigger flash for contact mode buttons
-	
     if (typeof props.label != "undefined") {
         this.text = props.label;
         this.labelSize = props.labelSize || 12;
@@ -24,7 +23,6 @@ Control.Button = function(ctx, props) {
 				 "value":this.text,
 				 "size":props.labelSize || 12,
 			 };
-                        
             var _w = Control.makeWidget(this.label);
 	        if(!Control.isAddingConstants) {
 	            Control.addWidget(_w, Control.addingPage); // PROBLEM

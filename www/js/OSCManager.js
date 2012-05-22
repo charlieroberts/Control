@@ -39,13 +39,12 @@ Control.oscManager = {
             }catch (e) {
                 return;
             }
-        
             var isImportant = false;
         	
 			if(typeof w.page === "undefined") {
 				w.page = Control.currentPage;
 			}
-			
+			Control.addingPage = w.page;
             var _w = Control.makeWidget(w);
             _w.page = w.page;
                     
@@ -56,7 +55,8 @@ Control.oscManager = {
             }
         
             var widgetPage = (typeof w.page !== "undefined") ? w.page : Control.currentPage;
-            Control.addWidget(window[w.name], widgetPage);
+            Control.addingPage = widgetPage;
+            Control.addWidget(window[w.name], Control.addingPage);
         },
         "/control/addWidgetKV" : function(args) {
             var w = {};

@@ -69,7 +69,7 @@ Control.autogui = {
     
     placeWidget : function(_widget, sacrosanct) {
         if(_widget === null) console.log("ALERT ALERT ALERT ALERT ALERT ALERT ALERT ALERT ALERT ALERT ALERT ALERT");
-        var page = (typeof _widget.page === "undefined") ? Control.currentPage : _widget.page;
+        var page = (typeof _widget.page === "undefined") ? Control.addingPage : _widget.page;
         var maxSize = 0;
         var bestDiv = -1;
         var bestChild = null;
