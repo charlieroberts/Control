@@ -7,30 +7,34 @@
 //
 
 #import "CNTRLSpeech.h"
-#import <OpenEars/PocketsphinxController.h>
-#import <OpenEars/LanguageModelGenerator.h>
 
 @implementation CNTRLSpeech
 
-@synthesize openEarsEventsObserver, pocketsphinxController, usingStartLanguageModel, pathToGrammarToStartAppWith, pathToDictionaryToStartAppWith,
-pathToDynamicallyGeneratedGrammar, pathToDynamicallyGeneratedDictionary;
+@synthesize openEarsEventsObserver, pocketsphinxController, usingStartLanguageModel, pathToDynamicallyGeneratedGrammar, pathToDynamicallyGeneratedDictionary;
+
+- (void) dealloc {
+    [languageModelGenerator release];
+    [super dealloc];
+}
 
 - (void)start:(NSMutableArray *)arguments withDict:(NSMutableDictionary *) options {
     [self.openEarsEventsObserver setDelegate:self];
     
+	languageModelGenerator = [[LanguageModelGenerator alloc] init]; 
+    [self setCommands:arguments withDict:options];
+}
+
+- (void)setCommands:(NSMutableArray *)arguments withDict:(NSMutableDictionary *) options {    
     NSArray *languageArray = [options objectForKey:@"commands"];
-    
-	LanguageModelGenerator *languageModelGenerator = [[LanguageModelGenerator alloc] init]; 
-    
 	NSError *error = [languageModelGenerator generateLanguageModelFromArray:languageArray withFilesNamed:@"OpenEarsDynamicGrammar"];
     
-	NSDictionary *dynamicLanguageGenerationResultsDictionary = nil;
+    NSDictionary *dynamicLanguageGenerationResultsDictionary = nil;
     
-	if([error code] != noErr) {
+    if([error code] != noErr) {
 		NSLog(@"Dynamic language generator reported error %@", [error description]);	
 	} else {
 		dynamicLanguageGenerationResultsDictionary = [error userInfo];
-		
+        
 		NSString *lmFile = [dynamicLanguageGenerationResultsDictionary objectForKey:@"LMFile"];
 		NSString *dictionaryFile = [dynamicLanguageGenerationResultsDictionary objectForKey:@"DictionaryFile"];
 		NSString *lmPath = [dynamicLanguageGenerationResultsDictionary objectForKey:@"LMPath"];
@@ -38,12 +42,22 @@ pathToDynamicallyGeneratedGrammar, pathToDynamicallyGeneratedDictionary;
 		
 		NSLog(@"Dynamic language generator completed successfully, you can find your new files %@\n and \n%@\n at the paths \n%@ \nand \n%@", lmFile,dictionaryFile,lmPath,dictionaryPath);	
 		
-		self.pathToDynamicallyGeneratedGrammar = lmPath; // We'll set our new .languagemodel file to be the one to get switched to when the words "CHANGE MODEL" are recognized.
-		self.pathToDynamicallyGeneratedDictionary = dictionaryPath; // We'll set our new dictionary to be the one to get switched to when the words "CHANGE MODEL" are recognized.
+		self.pathToDynamicallyGeneratedGrammar = lmPath;
+		self.pathToDynamicallyGeneratedDictionary = dictionaryPath;
         
+        self.pocketsphinxController.secondsOfSilenceToDetect = .25;
         [self.pocketsphinxController startListeningWithLanguageModelAtPath:self.pathToDynamicallyGeneratedGrammar dictionaryAtPath:self.pathToDynamicallyGeneratedDictionary languageModelIsJSGF:FALSE];
 	}
-    
+}
+
+- (void)listen:(NSMutableArray *)arguments withDict:(NSMutableDictionary *) options {
+    [self.pocketsphinxController resumeRecognition];     
+    [self.pocketsphinxController setProcessing:NO];
+}
+
+- (void)stopListening:(NSMutableArray *)arguments withDict:(NSMutableDictionary *) options {
+    [self.pocketsphinxController suspendRecognition];
+    [self.pocketsphinxController setProcessing:YES];
 }
 
 - (void) pocketsphinxDidReceiveHypothesis:(NSString *)hypothesis recognitionScore:(NSString *)recognitionScore utteranceID:(NSString *)utteranceID {
@@ -55,14 +69,38 @@ pathToDynamicallyGeneratedGrammar, pathToDynamicallyGeneratedDictionary;
 	[jsCallBack release];
 }
 
-
-- (void)stop:(NSMutableArray *)arguments withDict:(NSMutableDictionary *) options  {
-    NSLog(@"stopping speech");
-	[self.pocketsphinxController stopListening];
+// An optional delegate method of OpenEarsEventsObserver which informs that Pocketsphinx is now listening for speech.
+- (void) pocketsphinxDidStartListening {
+    NSLog(@"******************* DID START LISTENING ******************************");
+    NSString * jsCallBack;
+	jsCallBack = [[NSString alloc] initWithFormat:@"Control.speech.onStartListening();"];
+	[self.webView stringByEvaluatingJavaScriptFromString:jsCallBack];
+	[jsCallBack release];
 }
 
-- (void) startDisplayingLevels { }
-- (void) stopDisplayingLevels  { }
+// An optional delegate method of OpenEarsEventsObserver which informs that Pocketsphinx detected speech and is starting to process it.
+- (void) pocketsphinxDidDetectFinishedSpeech {
+    NSString * jsCallBack;
+    NSLog(@"******************* DID HEAR SPEECH AND START PROCESSING ******************************");
+    
+	jsCallBack = [[NSString alloc] initWithFormat:@"Control.speech.onStartProcessing();"];
+	[self.webView stringByEvaluatingJavaScriptFromString:jsCallBack];
+	[jsCallBack release];
+}
+
+//- (void) pocketsphinxDidDetectFinishedSpeech; // Pocketsphinx detected a second of silence indicating the end of an utterance
+
+
+
+// An optional delegate method of OpenEarsEventsObserver which informs that the unavailable audio input became available again.
+//- (void) audioInputDidBecomeAvailable {
+//    [self.pocketsphinxController startListeningWithLanguageModelAtPath:self.pathToGrammarToStartAppWith dictionaryAtPath:self.pathToDictionaryToStartAppWith languageModelIsJSGF:FALSE];
+//}
+
+- (void)stop:(NSMutableArray *)arguments withDict:(NSMutableDictionary *) options  {
+    NSLog(@"STOP LISTENING");
+	[self.pocketsphinxController stopListening];
+}
 
 - (PocketsphinxController *)pocketsphinxController { 
 	if (pocketsphinxController == nil) {

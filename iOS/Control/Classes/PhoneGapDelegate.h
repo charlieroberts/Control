@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "JSONKit.h"
+#import "CNTRLWindow.h"
 
 @class InvokedUrlCommand;
 @class PhoneGapViewController;
@@ -20,7 +21,7 @@
 {
 }
 
-@property (nonatomic, readwrite, retain) IBOutlet UIWindow *window;
+@property (nonatomic, readwrite, retain) IBOutlet CNTRLWindow *window;
 @property (nonatomic, readwrite, retain) IBOutlet UIWebView *webView;
 @property (nonatomic, readonly, retain) IBOutlet PhoneGapViewController *viewController;
 @property (nonatomic, readonly, retain) IBOutlet UIActivityIndicatorView *activityView;

@@ -50,14 +50,15 @@ window.run = function () {
 	}
     
 	if(window.count++ === 15) window.count = 0;
-	Control.timeout = setTimeout(window.run, window.tempo);
+	window.timeout = setTimeout(window.run, window.tempo);
 };
 
 window.stop = function() {
-	clearTimeout(Control.timeout);
+	clearTimeout(window.timeout);
 };
 
 window.setTempo = function(newTempo) {
+	console.log("SETTING TEMPO" + newTempo);
 	window.tempo = 250 / (newTempo / 60);
 };
 
@@ -394,8 +395,8 @@ Control.interface = {
              [{
               "name": "infoText",
               "type": "Label",
-              "x": .0,
-              "y": .0,
+              "x": 0,
+              "y": 0,
               "width": 1,
               "height": 1,
               "value": Control.data.infoText,

@@ -401,7 +401,7 @@ BOOL gSplashScreenShown = NO;
     
     
     CGRect screenBounds = [ [ UIScreen mainScreen ] bounds ];
-    self.window = [ [ [ UIWindow alloc ] initWithFrame:screenBounds ] autorelease ];
+    self.window = [ [ [ CNTRLWindow alloc ] initWithFrame:screenBounds ] autorelease ];
 
 
     self.window.autoresizesSubviews = YES;
@@ -415,6 +415,8 @@ BOOL gSplashScreenShown = NO;
     
     viewController.webView = self.webView;
     [self.viewController.view addSubview:self.webView];
+    
+    [self.window setWebView:self.webView]; // set webview so we can pass pressure (touch radii) readings
     
         
     /*

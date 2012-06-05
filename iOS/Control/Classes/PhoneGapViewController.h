@@ -7,6 +7,7 @@
 
 
 #import <UIKit/UIKit.h>
+#import "CNTRLWindow.h"
 #import <Foundation/Foundation.h>
 
 @interface PhoneGapViewController : UIViewController {

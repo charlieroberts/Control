@@ -80,6 +80,7 @@
 		CB76D5AB154CFD39006DF5DC /* transition_matrices in Resources */ = {isa = PBXBuildFile; fileRef = CB76D5A4154CFD39006DF5DC /* transition_matrices */; };
 		CB76D5AC154CFD39006DF5DC /* variances in Resources */ = {isa = PBXBuildFile; fileRef = CB76D5A5154CFD39006DF5DC /* variances */; };
 		CB76D5CC154F2B95006DF5DC /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB76D5CB154F2B95006DF5DC /* OpenEars.framework */; };
+		CBAA9785157D5F970024B90D /* CNTRLWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = CBAA9784157D5F960024B90D /* CNTRLWindow.m */; };
 		CBB033BC154C8F5600FC4156 /* CNTRLVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = CBB033BB154C8F5600FC4156 /* CNTRLVideo.m */; };
 		CBB033C9154C987900FC4156 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBB033C8154C987900FC4156 /* CoreVideo.framework */; };
 		CBFA18EE1547703B00809024 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = CBFA18EC1547703B00809024 /* Default.png */; };
@@ -219,6 +220,8 @@
 		CB76D5A4154CFD39006DF5DC /* transition_matrices */ = {isa = PBXFileReference; lastKnownFileType = file; path = transition_matrices; sourceTree = "<group>"; };
 		CB76D5A5154CFD39006DF5DC /* variances */ = {isa = PBXFileReference; lastKnownFileType = file; path = variances; sourceTree = "<group>"; };
 		CB76D5CB154F2B95006DF5DC /* OpenEars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenEars.framework; path = "../../../OpenEarsDistribution/OpenEars/build/Debug-iphoneos/OpenEars.framework"; sourceTree = "<group>"; };
+		CBAA9783157D5F960024B90D /* CNTRLWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNTRLWindow.h; sourceTree = "<group>"; };
+		CBAA9784157D5F960024B90D /* CNTRLWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNTRLWindow.m; sourceTree = "<group>"; };
 		CBB033BA154C8F5600FC4156 /* CNTRLVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNTRLVideo.h; sourceTree = "<group>"; };
 		CBB033BB154C8F5600FC4156 /* CNTRLVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNTRLVideo.m; sourceTree = "<group>"; };
 		CBB033C8154C987900FC4156 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
@@ -485,6 +488,8 @@
 				CB02391514981832001AC32A /* Contact.m */,
 				CB02391614981832001AC32A /* Contacts.h */,
 				CB02391714981832001AC32A /* Contacts.m */,
+				CBAA9783157D5F960024B90D /* CNTRLWindow.h */,
+				CBAA9784157D5F960024B90D /* CNTRLWindow.m */,
 				CB02391814981832001AC32A /* DebugConsole.h */,
 				CB02391914981832001AC32A /* DebugConsole.m */,
 				CB02391A14981832001AC32A /* File.h */,
@@ -697,6 +702,7 @@
 				CBFA19011547D94D00809024 /* CNTRLMagnetometer.m in Sources */,
 				CBB033BC154C8F5600FC4156 /* CNTRLVideo.m in Sources */,
 				CB64B49B154CE9AE00D403A4 /* CNTRLSpeech.m in Sources */,
+				CBAA9785157D5F970024B90D /* CNTRLWindow.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -33,12 +33,14 @@
 
 - (void)start:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options {
     [self publishService:[NSMutableArray arrayWithObjects:[NSNumber numberWithInt:8080], @"", nil] withDict:nil];
-	
-	self.browser = [NSNetServiceBrowser new];
-    self.browser.delegate = self;
-	
-	self.midiBrowser = [NSNetServiceBrowser new];
-    self.midiBrowser.delegate = self;
+//	
+//	self.browser = [NSNetServiceBrowser new];
+//    self.browser.delegate = self;
+//    [self.browser release];
+//	
+//	self.midiBrowser = [NSNetServiceBrowser new];
+//    self.midiBrowser.delegate = self;
+//    [self.midiBrowser release];
 	
     self.isConnected = NO;
 	

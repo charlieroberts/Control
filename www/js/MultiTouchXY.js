@@ -16,15 +16,23 @@ Control.MultiTouchXY = function(ctx, props) {
     this.half = parseInt(this.touchSize) / 2;
     this.container = document.createElement('div');
 	this.rainbow = (typeof props.rainbow == "undefined") ? true : props.rainbow;
+	this.sendPressure = true;
+	this.pressureMin = 6.0;
+	this.pressureMax = 13.0;
+	this.pressureRange = this.pressureMax - this.pressureMin;
     $(this.container).addClass('widget multiTouchXY');
+	
+	$(this.container).css({
+		position: "absolute",
+		display: "block",
+		width: this.width - 2,
+		height: this.height - 2,
+		top: this.y,
+		left: this.x,
+		backgroundColor : this.backgroundColor,
+		overflow: "hidden",
+	});
 
-    this.container.style.position = "absolute";
-    this.container.style.display = "block";
-    this.container.style.width = this.width - 2 + "px";
-    this.container.style.height = this.height - 2 + "px";
-    this.container.style.top = this.y + "px";
-    this.container.style.left = this.x + "px";
-    this.container.style.backgroundColor = this.backgroundColor;
     this.ctx.appendChild(this.container);
     
     this.events = { 
@@ -42,7 +50,6 @@ Control.MultiTouchXY = function(ctx, props) {
 }
 
 Control.MultiTouchXY.prototype = new Widget();
-
 
 Control.MultiTouchXY.prototype.init = function() {
     if(!this.isMomentary) {
@@ -108,7 +115,7 @@ Control.MultiTouchXY.prototype.removeTouch = function(touchToRemove) {
     }
 }
     
-Control.MultiTouchXY.prototype.trackTouch = function(xPos, yPos, id) {
+Control.MultiTouchXY.prototype.trackTouch = function(xPos, yPos, id, pressureID) {
     var closestDiff = 10000;
     var touchFound = null;
     var touchNum = null;
@@ -126,19 +133,26 @@ Control.MultiTouchXY.prototype.trackTouch = function(xPos, yPos, id) {
         }
     }
     touchFound.id = id;
+	touchFound.pressure = Control.pressures[pressureID];
+	
+	//console.log("WOO HOO : " + touchFound.pressure);
     touchFound.isActive = true;
     if(touchFound != null)
-        this.changeValue(touchFound, xPos, yPos, 1);
+        this.changeValue(touchFound, xPos, yPos, 1, touchFound.pressure);
     
     this.lastTouched = touchFound;
 }
 
 Control.MultiTouchXY.prototype.touchstart = function (touch) {
+    //console.log("NEW TOUCH " + touch.pageX + " " + touch.pageY);
+	var pressureID = touch.pageX + ":" + touch.pageY;
+	//Control.pressureIDs[touch.identifier] = touch.pageX + ":" + touch.pageY;
+
     if(this.hitTest(touch.pageX, touch.pageY)) {
         if(this.isMomentary) 
             this.addTouch(touch.pageX , touch.pageY , touch.identifier);
         else
-            this.trackTouch(touch.pageX, touch.pageY , touch.identifier);
+            this.trackTouch(touch.pageX, touch.pageY , touch.identifier, pressureID);
         
 		if(this.ontouchstart != null){            
 			if(typeof this.ontouchstart === "string") {
@@ -154,7 +168,9 @@ Control.MultiTouchXY.prototype.touchmove = function (touch) {
     for(var t = 0; t < this.children.length; t++) {
         _t = this.children[t];
         if(touch.identifier == _t.id) {
-            this.changeValue(_t, touch.pageX, touch.pageY, 1);
+			var pressureID = touch.pageX + ":" + touch.pageY;
+			
+            this.changeValue(_t, touch.pageX, touch.pageY, 1, Control.pressures[pressureID]);
 			
 			if(this.ontouchmove != null){            
 				if(typeof this.ontouchmove === "string") {
@@ -210,12 +226,22 @@ Control.MultiTouchXY.prototype.event = function(event) {
 }
 
 
-Control.MultiTouchXY.prototype.changeValue = function(touch, inputX, inputY, inputZ) {
+Control.MultiTouchXY.prototype.changeValue = function(touch, inputX, inputY, inputZ, pressure) {
     var xLeft   = inputX - this.half;
     var xRight  = inputX + this.half - 2;
     var yTop    = inputY - this.half;
     var yBottom = inputY + this.half - 2;
     
+	//console.log("pressure = " + pressure);
+	touch.pressure = (pressure - this.pressureMin) / this.pressureRange;
+	if(touch.pressure > 1) {
+		touch.pressure = 1;
+	}else if(touch.pressure < 0) {
+		touch.pressure = 0;
+	}
+	this.pressure = touch.pressure;
+	
+	//console.log("pressure : " + this.pressure);
 	var xPos = "0px";
 	var yPos = "0px";
     //console.log("x touch = " + inputX + " :: xLeft = " + xLeft + " :: xRight = " + xRight + " :: x = " + this.x + " :: width = " + this.width);
@@ -338,21 +364,26 @@ Control.MultiTouchXY.prototype.setBounds = function(newBounds) {
 Control.MultiTouchXY.prototype.output = function(touch) {
     var valueString = "";
     if(Control.protocol == "OSC") {
-        valueString = "|" + this.address;
-        if (this.maxTouches > 1) {
-          valueString += "/" + touch.activeNumber;
-        }
-        valueString += ":" + this.xvalue + "," + this.yvalue;
+        valueString = "|" + this.address + ":";
+        //if (this.maxTouches > 1) {
+        valueString += touch.activeNumber + ",";
+        //}
+        valueString += this.xvalue + "," + this.yvalue;
 
         if(this.sendZValue){
-            valueString += ","+this.zvalue;	
+            valueString += "," + this.zvalue;	
         }
+		if(this.sendPressure) {
+			valueString += "," + touch.pressure;	
+		}
     }else if(_protocol == "MIDI") {
         var xnum = this.midiNumber + (touch.activeNumber * 2) - 2;
         var ynum = xnum + 1;
+		var pnum = ynum + 1;
             
         valueString  = "|" + this.midiType + "," + (this.channel - 1) + "," + xnum + "," + Math.round(this.xvalue);
         valueString += "|" + this.midiType + "," + (this.channel - 1) + "," + ynum + "," + Math.round(this.yvalue);
+        valueString += "|" + this.midiType + "," + (this.channel - 1) + "," + pnum + "," + Math.round(touch.pressure * 127);
     }
     Control.valuesString += valueString;
 

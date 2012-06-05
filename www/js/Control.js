@@ -25,6 +25,8 @@ window["Control"] = {
     interfaceDiv 	: null,
     isAddingConstants : false,
     timeout         : null,
+    pressures       : {},
+    pressureIDs     : {},
 
     init : function() {
         this.currentTab = document.getElementById("Interfaces");
@@ -228,24 +230,26 @@ window["Control"] = {
 
     addWidget : function(widget, page) {
         //console.log("adding " + widget + " to page " + page);
-        if(typeof this.pages[page] === "undefined") {		// make sure all previous pages are populated so users can flip through blank pages
-            for(var i = 0; i <= page; i++) {
-                if(typeof this.pages[i] === "undefined") {
-                    this.pages[i] = [];
+        if(typeof widget !== "undefined") {
+            if(typeof this.pages[page] === "undefined") {		// make sure all previous pages are populated so users can flip through blank pages
+                for(var i = 0; i <= page; i++) {
+                    if(typeof this.pages[i] === "undefined") {
+                        this.pages[i] = [];
+                    }
                 }
             }
-        }
-        this.pages[page].push(widget);
-        if(page == Control.currentPage) {
-            if(widget.show != null) { widget.show(); }
-            if(widget.draw != null) { widget.draw(); }
-        }else{
-            if(widget.hide != null) { widget.hide(); }
-        }
-        if(typeof widget.oninit === "string") {
-            eval(widget.oninit);
-        }else if (widget.oninit !== null ){
-            widget.oninit();
+            this.pages[page].push(widget);
+            if(page == Control.currentPage && !this.isWidgetSensor(widget)) {
+                if(widget.show != null) { widget.show(); }
+                if(widget.draw != null) { widget.draw(); }
+            }else{
+                if(widget.hide != null) { widget.hide(); }
+            }
+            if(typeof widget.oninit === "string") {
+                eval(widget.oninit);
+            }else if (widget.oninit !== null ){
+                widget.oninit();
+            }
         }
     },
         
@@ -256,16 +260,19 @@ window["Control"] = {
     onRotation : function(event) { Control.orientation = event.orientation; },
 
     event : function(event) {
-        var page = Control.currentPage;    
-
+        var page = Control.currentPage; 
         for(var i = 0; i < Control.pages[page].length; i++) {
             var widget = Control.pages[page][i];
-            widget.event(event);
+            if(!Control.isWidgetSensor(widget)) {
+                widget.event(event);
+            }
         }
 
         for(var i = 0; i < Control.constants.length; i++) {
             var widget = Control.constants[i];
-            widget.event(event);
+            if(!Control.isWidgetSensor(widget)) {
+                widget.event(event);
+            }
         }
     },
 

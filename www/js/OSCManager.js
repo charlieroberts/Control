@@ -40,15 +40,17 @@ Control.oscManager = {
                 return;
             }
             var isImportant = false;
-        	
+        	var hasBounds = (typeof w.bounds !== "undefined") || (typeof w.x !== "undefined");
+            
 			if(typeof w.page === "undefined") {
 				w.page = Control.currentPage;
 			}
+            
 			Control.addingPage = w.page;
             var _w = Control.makeWidget(w);
             _w.page = w.page;
                     
-            if(typeof _w.bounds == "undefined") {
+            if(!hasBounds) {
                 if(!Control.isWidgetSensor(w) ) {
                     Control.autogui.placeWidget(_w, isImportant);
                 }

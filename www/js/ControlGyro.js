@@ -42,13 +42,16 @@ Control.Gyro.prototype = new Widget();
 //gyro._onGyroUpdate({'xRotationRate':0.002622,'yRotationRate':-0.004301,'zRotationRate':-0.012185},{'pitch':0.021584,'roll':-0.002796,'yaw':-0.016728})
 	
 Control.Gyro.prototype.onUpdate = function(rotationRate, euler) {
-    this.pitch = this.min + (((0 - this.hardwareMin)    + euler.pitch)  / this.hardwareRange )    * this.userDefinedRange;
-    this.roll =  this.min + (((0 - this.yawHardwareMin) + euler.roll)   / this.yawHardwareRange ) * this.userDefinedRange;
-    this.yaw =   this.min + (((0 - this.yawHardwareMin) + euler.yaw)    / this.yawHardwareRange ) * this.userDefinedRange;
+    this.pitch = this.min + (Math.abs(this.hardwareMin    + euler.pitch)  / this.hardwareRange )    * this.userDefinedRange;
+    this.roll =  this.min + (Math.abs(this.yawHardwareMin + euler.roll)   / this.yawHardwareRange ) * this.userDefinedRange;
+    this.yaw =   this.min + (Math.abs(this.yawHardwareMin + euler.yaw )   / this.yawHardwareRange ) * this.userDefinedRange;
     
-    this.xRotationRate = this.rotationHardwareMin + (((0 - this.rotationHardwareMin) + rotationRate.xRotationRate) / this.rotationHardwareRange) * this.userDefinedRange;
-    this.yRotationRate = this.rotationHardwareMin + (((0 - this.rotationHardwareMin) + rotationRate.yRotationRate) / this.rotationHardwareRange) * this.userDefinedRange;
-    this.zRotationRate = this.rotationHardwareMin + (((0 - this.rotationHardwareMin) + rotationRate.zRotationRate) / this.rotationHardwareRange) * this.userDefinedRange;
+//    this.xRotationRate = this.rotationHardwareMin + (Math.abs(this.rotationHardwareMin + rotationRate.xRotationRate) / this.rotationHardwareRange) * this.userDefinedRange;
+//    this.yRotationRate = this.rotationHardwareMin + (Math.abs(this.rotationHardwareMin + rotationRate.yRotationRate) / this.rotationHardwareRange) * this.userDefinedRange;
+//    this.zRotationRate = this.rotationHardwareMin + (Math.abs(this.rotationHardwareMin + rotationRate.zRotationRate) / this.rotationHardwareRange) * this.userDefinedRange;
+    this.xRotationRate = rotationRate.xRotationRate;
+    this.yRotationRate = rotationRate.yRotationRate;
+    this.zRotationRate = rotationRate.zRotationRate;
     
     if(this.onvaluechange != null) {
         if(typeof this.onvaluechange === "string") {
