@@ -360,7 +360,7 @@ Control.MultiButton.prototype.setBounds = function(bounds) {
         for(var j = 0; j < this.columns; j++) {
             var _x = this.buttonWidth * j; // - (j * this.pixelWidth);
             this.children[(i * this.columns) + j].setBounds([ this.origX + _x, this.origY + _y, this.buttonWidth, this.buttonHeight]);
-            console.log(this.origX + _x, this.origY + _y, this.buttonWidth, this.buttonHeight);
+            //console.log(this.origX + _x, this.origY + _y, this.buttonWidth, this.buttonHeight);
         }
     }
 }
