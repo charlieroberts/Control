@@ -202,6 +202,7 @@ Control.Button.prototype.touchstart = function(touch, isHit) {
         this.xOffset = (touch.pageX - this.x) / (this.width - this.x);
         this.yOffset = (touch.pageY - this.y) / (this.height - this.y);
         this.activeTouches.push(touch.identifier);
+        this.processingTouch = touch;
         var newValue;
         switch (this.mode) {
             case "toggle":
@@ -287,6 +288,7 @@ Control.Button.prototype.touchmove = function(touch, isHit) {
             newValue = this.max;
             break;
         }
+        this.processingTouch = touch;
         this.setValue(newValue);
         
         if(this.ontouchmove != null) {
@@ -299,6 +301,8 @@ Control.Button.prototype.touchmove = function(touch, isHit) {
     } else if (rollOff && this.mode == "momentary") {
         newValue = this.min;
         this.setValue(newValue);
+    } else if(isHit && this.sendPressure) {
+        this.output(); // will use last value sent and also change pressure
     }
 	return false;
 }
@@ -311,6 +315,7 @@ Control.Button.prototype.touchend = function(touch, isHit) {
                 // remove touch ID from array
                             
                 if (this.mode == "latch" || this.mode == "momentary") {
+                    this.processingTouch = touch;
                     this.setValue(this.min);
                 }
                             
@@ -349,6 +354,17 @@ Control.Button.prototype.output = function() {
     if (!this.isLocal && Control.protocol == "OSC") {
         var valueString = "|" + this.address;
         valueString += ":" + this.value;
+        if(this.sendPressure) {
+            var pressureID = this.processingTouch.pageX + ":" + this.processingTouch.pageY;
+            var pressure = Control.pressures[pressureID];
+            pressure = (pressure - this.pressureMin) / this.pressureRange;
+            if(pressure > 1) {
+                pressure = 1;
+            }else if(pressure < 0) {
+                pressure = 0;
+            }
+            valueString += "," + pressure;
+        }
         Control.valuesString += valueString;
     } else if (!this.isLocal && Control.protocol == "MIDI") {
         var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber + "," + Math.round(this.value);

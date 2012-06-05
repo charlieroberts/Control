@@ -7,7 +7,7 @@ Widget.prototype.make = function(ctx, props) {
         this.name = props.name;
 		this.ctx = ctx;
 		this.widgetType = props.type;
-		
+        
         if(this.ctx != "sensor") {
             if(typeof props.bounds != "undefined") {
                 props.x = props.bounds[0];
@@ -53,6 +53,11 @@ Widget.prototype.make = function(ctx, props) {
                 this.strokeColor = props.strokeColor || this.stroke;
                 this.backgroundColor = props.backgroundColor || "rgba(0,0,0,0)";
             }			
+            
+            this.sendPressure = false;
+            this.pressureMin = 6.0;
+            this.pressureMax = 13.0;
+            this.pressureRange = this.pressureMax - this.pressureMin;
             
             this.activeTouches = new Array();
         }
