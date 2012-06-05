@@ -58,6 +58,7 @@ Widget.prototype.make = function(ctx, props) {
             this.pressureMin = 6.0;
             this.pressureMax = 13.0;
             this.pressureRange = this.pressureMax - this.pressureMin;
+            this.processingTouch = null;
             
             this.activeTouches = new Array();
         }
@@ -185,14 +186,35 @@ Widget.prototype.setValueNoOutput = function(newValue) {
 }
 
 Widget.prototype.output = function() {
+    var pressure;
+    if(this.sendPressure) {
+        var pressureID = this.processingTouch.pageX + ":" + this.processingTouch.pageY;
+        pressure = Control.pressures[pressureID];
+        pressure = (pressure - this.pressureMin) / this.pressureRange;
+        if(pressure > 1) {
+            pressure = 1;
+        }else if(pressure < 0) {
+            pressure = 0;
+        }
+    }
     if(!this.isLocal && Control.protocol == "OSC") {
         var valueString = "|" + this.address;
         valueString += ":" + this.value;
+        
+        if(this.sendPressure) {
+            valueString += "," + pressure;
+        }
+                
         Control.valuesString += valueString;
         //Control.oscManager.sendOSC(this.addresss, 'f', this.value);
         //PhoneGap.exec(null, null, 'OSCManager', 'send', [this.address, 'f', this.value]);
     }else if (!this.isLocal && Control.protocol == "MIDI") {
         var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.value);
+        
+        if(this.sendPressure) {
+            valueString += "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber + 1) + "," + Math.round(pressure * 127);
+        }
+
         Control.valuesString += valueString;
     }
     

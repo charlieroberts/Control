@@ -233,7 +233,7 @@ Control.Slider.prototype.events = {
 Control.Slider.prototype.event = function(event) {
     for (var j = 0; j < event.changedTouches.length; j++){
         var touch = event.changedTouches.item(j);
-		
+		this.processingTouch = touch;
 		var breakCheck = this.events[event.type].call(this, touch);
 		
         if(breakCheck) break;
