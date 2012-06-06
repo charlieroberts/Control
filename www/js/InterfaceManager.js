@@ -190,15 +190,26 @@ Control.interfaceManager = {
         Control.interfaceManager.downloadInterface(ipAddress);
     },
 
-    downloadInterface: function(ipAddress) { // EVENT --- CANNOT REFER TO THIS, MUST USE INTERFACE MANAGER
+    downloadInterface: function(ipAddress) {
         Control.interfaceManager.myRequest = new XMLHttpRequest();
         var loadedInterfaceName = null;
+
         Control.interfaceManager.myRequest.onreadystatechange = function() {
-            //console.log("downloading..." + Control.interfaceManager.myRequest.readyState );
-            if (Control.interfaceManager.myRequest.readyState == 4) {
+            if (Control.interfaceManager.myRequest.readyState === 4) {
+                if(Control.interfaceManager.myRequest.status === 404 ) {
+                    alert("Your file could not be downloaded. Please check the URL and try again.");
+                    return;
+                }
                 //console.log(Control.interfaceManager.myRequest.responseText);
                 //console.log("before parsing");
-                eval(Control.interfaceManager.myRequest.responseText);
+                try {
+                    eval(Control.interfaceManager.myRequest.responseText);
+                } catch(e) {
+                    var err = e.constructor('Error in Evaled Script: ' + e.message);
+                    alert("Your file was downloaded, but cannot be parsed. Please check the file for errors.");
+                    throw err;
+                }
+                // eval(Control.interfaceManager.myRequest.responseText);
                 //console.log("after parsing");
                 //console.log(Control.interface);
                 if (Control.interface.name != null) {
@@ -209,11 +220,10 @@ Control.interfaceManager = {
                     Control.interfaceManager.interfaceIP = ipAddress;
                     Control.interfaceManager.runInterface(Control.interfaceManager.myRequest.responseText);
                 } else {
-                    document.getElementById("inputFieldHeader").innerHTML = "Could not load. Please try another URL or check your code for errors.";
                     return;
                 }
             }
-        }
+        };
         Control.interfaceManager.myRequest.ipAddress = ipAddress;
         //Control.interfaceManager.myRequest.withCredentials = "true";                
         Control.interfaceManager.myRequest.open("GET", ipAddress, true);
