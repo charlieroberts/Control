@@ -97,10 +97,10 @@
                     
                     </script>
                 </head>
-    <body id="stage" style="background-color:#000; -webkit-user-select: none; overflow:hidden;" class="theme"> 
+    <body id="stage" style="background-color:#000; position:static; -webkit-user-select: none; overflow:hidden;" class="theme"> 
         
         <div data-role="page" id="Interfaces" data-theme="a">
-            <div class="ui-bar-a  ui-header " data-role="header" id="header" data-backbtn="false" style="z-index:100">
+            <div data-role="header" id="header" data-backbtn="false" data-position="fixed">
                 <a href="#" id="interfaceEditBtn" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="Control.interfaceManager.editInterfaceList()">Edit</a>
                 <h1 class="ui-title">Interfaces</h1>
                 <div style="display:inline; position:absolute; top:.5em; right:.75em;">
@@ -108,14 +108,14 @@
                     <a href="#" data-role="button" data-icon="plus" class="ui-btn ui-btn-corner-all ui-btn-up-a" style="width:2.5em; padding-top:.45em; height:1.8em; display:inline-block" ontouchend="Control.interfaceManager.promptForInterfaceDownload()"><img src="css/images/add.png"></img></a>
                 </div>
             </div>
-            
-            <div id="wrapper" data-role="content" style="overflow-y: scroll; -webkit-overflow-scrolling: touch;">
-                <ul id="interfaceList" data-theme="g"  data-role="listview" style=""></ul>
+            <!--position:static; overflow-y: scroll; -webkit-overflow-scrolling: touch;-->
+            <div id="wrapper" data-role="content" style="position:static; overflow-y: scroll; -webkit-overflow-scrolling: touch">
+                <ul id="interfaceList" data-theme="g"  data-role="listview"></ul>
             </div>
         </div>
         
         <div data-role="page" id="Destinations" data-theme="a">
-            <div class="ui-bar-a  ui-header" data-role="header" id="header" data-backbtn="false">
+            <div data-role="header" id="header" data-backbtn="false" data-position="fixed">
                 <a href="#" id="destinationEditBtn" style="padding-top:.5em; width:4em; height:1.75em;" class="ui-btn-left ui-btn ui-btn-corner-all ui-btn-up-a" ontouchend="Control.destinationManager.editDestinationList()">Edit</a>     
                 <h1 class="ui-title">Destinations</h1>
                 <div style="display:inline; position:absolute; top:.5em; right:.75em;">
@@ -129,7 +129,7 @@
         </div>
         
         <div data-role="page" id="Preferences" data-theme="a">
-            <div data-role="header" id="header" data-backbtn="false"><h1>Preferences</h1></div>
+            <div data-role="header" id="header" data-backbtn="false" data-position="fixed"><h1>Preferences</h1></div>
             <div data-role="content">
                 <ul id="preferencesList" data-role="listview" data-theme="g">
                     <li data-icon="false" class="preferencesListItem"><a id="autolockToggle" href="#" ontouchend="Control.preferencesManager.autolockToggle()">Turn Autolock <b>On</b></a></li>
@@ -141,7 +141,7 @@
         </div>
         
         <div data-role="page" id="Info" data-theme="a">
-            <div data-role="header" id="header" data-backbtn="false">
+            <div data-role="header" id="header" data-backbtn="false" data-position="fixed">
                 <h1>Info</h1>
             </div>
             
@@ -181,7 +181,7 @@
             <div data-role="navbar" class="ui-navbar ui-navbar-noicons" role="navigation">
                 <ul class="ui-navbar-noicons ui-grid-c"  style="border-top-width:0;">
                     <li class="ui-block-a" style="border-top-width:0;">
-                        <a href="#" ontouchend="$.mobile.changePage('#Interfaces', {transition:'slide'}); Control.shouldPrevent = false;" class="ui-btn ui-btn-up-a" style=" border-top-width:0;" data-theme="a">
+                        <a href="#" ontouchend="$.mobile.changePage('#Interfaces', {transition:'slide'}); Control.shouldPrevent = false; wrapMe();" class="ui-btn ui-btn-up-a" style=" border-top-width:0;" data-theme="a">
                             <span class="ui-btn-inner"><span class="ui-btn-text" style="text-overflow: clip; font-size:1em">Interfaces</span></span>
                         </a>
                     </li>

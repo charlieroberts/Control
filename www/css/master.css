@@ -6,7 +6,7 @@ body {
     font-size:72%;
     line-height:1.5em;
     margin:0;
-    padding:0;
+    padding:0
     border-top:1px solid #393939;
     text-shadow:none !important;
     overflow:hidden;
@@ -15,7 +15,9 @@ body {
 
 b { font-weight: bold; }
 
-
+#wrapper > * {
+    -webkit-transform: translateZ(0px);
+}
 
 #selectedInterface, #Interfaces, #Destinations, #Preferences, #Info, #SelectedInterfacePage {
 position:absolute;
@@ -34,18 +36,18 @@ background-color:#000;
 
 li { color: #fff; }
     
-    #selectedInterface { background-color:#000; }
+#selectedInterface { background-color:#000; }
+
+canvas { margin: 0; padding: 0;}
     
-    canvas { margin: 0; padding: 0;}
-    
-    h3 { font-weight: normal !important; text-shadow: none !important}}
+h3 { font-weight: normal !important; text-shadow: none !important}}
 
 #Info { overflow:scroll; height:85%}
 
 #Info p {
-padding:0em 1em;
-color:#ccc;
-font-size:1em;
+    padding:0em 1em;
+    color:#ccc;
+    font-size:1em;
 }
 
 #Info a { color:#ccc; }
@@ -71,10 +73,10 @@ font-size:1em;
 .add  { position:absolute; right:.5em; font-weight:bold;width:3em; height:1.5em;	font-size:.9em; float:right;}
 
 #_footer {
-border-width:0;
-color-stop(0, 	#222222),
-color-stop(1, 	#000000));
-position:fixed; bottom:0px; width:100%; height:35px; display:block;
+    border-width:0;
+    color-stop(0, 	#222222),
+    color-stop(1, 	#000000));
+    position:fixed; bottom:0px; width:100%; height:35px; display:block;
 }
 
 #_footer a {
@@ -96,6 +98,8 @@ ul li { font-size: 1em; display:block; height:35px;}
 .interfaceListItem {
     height: 1.75em !important;
     line-height: 2em !important;
+    font-size: 1em;´
+    font-weight:normal;
 }
 
 .destinationImage { 
