@@ -70,9 +70,12 @@ Control.AudioPitch.prototype.onUpdate = function(newFreq) {
         this.noteName = "-";
     
 //    console.log("PITCH NAME = " + this.pitch);
-    
     if(this.onvaluechange != null) {
-        eval(this.onvaluechange);
+        if(typeof this.onvaluechange === "function") {
+            this.onvaluechange();
+        }else{
+            eval(this.onvaluechange);
+        }
     }
     
     if(!this.isLocal && Control.protocol == "OSC") {

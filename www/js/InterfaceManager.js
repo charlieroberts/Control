@@ -345,19 +345,37 @@ Control.interfaceManager = {
         //console.log("IP = " + Control.interfaceManager.interfaceIP);
         Control.interfaceManager.myRequest = new XMLHttpRequest();
         Control.interfaceManager.myRequest.onreadystatechange = function() {
-            console.log("downloading stage " + Control.interfaceManager.myRequest.readyState);
-            if (Control.interfaceManager.myRequest.readyState == 4) {
-                //Control.interfaceManager.runInterface(Control.interfaceManager.myRequest.responseText);
+            
+            //console.log("downloading stage " + Control.interfaceManager.myRequest.readyState);
+            
+            if (Control.interfaceManager.myRequest.readyState === 4) {
+                if(Control.interfaceManager.myRequest.status === 404 ) {
+                    alert("The URL this file was originally downloaded from can no longer be reached. Please reload the interface from the Interfaces tab.");
+                    return;
+                }
+                
+                //console.log(Control.interfaceManager.myRequest.responseText);
+                //console.log("before parsing");
+                
+                try {
+                    eval(Control.interfaceManager.myRequest.responseText);
+                } catch(e) {
+                    var err = e.constructor('Error in Evaled Script: ' + e.message);
+                    alert("Your file was downloaded, but cannot be parsed. Please check the file for errors.");
+                    throw err;
+                }
+
                 for (var i = 0; i < Control.interfaceManager.loadedInterfaces.length; i++) {
                     var interface = Control.interfaceManager.loadedInterfaces[i];
                     if (interface.name == Control.interfaceManager.currentInterfaceName) {
+                        
                         //console.log("SHOULD BE REPLACING " + i + " : " + Control.interface.name);
                         var newInterface = {
                             name: Control.interface.name,
                             json: Control.interfaceManager.myRequest.responseText,
                             address: Control.interfaceManager.interfaceIP
                         };
-                        //console.log(Control.interfaceManager.myRequest.responseText);
+
                         Control.interfaceManager.loadedInterfaces.splice(i, 1, newInterface);
 
                         localStorage.interfaceFiles = JSON.stringify(Control.interfaceManager.loadedInterfaces);
@@ -369,7 +387,6 @@ Control.interfaceManager = {
                 }
             }
         }
-        //console.log("getting from " + Control.interfaceManager.interfaceIP);
         Control.interfaceManager.myRequest.open("GET", Control.interfaceManager.interfaceIP, true);
         Control.interfaceManager.myRequest.send(null);
     },

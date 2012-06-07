@@ -345,5 +345,25 @@ window["Control"] = {
        } else { 
            Control.hideToolbar();
        } 
-    }
+    },
+    refreshButton : function() {
+        return {
+            name: "refreshBtn", 
+            type: "Button", 
+            bounds: [.6, .9, .2, .1], 
+            label: "refresh",
+            mode: "contact",
+            ontouchstart: Control.interfaceManager.refreshInterface, 
+        }
+    },
+    menuButton : function() {
+        return {
+            name: "menuBtn", 
+            type: "Button", 
+            bounds: [.8,.9, .2, .1], 
+            label: "menu",
+            mode: "toggle",
+            ontouchstart: Control.toggleToolbar,
+        }
+    },
 };

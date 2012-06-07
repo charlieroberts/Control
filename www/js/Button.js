@@ -13,8 +13,9 @@ Control.Button = function(ctx, props) {
     if (typeof props.label != "undefined") {
         this.text = props.label;
         this.labelSize = props.labelSize || 12;
-        {   //remove for canvas
-
+        
+        //remove for canvas
+        {   
             this.label = {
 				"name": this.name + "Label",
 				 "type": "Label", 
@@ -35,7 +36,8 @@ Control.Button = function(ctx, props) {
         }
     }
     
-    {   // remove for canvas
+    // remove for canvas
+    {   
         this.fillDiv   = document.createElement("div");
         $(this.fillDiv).addClass('widget button');
         
@@ -198,7 +200,6 @@ Control.Button.prototype.drawLabel = function() {
 
 Control.Button.prototype.touchstart = function(touch, isHit) {
     if (isHit) {
-        console.log("BUTTON HIT");
         this.xOffset = (touch.pageX - this.x) / (this.width - this.x);
         this.yOffset = (touch.pageY - this.y) / (this.height - this.y);
         this.activeTouches.push(touch.identifier);

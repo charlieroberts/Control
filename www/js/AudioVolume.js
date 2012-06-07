@@ -1,4 +1,4 @@
-function AudioVolume(props) {
+Control.AudioVolume = function(props) {
     this.make("sensor", props);
     
     this.mode = (typeof props.mode != "undefined") ? props.mode : "max";
@@ -22,22 +22,27 @@ function AudioVolume(props) {
 	return this;
 }
 
-AudioVolume.prototype = new Widget();
+Control.AudioVolume.prototype = new Widget();
 
-AudioVolume.prototype.start = function() {
-    PhoneGap.exec("AudioInput.start", "volume", this.mode);
+Control.AudioVolume.prototype.start = function() {
+    return PhoneGap.exec(null, null, "AudioInput", "start", ["volume", this.mode]);
 }	
 
-AudioVolume.prototype.unload = function() {	
-    PhoneGap.exec("AudioInput.stop", "volume");
+Control.AudioVolume.prototype.unload = function() {	
+    return PhoneGap.exec(null, null, "AudioInput", "stop", ["volume"]);
+
 }
 
-AudioVolume.prototype._onVolumeUpdate = function(newVolume) {
+Control.AudioVolume.prototype.onUpdate = function(newVolume) {
     this.volume = this.min + (((0 - this.hardwareMin) + newVolume)  / this.hardwareRange ) * this.userDefinedRange;
     
     //console.log("volume = " + this.volume + " :: newVolume = " + newVolume);
     if(this.onvaluechange != null) {
-        eval(this.onvaluechange);
+        if(typeof this.onvaluechange === "function") {
+            this.onvaluechange();
+        }else{
+            eval(this.onvaluechange);
+        }
     }
     
     if(!this.isLocal && Control.protocol == "OSC") {
