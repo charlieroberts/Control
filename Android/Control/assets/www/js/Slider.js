@@ -1,9 +1,14 @@
-function Slider(ctx, props) {
+Control.Slider = function(ctx, props) {
     this.make(ctx, props);
 	this.ctx = ctx;
-	//this.ctx = arguments[2];	
-	this.isVertical =  (typeof props.isVertical != "undefined") ? props.isVertical : false;
 	
+	if(typeof props.isVertical != "undefined")
+        this.isVertical = props.isVertical;
+    else
+        this.isVertical = (this.width < this.height);
+    
+    this.form.isVertical = "vertical slider";
+    
 	this.requiresTouchDown = (typeof props.requiresTouchDown != "undefined") ? props.requiresTouchDown : true;
 	
 	this.isXFader = (typeof props.isXFader != "undefined") ? props.isXFader : false;
@@ -15,51 +20,104 @@ function Slider(ctx, props) {
     
     this.prevValue = this.value;
 	
-	this.pixelWidth  = 1 / control.deviceWidth;
-	this.pixelHeight = 1 / control.deviceHeight;
+	this.pixelWidth  = 1 / Control.deviceWidth;
+	this.pixelHeight = 1 / Control.deviceHeight;
+    	
 	if(!this.shouldUseCanvas) {
 		this.fillDiv   = document.createElement("div");
-		$(this.fillDiv).addClass('widget slider');
+		$(this.fillDiv).addClass('widget slider_fill');
 
+		$(this.fillDiv).css({
+			"position": "absolute", 
+			"width": this.width - 2 + "px",
+			"height": this.height - 2 + "px", 
+			"left": this.x + 1 + "px", 
+			"top": this.y + 1 + "px",
+			"background-color": this.fillColor,
+			"z-index": 10,
 
-		this.fillDiv.style.width = this.width - 2 + "px";
-		this.fillDiv.style.height = this.height - 2 + "px";
-		this.fillDiv.style.position = "absolute";
-		this.fillDiv.style.left = this.x + 1 + "px";
-		this.fillDiv.style.top  = this.y + 1 + "px";
-		this.fillDiv.style.backgroundColor = this.fillColor;
-		//this.fillDiv.style.border = "1px solid " + this.fillColor;		// must have border so that it aligns with the stroke div
-		this.fillDiv.style.zIndex = 10;
-		this.ctx.appendChild(this.fillDiv);							// THIS LINE IS IMPORTANT!!!!
+		});
+        
+        if(this.isVertical) {
+            this.fillDiv.style.webkitTransformOriginY = "100%";
+        }else if(!this.isXFader) {
+            this.fillDiv.style.webkitTransformOriginX = "0";
+        }
+
+		this.ctx.appendChild(this.fillDiv);
 		
 		this.strokeDiv   = document.createElement("div");
-		//XXX should this be a widget or some sort of widget child?
 		$(this.strokeDiv).addClass('widget slider_stroke');
-
-		this.strokeDiv.style.width = this.width - 2 + "px";
-		this.strokeDiv.style.height = this.height - 2 + "px";
-		this.strokeDiv.style.position = "absolute";
-		this.strokeDiv.style.left = this.x + "px";
-		this.strokeDiv.style.top  = this.y + "px";
-		this.strokeDiv.style.border = "1px solid" + this.strokeColor;
-		this.strokeDiv.style.zIndex = 1;
-		this.strokeDiv.style.backgroundColor = this.backgroundColor;
-		this.ctx.appendChild(this.strokeDiv);						// THIS LINE IS IMPORTANT!!!!
+		
+		$(this.strokeDiv).css({
+			"width": this.width - 2 + "px",
+			"height": this.height - 2 + "px", 
+			"position": "absolute", 
+			"left": this.x + "px", 
+			"top": this.y  + "px",
+			"background-color": this.backgroundColor,
+			"border": "1px solid " + this.strokeColor, 
+			"z-index": 1,  
+		});
+		
+		this.ctx.appendChild(this.strokeDiv);
 	}else{
 		this.canvas = document.createElement('canvas');
-		$(this.canvas).addClass('widget slider');
+		$(this.canvas).addClass('widget Control.Slider');
 
 		this.canvas.width = this.width;						// DO NOT USE STYLES TO RESIZE CANVAS OBJECT
 		this.canvas.height = this.height;					// DO NOT USE STYLES TO RESIZE CANVAS OBJECT
 		this.ctx.appendChild(this.canvas);
 
-		this.canvas.style.border = "1px solid #fff";
-		this.canvas.style.top = this.y + "px";
-		this.canvas.style.left = this.x + "px";
-		this.canvas.style.position = "absolute";
+		$(this.canvas).css({
+			"border" : "1px solid #fff",
+			"top" 	 : this.y + "px",
+			"left" 	 : this.x + "px",
+			"position" : "absolute",
+		});
 
-		this.canvasCtx = this.canvas.getContext('2d');
-        
+		this.canvasCtx = this.canvas.getContext('2d');   
+	}
+	
+	this.displayValue = props.displayValue;
+	
+	if(typeof props.label != "undefined" || props.displayValue == true) {
+	    this.text = props.label || this.value;
+	    this.labelSize = props.labelSize || 12;
+
+	    {   //remove for canvas
+			var _width, _height, _x, _y;
+			if(this.isVertical) {
+				_width = props.width - (8 / Control.deviceWidth);
+				_height =  (this.labelSize + 4) / Control.deviceHeight;
+				_x = props.x;
+				_y = props.y + props.height - _height;
+			}else{
+				_width = (props.width / 3) - (8 / Control.deviceWidth);
+				_height = (this.labelSize + 4) / Control.deviceHeight;
+				_x = props.x + (props.width / 2) - ((props.width / 3) / 2);
+				_y = props.y + props.height - _height;
+			}
+			
+	        this.label = {
+				"name":   this.name + "Label",
+				"type":   "Label",
+				"bounds": [_x, _y, _width, _height],
+				"color":  this.strokeColor, 
+				"backgroundColor": "rgba(127, 127, 127, .75)",
+				"value": this.text,
+				"size":  props.labelSize || 12, 
+			 };
+                        
+	        var _w = Control.makeWidget(this.label);
+	        if(!Control.isAddingConstants)
+	            Control.addWidget(_w, Control.addingPage);
+	        else
+	            Control.addConstantWidget(_w);
+            
+	        this.label = _w;
+			$(this.label.label).css("padding", "0px 4px 0px 4px");
+		}
 	}
 	
 	if(this.isXFader) {
@@ -70,72 +128,119 @@ function Slider(ctx, props) {
 		}
 	}
     
+    this.events = { 
+        "touchstart": Control.Slider.prototype.touchstart, 
+        "touchmove" : Control.Slider.prototype.touchmove, 
+        "touchend"  : Control.Slider.prototype.touchend,
+    };
+	
     return this;
 }
 
-Slider.prototype = new Widget();
-    
-Slider.prototype.event = function(event) {
-    for (var j = 0; j < event.changedTouches.length; j++){
-        var touch = event.changedTouches.item(j);
-        var breakCheck = false;
-        
-        switch(event.type) {
-            case "touchstart":
-                if(this.hitTest(touch.pageX, touch.pageY)) {
-                    this.activeTouches.push(touch.identifier);
-                    if(this.isVertical) {
-                        this.changeValue(touch.pageY); 
-                    }else{
-                        this.changeValue(touch.pageX); 
-                    }
-                    eval(this.ontouchstart);
-                }
-                break;
-            case "touchmove":
-                
-                var shouldChange = false;
-                if(this.requiresTouchDown) {
-                    for(var i = 0; i < this.activeTouches.length; i++) {
-                        if(touch.identifier == this.activeTouches[i]) shouldChange = true;
-                    }
-                }else{
-                    shouldChange = true;
-                }
-                
-                if(shouldChange && this.hitTest(touch.pageX, touch.pageY)) {
-                    if(this.isVertical) {
-                        this.changeValue(touch.pageY); 
-                    }else{
-                        this.changeValue(touch.pageX); 
-                    }
-                    eval(this.ontouchmove); 
-                    breakCheck = true;
-                }
-                
+Control.Slider.prototype = new Widget();
 
-                break;
-            case "touchend":
-                if(this.activeTouches.length > 0) {
-                    for(var i = 0; i < this.activeTouches.length; i++) {
-                        if(touch.identifier == this.activeTouches[i]) {
-                            this.activeTouches.splice(i,1);	// remove touch ID from array
-                            breakCheck = true;
-                            eval(this.ontouchend); 
-                            break;
-                        }
-                    }
-                    
-                }
-                
-                break;
+Control.Slider.prototype.touchstart = function(touch) {
+    if(this.hitTest(touch.pageX, touch.pageY)) {
+        this.activeTouches.push(touch.identifier);
+        if(this.isVertical) {
+            this.changeValue(touch.pageY); 
+        }else{
+            this.changeValue(touch.pageX); 
+        }
+		
+        if(this.ontouchstart != null) {
+            if(typeof this.ontouchstart === "string") {
+                eval(this.ontouchstart);
+            }else{
+                this.ontouchstart(touch);
+            }
         }
         
+		return true;
+    }
+	return false;
+};
+
+Control.Slider.prototype.touchmove = function(touch) {       
+    var shouldChange = false;
+ 	var touchNumber = -1;
+	
+    for(var i = 0; i < this.activeTouches.length; i++) {
+        if(touch.identifier == this.activeTouches[i]){
+			touchNumber = i;
+            shouldChange = true;
+            break;
+        }
+    }
+    
+    if(!this.requiresTouchDown) {
+        shouldChange = true;
+    }
+    
+    var isHit = this.hitTest(touch.pageX, touch.pageY);
+    if(shouldChange) {
+		if(isHit) {
+			if(this.isVertical) {
+				this.changeValue(touch.pageY); 
+	        }else{
+	        	this.changeValue(touch.pageX); 
+	        }
+						
+            if(this.ontouchmove != null) {
+                if(typeof this.ontouchmove === "string") {
+                    eval(this.ontouchmove);
+                }else{
+                    this.ontouchmove(touch);
+                }
+            }
+
+			if(this.displayValue) { this.label.setValue(this.value); }
+
+	        return true;
+		}else{
+			if(touchNumber != -1) { this.activeTouches.splice(touchNumber, 1); }	
+		}
+    }
+	return false;
+};
+
+Control.Slider.prototype.touchend = function(touch) {
+    if(this.activeTouches.length > 0) {
+        for(var i = 0; i < this.activeTouches.length; i++) {
+            if(touch.identifier == this.activeTouches[i]) {
+                this.activeTouches.splice(i,1);	// remove touch ID from array
+                if(this.ontouchend != null) {
+                    if(typeof this.ontouchend === "string") {
+                        eval(this.ontouchend);
+                    }else{
+                        this.ontouchend(touch);
+                    }
+                }
+                
+				return true;
+            }
+        }
+    }
+	return false;
+};
+
+Control.Slider.prototype.events = { 
+    "touchstart": Control.Slider.prototype.touchstart, 
+    "touchmove" : Control.Slider.prototype.touchmove, 
+    "touchend"  : Control.Slider.prototype.touchend,
+};
+    
+Control.Slider.prototype.event = function(event) {
+    for (var j = 0; j < event.changedTouches.length; j++){
+        var touch = event.changedTouches.item(j);
+		this.processingTouch = touch;
+		var breakCheck = this.events[event.type].call(this, touch);
+		
         if(breakCheck) break;
     }
 };
 
-Slider.prototype.changeValue = function(val) { 
+Control.Slider.prototype.changeValue = function(val) { 
     this.prevValue = this.value;
     if(!this.isVertical) {
         this.value = 1 - ((this.x + this.width) - val) / (this.width);
@@ -144,10 +249,37 @@ Slider.prototype.changeValue = function(val) {
     }
 
     this.setValue( this.min + ( this.value * ( this.max - this.min ) ) );
-
 }
 
-Slider.prototype.draw = function() {
+Control.Slider.prototype.multiOutput = function() {
+    var pressure;
+    if(this.sendPressure) {
+        var pressureID = this.processingTouch.pageX + ":" + this.processingTouch.pageY;
+        pressure = Control.pressures[pressureID];
+        pressure = (pressure - this.pressureMin) / this.pressureRange;
+        if(pressure > 1) {
+            pressure = 1;
+        }else if(pressure < 0) {
+            pressure = 0;
+        }
+    }
+    
+    if (!this.isLocal && Control.protocol == "OSC") {
+        var valueString = "|" + this.address;
+        valueString += ":" + this.childID + "," + this.value;
+        
+        if(this.sendPressure) {
+            valueString += "," + pressure;
+        }
+        
+        Control.valuesString += valueString;
+    } else if (!this.isLocal && Control.protocol == "MIDI") {
+        var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber + "," + Math.round(this.value);
+        Control.valuesString += valueString;
+    }
+}
+
+Control.Slider.prototype.draw = function() {
     var range = this.max - this.min;
     var percent = (this.value + (0 - this.min)) / range;
     var prevPercent = (this.prevValue + (0 - this.min)) / range;
@@ -155,13 +287,18 @@ Slider.prototype.draw = function() {
     if(!this.shouldUseCanvas) {
         if(!this.isVertical) {
             if(!this.isXFader) {
-                this.fillDiv.style.width = ((this.width - 1) * percent) + "px";
+                //this.fillDiv.style["WebkitTransform"] = "scale3d(" + percent + ", 1, 1)";
+                //this.fillDiv.style.width = ((this.width - 1) * percent) + "px";
+
+                this.fillDiv.style.webkitTransform = "scale3d(" + percent + ", 1, 1 )"; 
             }else{
-                this.fillDiv.style.left = (this.x  + (percent * (this.width - this.xFaderWidth))) + "px";
+                this.fillDiv.style.webkitTransform = "translate3d("+ (percent * (this.width - this.xFaderWidth)) + "px, 0, 0)";
+                //this.fillDiv.style.left = (this.x  + (percent * (this.width - this.xFaderWidth))) + "px";
             }
         }else{
-            this.fillDiv.style.height = Math.ceil(((this.height - 2) * percent )) + "px";
-            this.fillDiv.style.top = this.y + ((this.height - 1) - (percent * (this.height - 2))) + "px";
+            this.fillDiv.style.webkitTransform = "scale3d(1, " + percent  + ", 1)"; 
+            //this.fillDiv.style.height = Math.ceil(((this.height - 2) * percent )) + "px";
+            //this.fillDiv.style.top = this.y + ((this.height - 1) - (percent * (this.height - 2))) + "px";
         }
     }else{
         this.ctx.fillStyle = this.backgroundColor;
@@ -186,7 +323,7 @@ Slider.prototype.draw = function() {
     }
 }
 
-Slider.prototype.setColors = function(newColors) {
+Control.Slider.prototype.setColors = function(newColors) {
     this.backgroundColor = newColors[0];
     this.fillColor = newColors[1];
     this.strokeColor = newColors[2];
@@ -195,22 +332,26 @@ Slider.prototype.setColors = function(newColors) {
     this.strokeDiv.style.border = "1px solid" + this.strokeColor;
     this.strokeDiv.style.backgroundColor = this.backgroundColor;
 }
-
-Slider.prototype.setBounds = function(newBounds) {
-    this.width = Math.round(newBounds[2] * control.deviceWidth);
-    this.height = Math.round(newBounds[3] * control.deviceHeight);
-    this.x = Math.round(newBounds[0] * control.deviceWidth);
-    this.y = Math.round(newBounds[1] * control.deviceHeight);
     
-    this.fillDiv.style.width  = this.width - 2 + "px";
-    this.fillDiv.style.height = this.height - 2 + "px";
-    this.fillDiv.style.left = this.x + 1 + "px";
-    this.fillDiv.style.top  = this.y + 1 + "px";
+Control.Slider.prototype.setBounds = function(newBounds) {
+    this.width = Math.round(newBounds[2] * $("#selectedInterface").width());
+    this.height = Math.round(newBounds[3] * $("#selectedInterface").height());
+    this.x = Math.round(newBounds[0] * $("#selectedInterface").width());
+    this.y = Math.round(newBounds[1] * $("#selectedInterface").height());
     
-    this.strokeDiv.style.width  = this.width - 2 + "px";
-    this.strokeDiv.style.height = this.height - 2 + "px";
-    this.strokeDiv.style.left = this.x  + "px";
-    this.strokeDiv.style.top  = this.y + "px";
+	$(this.fillDiv).css({
+	    "width" 	: this.width - 2 + "px",
+	    "height"	: this.height - 2 + "px",
+	    "left" 		: this.x + 1 + "px",
+	    "top"  		: this.y + 1 + "px",
+	});
+    
+	$(this.strokeDiv).css({
+	    "width"  : this.width - 2 + "px",
+	    "height" : this.height - 2 + "px",
+	    "left"   : this.x  + "px",
+	    "top"  	 : this.y + "px",
+	});
     
     if(this.isXFader) {
         this.xFaderWidth = 50;
@@ -221,9 +362,25 @@ Slider.prototype.setBounds = function(newBounds) {
     }
     
     this.draw();
+	
+	if(typeof this.label != "undefined") {
+		var _width, _height, _x, _y;
+		if(this.isVertical) {
+			_width = newBounds[2] - (8 / Control.deviceWidth);
+			_height =  (this.labelSize + 4) / Control.deviceHeight;
+			_x = newBounds[0];
+			_y = newBounds[1] + newBounds[3] - _height;
+		}else{
+			_width = (newBounds[2] / 3) - (8 / Control.deviceWidth);
+			_height = (this.labelSize + 4) / Control.deviceHeight;
+			_x = newBounds[0] + (newBounds[2] / 2) - ((newBounds[2] / 3) / 2);
+			_y = newBounds[1] + newBounds[3] - _height;
+		}
+		this.label.setBounds([_x,_y,_width,_height]);
+	}
 }
 
-Slider.prototype.show = function() {
+Control.Slider.prototype.show = function() {
     if(!this.shouldUseCanvas) {
         this.fillDiv.style.display = "block";
         this.strokeDiv.style.display = "block";
@@ -233,7 +390,7 @@ Slider.prototype.show = function() {
     this.draw();
 }
 
-Slider.prototype.hide = function() {
+Control.Slider.prototype.hide = function() {
     //this.ctx.clearRect(this.x,this.y,this.width,this.height);
     if(!this.shouldUseCanvas) {
         this.fillDiv.style.display = "none";
@@ -243,12 +400,17 @@ Slider.prototype.hide = function() {
     }
 }
 
-Slider.prototype.unload = function() {
-//        this.ctx.clearRect(this.x,this.y,this.width,this.height);
+Control.Slider.prototype.unload = function() {
+//  this.ctx.clearRect(this.x,this.y,this.width,this.height);
+    if(typeof this.label !== 'undefined') {
+        Control.removeWidgetWithName(this.name + "Label");
+    }
     if(!this.shouldUseCanvas) {
         this.ctx.removeChild(this.fillDiv);
         this.ctx.removeChild(this.strokeDiv);		
     }else{
+
+		
         this.ctx.removeChild(this.canvas);
     }
 }

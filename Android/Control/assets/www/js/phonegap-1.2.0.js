@@ -1,10 +1,23 @@
 /*
- * PhoneGap is available under *either* the terms of the modified BSD license *or* the
- * MIT License (2008). See http://opensource.org/licenses/alphabetical for full text.
+ *     Licensed to the Apache Software Foundation (ASF) under one
+ *     or more contributor license agreements.  See the NOTICE file
+ *     distributed with this work for additional information
+ *     regarding copyright ownership.  The ASF licenses this file
+ *     to you under the Apache License, Version 2.0 (the
+ *     "License"); you may not use this file except in compliance
+ *     with the License.  You may obtain a copy of the License at
  *
- * Copyright (c) 2005-2010, Nitobi Software Inc.
- * Copyright (c) 2010-2011, IBM Corporation
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing,
+ *     software distributed under the License is distributed on an
+ *     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *     KIND, either express or implied.  See the License for the
+ *     specific language governing permissions and limitations
+ *     under the License.
  */
+
+// Version 1.2.0
 
 if (typeof PhoneGap === "undefined") {
 
@@ -23,13 +36,18 @@ if (typeof PhoneGap === "undefined") {
  * onDestroy                  Internal event fired when app is being destroyed (User should use window.onunload event, not this one).
  *
  * The only PhoneGap events that user code should register for are:
- *      onDeviceReady
- *      onResume
+ *      deviceready           PhoneGap native code is initialized and PhoneGap APIs can be called from JavaScript
+ *      pause                 App has moved to background
+ *      resume                App has returned to foreground
  *
  * Listeners can be registered as:
  *      document.addEventListener("deviceready", myDeviceReadyListener, false);
  *      document.addEventListener("resume", myResumeListener, false);
  *      document.addEventListener("pause", myPauseListener, false);
+ *
+ * The DOM lifecycle events should be used for saving and restoring state
+ *      window.onload
+ *      window.onunload
  */
 
 if (typeof(DeviceInfo) !== 'object') {
@@ -46,7 +64,9 @@ var PhoneGap = {
         ready: true,
         commands: [],
         timer: null
-    }
+    },
+    documentEventHandler: {},   // Collection of custom document event handlers
+    windowEventHandler: {}      // Collection of custom window event handlers
 };
 
 /**
@@ -265,18 +285,6 @@ PhoneGap.onPhoneGapInfoReady = new PhoneGap.Channel('onPhoneGapInfoReady');
 PhoneGap.onPhoneGapConnectionReady = new PhoneGap.Channel('onPhoneGapConnectionReady');
 
 /**
- * onResume channel is fired when the PhoneGap native code
- * resumes.
- */
-PhoneGap.onResume = new PhoneGap.Channel('onResume');
-
-/**
- * onPause channel is fired when the PhoneGap native code
- * pauses.
- */
-PhoneGap.onPause = new PhoneGap.Channel('onPause');
-
-/**
  * onDestroy channel is fired when the PhoneGap native code
  * is destroyed.  It is used internally.
  * Window.onunload should be used by the user.
@@ -365,14 +373,10 @@ PhoneGap.Channel.join(function() {
     // Fire onDeviceReady event once all constructors have run and PhoneGap info has been
     // received from native side, and any user defined initialization channels.
     PhoneGap.Channel.join(function() {
-
-        // Turn off app loading dialog
-        navigator.notification.activityStop();
+        // Let native code know we are inited on JS side
+        prompt("", "gap_init:");
 
         PhoneGap.onDeviceReady.fire();
-
-        // Fire the onresume event, since first one happens before JavaScript is loaded
-        PhoneGap.onResume.fire();
     }, PhoneGap.deviceReadyChannelsArray);
 
 }, [ PhoneGap.onDOMContentLoaded, PhoneGap.onNativeReady ]);
@@ -385,32 +389,92 @@ document.addEventListener('DOMContentLoaded', function() {
 // Intercept calls to document.addEventListener and watch for deviceready
 PhoneGap.m_document_addEventListener = document.addEventListener;
 
+// Intercept calls to window.addEventListener
+PhoneGap.m_window_addEventListener = window.addEventListener;
+
+/**
+ * Add a custom window event handler.
+ *
+ * @param {String} event            The event name that callback handles
+ * @param {Function} callback       The event handler
+ */
+PhoneGap.addWindowEventHandler = function(event, callback) {
+    PhoneGap.windowEventHandler[event] = callback;
+}
+
+/**
+ * Add a custom document event handler.
+ *
+ * @param {String} event            The event name that callback handles
+ * @param {Function} callback       The event handler
+ */
+PhoneGap.addDocumentEventHandler = function(event, callback) {
+    PhoneGap.documentEventHandler[event] = callback;
+}
+
+/**
+ * Intercept adding document event listeners and handle our own
+ *
+ * @param {Object} evt
+ * @param {Function} handler
+ * @param capture
+ */
 document.addEventListener = function(evt, handler, capture) {
     var e = evt.toLowerCase();
     if (e === 'deviceready') {
         PhoneGap.onDeviceReady.subscribeOnce(handler);
-    } else if (e === 'resume') {
-        PhoneGap.onResume.subscribe(handler);
-        if (PhoneGap.onDeviceReady.fired) {
-            PhoneGap.onResume.fire();
-        }
-    } else if (e === 'pause') {
-        PhoneGap.onPause.subscribe(handler);
     }
     else {
         // If subscribing to Android backbutton
         if (e === 'backbutton') {
             PhoneGap.exec(null, null, "App", "overrideBackbutton", [true]);
         }
-
+        
+        // If subscribing to an event that is handled by a plugin
+        else if (typeof PhoneGap.documentEventHandler[e] !== "undefined") {
+            if (PhoneGap.documentEventHandler[e](e, handler, true)) {
+                return; // Stop default behavior
+            }
+        }
+        
         PhoneGap.m_document_addEventListener.call(document, evt, handler, capture);
     }
+};
+
+/**
+ * Intercept adding window event listeners and handle our own
+ *
+ * @param {Object} evt
+ * @param {Function} handler
+ * @param capture
+ */
+window.addEventListener = function(evt, handler, capture) {
+    var e = evt.toLowerCase();
+        
+    // If subscribing to an event that is handled by a plugin
+    if (typeof PhoneGap.windowEventHandler[e] !== "undefined") {
+        if (PhoneGap.windowEventHandler[e](e, handler, true)) {
+            return; // Stop default behavior
+        }
+    }
+        
+    PhoneGap.m_window_addEventListener.call(window, evt, handler, capture);
 };
 
 // Intercept calls to document.removeEventListener and watch for events that
 // are generated by PhoneGap native code
 PhoneGap.m_document_removeEventListener = document.removeEventListener;
 
+// Intercept calls to window.removeEventListener
+PhoneGap.m_window_removeEventListener = window.removeEventListener;
+
+/**
+ * Intercept removing document event listeners and handle our own
+ *
+ * @param {Object} evt
+ * @param {Function} handler
+ * @param capture
+ */
 document.removeEventListener = function(evt, handler, capture) {
     var e = evt.toLowerCase();
 
@@ -419,75 +483,68 @@ document.removeEventListener = function(evt, handler, capture) {
         PhoneGap.exec(null, null, "App", "overrideBackbutton", [false]);
     }
 
+    // If unsubcribing from an event that is handled by a plugin
+    if (typeof PhoneGap.documentEventHandler[e] !== "undefined") {
+        if (PhoneGap.documentEventHandler[e](e, handler, false)) {
+            return; // Stop default behavior
+        }
+    }
+
     PhoneGap.m_document_removeEventListener.call(document, evt, handler, capture);
 };
 
 /**
- * Method to fire event from native code
+ * Intercept removing window event listeners and handle our own
+ *
+ * @param {Object} evt
+ * @param {Function} handler
+ * @param capture
  */
-PhoneGap.fireEvent = function(type) {
+window.removeEventListener = function(evt, handler, capture) {
+    var e = evt.toLowerCase();
+
+    // If unsubcribing from an event that is handled by a plugin
+    if (typeof PhoneGap.windowEventHandler[e] !== "undefined") {
+        if (PhoneGap.windowEventHandler[e](e, handler, false)) {
+            return; // Stop default behavior
+        }
+    }
+
+    PhoneGap.m_window_removeEventListener.call(window, evt, handler, capture);
+};
+
+/**
+ * Method to fire document event
+ *
+ * @param {String} type             The event type to fire
+ * @param {Object} data             Data to send with event
+ */
+PhoneGap.fireDocumentEvent = function(type, data) {
     var e = document.createEvent('Events');
     e.initEvent(type);
+    if (data) {
+        for (var i in data) {
+            e[i] = data[i];
+        }
+    }
     document.dispatchEvent(e);
 };
 
 /**
- * If JSON not included, use our own stringify. (Android 1.6)
- * The restriction on ours is that it must be an array of simple types.
+ * Method to fire window event
  *
- * @param args
- * @return {String}
+ * @param {String} type             The event type to fire
+ * @param {Object} data             Data to send with event
  */
-PhoneGap.stringify = function(args) {
-    if (typeof JSON === "undefined") {
-        var s = "[";
-        var i, type, start, name, nameType, a;
-        for (i = 0; i < args.length; i++) {
-            if (args[i] !== null) {
-                if (i > 0) {
-                    s = s + ",";
-                }
-                type = typeof args[i];
-                if ((type === "number") || (type === "boolean")) {
-                    s = s + args[i];
-                } else if (args[i] instanceof Array) {
-                    s = s + "[" + args[i] + "]";
-                } else if (args[i] instanceof Object) {
-                    start = true;
-                    s = s + '{';
-                    for (name in args[i]) {
-                        if (args[i][name] !== null) {
-                            if (!start) {
-                                s = s + ',';
-                            }
-                            s = s + '"' + name + '":';
-                            nameType = typeof args[i][name];
-                            if ((nameType === "number") || (nameType === "boolean")) {
-                                s = s + args[i][name];
-                            } else if ((typeof args[i][name]) === 'function') {
-                                // don't copy the functions
-                                s = s + '""';
-                            } else if (args[i][name] instanceof Object) {
-                                s = s + PhoneGap.stringify(args[i][name]);
-                            } else {
-                                s = s + '"' + args[i][name] + '"';
-                            }
-                            start = false;
-                        }
-                    }
-                    s = s + '}';
-                } else {
-                    a = args[i].replace(/\\/g, '\\\\');
-                    a = a.replace(/"/g, '\\"');
-                    s = s + '"' + a + '"';
-                }
-            }
+PhoneGap.fireWindowEvent = function(type, data) {
+    var e = document.createEvent('Events');
+    e.initEvent(type);
+    if (data) {
+        for (var i in data) {
+            e[i] = data[i];
         }
-        s = s + "]";
-        return s;
-    } else {
-        return JSON.stringify(args);
     }
+    window.dispatchEvent(e);
 };
 
 /**
@@ -568,7 +625,7 @@ PhoneGap.exec = function(success, fail, service, action, args) {
             PhoneGap.callbacks[callbackId] = {success:success, fail:fail};
         }
 
-        var r = prompt(PhoneGap.stringify(args), "gap:"+PhoneGap.stringify([service, action, callbackId, true]));
+        var r = prompt(JSON.stringify(args), "gap:"+JSON.stringify([service, action, callbackId, true]));
 
         // If a result was returned
         if (r.length > 0) {
@@ -797,7 +854,7 @@ PhoneGap.JSCallback = function() {
 
             // If server is stopping
             else if (xmlhttp.status === 503) {
-                console.log("JSCallback Error: Service unavailable.  Stopping callbacks.");
+                console.log("JSCallback Server Closed: Stopping callbacks.");
             }
 
             // If request wasn't GET
@@ -928,29 +985,24 @@ PhoneGap.includeJavascript = function(jsfile, successCallback) {
     id.appendChild(el);
 };
 
-/**
- * This class is provided to bridge the gap between the way plugins were setup in 0.9.3 and 0.9.4.  
- * Users should be calling navigator.add.addService() instead of PluginManager.addService().
- * @class
- * @deprecated
- */
-var PluginManager = {
-    addService: function(serviceType, className) {
-        try {
-            navigator.app.addService(serviceType, className);
-        } catch (e) {
-            console.log("Error adding service "+serviceType+": "+e);
-        }
-    }
-};
-
 }
 /*
- * PhoneGap is available under *either* the terms of the modified BSD license *or* the
- * MIT License (2008). See http://opensource.org/licenses/alphabetical for full text.
+ *     Licensed to the Apache Software Foundation (ASF) under one
+ *     or more contributor license agreements.  See the NOTICE file
+ *     distributed with this work for additional information
+ *     regarding copyright ownership.  The ASF licenses this file
+ *     to you under the Apache License, Version 2.0 (the
+ *     "License"); you may not use this file except in compliance
+ *     with the License.  You may obtain a copy of the License at
  *
- * Copyright (c) 2005-2010, Nitobi Software Inc.
- * Copyright (c) 2010-2011, IBM Corporation
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing,
+ *     software distributed under the License is distributed on an
+ *     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *     KIND, either express or implied.  See the License for the
+ *     specific language governing permissions and limitations
+ *     under the License.
  */
 
 if (!PhoneGap.hasResource("accelerometer")) {
@@ -1072,15 +1124,27 @@ PhoneGap.addConstructor(function() {
 });
 }
 /*
- * PhoneGap is available under *either* the terms of the modified BSD license *or* the
- * MIT License (2008). See http://opensource.org/licenses/alphabetical for full text.
+ *     Licensed to the Apache Software Foundation (ASF) under one
+ *     or more contributor license agreements.  See the NOTICE file
+ *     distributed with this work for additional information
+ *     regarding copyright ownership.  The ASF licenses this file
+ *     to you under the Apache License, Version 2.0 (the
+ *     "License"); you may not use this file except in compliance
+ *     with the License.  You may obtain a copy of the License at
  *
- * Copyright (c) 2005-2010, Nitobi Software Inc.
- * Copyright (c) 2010-2011, IBM Corporation
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing,
+ *     software distributed under the License is distributed on an
+ *     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *     KIND, either express or implied.  See the License for the
+ *     specific language governing permissions and limitations
+ *     under the License.
  */
 
 if (!PhoneGap.hasResource("app")) {
 PhoneGap.addResource("app");
+(function() {
 
 /**
  * Constructor
@@ -1096,21 +1160,18 @@ App.prototype.clearCache = function() {
 };
 
 /**
- * Load the url into the webview.
+ * Load the url into the webview or into new browser instance.
  *
  * @param url           The URL to load
  * @param props         Properties that can be passed in to the activity:
  *      wait: int                           => wait msec before loading URL
  *      loadingDialog: "Title,Message"      => display a native loading dialog
- *      hideLoadingDialogOnPage: boolean    => hide loadingDialog when page loaded instead of when deviceready event occurs.
- *      loadInWebView: boolean              => cause all links on web page to be loaded into existing web view, instead of being loaded into new browser.
  *      loadUrlTimeoutValue: int            => time in msec to wait before triggering a timeout error
- *      errorUrl: URL                       => URL to load if there's an error loading specified URL with loadUrl().  Should be a local URL such as file:///android_asset/www/error.html");
- *      keepRunning: boolean                => enable app to keep running in background
+ *      clearHistory: boolean              => clear webview history (default=false)
+ *      openExternal: boolean              => open in a new browser (default=false)
  *
  * Example:
- *      App app = new App();
- *      app.loadUrl("http://server/myapp/index.html", {wait:2000, loadingDialog:"Wait,Loading App", loadUrlTimeoutValue: 60000});
+ *      navigator.app.loadUrl("http://server/myapp/index.html", {wait:2000, loadingDialog:"Wait,Loading App", loadUrlTimeoutValue: 60000});
  */
 App.prototype.loadUrl = function(url, props) {
     PhoneGap.exec(null, null, "App", "loadUrl", [url, props]);
@@ -1132,13 +1193,11 @@ App.prototype.clearHistory = function() {
 };
 
 /**
- * Add a class that implements a service.
- *
- * @param serviceType
- * @param className
+ * Go to previous page displayed.
+ * This is the same as pressing the backbutton on Android device.
  */
-App.prototype.addService = function(serviceType, className) {
-	PhoneGap.exec(null, null, "App", "addService", [serviceType, className]);
+App.prototype.backHistory = function() {
+    PhoneGap.exec(null, null, "App", "backHistory", []);
 };
 
 /**
@@ -1161,16 +1220,173 @@ App.prototype.exitApp = function() {
 	return PhoneGap.exec(null, null, "App", "exitApp", []);
 };
 
+/**
+ * Add entry to approved list of URLs (whitelist) that will be loaded into PhoneGap container instead of default browser.
+ * 
+ * @param origin		URL regular expression to allow
+ * @param subdomains	T=include all subdomains under origin
+ */
+App.prototype.addWhiteListEntry = function(origin, subdomains) {
+	return PhoneGap.exec(null, null, "App", "addWhiteListEntry", [origin, subdomains]);	
+};
+
 PhoneGap.addConstructor(function() {
-    navigator.app = window.app = new App();
+    navigator.app = new App();
+});
+}());
+}
+/*
+ *     Licensed to the Apache Software Foundation (ASF) under one
+ *     or more contributor license agreements.  See the NOTICE file
+ *     distributed with this work for additional information
+ *     regarding copyright ownership.  The ASF licenses this file
+ *     to you under the Apache License, Version 2.0 (the
+ *     "License"); you may not use this file except in compliance
+ *     with the License.  You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing,
+ *     software distributed under the License is distributed on an
+ *     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *     KIND, either express or implied.  See the License for the
+ *     specific language governing permissions and limitations
+ *     under the License.
+ */
+
+if (!PhoneGap.hasResource("battery")) {
+PhoneGap.addResource("battery");
+
+/**
+ * This class contains information about the current battery status.
+ * @constructor
+ */
+var Battery = function() {
+    this._level = null;
+    this._isPlugged = null;
+    this._batteryListener = [];
+    this._lowListener = [];
+    this._criticalListener = [];
+};
+
+/**
+ * Registers as an event producer for battery events.
+ * 
+ * @param {Object} eventType
+ * @param {Object} handler
+ * @param {Object} add
+ */
+Battery.prototype.eventHandler = function(eventType, handler, add) {
+    var me = navigator.battery;
+    if (add) {
+        // If there are no current registered event listeners start the battery listener on native side.
+        if (me._batteryListener.length === 0 && me._lowListener.length === 0 && me._criticalListener.length === 0) {
+            PhoneGap.exec(me._status, me._error, "Battery", "start", []);
+        }
+        
+        // Register the event listener in the proper array
+        if (eventType === "batterystatus") {
+            var pos = me._batteryListener.indexOf(handler);
+            if (pos === -1) {
+            	me._batteryListener.push(handler);
+            }
+        } else if (eventType === "batterylow") {
+            var pos = me._lowListener.indexOf(handler);
+            if (pos === -1) {
+            	me._lowListener.push(handler);
+            }
+        } else if (eventType === "batterycritical") {
+            var pos = me._criticalListener.indexOf(handler);
+            if (pos === -1) {
+            	me._criticalListener.push(handler);
+            }
+        }
+    } else {
+        // Remove the event listener from the proper array
+        if (eventType === "batterystatus") {
+            var pos = me._batteryListener.indexOf(handler);
+            if (pos > -1) {
+                me._batteryListener.splice(pos, 1);        
+            }
+        } else if (eventType === "batterylow") {
+            var pos = me._lowListener.indexOf(handler);
+            if (pos > -1) {
+                me._lowListener.splice(pos, 1);        
+            }
+        } else if (eventType === "batterycritical") {
+            var pos = me._criticalListener.indexOf(handler);
+            if (pos > -1) {
+                me._criticalListener.splice(pos, 1);        
+            }
+        }
+        
+        // If there are no more registered event listeners stop the battery listener on native side.
+        if (me._batteryListener.length === 0 && me._lowListener.length === 0 && me._criticalListener.length === 0) {
+            PhoneGap.exec(null, null, "Battery", "stop", []);
+        }
+    }
+};
+
+/**
+ * Callback for battery status
+ * 
+ * @param {Object} info			keys: level, isPlugged
+ */
+Battery.prototype._status = function(info) {
+	if (info) {
+		var me = this;
+		if (me._level != info.level || me._isPlugged != info.isPlugged) {
+			// Fire batterystatus event
+			PhoneGap.fireWindowEvent("batterystatus", info);
+
+			// Fire low battery event
+			if (info.level == 20 || info.level == 5) {
+				if (info.level == 20) {
+					PhoneGap.fireWindowEvent("batterylow", info);
+				}
+				else {
+					PhoneGap.fireWindowEvent("batterycritical", info);
+				}
+			}
+		}
+		me._level = info.level;
+		me._isPlugged = info.isPlugged;	
+	}
+};
+
+/**
+ * Error callback for battery start
+ */
+Battery.prototype._error = function(e) {
+    console.log("Error initializing Battery: " + e);
+};
+
+PhoneGap.addConstructor(function() {
+    if (typeof navigator.battery === "undefined") {
+        navigator.battery = new Battery();
+        PhoneGap.addWindowEventHandler("batterystatus", navigator.battery.eventHandler);
+        PhoneGap.addWindowEventHandler("batterylow", navigator.battery.eventHandler);
+        PhoneGap.addWindowEventHandler("batterycritical", navigator.battery.eventHandler);
+    }
 });
 }
 /*
- * PhoneGap is available under *either* the terms of the modified BSD license *or* the
- * MIT License (2008). See http://opensource.org/licenses/alphabetical for full text.
+ *     Licensed to the Apache Software Foundation (ASF) under one
+ *     or more contributor license agreements.  See the NOTICE file
+ *     distributed with this work for additional information
+ *     regarding copyright ownership.  The ASF licenses this file
+ *     to you under the Apache License, Version 2.0 (the
+ *     "License"); you may not use this file except in compliance
+ *     with the License.  You may obtain a copy of the License at
  *
- * Copyright (c) 2005-2010, Nitobi Software Inc.
- * Copyright (c) 2010-2011, IBM Corporation
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing,
+ *     software distributed under the License is distributed on an
+ *     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *     KIND, either express or implied.  See the License for the
+ *     specific language governing permissions and limitations
+ *     under the License.
  */
 
 if (!PhoneGap.hasResource("camera")) {
@@ -1200,6 +1416,39 @@ Camera.DestinationType = {
     FILE_URI: 1                 // Return file uri (content://media/external/images/media/2 for Android)
 };
 Camera.prototype.DestinationType = Camera.DestinationType;
+
+/**
+ * Encoding of image returned from getPicture.
+ *
+ * Example: navigator.camera.getPicture(success, fail,
+ *              { quality: 80,
+ *                destinationType: Camera.DestinationType.DATA_URL,
+ *                sourceType: Camera.PictureSourceType.CAMERA,
+ *                encodingType: Camera.EncodingType.PNG})
+*/
+Camera.EncodingType = {
+    JPEG: 0,                    // Return JPEG encoded image
+    PNG: 1                      // Return PNG encoded image
+};
+Camera.prototype.EncodingType = Camera.EncodingType;
+
+/**
+ * Type of pictures to select from.  Only applicable when
+ *      PictureSourceType is PHOTOLIBRARY or SAVEDPHOTOALBUM
+ *
+ * Example: navigator.camera.getPicture(success, fail,
+ *              { quality: 80,
+ *                destinationType: Camera.DestinationType.DATA_URL,
+ *                sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+ *                mediaType: Camera.MediaType.PICTURE})
+ */
+Camera.MediaType = {
+       PICTURE: 0,      // allow selection of still pictures only. DEFAULT. Will return format specified via DestinationType
+       VIDEO: 1,        // allow selection of video only, ONLY RETURNS URL
+       ALLMEDIA : 2     // allow selection from all media types
+};
+Camera.prototype.MediaType = Camera.MediaType;
+
 
 /**
  * Source to getPicture from.
@@ -1239,21 +1488,48 @@ Camera.prototype.getPicture = function(successCallback, errorCallback, options) 
         console.log("Camera Error: errorCallback is not a function");
         return;
     }
-
-    this.options = options;
-    var quality = 80;
-    if (options.quality) {
-        quality = this.options.quality;
+    
+    if (options === null || typeof options === "undefined") {
+        options = {};
     }
-    var destinationType = Camera.DestinationType.DATA_URL;
-    if (this.options.destinationType) {
-        destinationType = this.options.destinationType;
+    if (options.quality === null || typeof options.quality === "undefined") {
+        options.quality = 80;
     }
-    var sourceType = Camera.PictureSourceType.CAMERA;
-    if (typeof this.options.sourceType === "number") {
-        sourceType = this.options.sourceType;
+    if (options.maxResolution === null || typeof options.maxResolution === "undefined") {
+    	options.maxResolution = 0;
     }
-    PhoneGap.exec(successCallback, errorCallback, "Camera", "takePicture", [quality, destinationType, sourceType]);
+    if (options.destinationType === null || typeof options.destinationType === "undefined") {
+        options.destinationType = Camera.DestinationType.DATA_URL;
+    }
+    if (options.sourceType === null || typeof options.sourceType === "undefined") {
+        options.sourceType = Camera.PictureSourceType.CAMERA;
+    }
+    if (options.encodingType === null || typeof options.encodingType === "undefined") {
+        options.encodingType = Camera.EncodingType.JPEG;
+    }
+    if (options.mediaType === null || typeof options.mediaType === "undefined") {
+        options.mediaType = Camera.MediaType.PICTURE;
+    }
+    if (options.targetWidth === null || typeof options.targetWidth === "undefined") {
+        options.targetWidth = -1;
+    } 
+    else if (typeof options.targetWidth == "string") {
+        var width = new Number(options.targetWidth);
+        if (isNaN(width) === false) {
+            options.targetWidth = width.valueOf();
+        }
+    }
+    if (options.targetHeight === null || typeof options.targetHeight === "undefined") {
+        options.targetHeight = -1;
+    } 
+    else if (typeof options.targetHeight == "string") {
+        var height = new Number(options.targetHeight);
+        if (isNaN(height) === false) {
+            options.targetHeight = height.valueOf();
+        }
+    }
+    
+    PhoneGap.exec(successCallback, errorCallback, "Camera", "takePicture", [options]);
 };
 
 PhoneGap.addConstructor(function() {
@@ -1263,11 +1539,22 @@ PhoneGap.addConstructor(function() {
 });
 }
 /*
- * PhoneGap is available under *either* the terms of the modified BSD license *or* the
- * MIT License (2008). See http://opensource.org/licenses/alphabetical for full text.
+ *     Licensed to the Apache Software Foundation (ASF) under one
+ *     or more contributor license agreements.  See the NOTICE file
+ *     distributed with this work for additional information
+ *     regarding copyright ownership.  The ASF licenses this file
+ *     to you under the Apache License, Version 2.0 (the
+ *     "License"); you may not use this file except in compliance
+ *     with the License.  You may obtain a copy of the License at
  *
- * Copyright (c) 2005-2010, Nitobi Software Inc.
- * Copyright (c) 2010-2011, IBM Corporation
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing,
+ *     software distributed under the License is distributed on an
+ *     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *     KIND, either express or implied.  See the License for the
+ *     specific language governing permissions and limitations
+ *     under the License.
  */
 
 if (!PhoneGap.hasResource("capture")) {
@@ -1452,16 +1739,43 @@ PhoneGap.addConstructor(function(){
 		navigator.device.capture = window.device.capture = new Capture();
 	}
 });
-}/*
- * PhoneGap is available under *either* the terms of the modified BSD license *or* the
- * MIT License (2008). See http://opensource.org/licenses/alphabetical for full text.
+}
+/*
+ *     Licensed to the Apache Software Foundation (ASF) under one
+ *     or more contributor license agreements.  See the NOTICE file
+ *     distributed with this work for additional information
+ *     regarding copyright ownership.  The ASF licenses this file
+ *     to you under the Apache License, Version 2.0 (the
+ *     "License"); you may not use this file except in compliance
+ *     with the License.  You may obtain a copy of the License at
  *
- * Copyright (c) 2005-2010, Nitobi Software Inc.
- * Copyright (c) 2010-2011, IBM Corporation
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing,
+ *     software distributed under the License is distributed on an
+ *     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *     KIND, either express or implied.  See the License for the
+ *     specific language governing permissions and limitations
+ *     under the License.
  */
 
 if (!PhoneGap.hasResource("compass")) {
 PhoneGap.addResource("compass");
+
+CompassError = function(){
+    this.code = null;
+};
+
+// Capture error codes
+CompassError.COMPASS_INTERNAL_ERR = 0;
+CompassError.COMPASS_NOT_SUPPORTED = 20;
+
+CompassHeading = function() {
+    this.magneticHeading = null;
+    this.trueHeading = null;
+    this.headingAccuracy = null;
+    this.timestamp = null;
+};
 
 /**
  * This class provides access to device Compass data.
@@ -1565,6 +1879,14 @@ Compass.prototype.clearWatch = function(id) {
     }
 };
 
+Compass.prototype._castDate = function(pluginResult) {
+    if (pluginResult.message.timestamp) {
+        var timestamp = new Date(pluginResult.message.timestamp);
+        pluginResult.message.timestamp = timestamp;
+    }
+    return pluginResult;
+};
+
 PhoneGap.addConstructor(function() {
     if (typeof navigator.compass === "undefined") {
         navigator.compass = new Compass();
@@ -1572,11 +1894,22 @@ PhoneGap.addConstructor(function() {
 });
 }
 /*
- * PhoneGap is available under *either* the terms of the modified BSD license *or* the
- * MIT License (2008). See http://opensource.org/licenses/alphabetical for full text.
+ *     Licensed to the Apache Software Foundation (ASF) under one
+ *     or more contributor license agreements.  See the NOTICE file
+ *     distributed with this work for additional information
+ *     regarding copyright ownership.  The ASF licenses this file
+ *     to you under the Apache License, Version 2.0 (the
+ *     "License"); you may not use this file except in compliance
+ *     with the License.  You may obtain a copy of the License at
  *
- * Copyright (c) 2005-2010, Nitobi Software Inc.
- * Copyright (c) 2010-2011, IBM Corporation
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing,
+ *     software distributed under the License is distributed on an
+ *     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *     KIND, either express or implied.  See the License for the
+ *     specific language governing permissions and limitations
+ *     under the License.
  */
 
 if (!PhoneGap.hasResource("contact")) {
@@ -1594,17 +1927,14 @@ PhoneGap.addResource("contact");
 * @param {Array.<ContactAddress>} addresses array of addresses
 * @param {Array.<ContactField>} ims instant messaging user ids
 * @param {Array.<ContactOrganization>} organizations
-* @param {DOMString} revision date contact was last updated
 * @param {DOMString} birthday contact's birthday
-* @param {DOMString} gender contact's gender
 * @param {DOMString} note user notes about contact
 * @param {Array.<ContactField>} photos
 * @param {Array.<ContactField>} categories
 * @param {Array.<ContactField>} urls contact's web sites
-* @param {DOMString} timezone the contacts time zone
 */
 var Contact = function (id, displayName, name, nickname, phoneNumbers, emails, addresses,
-    ims, organizations, revision, birthday, gender, note, photos, categories, urls, timezone) {
+    ims, organizations, birthday, note, photos, categories, urls) {
     this.id = id || null;
     this.rawId = null;
     this.displayName = displayName || null;
@@ -1615,14 +1945,11 @@ var Contact = function (id, displayName, name, nickname, phoneNumbers, emails, a
     this.addresses = addresses || null; // ContactAddress[]
     this.ims = ims || null; // ContactField[]
     this.organizations = organizations || null; // ContactOrganization[]
-    this.revision = revision || null;
     this.birthday = birthday || null;
-    this.gender = gender || null;
     this.note = note || null;
     this.photos = photos || null; // ContactField[]
     this.categories = categories || null; // ContactField[]
     this.urls = urls || null; // ContactField[]
-    this.timezone = timezone || null;
 };
 
 /**
@@ -1639,11 +1966,10 @@ var ContactError = function() {
  */
 ContactError.UNKNOWN_ERROR = 0;
 ContactError.INVALID_ARGUMENT_ERROR = 1;
-ContactError.NOT_FOUND_ERROR = 2;
-ContactError.TIMEOUT_ERROR = 3;
-ContactError.PENDING_OPERATION_ERROR = 4;
-ContactError.IO_ERROR = 5;
-ContactError.NOT_SUPPORTED_ERROR = 6;
+ContactError.TIMEOUT_ERROR = 2;
+ContactError.PENDING_OPERATION_ERROR = 3;
+ContactError.IO_ERROR = 4;
+ContactError.NOT_SUPPORTED_ERROR = 5;
 ContactError.PERMISSION_DENIED_ERROR = 20;
 
 /**
@@ -1654,7 +1980,7 @@ ContactError.PERMISSION_DENIED_ERROR = 20;
 Contact.prototype.remove = function(successCB, errorCB) {
     if (this.id === null) {
         var errorObj = new ContactError();
-        errorObj.code = ContactError.NOT_FOUND_ERROR;
+        errorObj.code = ContactError.UNKNOWN_ERROR;
         errorCB(errorObj);
     }
     else {
@@ -1770,8 +2096,10 @@ var ContactField = function(type, value, pref) {
 * @param postalCode
 * @param country
 */
-var ContactAddress = function(formatted, streetAddress, locality, region, postalCode, country) {
+var ContactAddress = function(pref, type, formatted, streetAddress, locality, region, postalCode, country) {
 	this.id = null;
+    this.pref = pref || null;
+    this.type = type || null;
     this.formatted = formatted || null;
     this.streetAddress = streetAddress || null;
     this.locality = locality || null;
@@ -1792,8 +2120,10 @@ var ContactAddress = function(formatted, streetAddress, locality, region, postal
 * @param location
 * @param desc
 */
-var ContactOrganization = function(name, dept, title) {
+var ContactOrganization = function(pref, type, name, dept, title) {
 	this.id = null;
+    this.pref = pref || null;
+    this.type = type || null;
     this.name = name || null;
     this.department = dept || null;
     this.title = title || null;
@@ -1816,7 +2146,16 @@ var Contacts = function() {
 * @return array of Contacts matching search criteria
 */
 Contacts.prototype.find = function(fields, successCB, errorCB, options) {
-    PhoneGap.exec(successCB, errorCB, "Contacts", "search", [fields, options]);
+    if (successCB === null) {
+        throw new TypeError("You must specify a success callback for the find command.");
+    }
+    if (fields === null || fields === "undefined" || fields.length === "undefined" || fields.length <= 0) {
+        if (typeof errorCB === "function") {
+            errorCB({"code": ContactError.INVALID_ARGUMENT_ERROR});
+        }
+    } else {
+        PhoneGap.exec(successCB, errorCB, "Contacts", "search", [fields, options]);        
+    }
 };
 
 /**
@@ -1840,7 +2179,7 @@ Contacts.prototype.create = function(properties) {
 /**
 * This function returns and array of contacts.  It is required as we need to convert raw
 * JSON objects into concrete Contact objects.  Currently this method is called after
-* navigator.service.contacts.find but before the find methods success call back.
+* navigator.contacts.find but before the find methods success call back.
 *
 * @param jsonArray an array of JSON Objects that need to be converted to Contact objects.
 * @returns an array of Contact objects
@@ -1849,7 +2188,7 @@ Contacts.prototype.cast = function(pluginResult) {
 	var contacts = [];
 	var i;
 	for (i=0; i<pluginResult.message.length; i++) {
-		contacts.push(navigator.service.contacts.create(pluginResult.message[i]));
+		contacts.push(navigator.contacts.create(pluginResult.message[i]));
 	}
 	pluginResult.message = contacts;
 	return pluginResult;
@@ -1860,32 +2199,38 @@ Contacts.prototype.cast = function(pluginResult) {
  * @constructor
  * @param filter used to match contacts against
  * @param multiple boolean used to determine if more than one contact should be returned
- * @param updatedSince return only contact records that have been updated on or after the given time
  */
-var ContactFindOptions = function(filter, multiple, updatedSince) {
+var ContactFindOptions = function(filter, multiple) {
     this.filter = filter || '';
-    this.multiple = multiple || true;
-    this.updatedSince = updatedSince || '';
+    this.multiple = multiple || false;
 };
 
 /**
  * Add the contact interface into the browser.
  */
 PhoneGap.addConstructor(function() {
-    if(typeof navigator.service === "undefined") {
-        navigator.service = {};
-    }
-    if(typeof navigator.service.contacts === "undefined") {
-        navigator.service.contacts = new Contacts();
+    if(typeof navigator.contacts === "undefined") {
+        navigator.contacts = new Contacts();
     }
 });
 }
 /*
- * PhoneGap is available under *either* the terms of the modified BSD license *or* the
- * MIT License (2008). See http://opensource.org/licenses/alphabetical for full text.
+ *     Licensed to the Apache Software Foundation (ASF) under one
+ *     or more contributor license agreements.  See the NOTICE file
+ *     distributed with this work for additional information
+ *     regarding copyright ownership.  The ASF licenses this file
+ *     to you under the Apache License, Version 2.0 (the
+ *     "License"); you may not use this file except in compliance
+ *     with the License.  You may obtain a copy of the License at
  *
- * Copyright (c) 2005-2010, Nitobi Software Inc.
- * Copyright (c) 2010-2011, IBM Corporation
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing,
+ *     software distributed under the License is distributed on an
+ *     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *     KIND, either express or implied.  See the License for the
+ *     specific language governing permissions and limitations
+ *     under the License.
  */
 
 // TODO: Needs to be commented
@@ -1924,11 +2269,22 @@ PhoneGap.addConstructor(function() {
 });
 }
 /*
- * PhoneGap is available under *either* the terms of the modified BSD license *or* the
- * MIT License (2008). See http://opensource.org/licenses/alphabetical for full text.
+ *     Licensed to the Apache Software Foundation (ASF) under one
+ *     or more contributor license agreements.  See the NOTICE file
+ *     distributed with this work for additional information
+ *     regarding copyright ownership.  The ASF licenses this file
+ *     to you under the Apache License, Version 2.0 (the
+ *     "License"); you may not use this file except in compliance
+ *     with the License.  You may obtain a copy of the License at
  *
- * Copyright (c) 2005-2010, Nitobi Software Inc.
- * Copyright (c) 2010-2011, IBM Corporation
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing,
+ *     software distributed under the License is distributed on an
+ *     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *     KIND, either express or implied.  See the License for the
+ *     specific language governing permissions and limitations
+ *     under the License.
  */
 
 if (!PhoneGap.hasResource("device")) {
@@ -2029,11 +2385,22 @@ PhoneGap.addConstructor(function() {
 });
 }
 /*
- * PhoneGap is available under *either* the terms of the modified BSD license *or* the
- * MIT License (2008). See http://opensource.org/licenses/alphabetical for full text.
+ *     Licensed to the Apache Software Foundation (ASF) under one
+ *     or more contributor license agreements.  See the NOTICE file
+ *     distributed with this work for additional information
+ *     regarding copyright ownership.  The ASF licenses this file
+ *     to you under the Apache License, Version 2.0 (the
+ *     "License"); you may not use this file except in compliance
+ *     with the License.  You may obtain a copy of the License at
  *
- * Copyright (c) 2005-2010, Nitobi Software Inc.
- * Copyright (c) 2010-2011, IBM Corporation
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing,
+ *     software distributed under the License is distributed on an
+ *     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *     KIND, either express or implied.  See the License for the
+ *     specific language governing permissions and limitations
+ *     under the License.
  */
 
 if (!PhoneGap.hasResource("file")) {
@@ -2041,8 +2408,6 @@ PhoneGap.addResource("file");
 
 /**
  * This class provides some useful information about a file.
- * This is the fields returned when navigator.fileMgr.getFileProperties()
- * is called.
  * @constructor
  */
 var FileProperties = function(filePath) {
@@ -2062,9 +2427,9 @@ var FileProperties = function(filePath) {
  * @param size {Number} size of the file in bytes
  */
 var File = function(name, fullPath, type, lastModifiedDate, size) {
-	this.name = name || null;
+    this.name = name || null;
     this.fullPath = fullPath || null;
-	this.type = type || null;
+    this.type = type || null;
     this.lastModifiedDate = lastModifiedDate || null;
     this.size = size || 0;
 };
@@ -2092,67 +2457,8 @@ FileError.TYPE_MISMATCH_ERR = 11;
 FileError.PATH_EXISTS_ERR = 12;
 
 //-----------------------------------------------------------------------------
-// File manager
-//-----------------------------------------------------------------------------
-
-/** @constructor */
-var FileMgr = function() {
-};
-
-FileMgr.prototype.getFileProperties = function(filePath) {
-    return PhoneGap.exec(null, null, "File", "getFileProperties", [filePath]);
-};
-
-FileMgr.prototype.getFileBasePaths = function() {
-};
-
-FileMgr.prototype.testSaveLocationExists = function(successCallback, errorCallback) {
-    return PhoneGap.exec(successCallback, errorCallback, "File", "testSaveLocationExists", []);
-};
-
-FileMgr.prototype.testFileExists = function(fileName, successCallback, errorCallback) {
-    return PhoneGap.exec(successCallback, errorCallback, "File", "testFileExists", [fileName]);
-};
-
-FileMgr.prototype.testDirectoryExists = function(dirName, successCallback, errorCallback) {
-    return PhoneGap.exec(successCallback, errorCallback, "File", "testDirectoryExists", [dirName]);
-};
-
-FileMgr.prototype.getFreeDiskSpace = function(successCallback, errorCallback) {
-    return PhoneGap.exec(successCallback, errorCallback, "File", "getFreeDiskSpace", []);
-};
-
-FileMgr.prototype.writeAsText = function(fileName, data, append, successCallback, errorCallback) {
-    PhoneGap.exec(successCallback, errorCallback, "File", "writeAsText", [fileName, data, append]);
-};
-
-FileMgr.prototype.write = function(fileName, data, position, successCallback, errorCallback) {
-    PhoneGap.exec(successCallback, errorCallback, "File", "write", [fileName, data, position]);
-};
-
-FileMgr.prototype.truncate = function(fileName, size, successCallback, errorCallback) {
-    PhoneGap.exec(successCallback, errorCallback, "File", "truncate", [fileName, size]);
-};
-
-FileMgr.prototype.readAsText = function(fileName, encoding, successCallback, errorCallback) {
-    PhoneGap.exec(successCallback, errorCallback, "File", "readAsText", [fileName, encoding]);
-};
-
-FileMgr.prototype.readAsDataURL = function(fileName, successCallback, errorCallback) {
-    PhoneGap.exec(successCallback, errorCallback, "File", "readAsDataURL", [fileName]);
-};
-
-PhoneGap.addConstructor(function() {
-    if (typeof navigator.fileMgr === "undefined") {
-        navigator.fileMgr = new FileMgr();
-    }
-});
-
-//-----------------------------------------------------------------------------
 // File Reader
 //-----------------------------------------------------------------------------
-// TODO: All other FileMgr function operate on the SD card as root.  However,
-//       for FileReader & FileWriter the root is not SD card.  Should this be changed?
 
 /**
  * This class reads the mobile device file system.
@@ -2206,7 +2512,7 @@ FileReader.prototype.abort = function() {
     }
     // If abort callback
     if (typeof this.onabort === "function") {
-        this.oneabort({"type":"abort", "target":this});
+        this.onabort({"type":"abort", "target":this});
     }
     // If load end callback
     if (typeof this.onloadend === "function") {
@@ -2222,11 +2528,11 @@ FileReader.prototype.abort = function() {
  */
 FileReader.prototype.readAsText = function(file, encoding) {
     this.fileName = "";
-	if (typeof file.fullPath === "undefined") {
-		this.fileName = file;
-	} else {
-		this.fileName = file.fullPath;
-	}
+    if (typeof file.fullPath === "undefined") {
+        this.fileName = file;
+    } else {
+        this.fileName = file.fullPath;
+    }
 
     // LOADING state
     this.readyState = FileReader.LOADING;
@@ -2242,8 +2548,7 @@ FileReader.prototype.readAsText = function(file, encoding) {
     var me = this;
 
     // Read file
-    navigator.fileMgr.readAsText(this.fileName, enc,
-
+    PhoneGap.exec(
         // Success callback
         function(r) {
             var evt;
@@ -2269,89 +2574,6 @@ FileReader.prototype.readAsText = function(file, encoding) {
                 me.onloadend({"type":"loadend", "target":me});
             }
         },
-
-        // Error callback
-        function(e) {
-            var evt;
-            // If DONE (cancelled), then don't do anything
-            if (me.readyState === FileReader.DONE) {
-                return;
-            }
-
-            // Save error
-		    me.error = e;
-
-            // If onerror callback
-            if (typeof me.onerror === "function") {
-                me.onerror({"type":"error", "target":me});
-            }
-
-            // DONE state
-            me.readyState = FileReader.DONE;
-
-            // If onloadend callback
-            if (typeof me.onloadend === "function") {
-                me.onloadend({"type":"loadend", "target":me});
-            }
-        }
-        );
-};
-
-
-/**
- * Read file and return data as a base64 encoded data url.
- * A data url is of the form:
- *      data:[<mediatype>][;base64],<data>
- *
- * @param file          {File} File object containing file properties
- */
-FileReader.prototype.readAsDataURL = function(file) {
-	this.fileName = "";
-    if (typeof file.fullPath === "undefined") {
-        this.fileName = file;
-    } else {
-        this.fileName = file.fullPath;
-    }
-
-    // LOADING state
-    this.readyState = FileReader.LOADING;
-
-    // If loadstart callback
-    if (typeof this.onloadstart === "function") {
-        this.onloadstart({"type":"loadstart", "target":this});
-    }
-
-    var me = this;
-
-    // Read file
-    navigator.fileMgr.readAsDataURL(this.fileName,
-
-        // Success callback
-        function(r) {
-            var evt;
-
-            // If DONE (cancelled), then don't do anything
-            if (me.readyState === FileReader.DONE) {
-                return;
-            }
-
-            // Save result
-            me.result = r;
-
-            // If onload callback
-            if (typeof me.onload === "function") {
-                me.onload({"type":"load", "target":me});
-            }
-
-            // DONE state
-            me.readyState = FileReader.DONE;
-
-            // If onloadend callback
-            if (typeof me.onloadend === "function") {
-                me.onloadend({"type":"loadend", "target":me});
-            }
-        },
-
         // Error callback
         function(e) {
             var evt;
@@ -2375,8 +2597,86 @@ FileReader.prototype.readAsDataURL = function(file) {
             if (typeof me.onloadend === "function") {
                 me.onloadend({"type":"loadend", "target":me});
             }
-        }
-        );
+        }, "File", "readAsText", [this.fileName, enc]);
+};
+
+
+/**
+ * Read file and return data as a base64 encoded data url.
+ * A data url is of the form:
+ *      data:[<mediatype>][;base64],<data>
+ *
+ * @param file          {File} File object containing file properties
+ */
+FileReader.prototype.readAsDataURL = function(file) {
+    this.fileName = "";
+    if (typeof file.fullPath === "undefined") {
+        this.fileName = file;
+    } else {
+        this.fileName = file.fullPath;
+    }
+
+    // LOADING state
+    this.readyState = FileReader.LOADING;
+
+    // If loadstart callback
+    if (typeof this.onloadstart === "function") {
+        this.onloadstart({"type":"loadstart", "target":this});
+    }
+
+    var me = this;
+
+    // Read file
+    PhoneGap.exec(
+        // Success callback
+        function(r) {
+            var evt;
+
+            // If DONE (cancelled), then don't do anything
+            if (me.readyState === FileReader.DONE) {
+                return;
+            }
+
+            // Save result
+            me.result = r;
+
+            // If onload callback
+            if (typeof me.onload === "function") {
+                me.onload({"type":"load", "target":me});
+            }
+
+            // DONE state
+            me.readyState = FileReader.DONE;
+
+            // If onloadend callback
+            if (typeof me.onloadend === "function") {
+                me.onloadend({"type":"loadend", "target":me});
+            }
+        },
+        // Error callback
+        function(e) {
+            var evt;
+            // If DONE (cancelled), then don't do anything
+            if (me.readyState === FileReader.DONE) {
+                return;
+            }
+
+            // Save error
+            me.error = e;
+
+            // If onerror callback
+            if (typeof me.onerror === "function") {
+                me.onerror({"type":"error", "target":me});
+            }
+
+            // DONE state
+            me.readyState = FileReader.DONE;
+
+            // If onloadend callback
+            if (typeof me.onloadend === "function") {
+                me.onloadend({"type":"loadend", "target":me});
+            }
+        }, "File", "readAsDataURL", [this.fileName]);
 };
 
 /**
@@ -2417,10 +2717,10 @@ FileReader.prototype.readAsArrayBuffer = function(file) {
 var FileWriter = function(file) {
     this.fileName = "";
     this.length = 0;
-	if (file) {
-	    this.fileName = file.fullPath || file;
-	    this.length = file.size || 0;
-	}
+    if (file) {
+        this.fileName = file.fullPath || file;
+        this.length = file.size || 0;
+    }
     // default is to write at the beginning of the file
     this.position = 0;
 
@@ -2432,12 +2732,12 @@ var FileWriter = function(file) {
     this.error = null;
 
     // Event handlers
-    this.onwritestart = null;	// When writing starts
-    this.onprogress = null;		// While writing the file, and reporting partial file data
-    this.onwrite = null;		// When the write has successfully completed.
-    this.onwriteend = null;		// When the request has completed (either in success or failure).
-    this.onabort = null;		// When the write has been aborted. For instance, by invoking the abort() method.
-    this.onerror = null;		// When the write has failed (see errors).
+    this.onwritestart = null;   // When writing starts
+    this.onprogress = null;     // While writing the file, and reporting partial file data
+    this.onwrite = null;        // When the write has successfully completed.
+    this.onwriteend = null;     // When the request has completed (either in success or failure).
+    this.onabort = null;        // When the write has been aborted. For instance, by invoking the abort() method.
+    this.onerror = null;        // When the write has failed (see errors).
 };
 
 // States
@@ -2450,9 +2750,9 @@ FileWriter.DONE = 2;
  */
 FileWriter.prototype.abort = function() {
     // check for invalid state
-	if (this.readyState === FileWriter.DONE || this.readyState === FileWriter.INIT) {
-		throw FileError.INVALID_STATE_ERR;
-	}
+    if (this.readyState === FileWriter.DONE || this.readyState === FileWriter.INIT) {
+        throw FileError.INVALID_STATE_ERR;
+    }
 
     // set error
     var error = new FileError(), evt;
@@ -2465,7 +2765,7 @@ FileWriter.prototype.abort = function() {
     }
     // If abort callback
     if (typeof this.onabort === "function") {
-        this.oneabort({"type":"abort", "target":this});
+        this.onabort({"type":"abort", "target":this});
     }
 
     this.readyState = FileWriter.DONE;
@@ -2482,10 +2782,10 @@ FileWriter.prototype.abort = function() {
  * @param text to be written
  */
 FileWriter.prototype.write = function(text) {
-	// Throw an exception if we are already writing a file
-	if (this.readyState === FileWriter.WRITING) {
-		throw FileError.INVALID_STATE_ERR;
-	}
+    // Throw an exception if we are already writing a file
+    if (this.readyState === FileWriter.WRITING) {
+        throw FileError.INVALID_STATE_ERR;
+    }
 
     // WRITING state
     this.readyState = FileWriter.WRITING;
@@ -2498,8 +2798,7 @@ FileWriter.prototype.write = function(text) {
     }
 
     // Write file
-    navigator.fileMgr.write(this.fileName, text, this.position,
-
+    PhoneGap.exec(
         // Success callback
         function(r) {
             var evt;
@@ -2526,7 +2825,6 @@ FileWriter.prototype.write = function(text) {
                 me.onwriteend({"type":"writeend", "target":me});
             }
         },
-
         // Error callback
         function(e) {
             var evt;
@@ -2551,9 +2849,7 @@ FileWriter.prototype.write = function(text) {
             if (typeof me.onwriteend === "function") {
                 me.onwriteend({"type":"writeend", "target":me});
             }
-        }
-        );
-
+        }, "File", "write", [this.fileName, text, this.position]);
 };
 
 /**
@@ -2577,18 +2873,18 @@ FileWriter.prototype.seek = function(offset) {
 
     // See back from end of file.
     if (offset < 0) {
-		this.position = Math.max(offset + this.length, 0);
-	}
+        this.position = Math.max(offset + this.length, 0);
+    }
     // Offset is bigger then file size so set position
     // to the end of the file.
-	else if (offset > this.length) {
-		this.position = this.length;
-	}
+    else if (offset > this.length) {
+        this.position = this.length;
+    }
     // Offset is between 0 and file size so set the position
     // to start writing.
-	else {
-		this.position = offset;
-	}
+    else {
+        this.position = offset;
+    }
 };
 
 /**
@@ -2597,10 +2893,10 @@ FileWriter.prototype.seek = function(offset) {
  * @param size to chop the file at.
  */
 FileWriter.prototype.truncate = function(size) {
-	// Throw an exception if we are already writing a file
-	if (this.readyState === FileWriter.WRITING) {
-		throw FileError.INVALID_STATE_ERR;
-	}
+    // Throw an exception if we are already writing a file
+    if (this.readyState === FileWriter.WRITING) {
+        throw FileError.INVALID_STATE_ERR;
+    }
 
     // WRITING state
     this.readyState = FileWriter.WRITING;
@@ -2613,8 +2909,7 @@ FileWriter.prototype.truncate = function(size) {
     }
 
     // Write file
-    navigator.fileMgr.truncate(this.fileName, size,
-
+    PhoneGap.exec(
         // Success callback
         function(r) {
             var evt;
@@ -2640,7 +2935,6 @@ FileWriter.prototype.truncate = function(size) {
                 me.onwriteend({"type":"writeend", "target":me});
             }
         },
-
         // Error callback
         function(e) {
             var evt;
@@ -2664,8 +2958,7 @@ FileWriter.prototype.truncate = function(size) {
             if (typeof me.onwriteend === "function") {
                 me.onwriteend({"type":"writeend", "target":me});
             }
-        }
-    );
+        }, "File", "truncate", [this.fileName, size]);
 };
 
 /**
@@ -3084,19 +3377,30 @@ LocalFileSystem.prototype._castDate = function(pluginResult) {
  * Add the FileSystem interface into the browser.
  */
 PhoneGap.addConstructor(function() {
-	var pgLocalFileSystem = new LocalFileSystem();
-	// Needed for cast methods
+    var pgLocalFileSystem = new LocalFileSystem();
+    // Needed for cast methods
     if(typeof window.localFileSystem == "undefined") window.localFileSystem  = pgLocalFileSystem;
     if(typeof window.requestFileSystem == "undefined") window.requestFileSystem  = pgLocalFileSystem.requestFileSystem;
     if(typeof window.resolveLocalFileSystemURI == "undefined") window.resolveLocalFileSystemURI = pgLocalFileSystem.resolveLocalFileSystemURI;
 });
 }
 /*
- * PhoneGap is available under *either* the terms of the modified BSD license *or* the
- * MIT License (2008). See http://opensource.org/licenses/alphabetical for full text.
+ *     Licensed to the Apache Software Foundation (ASF) under one
+ *     or more contributor license agreements.  See the NOTICE file
+ *     distributed with this work for additional information
+ *     regarding copyright ownership.  The ASF licenses this file
+ *     to you under the Apache License, Version 2.0 (the
+ *     "License"); you may not use this file except in compliance
+ *     with the License.  You may obtain a copy of the License at
  *
- * Copyright (c) 2005-2010, Nitobi Software Inc.
- * Copyright (c) 2010-2011, IBM Corporation
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing,
+ *     software distributed under the License is distributed on an
+ *     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *     KIND, either express or implied.  See the License for the
+ *     specific language governing permissions and limitations
+ *     under the License.
  */
 
 if (!PhoneGap.hasResource("filetransfer")) {
@@ -3146,10 +3450,14 @@ FileTransfer.prototype.upload = function(filePath, server, successCallback, erro
     var fileName = null;
     var mimeType = null;
     var params = null;
+    var chunkedMode = true;
     if (options) {
         fileKey = options.fileKey;
         fileName = options.fileName;
         mimeType = options.mimeType;
+        if (options.chunkedMode != null || typeof options.chunkedMode != "undefined") {
+            chunkedMode = options.chunkedMode;
+        }
         if (options.params) {
             params = options.params;
         }
@@ -3158,7 +3466,7 @@ FileTransfer.prototype.upload = function(filePath, server, successCallback, erro
         }
     }
 
-    PhoneGap.exec(successCallback, errorCallback, 'FileTransfer', 'upload', [filePath, server, fileKey, fileName, mimeType, params, debug]);
+    PhoneGap.exec(successCallback, errorCallback, 'FileTransfer', 'upload', [filePath, server, fileKey, fileName, mimeType, params, debug, chunkedMode]);
 };
 
 /**
@@ -3177,11 +3485,22 @@ var FileUploadOptions = function(fileKey, fileName, mimeType, params) {
 };
 }
 /*
- * PhoneGap is available under *either* the terms of the modified BSD license *or* the
- * MIT License (2008). See http://opensource.org/licenses/alphabetical for full text.
+ *     Licensed to the Apache Software Foundation (ASF) under one
+ *     or more contributor license agreements.  See the NOTICE file
+ *     distributed with this work for additional information
+ *     regarding copyright ownership.  The ASF licenses this file
+ *     to you under the Apache License, Version 2.0 (the
+ *     "License"); you may not use this file except in compliance
+ *     with the License.  You may obtain a copy of the License at
  *
- * Copyright (c) 2005-2010, Nitobi Software Inc.
- * Copyright (c) 2010-2011, IBM Corporation
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing,
+ *     software distributed under the License is distributed on an
+ *     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *     KIND, either express or implied.  See the License for the
+ *     specific language governing permissions and limitations
+ *     under the License.
  */
 
 if (!PhoneGap.hasResource("geolocation")) {
@@ -3375,11 +3694,22 @@ PhoneGap.addConstructor(function() {
 });
 }
 /*
- * PhoneGap is available under *either* the terms of the modified BSD license *or* the
- * MIT License (2008). See http://opensource.org/licenses/alphabetical for full text.
+ *     Licensed to the Apache Software Foundation (ASF) under one
+ *     or more contributor license agreements.  See the NOTICE file
+ *     distributed with this work for additional information
+ *     regarding copyright ownership.  The ASF licenses this file
+ *     to you under the Apache License, Version 2.0 (the
+ *     "License"); you may not use this file except in compliance
+ *     with the License.  You may obtain a copy of the License at
  *
- * Copyright (c) 2005-2010, Nitobi Software Inc.
- * Copyright (c) 2010-2011, IBM Corporation
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing,
+ *     software distributed under the License is distributed on an
+ *     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *     KIND, either express or implied.  See the License for the
+ *     specific language governing permissions and limitations
+ *     under the License.
  */
 
 if (!PhoneGap.hasResource("media")) {
@@ -3439,6 +3769,7 @@ var Media = function(src, successCallback, errorCallback, statusCallback, positi
 // Media messages
 Media.MEDIA_STATE = 1;
 Media.MEDIA_DURATION = 2;
+Media.MEDIA_POSITION = 3;
 Media.MEDIA_ERROR = 9;
 
 // Media states
@@ -3459,6 +3790,7 @@ var MediaError = function() {
     this.message = "";
 };
 
+MediaError.MEDIA_ERR_NONE_ACTIVE    = 0;
 MediaError.MEDIA_ERR_ABORTED        = 1;
 MediaError.MEDIA_ERR_NETWORK        = 2;
 MediaError.MEDIA_ERR_DECODE         = 3;
@@ -3531,6 +3863,13 @@ Media.prototype.release = function() {
 };
 
 /**
+ * Adjust the volume.
+ */
+Media.prototype.setVolume = function(volume) {
+    PhoneGap.exec(null, null, "Media", "setVolume", [this.id, volume]);
+};
+
+/**
  * List of media objects.
  * PRIVATE
  */
@@ -3563,7 +3902,6 @@ PhoneGap.Media.getMediaObject = function(id) {
  */
 PhoneGap.Media.onStatus = function(id, msg, value) {
     var media = PhoneGap.mediaObjects[id];
-
     // If state update
     if (msg === Media.MEDIA_STATE) {
         if (value === Media.MEDIA_STOPPED) {
@@ -3580,71 +3918,36 @@ PhoneGap.Media.onStatus = function(id, msg, value) {
     }
     else if (msg === Media.MEDIA_ERROR) {
         if (media.errorCallback) {
-            media.errorCallback(value);
+            media.errorCallback({"code":value});
         }
+    }
+    else if (msg == Media.MEDIA_POSITION) {
+        media._position = value;
     }
 };
 }
 /*
- * PhoneGap is available under *either* the terms of the modified BSD license *or* the
- * MIT License (2008). See http://opensource.org/licenses/alphabetical for full text.
+ *     Licensed to the Apache Software Foundation (ASF) under one
+ *     or more contributor license agreements.  See the NOTICE file
+ *     distributed with this work for additional information
+ *     regarding copyright ownership.  The ASF licenses this file
+ *     to you under the Apache License, Version 2.0 (the
+ *     "License"); you may not use this file except in compliance
+ *     with the License.  You may obtain a copy of the License at
  *
- * Copyright (c) 2005-2010, Nitobi Software Inc.
- * Copyright (c) 2010-2011, IBM Corporation
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing,
+ *     software distributed under the License is distributed on an
+ *     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *     KIND, either express or implied.  See the License for the
+ *     specific language governing permissions and limitations
+ *     under the License.
  */
+
 
 if (!PhoneGap.hasResource("network")) {
 PhoneGap.addResource("network");
-
-/**
- * This class contains information about any NetworkStatus.
- * @constructor
- */
-var NetworkStatus = function() {
-    //this.code = null;
-    //this.message = "";
-};
-
-NetworkStatus.NOT_REACHABLE = 0;
-NetworkStatus.REACHABLE_VIA_CARRIER_DATA_NETWORK = 1;
-NetworkStatus.REACHABLE_VIA_WIFI_NETWORK = 2;
-
-/**
- * This class provides access to device Network data (reachability).
- * @constructor
- */
-var Network = function() {
-    /**
-     * The last known Network status.
-     * { hostName: string, ipAddress: string,
-        remoteHostStatus: int(0/1/2), internetConnectionStatus: int(0/1/2), localWiFiConnectionStatus: int (0/2) }
-     */
-    this.lastReachability = null;
-};
-
-/**
- * Called by the geolocation framework when the reachability status has changed.
- * @param {Reachibility} reachability The current reachability status.
- */
-// TODO: Callback from native code not implemented for Android
-Network.prototype.updateReachability = function(reachability) {
-    this.lastReachability = reachability;
-};
-
-/**
- * Determine if a URI is reachable over the network.
-
- * @param {Object} uri
- * @param {Function} callback
- * @param {Object} options  (isIpAddress:boolean)
- */
-Network.prototype.isReachable = function(uri, callback, options) {
-    var isIpAddress = false;
-    if (options && options.isIpAddress) {
-        isIpAddress = options.isIpAddress;
-    }
-    PhoneGap.exec(callback, null, "Network Status", "isReachable", [uri, isIpAddress]);
-};
 
 /**
  * This class contains information about the current network Connection.
@@ -3664,7 +3967,7 @@ var Connection = function() {
                 // set a timer if still offline at the end of timer send the offline event
                 me._timer = setTimeout(function(){
                     me.type = type;
-                    PhoneGap.fireEvent('offline');
+                    PhoneGap.fireDocumentEvent('offline');
                     me._timer = null;
                     }, me.timeout);
             } else {
@@ -3674,7 +3977,7 @@ var Connection = function() {
                     me._timer = null;
                 }
                 me.type = type;
-                PhoneGap.fireEvent('online');
+                PhoneGap.fireDocumentEvent('online');
             }
             
             // should only fire this once
@@ -3684,6 +3987,12 @@ var Connection = function() {
             }            
         },
         function(e) {
+            // If we can't get the network info we should still tell PhoneGap
+            // to fire the deviceready event.
+            if (me._firstRun) {
+                me._firstRun = false;
+                PhoneGap.onPhoneGapConnectionReady.fire();
+            }            
             console.log("Error initializing Network Connection: " + e);
         });
 };
@@ -3710,7 +4019,7 @@ Connection.prototype.getInfo = function(successCallback, errorCallback) {
 
 PhoneGap.addConstructor(function() {
     if (typeof navigator.network === "undefined") {
-        navigator.network = new Network();
+        navigator.network = new Object();
     }
     if (typeof navigator.network.connection === "undefined") {
         navigator.network.connection = new Connection();
@@ -3718,11 +4027,22 @@ PhoneGap.addConstructor(function() {
 });
 }
 /*
- * PhoneGap is available under *either* the terms of the modified BSD license *or* the
- * MIT License (2008). See http://opensource.org/licenses/alphabetical for full text.
+ *     Licensed to the Apache Software Foundation (ASF) under one
+ *     or more contributor license agreements.  See the NOTICE file
+ *     distributed with this work for additional information
+ *     regarding copyright ownership.  The ASF licenses this file
+ *     to you under the Apache License, Version 2.0 (the
+ *     "License"); you may not use this file except in compliance
+ *     with the License.  You may obtain a copy of the License at
  *
- * Copyright (c) 2005-2010, Nitobi Software Inc.
- * Copyright (c) 2010-2011, IBM Corporation
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing,
+ *     software distributed under the License is distributed on an
+ *     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *     KIND, either express or implied.  See the License for the
+ *     specific language governing permissions and limitations
+ *     under the License.
  */
 
 if (!PhoneGap.hasResource("notification")) {
@@ -3840,11 +4160,22 @@ PhoneGap.addConstructor(function() {
 });
 }
 /*
- * PhoneGap is available under *either* the terms of the modified BSD license *or* the
- * MIT License (2008). See http://opensource.org/licenses/alphabetical for full text.
+ *     Licensed to the Apache Software Foundation (ASF) under one
+ *     or more contributor license agreements.  See the NOTICE file
+ *     distributed with this work for additional information
+ *     regarding copyright ownership.  The ASF licenses this file
+ *     to you under the Apache License, Version 2.0 (the
+ *     "License"); you may not use this file except in compliance
+ *     with the License.  You may obtain a copy of the License at
  *
- * Copyright (c) 2005-2010, Nitobi Software Inc.
- * Copyright (c) 2010-2011, IBM Corporation
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing,
+ *     software distributed under the License is distributed on an
+ *     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *     KIND, either express or implied.  See the License for the
+ *     specific language governing permissions and limitations
+ *     under the License.
  */
 
 if (!PhoneGap.hasResource("position")) {
@@ -3929,11 +4260,22 @@ PositionError.POSITION_UNAVAILABLE = 2;
 PositionError.TIMEOUT = 3;
 }
 /*
- * PhoneGap is available under *either* the terms of the modified BSD license *or* the
- * MIT License (2008). See http://opensource.org/licenses/alphabetical for full text.
+ *     Licensed to the Apache Software Foundation (ASF) under one
+ *     or more contributor license agreements.  See the NOTICE file
+ *     distributed with this work for additional information
+ *     regarding copyright ownership.  The ASF licenses this file
+ *     to you under the Apache License, Version 2.0 (the
+ *     "License"); you may not use this file except in compliance
+ *     with the License.  You may obtain a copy of the License at
  *
- * Copyright (c) 2005-2010, Nitobi Software Inc.
- * Copyright (c) 2010-2011, IBM Corporation
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing,
+ *     software distributed under the License is distributed on an
+ *     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *     KIND, either express or implied.  See the License for the
+ *     specific language governing permissions and limitations
+ *     under the License.
  */
 
 /*
@@ -4241,83 +4583,83 @@ var DroidDB_openDatabase = function(name, version, display_name, size) {
  * @constructor
  */
 var CupcakeLocalStorage = function() {
-		try {
+    try {
 
-			this.db = openDatabase('localStorage', '1.0', 'localStorage', 2621440);
-			var storage = {};
-			this.length = 0;
-			function setLength (length) {
-				this.length = length;
-				localStorage.length = length;
-			}
-			this.db.transaction(
-				function (transaction) {
-				    var i;
-					transaction.executeSql('CREATE TABLE IF NOT EXISTS storage (id NVARCHAR(40) PRIMARY KEY, body NVARCHAR(255))');
-					transaction.executeSql('SELECT * FROM storage', [], function(tx, result) {
-						for(var i = 0; i < result.rows.length; i++) {
-							storage[result.rows.item(i)['id']] =  result.rows.item(i)['body'];
-						}
-						setLength(result.rows.length);
-						PhoneGap.initializationComplete("cupcakeStorage");
-					});
+      this.db = openDatabase('localStorage', '1.0', 'localStorage', 2621440);
+      var storage = {};
+      this.length = 0;
+      function setLength (length) {
+        this.length = length;
+        localStorage.length = length;
+      }
+      this.db.transaction(
+        function (transaction) {
+            var i;
+          transaction.executeSql('CREATE TABLE IF NOT EXISTS storage (id NVARCHAR(40) PRIMARY KEY, body NVARCHAR(255))');
+          transaction.executeSql('SELECT * FROM storage', [], function(tx, result) {
+            for(var i = 0; i < result.rows.length; i++) {
+              storage[result.rows.item(i)['id']] =  result.rows.item(i)['body'];
+            }
+            setLength(result.rows.length);
+            PhoneGap.initializationComplete("cupcakeStorage");
+          });
 
-				},
-				function (err) {
-					alert(err.message);
-				}
-			);
-			this.setItem = function(key, val) {
-				if (typeof(storage[key])=='undefined') {
-					this.length++;
-				}
-				storage[key] = val;
-				this.db.transaction(
-					function (transaction) {
-						transaction.executeSql('CREATE TABLE IF NOT EXISTS storage (id NVARCHAR(40) PRIMARY KEY, body NVARCHAR(255))');
-						transaction.executeSql('REPLACE INTO storage (id, body) values(?,?)', [key,val]);
-					}
-				);
-			};
-			this.getItem = function(key) {
-				return storage[key];
-			};
-			this.removeItem = function(key) {
-				delete storage[key];
-				this.length--;
-				this.db.transaction(
-					function (transaction) {
-						transaction.executeSql('CREATE TABLE IF NOT EXISTS storage (id NVARCHAR(40) PRIMARY KEY, body NVARCHAR(255))');
-						transaction.executeSql('DELETE FROM storage where id=?', [key]);
-					}
-				);
-			};
-			this.clear = function() {
-				storage = {};
-				this.length = 0;
-				this.db.transaction(
-					function (transaction) {
-						transaction.executeSql('CREATE TABLE IF NOT EXISTS storage (id NVARCHAR(40) PRIMARY KEY, body NVARCHAR(255))');
-						transaction.executeSql('DELETE FROM storage', []);
-					}
-				);
-			};
-			this.key = function(index) {
-				var i = 0;
-				for (var j in storage) {
-					if (i==index) {
-						return j;
-					} else {
-						i++;
-					}
-				}
-				return null;
-			};
+        },
+        function (err) {
+          alert(err.message);
+        }
+      );
+      this.setItem = function(key, val) {
+        if (typeof(storage[key])=='undefined') {
+          this.length++;
+        }
+        storage[key] = val;
+        this.db.transaction(
+          function (transaction) {
+            transaction.executeSql('CREATE TABLE IF NOT EXISTS storage (id NVARCHAR(40) PRIMARY KEY, body NVARCHAR(255))');
+            transaction.executeSql('REPLACE INTO storage (id, body) values(?,?)', [key,val]);
+          }
+        );
+      };
+      this.getItem = function(key) {
+        return storage[key];
+      };
+      this.removeItem = function(key) {
+        delete storage[key];
+        this.length--;
+        this.db.transaction(
+          function (transaction) {
+            transaction.executeSql('CREATE TABLE IF NOT EXISTS storage (id NVARCHAR(40) PRIMARY KEY, body NVARCHAR(255))');
+            transaction.executeSql('DELETE FROM storage where id=?', [key]);
+          }
+        );
+      };
+      this.clear = function() {
+        storage = {};
+        this.length = 0;
+        this.db.transaction(
+          function (transaction) {
+            transaction.executeSql('CREATE TABLE IF NOT EXISTS storage (id NVARCHAR(40) PRIMARY KEY, body NVARCHAR(255))');
+            transaction.executeSql('DELETE FROM storage', []);
+          }
+        );
+      };
+      this.key = function(index) {
+        var i = 0;
+        for (var j in storage) {
+          if (i==index) {
+            return j;
+          } else {
+            i++;
+          }
+        }
+        return null;
+      };
 
-		} catch(e) {
-			alert("Database error "+e+".");
-		    return;
-		}
+    } catch(e) {
+      alert("Database error "+e+".");
+        return;
+    }
 };
 
 PhoneGap.addConstructor(function() {

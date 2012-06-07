@@ -22,7 +22,7 @@ h1 { text-align:center; font-size:1em; display:inline; position:absolute; left:0
 	line-height:45px;
 	background-image:-webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #333333), color-stop(0.05, #333333), color-stop(1, #000000));
 	padding:0;
-	color:#eee;
+	color:#eee; 
 	font-size:20px;
 	/*text-align:center;*/
 	margin:0;

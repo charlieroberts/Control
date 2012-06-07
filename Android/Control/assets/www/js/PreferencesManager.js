@@ -1,82 +1,37 @@
-function PreferencesManager() {
-    autolock = false;
-    preferences = new Lawnchair('preferences');
-    this.oscport = 8080;
-
-    this.autolockToggle = function() {
-        console.log("LOCKING");
-        var autolockToggleLink = document.getElementById("autolockToggle");
-        autolock = !autolock;
-        (!autolock) ? autolockToggleLink.innerHTML = "Turn Autolock <b>Off</b>": autolockToggleLink.innerHTML = "Turn Autolock <b>On</b>";
-        PhoneGap.exec(null, null, "Device", "autolockToggle", [autolock]);
-        preferences.save({
-            key: "autolock",
-            shouldAutolock: autolock
-        });
-    }
-
-    this.changePort = function(newPort) {
-        console.log("changing port");
-        PhoneGap.exec(null, null, "OSCManager", "setOSCReceivePort", [parseInt(newPort)]);
-        this.oscport = parseInt(newPort);
-        preferences.save({
-            key: "OSCReceivePort",
-            oscPort: parseInt(newPort)
-        });
-    }
-
-    this.getAutolockDefault = function() {
-        preferences.get("autolock",
-            function(r) {
-                if(typeof r != "undefined" && r != null) {
-                    autolock = r.shouldAutolock;
-                }else{
-                    autolock = true;
-                }
-                var autolockToggleLink = document.getElementById("autolockToggle");
-                (!autolock) ? autolockToggleLink.innerHTML = "Turn Autolock <b>Off</b>": autolockToggleLink.innerHTML = "Turn Autolock <b>On</b>";
-                PhoneGap.exec(null, null, "Device", "autolockToggle", [autolock]);
-                setTimeout(function() {
-                    if (!autolock)
-                    $("#autolockToggle").innerHTML = "Turn Autolock <b>Off</b>";
-                    else
-                    $("#autolockToggle").innerHTML = "Turn Autolock <b>On</b>";
-                },
-                500);    
+Control.preferencesManager = {
+    preferences : {},
+    
+    init : function() {
+        if(typeof localStorage.preferences == "undefined") {
+            this.preferences = {
+                "autolock": false,
+                "oscReceivePort": 8080, 
             }
-        );
-    }
-    
-    setTimeout(function() { window.preferencesManager.getAutolockDefault(); }, 2000);
+            localStorage.preferences = JSON.stringify(this.preferences);
+        }else{
+            this.preferences = jQuery.parseJSON(localStorage.preferences);
+        }
+        
+        var autolockToggleLink = document.getElementById("autolockToggle");
+        (!this.preferences.autolock) ? autolockToggleLink.innerHTML = "Turn Autolock <b>Off</b>" : autolockToggleLink.innerHTML = "Turn Autolock <b>On</b>";
+        Control.device.setAutolock(this.preferences.autolock);
 
-    // preferences.get("OSCReceivePort",
-    //        function(r) {
-    //            var oscport;                    
-    //            oscport = 8080;
-    //            shouldChange = false;
-    //            if (typeof r == "undefined" && r != null) {
-    //                if(typeof r.oscPort != "undefined") {
-    //                    if(r.oscPort != oscport) {
-    //                        oscport = r.oscPort;
-    //                        shouldChange = true;
-    //                    }
-    //                }
-    //            }
-    //            if(shouldChange) {
-    //                window.preferencesManager.changePort(oscport);
-    //     
-    //                this.oscport = oscport;
-    //                console.log("setting preference text");
-    //                //PhoneGap.exec("OSCManager.setOSCReceivePort", parseInt(oscport));
-    //                $('#portField').val(this.oscport);
-    //             }
-    //        }
-    //     );
-    
-    // window.oscport = this.oscport;
-    // setTimeout(function() {
-    //     PhoneGap.exec(null, null, "OSCManager", "setOSCReceivePort", [parseInt(window.oscport)]);
-    // },
-    // 500);
-    return this;
-}
+        Control.oscManager.setReceivePort(this.preferences.oscReceivePort);
+        $('#portField').val(this.preferences.oscReceivePort); 
+    },
+
+    autolockToggle : function() {
+        var autolockToggleLink = document.getElementById("autolockToggle");
+        this.preferences.autolock = !this.preferences.autolock;
+        (!this.preferences.autolock) ? autolockToggleLink.innerHTML = "Turn Autolock <b>Off</b>" : autolockToggleLink.innerHTML = "Turn Autolock <b>On</b>";
+        
+        Control.device.setAutolock(this.preferences.autolock);
+        localStorage.preferences = JSON.stringify(this.preferences);
+    },
+
+    changePort : function(newPort) {
+        this.preferences.oscReceivePort = parseInt(newPort);
+        Control.oscManager.setReceivePort(this.preferences.oscReceivePort);
+        localStorage.preferences = JSON.stringify(this.preferences);
+    },
+};
