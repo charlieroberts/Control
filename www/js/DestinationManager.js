@@ -19,10 +19,12 @@ Control.destinationManager = {
         }else{
             this.destinations = jQuery.parseJSON(localStorage.destinations);
         }
-        
+        //$("#destinationList").listview();
+
         Control.bonjour.start();
         
-        this.createDestinationList();        
+        this.createDestinationList();
+        
     },
 
     refreshList : function() {
@@ -32,7 +34,10 @@ Control.destinationManager = {
         
         Control.bonjour.browse();
 
-        Control.destinationManager.createDestinationList();        
+        Control.destinationManager.createDestinationList();
+        
+        $('#destinationList').listview('refresh');        
+
     },
 
     clearList : function() {
@@ -74,7 +79,7 @@ Control.destinationManager = {
         var item = document.createElement('li');
         $(item).addClass('destinationListItem');
 
-        console.log("address: " + address + " | port : " + port + " | isBonjour | " + isBonjour);
+        //console.log("address: " + address + " | port : " + port + " | isBonjour | " + isBonjour);
         
         function selectAddressAndPort(itemNumber, _address, _port, _isMIDI) {
             return function(e) {					
@@ -88,7 +93,6 @@ Control.destinationManager = {
                 }
             }
         }
-        console.log(0);
          
         $(item).bind("touchend",  selectAddressAndPort(list.childNodes.length, address, port, isMIDI));	
 
@@ -109,7 +113,7 @@ Control.destinationManager = {
         
         $(item).append(innerDiv);        
         list.appendChild(item);
-
+        
         //$('#destinationList').listview('refresh');        
     },
     
@@ -147,7 +151,7 @@ Control.destinationManager = {
         $(item).append(innerDiv);        
         $(list).append(item);
     
-        $('#destinationList').listview('refresh');    
+        //$('#destinationList').listview('refresh');    
     },
     
     selectHardwareMIDI : function(destName) {
@@ -260,6 +264,7 @@ Control.destinationManager = {
         
         var results  = JSON.stringify(Control.destinationManager.destinations);
         localStorage.destinations = results;
+        $('#destinationList').listview('refresh');        
     },
     
     createDestinationList : function() {
