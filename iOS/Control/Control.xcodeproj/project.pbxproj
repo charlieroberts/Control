@@ -71,6 +71,8 @@
 		CB55B7A2154F3EED002CF96C /* Control-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CB55B7A1154F3EED002CF96C /* Control-Info.plist */; };
 		CB64B49B154CE9AE00D403A4 /* CNTRLSpeech.m in Sources */ = {isa = PBXBuildFile; fileRef = CB64B49A154CE9AE00D403A4 /* CNTRLSpeech.m */; };
 		CB64B49D154CF0F100D403A4 /* cmu07a.dic in Resources */ = {isa = PBXBuildFile; fileRef = CB64B49C154CF0F100D403A4 /* cmu07a.dic */; };
+		CB71195315804B08009AD79C /* AudioInput.mm in Sources */ = {isa = PBXBuildFile; fileRef = CB71195015804B08009AD79C /* AudioInput.mm */; };
+		CB71195415804B08009AD79C /* pkmFFT.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CB71195115804B08009AD79C /* pkmFFT.cpp */; };
 		CB737F1214DA8729003416AF /* Gyro.m in Sources */ = {isa = PBXBuildFile; fileRef = CB737F1114DA8729003416AF /* Gyro.m */; };
 		CB76D5A6154CFD39006DF5DC /* feat.params in Resources */ = {isa = PBXBuildFile; fileRef = CB76D59F154CFD39006DF5DC /* feat.params */; };
 		CB76D5A7154CFD39006DF5DC /* mdef in Resources */ = {isa = PBXBuildFile; fileRef = CB76D5A0154CFD39006DF5DC /* mdef */; };
@@ -210,6 +212,10 @@
 		CB64B499154CE9AE00D403A4 /* CNTRLSpeech.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNTRLSpeech.h; sourceTree = "<group>"; };
 		CB64B49A154CE9AE00D403A4 /* CNTRLSpeech.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNTRLSpeech.m; sourceTree = "<group>"; };
 		CB64B49C154CF0F100D403A4 /* cmu07a.dic */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cmu07a.dic; sourceTree = "<group>"; };
+		CB71194F15804B08009AD79C /* AudioInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioInput.h; sourceTree = "<group>"; };
+		CB71195015804B08009AD79C /* AudioInput.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AudioInput.mm; sourceTree = "<group>"; };
+		CB71195115804B08009AD79C /* pkmFFT.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pkmFFT.cpp; sourceTree = "<group>"; };
+		CB71195215804B08009AD79C /* pkmFFT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pkmFFT.h; sourceTree = "<group>"; };
 		CB737F1014DA8729003416AF /* Gyro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gyro.h; sourceTree = "<group>"; };
 		CB737F1114DA8729003416AF /* Gyro.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Gyro.m; sourceTree = "<group>"; };
 		CB76D59F154CFD39006DF5DC /* feat.params */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = feat.params; sourceTree = "<group>"; };
@@ -406,6 +412,10 @@
 		CB0238C614972BE5001AC32A /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
+				CB71194F15804B08009AD79C /* AudioInput.h */,
+				CB71195015804B08009AD79C /* AudioInput.mm */,
+				CB71195115804B08009AD79C /* pkmFFT.cpp */,
+				CB71195215804B08009AD79C /* pkmFFT.h */,
 				CB02390414980170001AC32A /* CNTRLBonjour.h */,
 				CB02390514980170001AC32A /* CNTRLBonjour.m */,
 				CB0238FC14973581001AC32A /* CNTRLDevice.h */,
@@ -703,6 +713,8 @@
 				CBB033BC154C8F5600FC4156 /* CNTRLVideo.m in Sources */,
 				CB64B49B154CE9AE00D403A4 /* CNTRLSpeech.m in Sources */,
 				CBAA9785157D5F970024B90D /* CNTRLWindow.m in Sources */,
+				CB71195315804B08009AD79C /* AudioInput.mm in Sources */,
+				CB71195415804B08009AD79C /* pkmFFT.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

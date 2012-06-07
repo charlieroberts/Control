@@ -116,7 +116,7 @@ static OSStatus inRenderProc (void *inRefCon,
             //printf("freq = %f\n", maxBin * freqBinSize);
         }
         
-        jsCallBack = [[NSMutableString alloc] initWithFormat:@"Control.audioPitch.onPitchUpdate(%f);", freq];
+        jsCallBack = [[NSMutableString alloc] initWithFormat:@"Control.audioPitch.onUpdate(%f);", freq];
     }
     
     
@@ -181,7 +181,7 @@ static OSStatus inRenderProc (void *inRefCon,
             }
             output = sqrtf(sampleSum / inNumberFrames);
         }
-        volumeCallbackString = [[NSString alloc] initWithFormat:@"Control.audioVolume.onVolumeUpdate(%f);", output];
+        volumeCallbackString = [[NSString alloc] initWithFormat:@"Control.audioVolume.onUpdate(%f);", output];
 
         if(me.outputPitch) {
             [jsCallBack appendString:volumeCallbackString];
@@ -219,16 +219,19 @@ static OSStatus inRenderProc (void *inRefCon,
 }
 
 - (void)start:(NSMutableArray *)arguments withDict:(NSMutableDictionary *) options {
-    if([[arguments objectAtIndex:0] isEqualToString:@"volume"]) {
+    NSLog(@"INSIDE PITCH START");
+    NSLog([arguments description]);
+    
+    if([[arguments objectAtIndex:1] isEqualToString:@"volume"]) {
         outputVolume = YES;
-        if([[arguments objectAtIndex:1] isEqualToString:@"max"]) {
+        if([[arguments objectAtIndex:2] isEqualToString:@"max"]) {
             volumeMode = VOLUME_MAX;
         } else {
             volumeMode = VOLUME_RMS;
         }
-    } else if([[arguments objectAtIndex:0] isEqualToString:@"pitch"]) {
+    } else if([[arguments objectAtIndex:1] isEqualToString:@"pitch"]) {
         outputPitch = YES;
-        if([[arguments objectAtIndex:1] isEqualToString:@"zero"]){
+        if([[arguments objectAtIndex:2] isEqualToString:@"zero"]){
             pitchMode = PITCH_ZERO;
         } else {
             NSLog(@"setting mode to HPS");
@@ -290,7 +293,7 @@ static OSStatus inRenderProc (void *inRefCon,
         fft = new pkmFFT(audioBufferSize  * 44100.f);
         
         samplesAsFloats            =  (float *) malloc (sizeof(float) * audioBufferSize  * 44100.f);        // samples must be sent to fft as floats, we convert in callback
-        allocated_magnitude_buffer =  (float *) malloc (sizeof(float) * (audioBufferSize * 44100.f / 2));  // number of bins is always half the buffer size
+        allocated_magnitude_buffer =  (float *) malloc (sizeof(float) * (audioBufferSize * 44100.f / 2));   // number of bins is always half the buffer size
         allocated_phase_buffer     =  (float *) malloc (sizeof(float) * (audioBufferSize * 44100.f / 2));
         fftDiv2                    =  (float *) malloc (sizeof(float) * (audioBufferSize * 44100.f / 2) / 2);
         fftDiv3                    =  (float *) malloc (sizeof(float) * (audioBufferSize * 44100.f / 2) / 3);

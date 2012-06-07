@@ -68,6 +68,8 @@
 		<string>CNTRLVideo</string>
 		<key>Speech</key>
 		<string>CNTRLSpeech</string>
+		<key>AudioInput</key>
+		<string>AudioInput</string>
 	</dict>
 </dict>
 </plist>

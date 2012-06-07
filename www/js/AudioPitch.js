@@ -1,4 +1,5 @@
-function AudioPitch(props) {    
+Control.AudioPitch = function(props) {  
+    console.log("MAKING PITCH????");
     this.make("sensor", props);
     this.mode = (typeof props.mode != "undefined") ? props.mode : "hps";
     
@@ -25,25 +26,30 @@ function AudioPitch(props) {
     this.pitch = 0;
     
     this.noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C"]; // 13
-    
+    console.log("AUDIO PITCH CREATED ********************* ");
 	return this;
 }
 
-AudioPitch.prototype = new Widget();
+Control.AudioPitch.prototype = new Widget();
 
-AudioPitch.prototype.start = function() {	
-    PhoneGap.exec("AudioInput.start", "pitch", this.mode);
+Control.AudioPitch.prototype.start = function() {	
+    console.log("AUDIO PITCH START CALLED *********************");
+    //PhoneGap.exec("AudioInput.start", "pitch", this.mode);
+    return PhoneGap.exec(null, null, "AudioInput", "start", ["pitch", this.mode]);
+
 }
  
-AudioPitch.prototype.restart = function() {	
-    PhoneGap.exec("AudioInput.restart");
+Control.AudioPitch.prototype.restart = function() {	
+    //PhoneGap.exec("AudioInput.restart");
+    return PhoneGap.exec(null, null, "AudioInput", "restart", []);    
 }
 
-AudioPitch.prototype.unload = function() {	
-    PhoneGap.exec("AudioInput.stop", "pitch");
+Control.AudioPitch.prototype.unload = function() {	
+    //PhoneGap.exec("AudioInput.stop", "pitch");
+    return PhoneGap.exec(null, null, "AudioInput", "stop", ["pitch"]);
 }
 
-AudioPitch.prototype._onPitchUpdate = function(newFreq) {
+Control.AudioPitch.prototype.onUpdate = function(newFreq) {
     if(newFreq > 20) 
         this.freqs.unshift(newFreq);
     
