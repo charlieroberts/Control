@@ -6,7 +6,7 @@ Control.MultiTouchXY = function(ctx, props) {
     this.yvalue = this.min;
     this.zvalue = false;
     this.sendZValue = (typeof props.sendZValue == "undefined") ? false : props.sendZValue;
-    this.maxTouches = props.maxTouches > 0 ? props.maxTouches : 1;
+    this.maxTouches = isNaN(props.maxTouches) ? 1 : props.maxTouches;
     this.children = [];
     this.valuesX = [];
     this.valuesY = [];
@@ -99,7 +99,6 @@ Control.MultiTouchXY.prototype.addTouch = function(xPos, yPos, id) {
     $(touch).text(touch.activeNumber);
     
     this.children.push(touch);
-    console.log(this.children);
     this.container.appendChild(touch);
     this.changeValue(touch, xPos, yPos, 1);
 }
@@ -363,30 +362,33 @@ Control.MultiTouchXY.prototype.setBounds = function(newBounds) {
 
 Control.MultiTouchXY.prototype.output = function(touch) {
     var valueString = "";
-    if(Control.protocol == "OSC") {
-        valueString = "|" + this.address + ":";
-        //if (this.maxTouches > 1) {
-        valueString += touch.activeNumber + ",";
-        //}
-        valueString += this.xvalue + "," + this.yvalue;
+	if(window.device.platform === "iPhone") {	
+	    if(Control.protocol == "OSC") {
+	        valueString = "|" + this.address + ":";
+	        //if (this.maxTouches > 1) {
+	        valueString += touch.activeNumber + ",";
+	        //}
+	        valueString += this.xvalue + "," + this.yvalue;
 
-        if(this.sendZValue){
-            valueString += "," + this.zvalue;	
-        }
-		if(this.sendPressure) {
-			valueString += "," + touch.pressure;	
-		}
-    }else if(_protocol == "MIDI") {
-        var xnum = this.midiNumber + (touch.activeNumber * 2) - 2;
-        var ynum = xnum + 1;
-		var pnum = ynum + 1;
+	        if(this.sendZValue){
+	            valueString += "," + this.zvalue;	
+	        }
+			if(this.sendPressure) {
+				valueString += "," + touch.pressure;	
+			}
+	    }else if(_protocol == "MIDI") {
+	        var xnum = this.midiNumber + (touch.activeNumber * 2) - 2;
+	        var ynum = xnum + 1;
+			var pnum = ynum + 1;
             
-        valueString  = "|" + this.midiType + "," + (this.channel - 1) + "," + xnum + "," + Math.round(this.xvalue);
-        valueString += "|" + this.midiType + "," + (this.channel - 1) + "," + ynum + "," + Math.round(this.yvalue);
-        valueString += "|" + this.midiType + "," + (this.channel - 1) + "," + pnum + "," + Math.round(touch.pressure * 127);
-    }
-    Control.valuesString += valueString;
-
+	        valueString  = "|" + this.midiType + "," + (this.channel - 1) + "," + xnum + "," + Math.round(this.xvalue);
+	        valueString += "|" + this.midiType + "," + (this.channel - 1) + "," + ynum + "," + Math.round(this.yvalue);
+	        valueString += "|" + this.midiType + "," + (this.channel - 1) + "," + pnum + "," + Math.round(touch.pressure * 127);
+	    }
+	    Control.valuesString += valueString;
+	}else{
+		Control.oscManager.sendOSC(this.address, 'iff', touch.activeNumber, this.xvalue, this.yvalue);
+	}
 }
 
 Control.MultiTouchXY.prototype.show = function() {

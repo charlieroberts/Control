@@ -48,19 +48,23 @@ Control.Accelerometer.prototype._onAccelUpdate = function(x,y,z) {
             eval(this.onvaluechange);
         }
     }
-    
-    if(!this.isLocal && Control.protocol == "OSC") {
-        var valueString = "|" + this.address;
-        valueString += ":" + this.x + "," + this.y + "," + this.z;
-        Control.valuesString += valueString;
-    }else if (!this.isLocal && Control.protocol == "MIDI") {
-        var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.x);			
-        Control.valuesString += valueString;
-        valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber+ 1) + "," + Math.round(this.y);			
-        Control.valuesString += valueString;
-        valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber+ 2) + "," + Math.round(this.z);			
-        Control.valuesString += valueString;	
-    }
+	
+	if(window.device.platform === "iPhone") {
+	    if(!this.isLocal && Control.protocol == "OSC") {
+	        var valueString = "|" + this.address;
+	        valueString += ":" + this.x + "," + this.y + "," + this.z;
+	        Control.valuesString += valueString;
+	    }else if (!this.isLocal && Control.protocol == "MIDI") {
+	        var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.x);			
+	        Control.valuesString += valueString;
+	        valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber+ 1) + "," + Math.round(this.y);			
+	        Control.valuesString += valueString;
+	        valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber+ 2) + "," + Math.round(this.z);			
+	        Control.valuesString += valueString;	
+	    }
+	}else{
+		Control.oscManager.sendOSC(this.address, 'fff', this.x, this.y, this.z);
+	}
 }
 
 Control.Accelerometer.prototype.draw = function() {}

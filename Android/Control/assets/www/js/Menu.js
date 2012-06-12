@@ -73,14 +73,18 @@ Control.Menu.prototype.events = {};
 Control.Menu.prototype.event = function(event) {}
 
 Control.Menu.prototype.output = function() {
-    if (!this.isLocal && Control.protocol == "OSC") {
-        var valueString = "|" + this.address;
-        valueString += ":" + this.value;
-        Control.valuesString += valueString;
-    } else if (!this.isLocal && Control.protocol == "MIDI") {
-        var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber + "," + Math.round(this.value);
-        Control.valuesString += valueString;
-    }
+	if(window.device.platform === "iPhone") {
+	    if (!this.isLocal && Control.protocol == "OSC") {
+	        var valueString = "|" + this.address;
+	        valueString += ":" + this.value;
+	        Control.valuesString += valueString;
+	    } else if (!this.isLocal && Control.protocol == "MIDI") {
+	        var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber + "," + Math.round(this.value);
+	        Control.valuesString += valueString;
+	    }
+	}else{
+		Control.oscManager.sendOSC(this.address, 's', this.value);
+	}
 }
 
 Control.Menu.prototype.setValue = function(newValue) {

@@ -25,7 +25,7 @@ Control.Slider = function(ctx, props) {
     	
 	if(!this.shouldUseCanvas) {
 		this.fillDiv   = document.createElement("div");
-		$(this.fillDiv).addClass('widget slider_fill');
+		$(this.fillDiv).addClass('widget slider_fill'); 
 
 		$(this.fillDiv).css({
 			"position": "absolute", 

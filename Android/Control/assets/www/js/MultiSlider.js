@@ -1,6 +1,5 @@
 Control.MultiSlider = function(ctx, props) {
 	// MUST BE BEFORE WIDGET INIT
-    console.log("MULTISLIDER");
     if(typeof props.width === "undefined"  && typeof props.bounds === "undefined") {
         this.widthInPercentage = 1;
         this.heightInPercentage = .5;
@@ -12,7 +11,7 @@ Control.MultiSlider = function(ctx, props) {
 
     this.numberOfSliders   = (typeof props.numberOfSliders   != "undefined") ? props.numberOfSliders   : 4;
     this.requiresTouchDown = (typeof props.requiresTouchDown != "undefined") ? props.requiresTouchDown : true;
-    console.log("REQUIRE TOUCHDOWN = " + this.requiresTouchDown);
+
     this.children = [];
 
     this.origX = props.x;
@@ -87,16 +86,13 @@ Control.MultiSlider.prototype.init = function() {
         _w.output = _w.multiOutput;
         this.children.push(_w);
     }
-    console.log("DONE MAKING SLIDERS");
 }
 
 Control.MultiSlider.prototype.draw = function() {
-    console.log("START DRAWING");
     for(var i = 0; i < this.children.length; i++) {
         var _w = this.children[i];
         _w.draw();
     }
-    console.log("DONE DRAWING");
 }
 
 Control.MultiSlider.prototype.show = function() {
@@ -181,6 +177,40 @@ Control.MultiSlider.prototype.setValue = function(sliderNumber, value) {
         _w.setValue(value);
     }
 }
+
+Control.Button.prototype.multiOutput = function() {
+    // var pressure;
+    // if(this.sendPressure) {
+    //     var pressureID = this.processingTouch.pageX + ":" + this.processingTouch.pageY;
+    //     pressure = Control.pressures[pressureID];
+    //     pressure = (pressure - this.pressureMin) / this.pressureRange;
+    //     if(pressure > 1) {
+    //         pressure = 1;
+    //     }else if(pressure < 0) {
+    //         pressure = 0;
+    //     }
+    // }
+	if(window.device.platform === "iPhone") {
+	    if (!this.isLocal && Control.protocol == "OSC") {
+	        var valueString = "|" + this.address;
+	        valueString += ":" + this.childID + "," + this.value;
+	        if(this.sendPressure) {
+	            valueString += "," + pressure;
+	        }
+	        Control.valuesString += valueString;
+	    } else if (!this.isLocal && Control.protocol == "MIDI") {
+	        var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber + "," + Math.round(this.value);
+	        if(this.sendPressure) {
+	            valueString += "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber + 1) + "," + Math.round(pressure * 127);
+	        }
+	        Control.valuesString += valueString;
+	    }
+	}else{
+		Control.oscManager.sendOSC(this.address, 'if', this.childID, this.value);
+	}
+}
+
+
 
 Control.MultiSlider.prototype.setSequentialValues = function() {
     for(var i = 0; i < arguments.length; i++) {

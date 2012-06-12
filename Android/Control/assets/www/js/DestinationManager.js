@@ -171,20 +171,20 @@ Control.destinationManager = {
     selectMIDIIPAddressAndPort : function(address,port) {
         this.ipaddress = address;
         this.port = port;
-        PhoneGap.exec("MIDI.connect", 1, this.ipaddress, this.port);
-        PhoneGap.exec("OSCManager.stopPolling");
+        PhoneGap.exec(null, null, "MIDI", "connect", [1, this.ipaddress, this.port]);
+        PhoneGap.exec(null, null, "OSCManager", "stopPolling", []);
     },
     
     selectIPAddress : function(address) {
         this.ipaddress = address;
-        PhoneGap.exec("OSCManager.setIPAddressAndPort", this.ipaddress, "12000");
+        PhoneGap.exec(null, null, "OSCManager", "setIPAddressAndPort", [this.ipaddress, "12000"]);
     },
     
     selectIPAddressAndPort : function(address, port) {
         if(this.ipaddress != address || this.port != port){
             this.ipaddress = address;	
             this.port = port;
-            PhoneGap.exec("OSCManager.setIPAddressAndPort", this.ipaddress, this.port);
+            PhoneGap.exec(null, null, "OSCManager", "setIPAddressAndPort", [this.ipaddress, this.port]);
         }
     },
     

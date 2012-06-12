@@ -51,16 +51,16 @@ public class OSCManager extends Plugin {
             			//System.out.println("Message received!");
             			if(message.getAddress().equals("/pushInterface")) {
             			    //[jsStringStart replaceOccurrencesOfString:@"\n" withString:@"" options:1 range:NSMakeRange(0, [jsStringStart length])]; // will not work with newlines present
-                            String js = "javascript:interfaceManager.pushInterface('" + ((String)args[0]).replace('\n', ' ') + "')"; // remove line breaks
+                            String js = "javascript:Control.interfaceManager.pushInterface('" + ((String)args[0]).replace('\n', ' ') + "')"; // remove line breaks
                     
                             webView.loadUrl(js);
             			}else if(message.getAddress().equals("/pushDestination")) {
             			    //		NSString *jsString = [[NSString alloc] initWithFormat:@"destinationManager.addDestination('%@')", destination];
-            			    String js = "javascript:destinationManager.pushDestination('" + (String)args[0] + "')";
+            			    String js = "javascript:Control.destinationManager.pushDestination('" + (String)args[0] + "')";
             			    //System.out.println(js);
             			    webView.loadUrl(js);
             			}else{
-            			    String jsString = "javascript:oscManager.processOSCMessage(";
+            			    String jsString = "javascript:Control.oscManager.processOSCMessage(";
                 			jsString = jsString + "\"" + message.getAddress() + "\", \"";
     			
                 			StringBuffer typeTagString = new StringBuffer();
@@ -110,7 +110,6 @@ public class OSCManager extends Plugin {
 				}
     		
     			OSCMessage msg = new OSCMessage( address, values.toArray() );
-
              	
                 sender.send(msg);
     	         // }
@@ -122,6 +121,7 @@ public class OSCManager extends Plugin {
     	         //                    System.err.println( sw.toString());
     	         //                 }
     		}else if(action.equals("setIPAddressAndPort")){
+    			Log.d("OSCManager", "setting ip address and port");
 			    ipAddress = data.getString(0);
 				sender = new OSCPortOut( InetAddress.getByName(ipAddress), data.getInt(1) );
 				hasAddress = true;

@@ -223,15 +223,20 @@ Control.RangeSlider.prototype.setValue = function(left, right) {
 };
 
 Control.RangeSlider.prototype.output = function() {
-    if(!this.isLocal && Control.protocol == "OSC") {
-        var valueString = "|" + this.address;
-        valueString += ":" + this.value[0] + "," + this.value[1];
-    }else if (!this.isLocal && Control.protocol == "MIDI") {
-        var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.value[0]);
-        valueString += "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber + 1) + "," + Math.round(this.value[1]);
-    }
+	if(window.device.platform === "iPhone") {
 	
-    Control.valuesString += valueString;	
+	    if(!this.isLocal && Control.protocol == "OSC") {
+	        var valueString = "|" + this.address;
+	        valueString += ":" + this.value[0] + "," + this.value[1];
+	    }else if (!this.isLocal && Control.protocol == "MIDI") {
+	        var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.value[0]);
+	        valueString += "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber + 1) + "," + Math.round(this.value[1]);
+	    }
+	
+	    Control.valuesString += valueString;	
+	}else{
+		Control.oscManager.sendOSC(this.address, 'ff', this.value[0], this.value[1]);
+	}
 };
 
 Control.RangeSlider.prototype.draw = function() {

@@ -50,7 +50,7 @@ public class Bonjour extends Plugin {
                         //System.out.println("Service resolved: " + ev.getInfo().getQualifiedName() + " port:" + ev.getInfo().getPort());
                         String address = ev.getInfo().getHostAddress();
                         if(address.compareTo(myIP) != 0 && address.compareTo(myMac) != 0 ) {
-                            String jsString = "javascript:destinationManager.addDestination('" + address + "'," + ev.getInfo().getPort() + ", 1, 0);";
+                            String jsString = "javascript:Control.destinationManager.addDestination('" + address + "'," + ev.getInfo().getPort() + ", 1, 0);";
                             //System.out.println(jsString);
                             webView.loadUrl(jsString);
                         }
@@ -58,7 +58,7 @@ public class Bonjour extends Plugin {
                     @Override
                     public void serviceRemoved(ServiceEvent ev) {
                         //System.out.println("Service removed: " + ev.getName());
-                        String jsString = "javascript:destinationManager.removeDestinationWithIPAndPort('" + ev.getInfo().getHostAddress() + "'," + ev.getInfo().getPort() + ");";
+                        String jsString = "javascript:Control.destinationManager.removeDestinationWithIPAndPort('" + ev.getInfo().getHostAddress() + "'," + ev.getInfo().getPort() + ");";
                         //System.out.println(jsString);
                         webView.loadUrl(jsString);
                     }
@@ -78,7 +78,7 @@ public class Bonjour extends Plugin {
                         String address = ev.getInfo().getHostAddress();
                         System.out.println(address + " :: " + myIP);
                         if(address.compareTo(myIP) != 0 && address.compareTo(myMac) != 0 ) {
-                            String jsString = "javascript:destinationManager.addDestination('" + address + "'," + ev.getInfo().getPort() + ", 0, 1);";
+                            String jsString = "javascript:Control.destinationManager.addDestination('" + address + "'," + ev.getInfo().getPort() + ", 0, 1);";
                             //System.out.println(jsString);
                             webView.loadUrl(jsString);
                         }
@@ -86,7 +86,7 @@ public class Bonjour extends Plugin {
                     @Override
                     public void serviceRemoved(ServiceEvent ev) {
                         System.out.println("Service removed: " + ev.getName());
-                        String jsString = "javascript:destinationManager.removeDestinationWithIPAndPort('" + ev.getInfo().getHostAddress() + "'," + ev.getInfo().getPort() + ");";
+                        String jsString = "javascript:Control.destinationManager.removeDestinationWithIPAndPort('" + ev.getInfo().getHostAddress() + "'," + ev.getInfo().getPort() + ");";
                         //System.out.println(jsString);
                         webView.loadUrl(jsString);
                     }
@@ -117,7 +117,7 @@ public class Bonjour extends Plugin {
                         for (int i = 0; i < infos.length; i++) {
                             String address = infos[i].getHostAddress();
                             if(address.compareTo(myIP) != 0 && address.compareTo(myMac) != 0 ) {
-                                String jsString = "javascript:destinationManager.addDestination('" + address + "'," + infos[i].getPort() + ", 0, 0);";
+                                String jsString = "javascript:Control.destinationManager.addDestination('" + address + "'," + infos[i].getPort() + ", 0, 0);";
                                 // System.out.println(jsString);
                                 webView.loadUrl(jsString);
                             }
@@ -128,7 +128,7 @@ public class Bonjour extends Plugin {
                             String address = infos[i].getHostAddress();
                             //System.out.println(address + " :: " + myIP);
                             if(address.compareTo(myIP) != 0 && address.compareTo(myMac) != 0 ) {
-                                String jsString = "javascript:destinationManager.addDestination('" + address + "'," + infos[i].getPort() + ", 0, 1);";
+                                String jsString = "javascript:Control.destinationManager.addDestination('" + address + "'," + infos[i].getPort() + ", 0, 1);";
                             //    System.out.println(jsString);
                                 webView.loadUrl(jsString);
                             }

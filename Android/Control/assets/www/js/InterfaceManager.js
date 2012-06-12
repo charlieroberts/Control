@@ -255,7 +255,6 @@ Control.interfaceManager = {
     },
 
     createInterfaceListWithArray: function(listArray) {
-		console.log("CREATING LIST");
         var list = $("#interfaceList");
         var count = 0;
 
@@ -283,8 +282,12 @@ Control.interfaceManager = {
 
             $(list).append(item);
         }
-
-        $(list).listview('refresh');
+		try {
+		    $('#list').listview('refresh');
+		} catch(e) {
+		    $('#list').listview();
+ 		    $('#list').listview('refresh'); 
+		}
     },
 
     editInterfaceList: function() {

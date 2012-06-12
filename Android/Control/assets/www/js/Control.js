@@ -38,19 +38,19 @@ window["Control"] = {
         this.preferencesManager.init();
 		console.log(1);
 		this.interfaceManager.init();
-       console.log(2);
+      	console.log(2);
        	this.destinationManager.init();
         console.log(3);
-        this.bonjour.start();
+        //this.bonjour.start();
         console.log(4);
         this.oscManager.delegate = Control.oscManager;
         this.oscManager.start();
 		console.log(5);
         
 		this.midiManager.delegate = Control.midiManager;
-		this.midiManager.start();
+		//this.midiManager.start();
 		console.log(6);
-		this.device.setRotation("portrait");
+		//this.device.setRotation("portrait");
 		console.log(7);
         document.addEventListener('orientationChanged', Control.onRotation, false);
     },

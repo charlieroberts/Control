@@ -60,17 +60,22 @@ Control.Text.prototype.reposition = function() {
 }
 
 Control.Text.prototype.events = {};
+
 Control.Text.prototype.event = function(event) {}
 
 Control.Text.prototype.output = function() {
-    if (!this.isLocal && Control.protocol == "OSC") {
-        var valueString = "|" + this.address;
-        valueString += ":" + this.value;
-        Control.valuesString += valueString;
-    } else if (!this.isLocal && Control.protocol == "MIDI") {
-        var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber + "," + Math.round(this.value);
-        Control.valuesString += valueString;
-    }
+	if(window.device.platform === "iPhone") {
+	    if (!this.isLocal && Control.protocol == "OSC") {
+	        var valueString = "|" + this.address;
+	        valueString += ":" + this.value;
+	        Control.valuesString += valueString;
+	    } else if (!this.isLocal && Control.protocol == "MIDI") {
+	        var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber + "," + Math.round(this.value);
+	        Control.valuesString += valueString;
+	    }
+	}else{
+		Control.oscManager.sendOSC(this.address, 'f', this.value);
+	}
 }
 
 Control.Text.prototype.setValue = function(newValue) {

@@ -52,9 +52,9 @@ public class DeviceFeatures extends Plugin {
     		            float h = webView.getHeight();
     		            String jsString = "";
     		            if(w < h) {
-                            jsString = "javascript:window.interfaceManager.rotationSet("+ w + "," + h + ");";
+                            jsString = "javascript:Control.interfaceManager.rotationSet("+ w + "," + h + ");";
                         }else{
-                            jsString = "javascript:window.interfaceManager.rotationSet("+ h + "," + w + ");";
+                            jsString = "javascript:Control.interfaceManager.rotationSet("+ h + "," + w + ");";
                         }
                         //System.out.println(jsString);
                         webView.loadUrl(jsString);

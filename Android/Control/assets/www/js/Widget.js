@@ -197,26 +197,31 @@ Widget.prototype.output = function() {
             pressure = 0;
         }
     }
-    if(!this.isLocal && Control.protocol == "OSC") {
-        var valueString = "|" + this.address;
-        valueString += ":" + this.value;
+	
+	if(window.device.platform === "iPhone") {
+	    if(!this.isLocal && Control.protocol == "OSC") {
+	        var valueString = "|" + this.address;
+	        valueString += ":" + this.value;
         
-        if(this.sendPressure) {
-            valueString += "," + pressure;
-        }
+	        if(this.sendPressure) {
+	            valueString += "," + pressure;
+	        }
                 
-        Control.valuesString += valueString;
-        //Control.oscManager.sendOSC(this.addresss, 'f', this.value);
-        //PhoneGap.exec(null, null, 'OSCManager', 'send', [this.address, 'f', this.value]);
-    }else if (!this.isLocal && Control.protocol == "MIDI") {
-        var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.value);
+	        Control.valuesString += valueString;
+	        //Control.oscManager.sendOSC(this.addresss, 'f', this.value);
+	        //PhoneGap.exec(null, null, 'OSCManager', 'send', [this.address, 'f', this.value]);
+	    }else if (!this.isLocal && Control.protocol == "MIDI") {
+	        var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.value);
         
-        if(this.sendPressure) {
-            valueString += "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber + 1) + "," + Math.round(pressure * 127);
-        }
+	        if(this.sendPressure) {
+	            valueString += "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber + 1) + "," + Math.round(pressure * 127);
+	        }
 
-        Control.valuesString += valueString;
-    }
+	        Control.valuesString += valueString;
+	    }
+	}else{
+		Control.oscManager.sendOSC(this.address, 'f', this.value);
+	}
     
 }
 

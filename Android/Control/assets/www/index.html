@@ -11,8 +11,7 @@
  10. in-app interface editor?
  11. ANDROID
  
--->
-
+--> 
 <!DOCTYPE html> 
 <html>
     <head>
@@ -91,14 +90,8 @@
                             }
                         }
                     }
-                    
-                    function onDeviceReady() { init(); }
-                    
-                    function init() {
-					    document.addEventListener("deviceready", _init, true);
-					}
-					
-					function _init() {	
+                    						
+					$( '#Interfaces' ).live( 'pageinit',function(event){
 						console.log("CALLING CONTROL INIT **********************");
 	                    //document.addEventListener("deviceready", function() {init();}, false);
 						
@@ -109,7 +102,7 @@
 	                    $("#SelectedInterfacePage").bind('touchmove touchstart touchend', window.preventBehavior);
                         
                         wrapMe();
-                    }
+                    });
                     
                     function wrapMe() {
                         //console.log("device height = " + device.height + " header height = " + $('#header').height() + " footer height = " + $('#ftr').height());
@@ -118,7 +111,7 @@
                     
                     </script>
                 </head>
-    <body id="stage" onload="init();" style="background-color:#000; position:static; -webkit-user-select: none; overflow:hidden;" class="theme"> 
+    <body id="stage" style="background-color:#000; position:static; -webkit-user-select: none; overflow:hidden;" class="theme"> 
         
         <div data-role="page" id="Interfaces" data-theme="a" style="background:#000">
             <div data-role="header" id="header" data-backbtn="false" data-position="fixed">
