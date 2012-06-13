@@ -28,7 +28,7 @@ import java.io.PrintWriter;
 
 public class OSCManager extends Plugin {
 	public boolean hasAddress = false; // send only after selecting ip address / port to send to
-	public int receivePort; 
+	public int receivePort = 8080; 
 	public final Object        sync = new Object();
 	
 	public OSCPortIn receiver = null;
@@ -45,19 +45,18 @@ public class OSCManager extends Plugin {
 		try {
 		    if (action.equals("startPolling") && r == 0) {
      		    //Log.d("OSCManager", "building client");
-    			receiver = new OSCPortIn(8080);
+    			receiver = new OSCPortIn(receivePort);
 				r = 1;
 				
     			listener = new com.illposed.osc.OSCListener() {
     	        	public void acceptMessage(java.util.Date time, com.illposed.osc.OSCMessage message) {
     	        	    Object[] args = message.getArguments();
-            			//System.out.println("Message received! " + message.toString());
-            			if(message.getAddress().equals("/pushInterface")) {
+						String address = message.getAddress();
+            			if(address.equals("/pushInterface") || address.equals("/control/pushInterface")) {
                             String js = "javascript:Control.interfaceManager.pushInterface('" + ((String)args[0]).replace('\n', ' ') + "')"; // remove line breaks
                     
                             webView.loadUrl(js);
-            			}else if(message.getAddress().equals("/pushDestination")) {
-            			    //		NSString *jsString = [[NSString alloc] initWithFormat:@"destinationManager.addDestination('%@')", destination];
+            			}else if(address.equals("/pushDestination") || address.equals("/control/pushDestination")) {
             			    String js = "javascript:Control.destinationManager.pushDestination('" + (String)args[0] + "')";
             			    //System.out.println(js);
             			    webView.loadUrl(js);
@@ -94,12 +93,8 @@ public class OSCManager extends Plugin {
             	};
 				
             	receiver.addListener("/", listener);
-				
             	receiver.startListening(); 
 				
-            	//Log.d("OSCManager", "finished setting up OSC receiver and now listening");
-				
-        		
     		} else if (action.equals("send") && hasAddress) {
     			//Log.d("OSCManager", "building message");
     			String address = "";
@@ -117,27 +112,21 @@ public class OSCManager extends Plugin {
 					//Log.d("OSCManager", ""+data.get(i).getClass().toString());
 				}
     		
-    			com.illposed.osc.OSCMessage msg = new com.illposed.osc.OSCMessage( address, values.toArray() );
+    			OSCMessage msg = new OSCMessage( address, values.toArray() );
              	
                 sender.send(msg);
-    	         // }
-    	         //                 catch( IOException e ) {
-    	         //                    System.err.println("CRAP NetUtil osc sending isn't working!!!");
-    	         // 
-    	         //                    StringWriter sw = new StringWriter();
-    	         //                    e.printStackTrace(new PrintWriter(sw));
-    	         //                    System.err.println( sw.toString());
-    	         //                 }
     		}else if(action.equals("setIPAddressAndPort")){
     			Log.d("OSCManager", "setting ip address and port");
 			    ipAddress = data.getString(0);
 				sender = new OSCPortOut( InetAddress.getByName(ipAddress), data.getInt(1) );
 				hasAddress = true;
     		}else if(action.equals("setOSCReceivePort")){
-				/*System.out.println("NEW PORT");
-			   	receiver = new OSCPortIn(data.getInt(0));
-			   	receiver.addListener("/", listener);
-			   	System.err.println("MADE NEW PORT WHICH WAS " + data.getInt(0));*/
+				if(data.getInt(0) != receivePort) {
+					receivePort = data.getInt(0);
+				   	receiver = new OSCPortIn(receivePort);
+				   	receiver.addListener("/", listener);
+				   	//System.err.println("MADE NEW PORT WHICH WAS " + data.getInt(0));
+				}
     		}else{
     			result = new PluginResult(Status.INVALID_ACTION);
     		}
