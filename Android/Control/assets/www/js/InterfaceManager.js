@@ -32,7 +32,76 @@ Control.interfaceManager = {
             this.createInterfaceListWithArray(this.loadedInterfaces);
         }
     },
-
+	
+//     rotationSet : function(_width, _height) {
+//         //control.makePages(pages, screen.width * r, screen.height * r);
+//         //PhoneGap.exec(null, null, "DeviceFeatures", "getScale", []);
+//         //PhoneGap.exec(null, null, "DeviceFeatures", "print", ["h:" + screen.height + " || w: " + screen.width]);
+//         PhoneGap.exec(null, null, "DeviceFeatures", "print", ["pixelRatio = " + window.devicePixelRatio]);
+//         //var r = 1 / window.devicePixelRatio;
+//         var w, h;
+//             // change w / h depending on orientation
+//         if(control.orientationString == "portrait") {
+//             w = _width; h = _height;
+//         }else{
+//             w = _height; h = _width;
+//         }   
+//         // froyo / gingerbread
+//         //console.log("DEVICE VERSION = " + device.version);
+//         if(parseFloat(device.version) >= 2.2 && parseFloat(device.version) < 3.0) {
+//             //console.log("inside froyo / gingerbread");
+//             //console.log("width = " + _width + " height = " + _height);
+//             //console.log("ORIENTATION = " + control.orientationString);
+//             // if(control.orientationString == "portrait") {
+//             //                 //$("#SelectedInterfacePage").css( {'width': _width * r + "px", 'height' : _height * r + "px"} );
+//             //             }else{
+//             //                 //$("#SelectedInterfacePage").css({'width': _width * r + "px", 'height' : _height * r + "px"});
+//             //                 $("#SelectedInterfacePage").css({'width': "320px", 'height' : "320px"});
+//             //             }
+//             // if(control.orientationString == "landscape") {
+//             //                 $("#SelectedInterfacePage").css({'height' : "320px !important"});
+//             //             }else{
+//             //                 $("#SelectedInterfacePage").css({'height' : "100% !important"});
+//             //             }
+//             //control.makePages(pages, _width * r, _height * r);
+// 
+//             // $("#SelectedInterfacePage").css({
+//             //                         'width':  w  + 'px',
+//             //                         'height': h  + 'px',
+//             //             });
+//         
+//             control.makePages(pages, w * r, h * r);
+//             if(control.orientationString == "portrait") {
+//                 $("#SelectedInterfacePage").css({ 'height' : '100% !important'});
+//             }else{
+//                 $("#SelectedInterfacePage").css({ 'height' : "320px !important"});
+//             }
+//         }else{ // android 2.1 / honeycomb
+//             // "height" must always be 320
+//             if(control.orientationString == "portrait") {
+//                 $("#SelectedInterfacePage").css( {'width': _width * r, 'height' : _height * r} );
+//             }else{
+//                 $("#SelectedInterfacePage").css({'width': _height * r, 'height' : _width * r});
+//             }
+//             
+//             control.makePages(pages, screen.width * r, screen.height * r);
+//             PhoneGap.exec(null, null, "DeviceFeatures", "print", ["interface height = " + $("#SelectedInterfacePage").css("height")]);
+//         }
+// 
+//         if (constants != null) {
+//             control.loadConstants(constants);
+//         }
+// 
+//         control.loadWidgets();
+// 
+//         if (control.currentTab != document.getElementById("SelectedInterfacePage")) {
+//             control.changeTab(document.getElementById("SelectedInterfacePage"));
+//             $.mobile.changePage('#SelectedInterfacePage');
+//         }
+//         control.isLoadingInterface = false;
+// //        PhoneGap.exec(null, null, "DeviceFeatures", "print", ["interface height = " + $("#SelectedInterfacePage").css("height")]);      
+//     },
+	
     loadScripts: function() {
         Control.data = null;
         Control.functions = null;
@@ -283,10 +352,10 @@ Control.interfaceManager = {
             $(list).append(item);
         }
 		try {
-		    $('#list').listview('refresh');
+		    $(list).listview('refresh');
 		} catch(e) {
-		    $('#list').listview();
- 		    $('#list').listview('refresh'); 
+		    $(list).listview();
+ 		    $(list).listview('refresh'); 
 		}
     },
 
@@ -460,6 +529,39 @@ Control.interfaceManager = {
             }
         }
     },
+	
+	// android only function...
+	rotationSet : function() { 
+        Control.makePages(pages, screen.width, screen.height);
+       //}else{
+       //    control.makePages(pages, screen.height, screen.width);
+       //}
+
+       if (typeof Control.interface.onpreinit === "string") {
+           eval(Control.interface.onpreinit);
+       } else if (Control.interface.onpreinit != null) {
+           Control.interface.onpreinit();
+       }
+		
+       if (Control.interface.constants != null) {
+           Control.loadConstants(Control.interface.constants);
+       }
+
+       Control.loadWidgets();
+
+       if (typeof Control.interface.oninit === "string") {
+           eval(Control.interface.oninit);
+       } else if (Control.interface.oninit != null) {
+           Control.interface.oninit();
+       }
+
+       if (this.currentTab != document.getElementById("selectedInterface")) {
+           Control.shouldPrevent = true;
+           Control.changeTab(document.getElementById("selectedInterface"));
+           $.mobile.changePage('#SelectedInterfacePage');
+       }
+	},
+	
 
     runInterface: function(js) {
         Control.unloadWidgets();
@@ -481,36 +583,38 @@ Control.interfaceManager = {
         if (typeof Control.interface.orientation != "undefined") {
             Control.device.setRotation(Control.interface.orientation);
         }
-
-        if (Control.interface.orientation == "portrait") {
-            Control.makePages(Control.interface.pages, screen.width, screen.height);
-        } else {
-            Control.makePages(Control.interface.pages, screen.height, screen.width);
-        }
-
-        if (typeof Control.interface.onpreinit === "string") {
-            eval(Control.interface.onpreinit);
-        } else if (Control.interface.onpreinit != null) {
-            Control.interface.onpreinit();
-        }
 		
-        if (Control.interface.constants != null) {
-            Control.loadConstants(Control.interface.constants);
-        }
-
-        Control.loadWidgets();
-
-        if (typeof Control.interface.oninit === "string") {
-            eval(Control.interface.oninit);
-        } else if (Control.interface.oninit != null) {
-            Control.interface.oninit();
-        }
-
-        if (this.currentTab != document.getElementById("selectedInterface")) {
-            Control.shouldPrevent = true;
-            Control.changeTab(document.getElementById("selectedInterface"));
-            $.mobile.changePage('#SelectedInterfacePage');
-        }
+		if(device.platform == 'iPhone') { // else rotationSet is called from Java
+	        if (Control.interface.orientation == "portrait") {
+	            Control.makePages(Control.interface.pages, screen.width, screen.height);
+	        } else {
+	            Control.makePages(Control.interface.pages, screen.height, screen.width);
+	        }
+			moved for android
+	        if (typeof Control.interface.onpreinit === "string") {
+	            eval(Control.interface.onpreinit);
+	        } else if (Control.interface.onpreinit != null) {
+	            Control.interface.onpreinit();
+	        }
+        		
+	        if (Control.interface.constants != null) {
+	            Control.loadConstants(Control.interface.constants);
+	        }
+        
+	        Control.loadWidgets();
+        
+	        if (typeof Control.interface.oninit === "string") {
+	            eval(Control.interface.oninit);
+	        } else if (Control.interface.oninit != null) {
+	            Control.interface.oninit();
+	        }
+        
+	        if (this.currentTab != document.getElementById("selectedInterface")) {
+	            Control.shouldPrevent = true;
+	            Control.changeTab(document.getElementById("selectedInterface"));
+	            $.mobile.changePage('#SelectedInterfacePage');
+	        }
+		}
     },
 
     selectInterfaceFromList: function(interfaceNumber) {

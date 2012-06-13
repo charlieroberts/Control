@@ -1,13 +1,14 @@
 Control.device = {
     setRotation: function(orientation) {
-        return PhoneGap.exec(null, null, "Device", "setRotation", [orientation]);
+		console.log("SETTING ORIENTATION "  + orientation);
+        return PhoneGap.exec(null, null, "DeviceFeatures", "setRotation", [orientation]);
     },
     
     deviceProperties:function() {
-        return PhoneGap.exec(null, null, "Device", "deviceProperties", []);
+        return PhoneGap.exec(null, null, "DeviceFeatures", "deviceProperties", []);
     },
     
     setAutolock : function(autolock) {
-        PhoneGap.exec(null, null, "Device", "autolockToggle", [autolock]);
+        PhoneGap.exec(null, null, "DeviceFeatures", "autolockToggle", [autolock]);
     },
 };

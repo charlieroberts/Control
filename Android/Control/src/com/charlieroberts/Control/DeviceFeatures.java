@@ -31,23 +31,24 @@ public class DeviceFeatures extends Plugin {
 	
 	@Override
 	public PluginResult execute(String action, JSONArray data, String callbackId) {
-	    //Log.d("OSCManager", "executing something " + action);	
+	    //Log.d("DeviceManager", "DEVICE ::: executing something " + action);	
     	PluginResult result = null;
+		
         try {
-	        if (action.equals("setOrientation")) {
+	        if (action.equals("setRotation")) {
     	        String orientation;
             	orientation = data.getString(0);
 
         		//System.out.println("Rotating device");
-        		if (action.equals("setOrientation") || action.equals("setOrientation2")) {
-        		    System.out.println("ROTATION STARTING " + orientation + " ********************************************");
+        		if (action.equals("setRotation") || action.equals("setRotation2")) {
+        		    //System.out.println("ROTATION STARTING " + orientation + " ********************************************");
         		    if(orientation.equals("landscape")) {
             		    this.ctx.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             		} else {
             		    this.ctx.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             		}
 		        
-    		        if(action.equals("setOrientation")) {
+    		        if(action.equals("setRotation")) {
     		            float w = webView.getWidth();
     		            float h = webView.getHeight();
     		            String jsString = "";
@@ -63,7 +64,7 @@ public class DeviceFeatures extends Plugin {
         	    }
             }else if(action.equals("print")){
                 try{
-                    System.out.println(data.getString(0));
+                    System.out.println(data.getString(1));
                 }catch (Exception e) {
                     System.out.println("failed to print");
                 }

@@ -51,7 +51,7 @@ Control.Knob = function(ctx,props) {
 	this.canvas.style.left = this.x + "px";
 	this.canvas.style.position = "absolute";
 	
-    console.log("left : " + this.canvas.style.left + " || top : " + this.canvas.style.top);
+    //console.log("left : " + this.canvas.style.left + " || top : " + this.canvas.style.top);
     
 	this.displayValue = props.displayValue;
 	

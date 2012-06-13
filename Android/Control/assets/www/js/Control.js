@@ -34,24 +34,20 @@ window["Control"] = {
         this.changeTab(this.currentTab);
         
         this.sensors = [this.acc, this.magnetometer, this.gyro, this.audioPitch, this.audioVolume];
-        console.log(0);
         this.preferencesManager.init();
-		console.log(1);
 		this.interfaceManager.init();
-      	console.log(2);
+
        	this.destinationManager.init();
-        console.log(3);
+
         //this.bonjour.start();
-        console.log(4);
+		
         this.oscManager.delegate = Control.oscManager;
         this.oscManager.start();
-		console.log(5);
         
 		this.midiManager.delegate = Control.midiManager;
 		//this.midiManager.start();
-		console.log(6);
-		//this.device.setRotation("portrait");
-		console.log(7);
+		this.device.setRotation("portrait");
+		
         document.addEventListener('orientationChanged', Control.onRotation, false);
     },
 
@@ -180,7 +176,7 @@ window["Control"] = {
     
     makeWidget : function(w) {
         var _w;
-        console.log("MAKING WIDGET " + w.name);
+        //console.log("MAKING WIDGET " + w.name);
         if(!this.isWidgetSensor(w)) {
             _w = window[w.name] = new Control[w.type](this.interfaceDiv, w);
             if(_w.init != null) { 
