@@ -43,7 +43,8 @@ public class Bonjour extends Plugin {
 
 	public Bonjour() {
 	    try{
-                jmdns = JmDNS.create();
+				
+                jmdns = JmDNS.create(InetAddress.getLocalHost());
                 jmdns.addServiceListener(oscType, oscListener = new ServiceListener() {
                     @Override
                     public void serviceResolved(ServiceEvent ev) {
@@ -123,16 +124,16 @@ public class Bonjour extends Plugin {
                             }
                         } // _apple-midi._udp.
                         
-                        infos = jmdns.list("_apple-midi._udp.local.");
-                        for (int i = 0; i < infos.length; i++) {
-                            String address = infos[i].getHostAddress();
-                            //System.out.println(address + " :: " + myIP);
-                            if(address.compareTo(myIP) != 0 && address.compareTo(myMac) != 0 ) {
-                                String jsString = "javascript:Control.destinationManager.addDestination('" + address + "'," + infos[i].getPort() + ", 0, 1);";
-                            //    System.out.println(jsString);
-                                webView.loadUrl(jsString);
-                            }
-                        }
+                        // infos = jmdns.list("_apple-midi._udp.local.");
+                        // for (int i = 0; i < infos.length; i++) {
+                        //     String address = infos[i].getHostAddress();
+                        //     //System.out.println(address + " :: " + myIP);
+                        //     if(address.compareTo(myIP) != 0 && address.compareTo(myMac) != 0 ) {
+                        //         String jsString = "javascript:Control.destinationManager.addDestination('" + address + "'," + infos[i].getPort() + ", 0, 1);";
+                        //     //    System.out.println(jsString);
+                        //         webView.loadUrl(jsString);
+                        //     }
+                        // }
                         
                         if(action.equals("start")) {
                             ServiceInfo serviceInfo = ServiceInfo.create("_osc._udp.local.",

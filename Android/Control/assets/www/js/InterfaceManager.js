@@ -532,34 +532,33 @@ Control.interfaceManager = {
 	
 	// android only function...
 	rotationSet : function() { 
-        Control.makePages(pages, screen.width, screen.height);
-       //}else{
-       //    control.makePages(pages, screen.height, screen.width);
-       //}
+		if(typeof Control.interface !== "undefined") {
+	    	Control.makePages(Control.interface.pages, screen.width, screen.height);
 
-       if (typeof Control.interface.onpreinit === "string") {
-           eval(Control.interface.onpreinit);
-       } else if (Control.interface.onpreinit != null) {
-           Control.interface.onpreinit();
-       }
+			if (typeof Control.interface.onpreinit === "string") {
+			   eval(Control.interface.onpreinit);
+			} else if (Control.interface.onpreinit != null) {
+			   Control.interface.onpreinit();
+			}
 		
-       if (Control.interface.constants != null) {
-           Control.loadConstants(Control.interface.constants);
-       }
+			if (Control.interface.constants != null) {
+			   Control.loadConstants(Control.interface.constants);
+			}
 
-       Control.loadWidgets();
+			Control.loadWidgets();
 
-       if (typeof Control.interface.oninit === "string") {
-           eval(Control.interface.oninit);
-       } else if (Control.interface.oninit != null) {
-           Control.interface.oninit();
-       }
+			if (typeof Control.interface.oninit === "string") {
+			   eval(Control.interface.oninit);
+			} else if (Control.interface.oninit != null) {
+			   Control.interface.oninit();
+			}
 
-       if (this.currentTab != document.getElementById("selectedInterface")) {
-           Control.shouldPrevent = true;
-           Control.changeTab(document.getElementById("selectedInterface"));
-           $.mobile.changePage('#SelectedInterfacePage');
-       }
+			if (this.currentTab != document.getElementById("selectedInterface")) {
+			   Control.shouldPrevent = true;
+			   Control.changeTab(document.getElementById("selectedInterface"));
+			   $.mobile.changePage('#SelectedInterfacePage');
+			}
+		}
 	},
 	
 
@@ -590,7 +589,7 @@ Control.interfaceManager = {
 	        } else {
 	            Control.makePages(Control.interface.pages, screen.height, screen.width);
 	        }
-			moved for android
+
 	        if (typeof Control.interface.onpreinit === "string") {
 	            eval(Control.interface.onpreinit);
 	        } else if (Control.interface.onpreinit != null) {

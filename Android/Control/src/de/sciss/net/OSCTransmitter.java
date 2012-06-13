@@ -38,6 +38,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.net.UnknownHostException;
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
@@ -59,11 +60,6 @@ import java.nio.channels.SocketChannel;
  *	over <code>OSCTransmitter</code>. Also note that as of v0.3, <code>OSCTransmitter</code> is abstract, which
  *	renders direct instantiation impossible. <B>To update old code,</B> occurences of <code>new OSCTransmitter()</code>
  *	must be replaced by one of the <code>OSCTransmitter.newUsing</code> methods!
- *	<P>
- *	Note that someone has reported trouble with the <code>InetAddress.getLocalHost()</code> method
- *	on a machine that has no proper IP configuration or DNS problems. In such a case when you need
- *	to communicate only on this machine and not a network, you can still bind the channel
- *	to the special address &quot;127.0.0.1&quot; (called &quot;loopback&quot;).
  *
  *  @author		Hanns Holger Rutz
  *  @version	0.33, 05-Mar-09
@@ -205,7 +201,7 @@ implements OSCChannel
 	 *	@param	port		the port number for the OSC socket, or <code>0</code> to use an arbitrary free port
 	 *	@param	loopBack	if <code>true</code>, the &quot;loopback&quot; address (<code>&quot;127.0.0.1&quot;</code>)
 	 *						is used which limits communication to the local machine. If <code>false</code>, the
-	 *						local machine's regular IP address is used.
+	 *						special IP <code>"0.0.0.0"</code> is used which means any local host is picked
 	 *	
 	 *	@return				the newly created transmitter
 	 *
@@ -231,7 +227,7 @@ implements OSCChannel
 	 *	@param	port		the port number for the OSC socket, or <code>0</code> to use an arbitrary free port
 	 *	@param	loopBack	if <code>true</code>, the &quot;loopback&quot; address (<code>&quot;127.0.0.1&quot;</code>)
 	 *						is used which limits communication to the local machine. If <code>false</code>, the
-	 *						local machine's regular IP address is used.
+	 *						special IP <code>"0.0.0.0"</code> is used which means any local host is picked
 	 *	
 	 *	@return				the newly created transmitter
 	 *
@@ -243,10 +239,9 @@ implements OSCChannel
 	public static OSCTransmitter newUsing( OSCPacketCodec c, String protocol, int port, boolean loopBack )
 	throws IOException
 	{
-      //XXX alex changed the InetSocketAddress to just take the port, works on android now
-      final InetSocketAddress localAddress = loopBack ? new InetSocketAddress( "127.0.0.1", port ) :
-         new InetSocketAddress( port );
-         //new InetSocketAddress( InetAddress.getLocalHost(), port );
+//		final InetSocketAddress localAddress = loopBack ? new InetSocketAddress( "127.0.0.1", port ) :
+//														  new InetSocketAddress( InetAddress.getLocalHost(), port );
+		final InetSocketAddress localAddress = new InetSocketAddress( loopBack ? "127.0.0.1" : "0.0.0.0", port );
 		return newUsing( c, protocol, localAddress );
 	}
 
@@ -414,12 +409,13 @@ implements OSCChannel
 	 *	method after the transmitter has been connected.
 	 *	
 	 *	@return				the address of the transmitter's local socket.
+	 *	@throws	IOException	if the local host could not be resolved
 	 *
 	 *	@see	java.net.InetSocketAddress#getHostName()
 	 *	@see	java.net.InetSocketAddress#getAddress()
 	 *	@see	java.net.InetSocketAddress#getPort()
 	 */
-	public abstract InetSocketAddress getLocalAddress();
+	public abstract InetSocketAddress getLocalAddress() throws IOException;
 
 	/**
 	 *	Specifies the transmitter's target address, that is the address of the remote side to talk to.
@@ -469,6 +465,12 @@ implements OSCChannel
 	 */
 	public abstract void connect() throws IOException;
 		
+	protected InetSocketAddress getLocalAddress( InetAddress addr, int port )
+	throws UnknownHostException
+	{
+		return new InetSocketAddress( addr.getHostName().equals( "0.0.0.0" ) ? InetAddress.getLocalHost() : addr, port );
+	}
+
 	/**
 	 *	Queries the connection state of the transmitter.
 	 *
@@ -624,14 +626,15 @@ implements OSCChannel
 			}
 		}
 	
-		public InetSocketAddress getLocalAddress()
+		public InetSocketAddress getLocalAddress() 
+		throws UnknownHostException
 		{
 			synchronized( sync ) {
 				if( dch != null ) {
 					final DatagramSocket ds = dch.socket();
 					return new InetSocketAddress( ds.getLocalAddress(), ds.getLocalPort() );
 				} else {
-					return localAddress;
+					return getLocalAddress( localAddress.getAddress(), localAddress.getPort() );
 				}
 			}
 		}
@@ -729,13 +732,14 @@ implements OSCChannel
 		}
 
 		public InetSocketAddress getLocalAddress()
+		throws UnknownHostException
 		{
 			synchronized( sync ) {
 				if( sch != null ) {
 					final Socket s = sch.socket();
 					return new InetSocketAddress( s.getLocalAddress(), s.getLocalPort() );
 				} else {
-					return localAddress;
+					return getLocalAddress( localAddress.getAddress(), localAddress.getPort() );
 				}
 			}
 		}

@@ -55,12 +55,14 @@ public class OSCPortIn extends OSCPort implements Runnable {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
-			// buffers were 1500 bytes in size, but this was
-			// increased to 1536, as this is a common MTU
+		// buffers were 1500 bytes in size, but this was
+		// increased to 1536, as this is a common MTU
 		byte[] buffer = new byte[1536];
-		DatagramPacket packet = new DatagramPacket(buffer, 1536);
+		DatagramPacket packet;
 		while (isListening) {
 			try {
+				packet = new DatagramPacket(buffer, 1536);
+				
 				socket.receive(packet);
 				OSCPacket oscPacket = converter.convert(buffer, packet.getLength());
 				dispatcher.dispatchPacket(oscPacket);

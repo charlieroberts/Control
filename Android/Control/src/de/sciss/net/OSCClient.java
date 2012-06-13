@@ -304,6 +304,61 @@ implements OSCBidi
 		return new OSCClient( rcv, trns, protocol );
 	}
 
+	/**
+	 *	Creates a new instance of an <code>OSCClient</code>, using
+	 *	default codec and a specific transport protocol and local socket address.
+	 *	Note that <code>localAdress</code> specifies the
+	 *	local socket (at which the receiver listens and from which the transmitter sends),
+	 *  it does not determine the
+	 *	remote sockets to which the client connects. To specify the remote socket,
+	 *	use the <code>setTarget</code> method!
+	 *	<P>
+	 *
+	 *	@param	protocol	the protocol to use, currently either <code>UDP</code> or <code>TCP</code>
+	 *	@return				the newly created client
+	 *
+	 *	@throws	IOException					if a networking error occurs while creating the socket
+	 *	@throws	IllegalArgumentException	if an illegal protocol is used
+	 *
+	 *	@since		NetUtil 0.39
+	 */
+	public static OSCClient newUsing( String protocol, InetSocketAddress localAddress )
+	throws IOException
+	{
+		final OSCReceiver		rcv		= OSCReceiver.newUsing( protocol, localAddress );
+		final OSCTransmitter	trns	= OSCTransmitter.newUsing( protocol, localAddress );
+
+		return new OSCClient( rcv, trns, protocol );
+	}
+
+	/**
+	 *	Creates a new instance of an <code>OSCClient</code>, using
+	 *	a given codec, a specific transport protocol and local socket address.
+	 *	Note that <code>localAdress</code> specifies the
+	 *	local socket (at which the receiver listens and from which the transmitter sends),
+	 *  it does not determine the
+	 *	remote sockets to which the client connects. To specify the remote socket,
+	 *	use the <code>setTarget</code> method!
+	 *	<P>
+	 *
+	 *	@param	c			the codec to use
+	 *	@param	protocol	the protocol to use, currently either <code>UDP</code> or <code>TCP</code>
+	 *	@return				the newly created client
+	 *
+	 *	@throws	IOException					if a networking error occurs while creating the socket
+	 *	@throws	IllegalArgumentException	if an illegal protocol is used
+	 *
+	 *	@since		NetUtil 0.39
+	 */
+	public static OSCClient newUsing( OSCPacketCodec c, String protocol, InetSocketAddress localAddress )
+	throws IOException
+	{
+		final OSCReceiver		rcv		= OSCReceiver.newUsing( c, protocol, localAddress );
+		final OSCTransmitter	trns	= OSCTransmitter.newUsing( c, protocol, localAddress );
+
+		return new OSCClient( rcv, trns, protocol );
+	}
+
 	public String getProtocol()
 	{
 		return protocol;

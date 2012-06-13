@@ -31,7 +31,7 @@ window["Control"] = {
     init : function() {
         this.currentTab = document.getElementById("Interfaces");
         this.interfaceDiv = document.getElementById("selectedInterface");
-        this.changeTab(this.currentTab);
+        //this.changeTab(this.currentTab);
         
         this.sensors = [this.acc, this.magnetometer, this.gyro, this.audioPitch, this.audioVolume];
         this.preferencesManager.init();
@@ -39,14 +39,14 @@ window["Control"] = {
 
        	this.destinationManager.init();
 
-        //this.bonjour.start();
+        this.bonjour.start();
 		
         this.oscManager.delegate = Control.oscManager;
         this.oscManager.start();
         
-		this.midiManager.delegate = Control.midiManager;
+		//this.midiManager.delegate = Control.midiManager;
 		//this.midiManager.start();
-		this.device.setRotation("portrait");
+		//this.device.setRotation("portrait");
 		
         document.addEventListener('orientationChanged', Control.onRotation, false);
     },

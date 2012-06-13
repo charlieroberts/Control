@@ -344,7 +344,59 @@ implements OSCBidi
 //		final InetSocketAddress localAddress = loopBack ? new InetSocketAddress( "127.0.0.1", port ) :
 //														  new InetSocketAddress( InetAddress.getLocalHost(), port );
 		final InetSocketAddress localAddress = new InetSocketAddress( loopBack ? "127.0.0.1" : "0.0.0.0", port );
+		return newUsing( c, protocol, localAddress );
+	}
+
+	/**
+	 *	Creates a new instance of an <code>OSCServer</code>, using
+	 *	default codec and a specific transport protocol and local socket address.
+	 *
+	 *	@param	protocol	the protocol to use, currently either <code>UDP</code> or <code>TCP</code>
+	 *	@param	localAddress	a valid address to use for the OSC socket. If the port is <code>0</code>,
+	 *							an arbitrary free port is picked when the receiver is started. (you can find out
+	 *							the actual port in this case by calling <code>getLocalAddress()</code> after the
+	 *							server was started).
+	 *	@return				the newly created server
+	 *
+	 *	@throws	IOException					if a networking error occurs while creating the socket
+	 *	@throws	IllegalArgumentException	if an illegal protocol is used
+	 *
+	 *	@see	OSCChannel#UDP
+	 *	@see	OSCChannel#TCP
+	 *	@see	#getLocalAddress
+	 *
+	 *	@since		NetUtil 0.39
+	 */
+	public static OSCServer newUsing( String protocol, InetSocketAddress localAddress )
+	throws IOException
+	{
+		return newUsing( OSCPacketCodec.getDefaultCodec(), protocol, localAddress );
+	}
 	
+	/**
+	 *	Creates a new instance of an <code>OSCServer</code>, using
+	 *	a given codec, a specific transport protocol and local socket address.
+	 *
+	 *	@param	c			the codec to use
+	 *	@param	protocol	the protocol to use, currently either <code>UDP</code> or <code>TCP</code>
+	 *	@param	localAddress	a valid address to use for the OSC socket. If the port is <code>0</code>,
+	 *							an arbitrary free port is picked when the receiver is started. (you can find out
+	 *							the actual port in this case by calling <code>getLocalAddress()</code> after the
+	 *							server was started).
+	 *	@return				the newly created server
+	 *
+	 *	@throws	IOException					if a networking error occurs while creating the socket
+	 *	@throws	IllegalArgumentException	if an illegal protocol is used
+	 *
+	 *	@see	OSCChannel#UDP
+	 *	@see	OSCChannel#TCP
+	 *	@see	#getLocalAddress
+	 *
+	 *	@since		NetUtil 0.39
+	 */
+	public static OSCServer newUsing( OSCPacketCodec c, String protocol, InetSocketAddress localAddress )
+	throws IOException
+	{
 		if( protocol.equals( UDP )) {
 			return new UDPOSCServer( c, localAddress );
 			
@@ -524,8 +576,8 @@ implements OSCBidi
 		{
 			super( c, UDP );
 		
-			rcv				= OSCReceiver.newUsing( c, UDP, localAddress );
-			trns			= OSCTransmitter.newUsing( c, UDP, localAddress );
+			rcv		= OSCReceiver.newUsing( c, UDP, localAddress );
+			trns	= OSCTransmitter.newUsing( c, UDP, localAddress );
 		}
 		
 		public InetSocketAddress getLocalAddress()

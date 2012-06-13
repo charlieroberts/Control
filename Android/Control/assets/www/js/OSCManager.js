@@ -3,6 +3,7 @@ Control.oscManager = {
     receivePort : 8080,
     
     start: function() {
+		console.log("STARTING OSC POLLING ************************************");
         return PhoneGap.exec(null, null, "OSCManager", "startPolling", []);
     },
     

@@ -32,25 +32,27 @@ public class OSCManager extends Plugin {
 	public final Object        sync = new Object();
 	
 	public OSCPortIn receiver = null;
+	public int r = 0;	
 	public OSCPortOut sender;
-	public OSCListener listener;
+	public com.illposed.osc.OSCListener listener;
 	public String ipAddress;
 	
-	public Class dd;
-	
+	//public de.sciss.net.OSCClient c;
+		
 	@Override
 	public PluginResult execute(String action, JSONArray data, String callbackId) {
-		PluginResult result = null;
+		PluginResult result = null;		
 		try {
-		    if (action.equals("startOSCListener") && receiver == null) {
-     		    Log.d("OSCManager", "building client");	
+		    if (action.equals("startPolling") && r == 0) {
+     		    //Log.d("OSCManager", "building client");
     			receiver = new OSCPortIn(8080);
-    			listener = new OSCListener() {
-    	        	public void acceptMessage(java.util.Date time, OSCMessage message) {
+				r = 1;
+				
+    			listener = new com.illposed.osc.OSCListener() {
+    	        	public void acceptMessage(java.util.Date time, com.illposed.osc.OSCMessage message) {
     	        	    Object[] args = message.getArguments();
-            			//System.out.println("Message received!");
+            			//System.out.println("Message received! " + message.toString());
             			if(message.getAddress().equals("/pushInterface")) {
-            			    //[jsStringStart replaceOccurrencesOfString:@"\n" withString:@"" options:1 range:NSMakeRange(0, [jsStringStart length])]; // will not work with newlines present
                             String js = "javascript:Control.interfaceManager.pushInterface('" + ((String)args[0]).replace('\n', ' ') + "')"; // remove line breaks
                     
                             webView.loadUrl(js);
@@ -75,6 +77,8 @@ public class OSCManager extends Plugin {
             			            typeTagString.append('i');
             			            argString.append( ((Integer)args[i]).intValue() );
             			        }else if(arg instanceof java.lang.String) {
+		                			System.out.println(args[i]);
+									
             			            typeTagString.append('s');
             			            argString.append("\"");
             			            argString.append( ((String)args[i]) );
@@ -88,9 +92,13 @@ public class OSCManager extends Plugin {
                 		}
             		}
             	};
+				
             	receiver.addListener("/", listener);
+				
             	receiver.startListening(); 
-            	Log.d("OSCManager", "finished setting up OSC receiver and now listening");
+				
+            	//Log.d("OSCManager", "finished setting up OSC receiver and now listening");
+				
         		
     		} else if (action.equals("send") && hasAddress) {
     			//Log.d("OSCManager", "building message");
@@ -109,7 +117,7 @@ public class OSCManager extends Plugin {
 					//Log.d("OSCManager", ""+data.get(i).getClass().toString());
 				}
     		
-    			OSCMessage msg = new OSCMessage( address, values.toArray() );
+    			com.illposed.osc.OSCMessage msg = new com.illposed.osc.OSCMessage( address, values.toArray() );
              	
                 sender.send(msg);
     	         // }
@@ -126,9 +134,10 @@ public class OSCManager extends Plugin {
 				sender = new OSCPortOut( InetAddress.getByName(ipAddress), data.getInt(1) );
 				hasAddress = true;
     		}else if(action.equals("setOSCReceivePort")){
+				/*System.out.println("NEW PORT");
 			   	receiver = new OSCPortIn(data.getInt(0));
 			   	receiver.addListener("/", listener);
-			   	System.err.println("MADE NEW PORT WHICH WAS " + data.getInt(0));
+			   	System.err.println("MADE NEW PORT WHICH WAS " + data.getInt(0));*/
     		}else{
     			result = new PluginResult(Status.INVALID_ACTION);
     		}
