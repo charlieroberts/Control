@@ -1,7 +1,7 @@
 Control.Slider = function(ctx, props) {
     this.make(ctx, props);
 	this.ctx = ctx;
-	
+	this.count = 0;
 	if(typeof props.isVertical != "undefined")
         this.isVertical = props.isVertical;
     else
@@ -279,6 +279,30 @@ Control.Slider.prototype.multiOutput = function() {
     }
 }
 
+Control.Slider.prototype.setValue = function(newValue) {
+	//if(this.count++ % 5 === 0) {
+	
+	    if(newValue > this.max) { 
+	        newValue = this.max;
+	    }else if(newValue < this.min) {
+	        newValue = this.min;
+	    }
+	
+	    this.value = newValue;
+		    this.draw();
+	
+		if(typeof this.onvaluechange === "string") {
+	        eval(this.onvaluechange);
+		}else if(this.onvaluechange != null){
+			this.onvaluechange();
+		}
+    
+		if(!(arguments[1] === false))
+			this.output();
+	//}
+}
+
+
 Control.Slider.prototype.draw = function() {
     var range = this.max - this.min;
     var percent = (this.value + (0 - this.min)) / range;
@@ -287,10 +311,10 @@ Control.Slider.prototype.draw = function() {
     if(!this.shouldUseCanvas) {
         if(!this.isVertical) {
             if(!this.isXFader) {
-                //this.fillDiv.style["WebkitTransform"] = "scale3d(" + percent + ", 1, 1)";
+                this.fillDiv.style.webkitTransform = "scale3d(" + percent + ", 1, 1)";
                 //this.fillDiv.style.width = ((this.width - 1) * percent) + "px";
 
-                this.fillDiv.style.webkitTransform = "scale3d(" + percent + ", 1, 1 )"; 
+                //this.fillDiv.style.webkitTransform = "scale3d(" + percent + ", 1, 1 )"; 
             }else{
                 this.fillDiv.style.webkitTransform = "translate3d("+ (percent * (this.width - this.xFaderWidth)) + "px, 0, 0)";
                 //this.fillDiv.style.left = (this.x  + (percent * (this.width - this.xFaderWidth))) + "px";

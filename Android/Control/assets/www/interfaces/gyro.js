@@ -15,10 +15,10 @@ Control.functions = {
 };
 
 Control.interface = {
-	name : "Gyro + Accelerometer",
+	name : "Accelerometer",
 	orientation : "portrait",
 	pages : [[
-	{
+	/*{
 	    "name": "gyroLabel",
 	    "type": "Label",
 	    "bounds": [0,0,1,.05], 
@@ -80,7 +80,7 @@ Control.interface = {
 	    "color": "#ffffff",
 	    "value": "Update Rate : 10Hz",
 		"align": "left",
-	},
+	},*/
 	
 	{
 	    "name": "accLabel",
@@ -205,7 +205,7 @@ Control.interface = {
 	    "onvaluechange": "accSliders.setSequentialValues(this.x, this.y, this.z);",
 	},
 	
-	{
+	/*{
 	    "name": "gyro",
 	    "type": "Gyro",
 		"isLocal": true, 
@@ -213,7 +213,7 @@ Control.interface = {
 	    "min": 0,
 	    "max": 1,
 	    "onvaluechange": "gyroSliders.setSequentialValues(this.pitch, this.roll, this.yaw);",
-	},
+	},*/
 	
 	],
     

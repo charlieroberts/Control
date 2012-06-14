@@ -39,7 +39,7 @@ window["Control"] = {
 
        	this.destinationManager.init();
 
-        this.bonjour.start();
+        //this.bonjour.start();
 		
         this.oscManager.delegate = Control.oscManager;
         this.oscManager.start();

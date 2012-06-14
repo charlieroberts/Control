@@ -40,11 +40,14 @@ public class Bonjour extends Plugin {
 	JmDNS jmdns;
 	ServiceListener oscListener, midiListener;
 	String myIP, myMac;
+	InetAddress addr;
 
 	public Bonjour() {
 	    try{
-				
-                jmdns = JmDNS.create(InetAddress.getLocalHost());
+            	getLocalIpAddress();
+				// System.out.println("USING IP " + myIP);
+				// addr is determined in getLocalIpAddress
+				jmdns = JmDNS.create(addr);
                 jmdns.addServiceListener(oscType, oscListener = new ServiceListener() {
                     @Override
                     public void serviceResolved(ServiceEvent ev) {
@@ -99,7 +102,11 @@ public class Bonjour extends Plugin {
                     }
                 });
                 
-                getLocalIpAddress();
+				
+                String jsString = "javascript:window.Control.ipAddress = " + myIP +";";
+                System.out.println(jsString);
+                webView.loadUrl(jsString);
+				
                 
             }catch(Exception e) {
                 System.out.println("error starting Bonjour");
@@ -130,15 +137,13 @@ public class Bonjour extends Plugin {
                         //     //System.out.println(address + " :: " + myIP);
                         //     if(address.compareTo(myIP) != 0 && address.compareTo(myMac) != 0 ) {
                         //         String jsString = "javascript:Control.destinationManager.addDestination('" + address + "'," + infos[i].getPort() + ", 0, 1);";
-                        //     //    System.out.println(jsString);
+                        //     	   System.out.println(jsString);
                         //         webView.loadUrl(jsString);
                         //     }
                         // }
                         
                         if(action.equals("start")) {
-                            ServiceInfo serviceInfo = ServiceInfo.create("_osc._udp.local.",
-                                         "Control_" + (Math.round(Math.random() * 100000)), 8080,
-                                         "OSC reception for device running Control");
+                            ServiceInfo serviceInfo = ServiceInfo.create("_osc._udp.local", "Control2", 8080, "");
                             jmdns.registerService(serviceInfo);
                         }
                     }
@@ -160,24 +165,25 @@ public class Bonjour extends Plugin {
 	public String getLocalIpAddress() {
 	    System.out.println("getting local ip");
         try {
-                   for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
-                       NetworkInterface intf = en.nextElement();
-                       for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-                           InetAddress inetAddress = enumIpAddr.nextElement();
-                           if (!inetAddress.isLoopbackAddress()) {
-                               if(inetAddress.getHostAddress().indexOf(":") == -1) { // avoid local and MAC address
-                                    //System.err.println(inetAddress.getHostAddress());
-                                   myIP = inetAddress.getHostAddress();
-                               }else{
-                                   myMac = inetAddress.getHostAddress();
-                                   //System.out.println("FOUND MAC : " + myMac);
-                               }
-                           }
+           for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+               NetworkInterface intf = en.nextElement();
+               for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                   InetAddress inetAddress = enumIpAddr.nextElement();
+                   if (!inetAddress.isLoopbackAddress()) {
+                       if(inetAddress.getHostAddress().indexOf(":") == -1) { // avoid local and MAC address
+                            //System.err.println(inetAddress.getHostAddress());
+						   addr = inetAddress;
+                       	   myIP = inetAddress.getHostAddress();
+                       }else{
+                           myMac = inetAddress.getHostAddress();
+                           //System.out.println("FOUND MAC : " + myMac);
                        }
                    }
-               } catch (SocketException ex) {
-                   System.err.println( "can't get ip" );
                }
+           }
+       } catch (SocketException ex) {
+           System.err.println( "can't get ip" );
+       }
  
         return null;
     }

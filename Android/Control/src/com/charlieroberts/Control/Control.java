@@ -30,13 +30,14 @@ public class Control extends DroidGap
          //super.appView.getSettings().setCacheMode(android.webkit.WebSettings.LOAD_NO_CACHE); // Turn off cacheing of interfaces so that they can be refreshed / reloaded
         
          super.loadUrl("file:///android_asset/www/index.html");
+         // super.loadUrl("http://192.168.1.101/~charlie/www/index.html");
          super.appView.getSettings().setSupportZoom(false);
          super.appView.getSettings().setDomStorageEnabled(true);
 	     super.appView.getSettings().setJavaScriptEnabled(true);
+		 super.appView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
 		 
-         super.appView.getSettings().setBuiltInZoomControls(true); //Enable Multitouch if supported by ROM
+         super.appView.getSettings().setBuiltInZoomControls(false); //Enable Multitouch if supported by ROM
 		 
-         //super.loadUrl("http://192.168.1.6/~charlie/www/index.html");         
          //super.appView.setWebChromeClient(new EclairClient2(this));
          
          // TODO: the line below seems to create better multitouch, but it also makes some errant calls every once in a while...
