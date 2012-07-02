@@ -200,8 +200,8 @@ Control.interfaceManager = {
                     alert("Your file could not be downloaded. Please check the URL and try again.");
                     return;
                 }
-                //console.log(Control.interfaceManager.myRequest.responseText);
-                //console.log("before parsing");
+                console.log(Control.interfaceManager.myRequest.responseText);
+                console.log("before parsing");
                 try {
                     eval(Control.interfaceManager.myRequest.responseText);
                 } catch(e) {
@@ -209,8 +209,9 @@ Control.interfaceManager = {
                     alert("Your file was downloaded, but cannot be parsed. Please check the file for errors.");
                     throw err;
                 }
-                // eval(Control.interfaceManager.myRequest.responseText);
-                //console.log("after parsing");
+				
+                eval(Control.interfaceManager.myRequest.responseText);
+                console.log("after parsing");
                 //console.log(Control.interface);
                 if (Control.interface.name != null) {
                     if (document.getElementById("promptDiv") != null) {
@@ -346,7 +347,7 @@ Control.interfaceManager = {
         Control.interfaceManager.myRequest = new XMLHttpRequest();
         Control.interfaceManager.myRequest.onreadystatechange = function() {
             
-            //console.log("downloading stage " + Control.interfaceManager.myRequest.readyState);
+            console.log("downloading stage " + Control.interfaceManager.myRequest.readyState);
             
             if (Control.interfaceManager.myRequest.readyState === 4) {
                 if(Control.interfaceManager.myRequest.status === 404 ) {
@@ -354,8 +355,8 @@ Control.interfaceManager = {
                     return;
                 }
                 
-                //console.log(Control.interfaceManager.myRequest.responseText);
-                //console.log("before parsing");
+                console.log(Control.interfaceManager.myRequest.responseText);
+                console.log("before parsing");
                 
                 try {
                     eval(Control.interfaceManager.myRequest.responseText);
@@ -369,7 +370,7 @@ Control.interfaceManager = {
                     var interface = Control.interfaceManager.loadedInterfaces[i];
                     if (interface.name == Control.interfaceManager.currentInterfaceName) {
                         
-                        //console.log("SHOULD BE REPLACING " + i + " : " + Control.interface.name);
+                        console.log("SHOULD BE REPLACING " + i + " : " + Control.interface.name);
                         var newInterface = {
                             name: Control.interface.name,
                             json: Control.interfaceManager.myRequest.responseText,
