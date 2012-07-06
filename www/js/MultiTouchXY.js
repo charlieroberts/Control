@@ -99,7 +99,6 @@ Control.MultiTouchXY.prototype.addTouch = function(xPos, yPos, id) {
     $(touch).text(touch.activeNumber);
     
     this.children.push(touch);
-    console.log(this.children);
     this.container.appendChild(touch);
     this.changeValue(touch, xPos, yPos, 1);
 }

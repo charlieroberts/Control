@@ -25,14 +25,18 @@ Control.RangeSlider = function(ctx, props) {
 
 	this.canvas.width = this.width;			// DO NOT USE STYLES TO RESIZE CANVAS OBJECT
 	this.canvas.height = this.height;		// DO NOT USE STYLES TO RESIZE CANVAS OBJECT
-	this.ctx.appendChild(this.canvas);
 
-	$(this.canvas).css({
+    this.container = $("<div>");
+    
+	$(this.container).css({
 		"border" : "1px solid #fff",
 		"top" 	 : this.y + "px",
 		"left" 	 : this.x + "px",
 		"position" : "absolute",
 	});
+    
+    $(this.container).append(this.canvas);
+    $(this.ctx).append(this.container);
 
 	this.canvasCtx = this.canvas.getContext('2d');   
 
@@ -304,10 +308,9 @@ Control.RangeSlider.prototype.setBounds = function(newBounds) {
 
 Control.RangeSlider.prototype.show = function() {
     if(!this.shouldUseCanvas) {
-        this.fillDiv.style.display = "block";
-        this.strokeDiv.style.display = "block";
+        this.container.style.display = "block";
     }else{
-        this.canvas.style.display = "block";
+        this.container.style.display = "block";
     }
     this.draw();
 }
@@ -315,9 +318,8 @@ Control.RangeSlider.prototype.show = function() {
 Control.RangeSlider.prototype.hide = function() {
     //this.ctx.clearRect(this.x,this.y,this.width,this.height);
     if(!this.shouldUseCanvas) {
-        this.fillDiv.style.display = "none";
-        this.strokeDiv.style.display = "none";
+        this.container.style.display = "none";
     }else{
-        this.canvas.style.display = "none";
+        this.container.style.display = "none";
     }
 }

@@ -24,6 +24,17 @@ Control.Slider = function(ctx, props) {
 	this.pixelHeight = 1 / Control.deviceHeight;
     	
 	if(!this.shouldUseCanvas) {
+        this.container = $("<div>");
+        $(this.container).css({
+                            "position": "absolute", 
+                            "width": this.width + "px",
+                            "height": this.height + "px", 
+                            "left": this.x + "px", 
+                            "top": this.y + "px",
+                            "background-color": "rgba(0,0,0,0)",
+                            "z-index": 0,
+                            });
+        
 		this.fillDiv   = document.createElement("div");
 		$(this.fillDiv).addClass('widget slider_fill'); 
 
@@ -31,8 +42,8 @@ Control.Slider = function(ctx, props) {
 			"position": "absolute", 
 			"width": this.width - 2 + "px",
 			"height": this.height - 2 + "px", 
-			"left": this.x + 1 + "px", 
-			"top": this.y + 1 + "px",
+			"left": 1 + "px", 
+			"top": 1 + "px",
 			"background-color": this.fillColor,
 			"z-index": 10,
 
@@ -43,8 +54,8 @@ Control.Slider = function(ctx, props) {
         }else if(!this.isXFader) {
             this.fillDiv.style.webkitTransformOriginX = "0";
         }
-
-		this.ctx.appendChild(this.fillDiv);
+        
+		$(this.container).append(this.fillDiv);
 		
 		this.strokeDiv   = document.createElement("div");
 		$(this.strokeDiv).addClass('widget slider_stroke');
@@ -53,14 +64,13 @@ Control.Slider = function(ctx, props) {
 			"width": this.width - 2 + "px",
 			"height": this.height - 2 + "px", 
 			"position": "absolute", 
-			"left": this.x + "px", 
-			"top": this.y  + "px",
 			"background-color": this.backgroundColor,
 			"border": "1px solid " + this.strokeColor, 
 			"z-index": 1,  
 		});
 		
-		this.ctx.appendChild(this.strokeDiv);
+		$(this.container).append(this.strokeDiv);
+        
 	}else{
 		this.canvas = document.createElement('canvas');
 		$(this.canvas).addClass('widget Control.Slider');
@@ -79,6 +89,8 @@ Control.Slider = function(ctx, props) {
 		this.canvasCtx = this.canvas.getContext('2d');   
 	}
 	
+    $(this.ctx).append(this.container);
+
 	this.displayValue = props.displayValue;
 	
 	if(typeof props.label != "undefined" || props.displayValue == true) {
@@ -124,7 +136,7 @@ Control.Slider = function(ctx, props) {
 		this.xFaderWidth = 50;
 		if(!this.shouldUseCanvas) {
 			this.fillDiv.style.width = this.xFaderWidth + "px";
-			this.fillDiv.style.left = (this.x + (this.value * this.width)) + 1 + "px";
+			this.fillDiv.style.left = (this.value * this.width) + 1 + "px";
 		}
 	}
     

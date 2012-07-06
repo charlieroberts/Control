@@ -18,9 +18,11 @@ Control.Text = function(ctx, props) {
 			Control.oscManager.sendOSC( close.address, "s", close.value );
 		});
 	}
-
+    
+    this.container = this.text;
+    
 	$(this.ctx).append(this.text);
-
+    
 	$(this.text).css({
 		"display": "block",
 		"position": "absolute", 

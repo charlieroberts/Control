@@ -28,6 +28,8 @@ Control.Label = function(ctx, props) {
         "background-color" : this.backgroundColor,
     });
     
+    this.container = this.label;
+    
     this.label.style.lineHeight = (this.verticalCenter) ? this.height + "px" : (this.size + 2) + "px";
       
     this.ctx.appendChild(this.label);

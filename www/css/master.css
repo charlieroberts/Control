@@ -112,7 +112,7 @@ ul li { font-size: 1em; display:block; height:35px;}
 
 .preferencesListItem {
     width: 100%;
-    border-bottom: 1px solid #666;
+    border-bottom: 1px solid #666;  
     font-size: 1.3em;
     font-weight:normal;
 }
@@ -123,3 +123,5 @@ ul li { font-size: 1em; display:block; height:35px;}
     .ui-btn-up-a   { background-image:-webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #333333), color-stop(0.05, #333333), color-stop(1, #000000)); }
         .ui-btn-inner  { border-top-width:0; border-left-width:0; border-right-width:1px; }
         .ui-content { background-color: #000; }
+
+            .ui-resizable-se { bottom:0; position:absolute; right:0; }

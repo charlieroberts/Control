@@ -24,7 +24,8 @@ Control.Video = function(ctx, props) {
 	// 	this.max = (typeof props.max != "undefined") ? props.max : 360;
 	// 	this.min = (typeof props.min != "undefined") ? props.min : 0;			
 	// }
-	//     this.userDefinedRange = this.max - this.min;
+	// this.userDefinedRange = this.max - this.min;
+    
 	console.log("MADE A VIDEO OBJECT");
 	Control.video = this;
     this.start();

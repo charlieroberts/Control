@@ -10,38 +10,14 @@ Control.Button = function(ctx, props) {
     this.requiresTouchDown = (typeof props.requiresTouchDown == "undefined") ? true : props.requiresTouchDown;
     
     this.contactOn = false;	// used to trigger flash for contact mode buttons
-    if (typeof props.label != "undefined") {
-        this.text = props.label;
-        this.labelSize = props.labelSize || 12;
-        
-        //remove for canvas
-        {   
-            this.label = {
-				"name": this.name + "Label",
-				 "type": "Label", 
-				 "bounds":[props.x, props.y, props.width, props.height], 
-				 "color":this.strokeColor, 
-				 "value":this.text,
-				 "size":props.labelSize || 12,
-			 };
-            var _w = Control.makeWidget(this.label);
-	        if(!Control.isAddingConstants) {
-	            Control.addWidget(_w, Control.addingPage); // PROBLEM
-	        }else{
-                Control.constants.push(_w);
-	            Control.addConstantWidget(_w); // PROBLEM
-            }
-          
-            this.label = _w;
-        }
-    }
+
     
     // remove for canvas
     {   
-        this.fillDiv   = document.createElement("div");
-        $(this.fillDiv).addClass('widget button');
+        this.container   = document.createElement("div");
+        $(this.container).addClass('widget button');
         
-        $(this.fillDiv).css({
+        $(this.container).css({
             "width" 	: this.width - 2 + "px",
             "height" 	: this.height - 2 + "px",	
             "position" 	: "absolute",
@@ -49,9 +25,43 @@ Control.Button = function(ctx, props) {
             "top"  		: this.y + "px",
             "border" 	: "1px solid " + this.strokeColor,
 		});
+		
+		this.container.widget = this;
         
-        this.ctx.appendChild(this.fillDiv);
     }
+    if (typeof props.label != "undefined") {
+        this.text = props.label;
+        this.labelSize = props.labelSize || 12;
+        
+        //remove for canvas
+        {   
+				//  this.label = {
+				// "name": this.name + "Label",
+				//  "type": "Label", 
+				//  "bounds":[props.x, props.y, props.width, props.height], 
+				//  "color":this.strokeColor, 
+				//  "value":this.text,
+				//  "size":props.labelSize || 12,
+				// 			 };
+				//             var _w = Control.makeWidget(this.label);
+				// 	        if(!Control.isAddingConstants) {
+				// 	            Control.addWidget(_w, Control.addingPage); // PROBLEM
+				// 	        }else{
+				//                 Control.constants.push(_w);
+				// 	            Control.addConstantWidget(_w); // PROBLEM
+				//             }
+				// 
+			this.label = $("<h3>");
+			$(this.label).css({color:"#ccc", "text-align" : "center", width: "100%" });
+			$(this.label).text(this.text);
+			console.log("LABEL", this.label);
+			$(this.container).append(this.label)    
+            //this.label = _w;
+        }
+    }
+    this.ctx.appendChild(this.container);
+	
+	
 	/*
 	(function(obj) {
 		var that = obj;
@@ -68,9 +78,9 @@ Control.Button = function(ctx, props) {
 		        set: function(value) {
 		            if(value < 1) {
 		            	var newWidth = value * $("#selectedInterface").width();
-						$(that.fillDiv).css("width", newWidth);
+						$(that.container).css("width", newWidth);
 		            }else{
-		            	$(that.fillDiv).css("width", value);
+		            	$(that.container).css("width", value);
 		            }
 		        }
 			},
@@ -81,9 +91,9 @@ Control.Button = function(ctx, props) {
 		        set: function(value) {
 		            if(value < 1) {
 		            	var newHeight = value * $("#selectedInterface").height();
-						$(that.fillDiv).css("height", newHeight);
+						$(that.container).css("height", newHeight);
 		            }else{
-		            	$(that.fillDiv).css("height", value);
+		            	$(that.container).css("height", value);
 		            }
 		        }
 			},
@@ -94,9 +104,9 @@ Control.Button = function(ctx, props) {
 		        set: function(value) {
 		            if(value < 1) {
 		            	var newX = value * $("#selectedInterface").width();
-						$(that.fillDiv).css("left", newX);
+						$(that.container).css("left", newX);
 		            }else{
-		            	$(that.fillDiv).css("left", value);
+		            	$(that.container).css("left", value);
 		            }
 		        }
 			},
@@ -107,9 +117,9 @@ Control.Button = function(ctx, props) {
 		        set: function(value) {
 		            if(value < 1) {
 		            	var newY = value * $("#selectedInterface").height();
-						$(that.fillDiv).css("top", newY);
+						$(that.container).css("top", newY);
 		            }else{
-		            	$(that.fillDiv).css("top", value);
+		            	$(that.container).css("top", value);
 		            }
 		        }
 			},
@@ -136,7 +146,7 @@ Control.Button.prototype = new Widget();
 
 Control.Button.prototype.flash = function(btn) {
 	return (function() {
-		$(btn.fillDiv).css("background-color", btn.backgroundColor);
+		$(btn.container).css("background-color", btn.backgroundColor);
 	});
 }
 
@@ -145,15 +155,15 @@ Control.Button.prototype.draw = function() {
     //this.ctx.clearRect(this.x, this.y, this.width, this.height);
     {   // remove for canvas
         if(this.mode != "contact") {
-            this.fillDiv.style.backgroundColor = (this.isLit) ? this.fillColor : this.backgroundColor;
+            this.container.style.backgroundColor = (this.isLit) ? this.fillColor : this.backgroundColor;
         } else {
-            this.fillDiv.style.backgroundColor = this.fillColor;
+            this.container.style.backgroundColor = this.fillColor;
 			var flashFunction = Control.Button.prototype.flash(this);
 			setTimeout(flashFunction, 50);
         }
-        this.fillDiv.style.border = "1px solid " + this.strokeColor;
+        this.container.style.border = "1px solid " + this.strokeColor;
 
-        if(this.label != null) this.label.draw();
+        //if(this.label != null) this.label.draw();
     }
 
 //        this.drawLabel();
@@ -176,14 +186,14 @@ Control.Button.prototype.setBounds = function(newBounds) {
     this.x = (newBounds[0] <= 1) ? Math.round(newBounds[0] * $("#selectedInterface").width()) : newBounds[0]; 
     this.y = (newBounds[1] <= 1) ? Math.round(newBounds[1] * $("#selectedInterface").height()): newBounds[1];
     //console.log(this.width + " : " + this.height + " : "  +this.x + " : " + this.y);
-    this.fillDiv.style.width  = this.width - 2 + "px";
-    this.fillDiv.style.height = this.height - 2 + "px";
-    this.fillDiv.style.left = this.x  + "px";
-    this.fillDiv.style.top  = this.y  + "px";
+    this.container.style.width  = this.width - 2 + "px";
+    this.container.style.height = this.height - 2 + "px";
+    this.container.style.left = this.x  + "px";
+    this.container.style.top  = this.y  + "px";
     
-    if(typeof this.label != "undefined") {
-        this.label.setBounds(newBounds);
-    }
+    // if(typeof this.label != "undefined") {
+    //     this.label.setBounds(newBounds);
+    // }
 }
 
 Control.Button.prototype.drawLabel = function() {
@@ -344,6 +354,8 @@ Control.Button.prototype.event = function(event) {
     for (var j = 0; j < event.changedTouches.length; j++){
         var touch = event.changedTouches.item(j);
 		
+		if(this.name === "_2" || this.name === "_1")
+			console.log(this.name, touch.pageX, touch.pageY, this.x, this.y, this.width, this.height);
         var isHit = this.hitTest(touch.pageX, touch.pageY);
 		var breakCheck = this.events[event.type].call(this, touch, isHit);
 		
@@ -445,19 +457,20 @@ Control.Button.prototype.setValue = function(newValue) {
 
 Control.Button.prototype.show = function() {
     //this.draw();
-    this.fillDiv.style.display = "block";
+    this.container.style.display = "block";
 }
 
 Control.Button.prototype.hide = function() {
     //this.ctx.clearRect(this.x, this.y, this.width, this.height);    
-    this.fillDiv.style.display = "none";
+    this.container.style.display = "none";
 }
 
 Control.Button.prototype.unload = function() {
     //this.ctx.clearRect(this.x, this.y, this.width, this.height);
     if(typeof this.label !== 'undefined') {
-        Control.removeWidgetWithName(this.name + "Label");
+        //Control.removeWidgetWithName(this.name + "Label");
+		$(this.label).remove();
     }
 
-    this.ctx.removeChild(this.fillDiv);
+    this.ctx.removeChild(this.container);
 }

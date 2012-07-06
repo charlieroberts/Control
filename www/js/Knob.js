@@ -34,6 +34,7 @@ Control.Knob = function(ctx,props) {
 	else
 		this.lastPosition = -1;
 	
+    this.container = $("<div>");
 	this.canvas = document.createElement('canvas');
 	$(this.canvas).addClass('widget knob');
     
@@ -44,12 +45,21 @@ Control.Knob = function(ctx,props) {
 	
 	this.canvas.width = this.width;						// DO NOT USE STYLES TO RESIZE CANVAS OBJECT
 	this.canvas.height = this.width;					// DO NOT USE STYLES TO RESIZE CANVAS OBJECT
-	this.ctx.appendChild(this.canvas);
+    $(this.container).css({
+                          "top" : this.y,
+                          "left" : this.x,
+                          "width" : this.width,
+                          "height" : this.height,
+                          "position" : "absolute",
+    });
     
+	$(this.container).append(this.canvas);
+    $(this.ctx).append(this.container);
+
 	//this.canvas.style.border = "1px solid #fff";
-	this.canvas.style.top = this.y + "px";
-	this.canvas.style.left = this.x + "px";
-	this.canvas.style.position = "absolute";
+//	this.canvas.style.top = this.y + "px";
+//	this.canvas.style.left = this.x + "px";
+//	this.canvas.style.position = "absolute";
 	
     console.log("left : " + this.canvas.style.left + " || top : " + this.canvas.style.top);
     
@@ -354,11 +364,11 @@ Control.Knob.prototype.setBounds = function(newBounds) {
 }
 
 Control.Knob.prototype.show = function() {
-    this.canvas.style.display = "block";
+    this.container.display = "block";
 }
 
 Control.Knob.prototype.hide = function() {
-    this.canvas.style.display = "none";
+    this.container.display = "none";
 }
 
 Control.Knob.prototype.unload = function() {
@@ -366,5 +376,5 @@ Control.Knob.prototype.unload = function() {
         Control.removeWidgetWithName(this.name + "Label");
     }
 
-    this.ctx.removeChild(this.canvas);
+    this.ctx.removeChild(this.container);
 }

@@ -40,6 +40,8 @@ Control.Menu = function(ctx, props) {
 		"height": this.height,
 		"font-size": this.fontSize + "px",
 	});
+    
+    this.container = this.menu;
 	
     this.events = { 
         "touchstart": Control.Menu.prototype.touchstart, 
