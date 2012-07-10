@@ -28,16 +28,18 @@ Widget.prototype.make = function(ctx, props) {
 //            this.width  = ($("#selectedInterface").width() / 100) * Control.deviceWidth * props.width;
 //            this.height = ($("#selectedInterface").height() / 100) * Control.deviceHeight * props.height;
             
-            this.width = $("#selectedInterface").width() * props.width;
-            this.height = $("#selectedInterface").height() * props.height;
+            
+            this.width  = props.width  < 1 ? $("#selectedInterface").width() * props.width   : props.width;
+            this.height = props.height < 1 ? $("#selectedInterface").height() * props.height : props.height;
+            
             if(typeof props.x == "undefined") props.x = 0;
             if(typeof props.y == "undefined") props.y = 0;	
             
 //            this.x = ( ($("#selectedInterface").width() /  100) * Control.deviceWidth  * props.x) + .5;
 //            this.y = ( ($("#selectedInterface").height() / 100) * Control.deviceHeight * props.y) + .5;
-            this.x = ($("#selectedInterface").width() * props.x) + .5;
-            this.y = ($("#selectedInterface").height()* props.y) + .5;            
-            
+            this.x = props.x < 1 ? ($("#selectedInterface").width() * props.x) + .5 : props.x;
+            this.y = props.y < 1 ? ($("#selectedInterface").height()* props.y) + .5 : props.y;
+                        
             //console.log("x = " + props.x + " :: y = " + props.y + " :: width = " + props.width + " :: height = " + props.height);
 
             if(typeof props.colors != "undefined") {
@@ -117,20 +119,20 @@ Widget.prototype.make = function(ctx, props) {
 			"backgroundColor": "background color", 
 			"fillColor": "fill color", 
 			"strokeColor": "stroke color", 
-			// "min": "osc minimum value", 
-			// "max": "osc maximum value",
-			// "address": "osc address", 
-			// "midiMin": "MIDI minimum value", 
-			// "midiMax": "MIDI maximum value", 
-			// "midiType": "MIDI message type", 
-			// "channel": "MIDI Channel", 
-			// "midiNumber": "MIDI Number", 
-			// "value": "starting value",
-			// "ontouchstart": "ontouchstart",  
-			// "ontouchmove": "ontouchmove", 
-			// "ontouchend": "ontouchend", 
-			// "onvaluechange": "onvaluechange", 
-			// "oninit": "oninit", 
+			"min": "osc minimum value", 
+			"max": "osc maximum value",
+			"address": "osc address", 
+			"midiMin": "MIDI minimum value", 
+			"midiMax": "MIDI maximum value", 
+			"midiType": "MIDI message type", 
+			"channel": "MIDI Channel", 
+			"midiNumber": "MIDI Number", 
+			"value": "starting value",
+			"ontouchstart": "ontouchstart",  
+			"ontouchmove": "ontouchmove", 
+			"ontouchend": "ontouchend", 
+			"onvaluechange": "onvaluechange", 
+			"oninit": "oninit", 
 		};
 		
 	}		

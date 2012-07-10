@@ -14,41 +14,41 @@ Control.Slider = function(ctx, props) {
 	this.isXFader = (typeof props.isXFader != "undefined") ? props.isXFader : false;
 	
 	this.shouldUseCanvas = (typeof props.shouldUseCanvas != "undefined") ? props.shouldUseCanvas : false;
-	
+
 	this.fillDiv = null;
-	this.strokeDiv = null;
+    this.container = null;
     
     this.prevValue = this.value;
 	
 	this.pixelWidth  = 1 / Control.deviceWidth;
 	this.pixelHeight = 1 / Control.deviceHeight;
-    	
+
 	if(!this.shouldUseCanvas) {
-        this.container = $("<div>");
+        this.container = document.createElement("div");
         $(this.container).css({
                             "position": "absolute", 
-                            "width": this.width + "px",
-                            "height": this.height + "px", 
+                            "width": this.width - 2 +  "px",
+                            "height": this.height - 2 + "px", 
                             "left": this.x + "px", 
                             "top": this.y + "px",
-                            "background-color": "rgba(0,0,0,0)",
-                            "z-index": 0,
+                            "background-color": this.backgroundColor,
+                            "border": "1px solid " + this.strokeColor, 
+                            "z-index": 1,
                             });
-        
+        $(this.container).addClass('widget slider_stroke');
+
 		this.fillDiv   = document.createElement("div");
-		$(this.fillDiv).addClass('widget slider_fill'); 
 
 		$(this.fillDiv).css({
-			"position": "absolute", 
-			"width": this.width - 2 + "px",
-			"height": this.height - 2 + "px", 
-			"left": 1 + "px", 
-			"top": 1 + "px",
-			"background-color": this.fillColor,
+			"position": "relative", 
+			"width": "100%",    // this.width - 2 + "px",
+			"height": "100%",   // + "px", 
+            "background-color": this.fillColor,
 			"z-index": 10,
 
 		});
-        
+        $(this.fillDiv).addClass('widget slider_fill'); 
+
         if(this.isVertical) {
             this.fillDiv.style.webkitTransformOriginY = "100%";
         }else if(!this.isXFader) {
@@ -56,20 +56,6 @@ Control.Slider = function(ctx, props) {
         }
         
 		$(this.container).append(this.fillDiv);
-		
-		this.strokeDiv   = document.createElement("div");
-		$(this.strokeDiv).addClass('widget slider_stroke');
-		
-		$(this.strokeDiv).css({
-			"width": this.width - 2 + "px",
-			"height": this.height - 2 + "px", 
-			"position": "absolute", 
-			"background-color": this.backgroundColor,
-			"border": "1px solid " + this.strokeColor, 
-			"z-index": 1,  
-		});
-		
-		$(this.container).append(this.strokeDiv);
         
 	}else{
 		this.canvas = document.createElement('canvas');
@@ -88,50 +74,52 @@ Control.Slider = function(ctx, props) {
 
 		this.canvasCtx = this.canvas.getContext('2d');   
 	}
-	
+
     $(this.ctx).append(this.container);
+    this.container.widget = this;
+    this.fillDiv.widget = this;
 
 	this.displayValue = props.displayValue;
 	
 	if(typeof props.label != "undefined" || props.displayValue == true) {
 	    this.text = props.label || this.value;
 	    this.labelSize = props.labelSize || 12;
-
-	    {   //remove for canvas
-			var _width, _height, _x, _y;
-			if(this.isVertical) {
-				_width = props.width - (8 / Control.deviceWidth);
-				_height =  (this.labelSize + 4) / Control.deviceHeight;
-				_x = props.x;
-				_y = props.y + props.height - _height;
-			}else{
-				_width = (props.width / 3) - (8 / Control.deviceWidth);
-				_height = (this.labelSize + 4) / Control.deviceHeight;
-				_x = props.x + (props.width / 2) - ((props.width / 3) / 2);
-				_y = props.y + props.height - _height;
-			}
-			
-	        this.label = {
-				"name":   this.name + "Label",
-				"type":   "Label",
-				"bounds": [_x, _y, _width, _height],
-				"color":  this.strokeColor, 
-				"backgroundColor": "rgba(127, 127, 127, .75)",
-				"value": this.text,
-				"size":  props.labelSize || 12, 
-			 };
-                        
-	        var _w = Control.makeWidget(this.label);
-	        if(!Control.isAddingConstants)
-	            Control.addWidget(_w, Control.addingPage);
-	        else
-	            Control.addConstantWidget(_w);
-            
-	        this.label = _w;
-			$(this.label.label).css("padding", "0px 4px 0px 4px");
-		}
+//
+//	    {   //remove for canvas
+//			var _width, _height, _x, _y;
+//			if(this.isVertical) {
+//				_width = props.width - (8 / Control.deviceWidth);
+//				_height =  (this.labelSize + 4) / Control.deviceHeight;
+//				_x = props.x;
+//				_y = props.y + props.height - _height;
+//			}else{
+//				_width = (props.width / 3) - (8 / Control.deviceWidth);
+//				_height = (this.labelSize + 4) / Control.deviceHeight;
+//				_x = props.x + (props.width / 2) - ((props.width / 3) / 2);
+//				_y = props.y + props.height - _height;
+//			}
+//			
+//	        this.label = {
+//				"name":   this.name + "Label",
+//				"type":   "Label",
+//				"bounds": [_x, _y, _width, _height],
+//				"color":  this.strokeColor, 
+//				"backgroundColor": "rgba(127, 127, 127, .75)",
+//				"value": this.text,
+//				"size":  props.labelSize || 12, 
+//			 };
+//                        
+//	        var _w = Control.makeWidget(this.label);
+//	        if(!Control.isAddingConstants)
+//	            Control.addWidget(_w, Control.addingPage);
+//	        else
+//	            Control.addConstantWidget(_w);
+//            
+//	        this.label = _w;
+//			$(this.label.label).css("padding", "0px 4px 0px 4px");
+//		}
 	}
-	
+
 	if(this.isXFader) {
 		this.xFaderWidth = 50;
 		if(!this.shouldUseCanvas) {
@@ -292,6 +280,7 @@ Control.Slider.prototype.multiOutput = function() {
 }
 
 Control.Slider.prototype.draw = function() {
+    console.log("DRAWING");
     var range = this.max - this.min;
     var percent = (this.value + (0 - this.min)) / range;
     var prevPercent = (this.prevValue + (0 - this.min)) / range;
@@ -341,24 +330,17 @@ Control.Slider.prototype.setColors = function(newColors) {
     this.strokeColor = newColors[2];
     
     this.fillDiv.style.backgroundColor = this.fillColor;
-    this.strokeDiv.style.border = "1px solid" + this.strokeColor;
-    this.strokeDiv.style.backgroundColor = this.backgroundColor;
+    this.container.style.border = "1px solid" + this.strokeColor;
+    this.container.style.backgroundColor = this.backgroundColor;
 }
     
-Control.Slider.prototype.setBounds = function(newBounds) {
-    this.width = Math.round(newBounds[2] * $("#selectedInterface").width());
-    this.height = Math.round(newBounds[3] * $("#selectedInterface").height());
-    this.x = Math.round(newBounds[0] * $("#selectedInterface").width());
-    this.y = Math.round(newBounds[1] * $("#selectedInterface").height());
+Control.Slider.prototype.setBounds = function(newBounds) {    
+    this.x      = newBounds[0] <= 1 ? Math.round(newBounds[0] * $("#selectedInterface").width())  : newBounds[0];
+    this.y      = newBounds[1] <= 1 ? Math.round(newBounds[1] * $("#selectedInterface").height()) : newBounds[1];    
+    this.width  = newBounds[2] <= 1 ? Math.round(newBounds[2] * $("#selectedInterface").width())  : newBounds[2];
+    this.height = newBounds[3] <= 1 ? Math.round(newBounds[3] * $("#selectedInterface").height()) : newBounds[3];
     
-	$(this.fillDiv).css({
-	    "width" 	: this.width - 2 + "px",
-	    "height"	: this.height - 2 + "px",
-	    "left" 		: this.x + 1 + "px",
-	    "top"  		: this.y + 1 + "px",
-	});
-    
-	$(this.strokeDiv).css({
+	$(this.container).css({
 	    "width"  : this.width - 2 + "px",
 	    "height" : this.height - 2 + "px",
 	    "left"   : this.x  + "px",
@@ -372,6 +354,7 @@ Control.Slider.prototype.setBounds = function(newBounds) {
             this.fillDiv.style.left = (this.x + (this.value * this.width)) + 1 + "px";
         }
     }
+    this.fillDiv.style.webkitTransformOriginY = "100%";
     
     this.draw();
 	
@@ -394,21 +377,20 @@ Control.Slider.prototype.setBounds = function(newBounds) {
 
 Control.Slider.prototype.show = function() {
     if(!this.shouldUseCanvas) {
-        this.fillDiv.style.display = "block";
-        this.strokeDiv.style.display = "block";
+        $(this.container).css("display", "block");
     }else{
-        this.canvas.style.display = "block";
+        $(this.container).css("display", "block");
     }
+
     this.draw();
 }
 
 Control.Slider.prototype.hide = function() {
     //this.ctx.clearRect(this.x,this.y,this.width,this.height);
     if(!this.shouldUseCanvas) {
-        this.fillDiv.style.display = "none";
-        this.strokeDiv.style.display = "none";
+        $(this.container).css("display", "none");
     }else{
-        this.canvas.style.display = "none";
+        $(this.container).css("display", "none");
     }
 }
 
@@ -417,13 +399,6 @@ Control.Slider.prototype.unload = function() {
     if(typeof this.label !== 'undefined') {
         Control.removeWidgetWithName(this.name + "Label");
     }
-    if(!this.shouldUseCanvas) {
-        this.ctx.removeChild(this.fillDiv);
-        this.ctx.removeChild(this.strokeDiv);		
-    }else{
-
-		
-        this.ctx.removeChild(this.canvas);
-    }
+    this.ctx.removeChild(this.container);
 }
 

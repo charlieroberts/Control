@@ -1,8 +1,10 @@
 Control.Button = function(ctx, props) {
+    console.log("BUTTON START");
     this.make(ctx, props);
+    console.log(0);    
     this.ctx = ctx;
     this.mode = (typeof props.mode != "undefined") ? props.mode: "toggle";
-    
+    console.log(1);    
     this.widgetID = -1;
     
     this.activeTouches =  [];
@@ -11,7 +13,7 @@ Control.Button = function(ctx, props) {
     
     this.contactOn = false;	// used to trigger flash for contact mode buttons
 
-    
+    console.log(2);    
     // remove for canvas
     {   
         this.container   = document.createElement("div");
@@ -29,6 +31,7 @@ Control.Button = function(ctx, props) {
 		this.container.widget = this;
         
     }
+    console.log(3);    
     if (typeof props.label != "undefined") {
         this.text = props.label;
         this.labelSize = props.labelSize || 12;
@@ -61,7 +64,7 @@ Control.Button = function(ctx, props) {
     }
     this.ctx.appendChild(this.container);
 	
-	
+    console.log(4);
 	/*
 	(function(obj) {
 		var that = obj;
@@ -138,6 +141,7 @@ Control.Button = function(ctx, props) {
         "touchmove" : Control.Button.prototype.touchmove, 
         "touchend"  : Control.Button.prototype.touchend,
     };
+    console.log(5);    
     
     return this;
 }
@@ -354,8 +358,8 @@ Control.Button.prototype.event = function(event) {
     for (var j = 0; j < event.changedTouches.length; j++){
         var touch = event.changedTouches.item(j);
 		
-		if(this.name === "_2" || this.name === "_1")
-			console.log(this.name, touch.pageX, touch.pageY, this.x, this.y, this.width, this.height);
+		//if(this.name === "_2" || this.name === "_1")
+		//	console.log(this.name, touch.pageX, touch.pageY, this.x, this.y, this.width, this.height);
         var isHit = this.hitTest(touch.pageX, touch.pageY);
 		var breakCheck = this.events[event.type].call(this, touch, isHit);
 		

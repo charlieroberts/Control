@@ -412,6 +412,67 @@ Control.interfaceManager = {
             }
         }
     },
+	
+	saveInterface2 : function() {
+		var data = "Control.data = ";
+		data += typeof Control.data === "undefined" ? "{}" : JSON.stringify(Control.data);
+		data += ";\n";
+		
+		var functions = "Control.functions = ";
+		if(typeof Control.functions === "undefined" || Control.functions === null) {
+			functions += "{};\n";
+		}else{
+			functions += "{\n";
+			for(var key in Control.functions) {
+				functions += "{0} : {1},\n".format(key, Control.functions[key].toString() );
+			}
+			functions += "};\n";
+		}
+		
+		var _name = typeof Control.interface.name === "undefined" ? "" : Control.interface.name
+		var name = window.prompt("Enter a name for the interface", _name);
+		
+		var _interface = "Control.interface = {\n";
+		_interface += "name : \"{0}\",".format(name);
+		_interface += "orientation : \"{0}\",".format(Control.interface.orientation);		
+		
+		var constants = "constants : ";
+		constants += this.processArray(Control.constants) + "\n";
+		
+		var pages = "pages : ";
+		pages += this.processArray(Control.pages);
+		
+		_interface += "{0}{1}\n};".format(constants, pages);
+		var _json = data + functions + _interface;
+		console.log(_json);
+		this.saveInterface(_json, true);
+	},
+	
+	processArray : function(arr) {
+		var _arr = "[\n";
+		for(var j = 0; j < arr.length; j++) {
+			var w = arr[j];
+			if($.isArray(w)) {
+				_arr += this.processArray(w);
+				continue;
+			}
+			var obj = "{\n"
+			obj += "\"type\" : \"" + w.props.type + "\","; 
+			for(key in w.form) {
+				var value = w[key];
+				if(typeof value === "function") {
+					value = value.toString();
+				}else{
+					value = JSON.stringify(value);
+				}
+				obj += "\"{0}\" : {1},\n".format(key, value);					
+			}
+			obj += "},";
+			_arr += obj;
+		}
+		_arr += "\n],";
+		return _arr;
+	},
 
     pushInterfaceWithDestination: function(interfaceJSON, nameOfSender, newDestination) {
         if (typeof nameOfSender != "undefined") {
@@ -517,3 +578,21 @@ Control.interfaceManager = {
         Control.interfaceManager.runInterface(r.json);
     },
 };
+
+String.prototype.format = function(i, safe, arg) {
+
+    function format() {
+        var str = this,
+            len = arguments.length + 1;
+
+        for (i = 0; i < len; arg = arguments[i++]) {
+            safe = arg; //typeof arg === 'object' ? JSON.stringify(arg) : arg;
+            str = str.replace(RegExp('\\{' + (i - 1) + '\\}', 'g'), safe);
+        }
+        return str;
+    }
+
+    format.native = String.prototype.format;
+
+    return format;
+}();

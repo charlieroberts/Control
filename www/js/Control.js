@@ -109,6 +109,7 @@ window["Control"] = {
                 if(widget.name == widgetName) {
                     Control.pages[page].splice(j,1);
                     widget = null;
+                    return;
                 }
             }
         }
@@ -182,7 +183,9 @@ window["Control"] = {
         var _w;
         console.log("MAKING WIDGET " + w.name);
         if(!this.isWidgetSensor(w)) {
+            console.log("no sensor");
             _w = window[w.name] = new Control[w.type](this.interfaceDiv, w);
+            console.log("widget hooray!");            
             if(_w.init != null) { 
                 _w.init();
             }
