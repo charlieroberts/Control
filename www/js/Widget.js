@@ -37,8 +37,8 @@ Widget.prototype.make = function(ctx, props) {
             
 //            this.x = ( ($("#selectedInterface").width() /  100) * Control.deviceWidth  * props.x) + .5;
 //            this.y = ( ($("#selectedInterface").height() / 100) * Control.deviceHeight * props.y) + .5;
-            this.x = props.x < 1 ? ($("#selectedInterface").width() * props.x) + .5 : props.x;
-            this.y = props.y < 1 ? ($("#selectedInterface").height()* props.y) + .5 : props.y;
+            this.x = props.x < 1 ? ($("#selectedInterface").width() * props.x) : props.x;
+            this.y = props.y < 1 ? ($("#selectedInterface").height()* props.y) : props.y;
                         
             //console.log("x = " + props.x + " :: y = " + props.y + " :: width = " + props.width + " :: height = " + props.height);
 
@@ -111,28 +111,34 @@ Widget.prototype.make = function(ctx, props) {
         this.oninit		   = (typeof props.oninit        != "undefined") ? props.oninit        : null;
         
 		this.form = {
-			"name": "widget name", 
+			"_bounds_": "Position + Size", 
 			"width": "width", 
 			"height": "height", 
 			"x": "x",
 			"y": "y", 
+			"_colors_": "Colors", 
 			"backgroundColor": "background color", 
 			"fillColor": "fill color", 
 			"strokeColor": "stroke color", 
+			"_ranges_": "Ranges", 
 			"min": "osc minimum value", 
 			"max": "osc maximum value",
-			"address": "osc address", 
 			"midiMin": "MIDI minimum value", 
-			"midiMax": "MIDI maximum value", 
+			"midiMax": "MIDI maximum value",
+			"_destinations_": "Output Destination", 
+			"address": "osc address", 
 			"midiType": "MIDI message type", 
 			"channel": "MIDI Channel", 
-			"midiNumber": "MIDI Number", 
-			"value": "starting value",
+			"midiNumber": "MIDI Number",
+			"_event handlers_": "Event Handlers", 
 			"ontouchstart": "ontouchstart",  
 			"ontouchmove": "ontouchmove", 
 			"ontouchend": "ontouchend", 
 			"onvaluechange": "onvaluechange", 
 			"oninit": "oninit", 
+			"_misc_": "Miscellaneous", 
+			"value": "value",
+			"name": "widget js name",
 		};
 		
 	}		

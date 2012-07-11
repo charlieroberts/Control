@@ -1,19 +1,18 @@
 Control.Button = function(ctx, props) {
-    console.log("BUTTON START");
     this.make(ctx, props);
-    console.log(0);    
     this.ctx = ctx;
     this.mode = (typeof props.mode != "undefined") ? props.mode: "toggle";
-    console.log(1);    
+
     this.widgetID = -1;
     
     this.activeTouches =  [];
     
     this.requiresTouchDown = (typeof props.requiresTouchDown == "undefined") ? true : props.requiresTouchDown;
     
+    this.form.label = "label text";
+
     this.contactOn = false;	// used to trigger flash for contact mode buttons
 
-    console.log(2);    
     // remove for canvas
     {   
         this.container   = document.createElement("div");
@@ -29,42 +28,17 @@ Control.Button = function(ctx, props) {
 		});
 		
 		this.container.widget = this;
-        
     }
-    console.log(3);    
+	
+	this.initProperties();
+	
     if (typeof props.label != "undefined") {
-        this.text = props.label;
         this.labelSize = props.labelSize || 12;
-        
-        //remove for canvas
-        {   
-				//  this.label = {
-				// "name": this.name + "Label",
-				//  "type": "Label", 
-				//  "bounds":[props.x, props.y, props.width, props.height], 
-				//  "color":this.strokeColor, 
-				//  "value":this.text,
-				//  "size":props.labelSize || 12,
-				// 			 };
-				//             var _w = Control.makeWidget(this.label);
-				// 	        if(!Control.isAddingConstants) {
-				// 	            Control.addWidget(_w, Control.addingPage); // PROBLEM
-				// 	        }else{
-				//                 Control.constants.push(_w);
-				// 	            Control.addConstantWidget(_w); // PROBLEM
-				//             }
-				// 
-			this.label = $("<h3>");
-			$(this.label).css({color:"#ccc", "text-align" : "center", width: "100%" });
-			$(this.label).text(this.text);
-			console.log("LABEL", this.label);
-			$(this.container).append(this.label)    
-            //this.label = _w;
-        }
+        this.label = props.label;
     }
+	
     this.ctx.appendChild(this.container);
 	
-    console.log(4);
 	/*
 	(function(obj) {
 		var that = obj;
@@ -141,12 +115,42 @@ Control.Button = function(ctx, props) {
         "touchmove" : Control.Button.prototype.touchmove, 
         "touchend"  : Control.Button.prototype.touchend,
     };
-    console.log(5);    
     
     return this;
 }
 
 Control.Button.prototype = new Widget();
+
+Control.Button.prototype.initProperties = function() {
+    (function(obj) {
+	     var that = obj;
+		 var label = "";
+	     var width = that.width;
+	     var height = that.height;
+	     var x = that.x;
+	     var y = that.y;
+	 	
+		 Object.defineProperties(that, {
+			 "label" : {
+				 get : function() {
+					 return label;
+				 },
+				 set : function(value) {
+					 label = value;
+				 
+					 if(typeof that._label === "undefined") {
+			 			that._label = $("<h3>");
+			 			$(that.container).append(that._label);
+					}
+				
+		 			$(that._label).css({color:"#ccc", "text-align" : "center", width: "100%" });
+		 			$(that._label).text(that.label);
+				 }
+			 },
+		});
+	})(this);
+};
+
 
 Control.Button.prototype.flash = function(btn) {
 	return (function() {
