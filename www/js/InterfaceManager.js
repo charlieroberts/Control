@@ -11,8 +11,7 @@ Control.interfaceManager = {
         this.interfaceIP = null;
         constants = null;
 
-        this.interfaceDefaults = ["gyro.js", "djcut.js", "multibutton.js", "multiXY.js", "life.js", "iphoneLandscapeMixer.js", "sequencer.js", "monome.js"];
-        //                        "list.js", "list2.js", "list3.js", "list4.js", "list5.js", "list6.js", "list7.js"];
+        this.interfaceDefaults = ["gyro.js", "djcut.js", "multibutton.js", "multiXY.js", "life.js", "iphoneLandscapeMixer.js", "sequencer.js", "monome.js" , "list.js", "list2.js", "list3.js", "list4.js", "list5.js", "list6.js", "list7.js"];
 		
         //delete localStorage.interfaceFiles;
         Control.ifCount = 0;

@@ -9,8 +9,6 @@ Control.Button = function(ctx, props) {
     
     this.requiresTouchDown = (typeof props.requiresTouchDown == "undefined") ? true : props.requiresTouchDown;
     
-    this.form.label = "label text";
-
     this.contactOn = false;	// used to trigger flash for contact mode buttons
 
     // remove for canvas
@@ -35,6 +33,10 @@ Control.Button = function(ctx, props) {
     if (typeof props.label != "undefined") {
         this.labelSize = props.labelSize || 12;
         this.label = props.label;
+        $(this.container).css({
+			"line-height": this.height + "px",
+			"vertical-align" : "middle",
+		});
     }
 	
     this.ctx.appendChild(this.container);
@@ -121,6 +123,9 @@ Control.Button = function(ctx, props) {
 
 Control.Button.prototype = new Widget();
 
+Control.Button.prototype.form.label = "label text";
+
+
 Control.Button.prototype.initProperties = function() {
     (function(obj) {
 	     var that = obj;
@@ -143,7 +148,7 @@ Control.Button.prototype.initProperties = function() {
 			 			$(that.container).append(that._label);
 					}
 				
-		 			$(that._label).css({color:"#ccc", "text-align" : "center", width: "100%" });
+		 			$(that._label).css({margin:0, color:"#ccc", "text-align" : "center", width: "100%", height:that.height, "line-height":that.height+"px" });
 		 			$(that._label).text(that.label);
 				 }
 			 },
@@ -156,7 +161,7 @@ Control.Button.prototype.flash = function(btn) {
 	return (function() {
 		$(btn.container).css("background-color", btn.backgroundColor);
 	});
-}
+};
 
 Control.Button.prototype.draw = function() {
     //console.log("drawing " + this.value );
@@ -178,7 +183,7 @@ Control.Button.prototype.draw = function() {
 //        this.ctx.lineWidth = 1;
 //        this.ctx.strokeStyle = this.color;
 //        this.ctx.strokeRect(this.x, this.y, this.width, this.height);
-}
+};
 
 Control.Button.prototype.setColors = function(newColors) {
     this.backgroundColor = newColors[0];
@@ -186,7 +191,7 @@ Control.Button.prototype.setColors = function(newColors) {
     this.strokeColor = newColors[2] || this.strokeColor;
     
     this.draw();
-}
+};
 
 Control.Button.prototype.setBounds = function(newBounds) {
     this.width = (newBounds[2] <= 1) ? Math.round(newBounds[2]  * $("#selectedInterface").width()) : newBounds[2];
@@ -202,7 +207,7 @@ Control.Button.prototype.setBounds = function(newBounds) {
     // if(typeof this.label != "undefined") {
     //     this.label.setBounds(newBounds);
     // }
-}
+};
 
 Control.Button.prototype.drawLabel = function() {
     if (typeof this.text != "undefined") {
@@ -214,7 +219,7 @@ Control.Button.prototype.drawLabel = function() {
         
         this.ctx.fillText(this.text, this.x + this.width / 2, this.y + this.height / 2);
     }
-}
+};
 
 Control.Button.prototype.touchstart = function(touch, isHit) {
     if (isHit) {
@@ -252,7 +257,7 @@ Control.Button.prototype.touchstart = function(touch, isHit) {
 		return true;      
     }
 	return false;
-}
+};
 
 Control.Button.prototype.touchmove = function(touch, isHit) {
     var shouldChange = !this.requiresTouchDown;
@@ -324,7 +329,7 @@ Control.Button.prototype.touchmove = function(touch, isHit) {
         this.output(); // will use last value sent and also change pressure
     }
 	return false;
-}
+};
 
 Control.Button.prototype.touchend = function(touch, isHit) {
     if (isHit || this.mode == "latch" || this.mode == "momentary") {
@@ -358,6 +363,7 @@ Control.Button.prototype.events = {
     "touchmove" : Control.Button.prototype.touchmove, 
     "touchend"  : Control.Button.prototype.touchend,
 };
+
 Control.Button.prototype.event = function(event) {
     for (var j = 0; j < event.changedTouches.length; j++){
         var touch = event.changedTouches.item(j);
@@ -365,11 +371,12 @@ Control.Button.prototype.event = function(event) {
 		//if(this.name === "_2" || this.name === "_1")
 		//	console.log(this.name, touch.pageX, touch.pageY, this.x, this.y, this.width, this.height);
         var isHit = this.hitTest(touch.pageX, touch.pageY);
+		//if(isHit) console.log("HIT", this.name);
 		var breakCheck = this.events[event.type].call(this, touch, isHit);
 		
         if(breakCheck) break;
     }
-}
+};
 
 Control.Button.prototype.output = function() {
     var pressure;
@@ -400,7 +407,7 @@ Control.Button.prototype.output = function() {
         
         Control.valuesString += valueString;
     }
-}
+};
 // used instead of output when button is part of a multibutton widget
 Control.Button.prototype.multiOutput = function() {
     var pressure;
@@ -429,7 +436,7 @@ Control.Button.prototype.multiOutput = function() {
         }
         Control.valuesString += valueString;
     }
-}
+};
 
 Control.Button.prototype.setValue = function(newValue) {
     this.value = newValue;
@@ -461,17 +468,17 @@ Control.Button.prototype.setValue = function(newValue) {
     if (! (arguments[1] === false)) {
         this.output();
     }
-}
+};
 
 Control.Button.prototype.show = function() {
     //this.draw();
     this.container.style.display = "block";
-}
+};
 
 Control.Button.prototype.hide = function() {
     //this.ctx.clearRect(this.x, this.y, this.width, this.height);    
     this.container.style.display = "none";
-}
+};
 
 Control.Button.prototype.unload = function() {
     //this.ctx.clearRect(this.x, this.y, this.width, this.height);
@@ -481,4 +488,4 @@ Control.Button.prototype.unload = function() {
     }
 
     this.ctx.removeChild(this.container);
-}
+};

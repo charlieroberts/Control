@@ -47,6 +47,7 @@ protected:
 			}
 			
 			[jsString appendString:@");"];
+            NSLog(@"%@", jsString);
 			[_oscManager.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsString waitUntilDone:NO];
 		}
 		[pool drain];

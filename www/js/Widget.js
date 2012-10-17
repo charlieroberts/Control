@@ -29,8 +29,8 @@ Widget.prototype.make = function(ctx, props) {
 //            this.height = ($("#selectedInterface").height() / 100) * Control.deviceHeight * props.height;
             
             
-            this.width  = props.width  < 1 ? $("#selectedInterface").width() * props.width   : props.width;
-            this.height = props.height < 1 ? $("#selectedInterface").height() * props.height : props.height;
+            this.width  = props.width  <= 1 ? $("#selectedInterface").width() * props.width   : props.width;
+            this.height = props.height <= 1 ? $("#selectedInterface").height() * props.height : props.height;
             
             if(typeof props.x == "undefined") props.x = 0;
             if(typeof props.y == "undefined") props.y = 0;	
@@ -109,49 +109,48 @@ Widget.prototype.make = function(ctx, props) {
 		this.ontouchend    = (typeof props.ontouchend    != "undefined") ? props.ontouchend    : null;
         this.onvaluechange = (typeof props.onvaluechange != "undefined") ? props.onvaluechange : null;
         this.oninit		   = (typeof props.oninit        != "undefined") ? props.oninit        : null;
-        
-		this.form = {
-			"_bounds_": "Position + Size", 
-			"width": "width", 
-			"height": "height", 
-			"x": "x",
-			"y": "y", 
-			"_colors_": "Colors", 
-			"backgroundColor": "background color", 
-			"fillColor": "fill color", 
-			"strokeColor": "stroke color", 
-			"_ranges_": "Ranges", 
-			"min": "osc minimum value", 
-			"max": "osc maximum value",
-			"midiMin": "MIDI minimum value", 
-			"midiMax": "MIDI maximum value",
-			"_destinations_": "Output Destination", 
-			"address": "osc address", 
-			"midiType": "MIDI message type", 
-			"channel": "MIDI Channel", 
-			"midiNumber": "MIDI Number",
-			"_event handlers_": "Event Handlers", 
-			"ontouchstart": "ontouchstart",  
-			"ontouchmove": "ontouchmove", 
-			"ontouchend": "ontouchend", 
-			"onvaluechange": "onvaluechange", 
-			"oninit": "oninit", 
-			"_misc_": "Miscellaneous", 
-			"value": "value",
-			"name": "widget js name",
-		};
-		
 	}		
 	
 	return this;
 }
+
+Widget.prototype.form = {
+    "_bounds_": "Position + Size", 
+    "width": "width", 
+    "height": "height", 
+    "x": "x",
+    "y": "y", 
+    "_colors_": "Colors", 
+    "backgroundColor": "background color", 
+    "fillColor": "fill color", 
+    "strokeColor": "stroke color", 
+    "_ranges_": "Ranges", 
+    "min": "osc minimum value", 
+    "max": "osc maximum value",
+    "midiMin": "MIDI minimum value", 
+    "midiMax": "MIDI maximum value",
+    "_destinations_": "Output Destination", 
+    "address": "osc address", 
+    "midiType": "MIDI message type", 
+    "channel": "MIDI Channel", 
+    "midiNumber": "MIDI Number",
+    "_event handlers_": "Event Handlers", 
+    "ontouchstart": "ontouchstart",  
+    "ontouchmove": "ontouchmove", 
+    "ontouchend": "ontouchend", 
+    "onvaluechange": "onvaluechange", 
+    "oninit": "oninit", 
+    "_misc_": "Miscellaneous", 
+    "value": "value",
+    "name": "widget js name",
+};
 
 Widget.prototype.setRange = function(min, max) {
     this.min = min;
     this.max = max;
     
     this.setValue(this.value);
-}
+};
 
 Widget.prototype.hitTest = function(x,y) { 
 	if(x >= this.x && x < this.x + this.width) {
@@ -160,7 +159,7 @@ Widget.prototype.hitTest = function(x,y) {
 		} 
 	}
 	return false;
-}
+};
 
 Widget.prototype.setValue = function(newValue) {
     if(newValue > this.max) { 
@@ -180,7 +179,7 @@ Widget.prototype.setValue = function(newValue) {
     
 	if(!(arguments[1] === false))
 		this.output();
-}
+};
 
 Widget.prototype.setValueNoOutput = function(newValue) {
 	if(newValue > this.max) { 
@@ -191,7 +190,7 @@ Widget.prototype.setValueNoOutput = function(newValue) {
     this.value = newValue;
     this.draw();    
     eval(this.onvaluechange);
-}
+};
 
 Widget.prototype.output = function() {
     var pressure;
@@ -224,9 +223,8 @@ Widget.prototype.output = function() {
         }
 
         Control.valuesString += valueString;
-    }
-    
-}
+    }  
+};
 
 Widget.prototype.event = function(event) {
     if(event.type != "touchend") {
@@ -235,4 +233,4 @@ Widget.prototype.event = function(event) {
           this.changeValue(touch.pageX);
         }
     }
-}
+};

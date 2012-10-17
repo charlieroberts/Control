@@ -181,7 +181,7 @@ window["Control"] = {
     
     makeWidget : function(w) {
         var _w;
-        console.log("MAKING WIDGET " + w.name);
+        //console.log("MAKING WIDGET " + w.name);
         if(!this.isWidgetSensor(w)) {
             _w = window[w.name] = new Control[w.type](this.interfaceDiv, w);
             if(_w.init != null) { 

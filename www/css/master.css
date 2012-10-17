@@ -15,6 +15,10 @@ body {
 
 b { font-weight: bold; }
 
+#wrapper {
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+}
 #wrapper > * {
     -webkit-transform: translateZ(0px);
 }

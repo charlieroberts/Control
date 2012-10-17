@@ -243,7 +243,7 @@ Control.interfaceManager = {
             e.preventDefault();
         });
 
-        promptDiv.setAttribute("style", "z-index:2; left:0px; top:0px; position:absolute; background-color:rgba(0,0,0,.8); width:100%; height:100%;");
+        promptDiv.setAttribute("style", "z-index:1000; left:0px; top:0px; position:absolute; background-color:rgba(0,0,0,.8); width:100%; height:100%;");
         promptDiv.setAttribute("id", "promptDiv");
         promptDiv.appendChild(inputHeader);
         promptDiv.appendChild(input);

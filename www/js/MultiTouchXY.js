@@ -2,6 +2,7 @@ gNOT_ACTIVE = -10000;
 // TODO: touches don't adjust position when range is set via osc
 Control.MultiTouchXY = function(ctx, props) {
     this.make(ctx, props);
+    console.log("XY " + this.width + " : " + this.height);
     this.xvalue = this.min;
     this.yvalue = this.min;
     this.zvalue = false;

@@ -280,7 +280,6 @@ Control.Slider.prototype.multiOutput = function() {
 }
 
 Control.Slider.prototype.draw = function() {
-    console.log("DRAWING");
     var range = this.max - this.min;
     var percent = (this.value + (0 - this.min)) / range;
     var prevPercent = (this.prevValue + (0 - this.min)) / range;
