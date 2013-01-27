@@ -11,7 +11,6 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVCaptureOutput.h>
 #import "PGPlugin.h"
-#import "IOSGLView.h"
 
 @interface CNTRLVideo : PGPlugin<AVCaptureVideoDataOutputSampleBufferDelegate> {
 	AVCaptureSession *captureSession;
@@ -20,8 +19,6 @@
     
     BOOL shouldShowModifiedVideo;
     NSTimer *timer;
-    
-    IOSGLView *videoView;
 }
 
 - (void) addVideoInput;

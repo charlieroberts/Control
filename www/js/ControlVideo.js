@@ -28,7 +28,7 @@ Control.Video = function(ctx, props) {
     
 	console.log("MADE A VIDEO OBJECT");
 	Control.video = this;
-    this.start();
+    this.start(this.x, this.y, this.width, this.height);
     
     return this;
 }
@@ -77,7 +77,7 @@ Control.Video.prototype.draw = function() {}
 
 Control.Video.prototype.start = function() {
     console.log("STARTING VIDEO");
-    PhoneGap.exec("Video.start", null);
+    PhoneGap.exec(null, null, "Video", "start", [this.x, this.y, this.width, this.height]);
 }
 
 Control.Video.prototype.unload = function() {

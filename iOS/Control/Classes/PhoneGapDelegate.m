@@ -9,10 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 
-#import "Location.h"
-#import "Sound.h"
+//#import "Location.h"
+//#import "Sound.h"
 #import "DebugConsole.h"
-#import "Connection.h"
+//#import "Connection.h"
 
 #import "PGURLProtocol.h"
 #import "PGWhitelist.h"
@@ -504,15 +504,15 @@ BOOL gSplashScreenShown = NO;
 //	[devProps setObject:[NSString stringWithFormat:@"%f", del.window.frame.size.width] forKey:@"width"];
 //	[devProps setObject:[NSString stringWithFormat:@"%f",del.window.frame.size.height] forKey:@"height"];	
     
-    id cmd = [self getCommandInstance:@"com.phonegap.connection"];
-    if (cmd && [cmd isKindOfClass:[PGConnection class]]) 
-    {
-        NSMutableDictionary *connProps = [NSMutableDictionary dictionaryWithCapacity:3];
-        if ([cmd respondsToSelector:@selector(connectionType)]) {
-            [connProps setObject:[cmd connectionType] forKey:@"type"];
-        }
-        [devProps setObject:connProps forKey:@"connection"];
-    }
+//    id cmd = [self getCommandInstance:@"com.phonegap.connection"];
+//    if (cmd && [cmd isKindOfClass:[PGConnection class]]) 
+//    {
+//        NSMutableDictionary *connProps = [NSMutableDictionary dictionaryWithCapacity:3];
+//        if ([cmd respondsToSelector:@selector(connectionType)]) {
+//            [connProps setObject:[cmd connectionType] forKey:@"type"];
+//        }
+//        [devProps setObject:connProps forKey:@"connection"];
+//    }
     
     NSDictionary *devReturn = [NSDictionary dictionaryWithDictionary:devProps];
     return devReturn;
