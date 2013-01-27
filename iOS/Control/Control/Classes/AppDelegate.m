@@ -37,6 +37,7 @@
 		NSURL *url = [launchOptions objectForKey:[keyArray objectAtIndex:0]];
 		self.invokeString = [url absoluteString];
 		NSLog(@"Control launchOptions = %@",url);
+        [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 	}
     NSLog(@"APP LAUNCHED");
 	

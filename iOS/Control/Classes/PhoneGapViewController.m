@@ -82,6 +82,10 @@
     return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
 }
 
+-(NSUInteger)supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskLandscapeRight | UIInterfaceOrientationMaskLandscapeRight | UIInterfaceOrientationPortrait;
+}
+
 /**
  Called by UIKit when the device starts to rotate to a new orientation.  This fires the \c setOrientation
  method on the Orientation object in JavaScript.  Look at the JavaScript documentation for more information.
