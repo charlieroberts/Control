@@ -27,6 +27,30 @@ static void notifyProc(const MIDINotification *message, void *refCon) {// if MID
 static void readProc(const MIDIPacketList *pktlist, void *refCon, void *connRefCon) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	MIDIPacket *packet = (MIDIPacket *)pktlist->packet; 
+
+  // most (all?) normal MIDI messages are less than 4 bytes long and i can't 
+  // find any way to ask if this is a SysEx packet, so this is a hack. we assume
+  // that if the packet length is > 3, then this is a SysEx message. also, this
+  // does not handle the case where a SysEx message has been broken into many
+  // packets. a SysEx message is basically just a list of bytes. here we build
+  // up a js array of ints (e.g. [1,2,3]) and pass it to processSysExMessage().
+  //   -- karl yerkes
+  if (packet->length > 3) {
+    NSMutableString* mutableString = [NSMutableString
+      stringWithFormat:@"midiManager.processSysExMessage([%d",
+      packet->data[0]];
+    for (int i = 1; i < packet->length; ++i)
+      [mutableString appendFormat:@",%d", (int)packet->data[i]];
+    [mutableString appendFormat:@"]);"];
+
+    [me.webView
+      performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:)
+      withObject:mutableString
+      waitUntilDone:NO];
+
+    [pool drain];
+    return; // exit this function
+  }
 	
 	int packetStart = packet->data[0];
 	int channel = (packetStart &= 15) + 1;
