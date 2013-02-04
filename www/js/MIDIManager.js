@@ -4,6 +4,29 @@ function MIDIManager() {
 	return this;
 }
 
+MIDIManager.prototype.processSysExMessage = function(value) {	
+	this.delegate.processSysEx(value);
+}	
+
+MIDIManager.prototype.processSysEx = function(value) {
+	if (typeof control.constants != "undefined") {
+    for (var i = 0; i < control.constants.length; i++) {
+      var w = control.constants[i];
+		  if (w.midiType == "sysex") {
+        w.setValue(value, false); // "value" is an array of ints
+        break;
+      }
+    }
+  }
+	for (var i = 0; i < control.widgets.length; i++) {
+		var w = control.widgets[i];
+    if (w.midiType == "sysex") {
+      w.setValue(value, false); // "value" is an array of ints
+      break;
+    }
+  }
+}
+
 MIDIManager.prototype.processMIDIMessage = function(msgType, channel, number, value) {	
 	this.delegate.processMIDI(msgType, channel, number, value);
 }	
