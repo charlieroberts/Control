@@ -37,9 +37,9 @@ RectBlobDetect::RectBlobDetect() {
   //videoTexture = rh->CreateTextureFromImageFile("blobTest1.png");
   
   //videoTexture = rh->CreateVideoTexture("AlloPano5Mbps.mov",  false, false, true);
-  videoTexture = rh->CreateVideoTexture("testvid.m4v", false, false, true);
+//  videoTexture = rh->CreateVideoTexture("testvid.m4v", false, false, true);
   
-  //videoTexture = rh->CreateVideoCaptureTexture(); //pass in resolution, also camera (front or back)!
+  videoTexture = rh->CreateVideoCaptureTexture(); //pass in resolution, also camera (front or back)!
   videoTexture->SetFilterModes(GL_NEAREST,GL_NEAREST);
   
   

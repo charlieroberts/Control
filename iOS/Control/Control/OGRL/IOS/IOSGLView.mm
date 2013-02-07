@@ -5,6 +5,9 @@
 #import "IOSGLView.h"
 
 
+#import "RendererBlobDetector.h"
+
+
 @implementation IOSGLView
 @synthesize m_renderer;
 @synthesize m_context;
@@ -23,8 +26,9 @@ bool USE_RETINA = NO;
 - (void) initRenderer:(CAEAGLLayer*) eaglLayer {
   
   //set the Renderer that you want to use in the AppDelegate via the GetRenderer function
-  AppDelegate* app =  (( AppDelegate* )[[ UIApplication sharedApplication ] delegate ]);
-  m_renderer = (Renderer*)[app GetRenderer];
+  //AppDelegate* app =  (( AppDelegate* )[[ UIApplication sharedApplication ] delegate ]);
+  //m_renderer = (Renderer*)[app GetRenderer];
+    m_renderer = new RendererBlobDetector();
   
 
   /*

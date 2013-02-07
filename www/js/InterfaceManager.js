@@ -11,21 +11,23 @@ Control.interfaceManager = {
         this.interfaceIP = null;
         constants = null;
 
-        this.interfaceDefaults = ["gyro.js", "djcut.js", "multibutton.js", "multiXY.js", "life.js", "iphoneLandscapeMixer.js", "sequencer.js", "monome.js" , "list.js", "video.js"];
+        this.interfaceDefaults = ["gyro.js", "djcut.js", "multibutton.js", "multiXY.js", "life.js", "iphoneLandscapeMixer.js", "sequencer.js", "monome.js" , "video.js"];
 		
         //delete localStorage.interfaceFiles;
         Control.ifCount = 0;
-        if (typeof localStorage.interfaceFiles == "undefined") {
-            this.loadedInterfaces = [];
-            //var msg = "now loading default interfaces. this will only happen the first time the app is launched (possibly also after updates) and takes about 8 seconds";
-            //navigator.notification.alert(msg, null, "loading");
-            setTimeout(function() {
-                Control.interfaceManager.loadScripts();
-            }, 1000);
-        } else {
-            this.loadedInterfaces = JSON.parse(localStorage.interfaceFiles);
-            this.createInterfaceListWithArray(this.loadedInterfaces);
-        }
+//        if (typeof localStorage.interfaceFiles == "undefined") {
+//            this.loadedInterfaces = [];
+//            //var msg = "now loading default interfaces. this will only happen the first time the app is launched (possibly also after updates) and takes about 8 seconds";
+//            //navigator.notification.alert(msg, null, "loading");
+//            setTimeout(function() {
+//                Control.interfaceManager.loadScripts();
+//            }, 1000);
+//        } else {
+//            this.loadedInterfaces = JSON.parse(localStorage.interfaceFiles);
+//            this.createInterfaceListWithArray(this.loadedInterfaces);
+//        }
+        Control.interfaceManager.loadScripts();
+
     },
 
     loadScripts: function() {
