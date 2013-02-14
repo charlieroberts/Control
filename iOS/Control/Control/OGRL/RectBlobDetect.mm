@@ -34,11 +34,12 @@ RectBlobDetect::RectBlobDetect() {
   
   ResourceHandler* rh = ResourceHandler::GetResourceHandler();
   
+  //For debugging without video camera feed (with a video file or a static image...)
   //videoTexture = rh->CreateTextureFromImageFile("blobTest1.png");
-  
   //videoTexture = rh->CreateVideoTexture("AlloPano5Mbps.mov",  false, false, true);
-//  videoTexture = rh->CreateVideoTexture("testvid.m4v", false, false, true);
+  //videoTexture = rh->CreateVideoTexture("testvid.m4v", false, false, true);
   
+  //Currently defaulting to lowest resolution...
   videoTexture = rh->CreateVideoCaptureTexture(); //pass in resolution, also camera (front or back)!
   videoTexture->SetFilterModes(GL_NEAREST,GL_NEAREST);
   
@@ -72,7 +73,6 @@ bool RectBlobDetect::CheckIfLegalBlob(Blob* b) {
   printf("num pixels = %d\n", b->numPixels);
   printf("tot pixels = %d\n", b->CalculateSize());
   printf("%d/%d/%d/%d\n", b->left, b->right, b->bottom, b->top);
-  
   
   printf("Density = %f\n", b->CalculateDensity(PIXEL_SKIP));
   printf("Size = %d\n", b->CalculateSize()); 
@@ -140,11 +140,13 @@ void RectBlobDetect::Draw() {
     maxGreen = infoPanel->GetGreen().y;
     minBlue = infoPanel->GetBlue().x;
     maxBlue = infoPanel->GetBlue().y;
-    
+  
+      /*
     printf("Was updated... minRed/maxRed = %d/%d\n", minRed, maxRed);
     printf("Was updated... minG/maxG = %d/%d\n", minGreen, maxGreen);
     printf("Was updated... minB/maxB = %d/%d\n", minBlue, maxBlue);
-    
+       */
+      
     infoPanel->isUpdated = false;
   }
   
@@ -153,31 +155,22 @@ void RectBlobDetect::Draw() {
    float averageLuma = AverageLuma(videoTexture, PIXEL_SKIP);
    // printf("? averageLuma = %f\n", averageLuma);
   
-  //  printf("in Draw : drawing...\n");
-  
-  
-  
-//  printf("out Draw : released...\n");
-  
   Geom* blobGeom = blobCircle;
   Geom* blobGeom2 = blobRect;
   
   
   
-  program = GetProgram("FlatShader");
+  program = GetProgram("FlatShader");  
   
-  float BLOB_ASPECT = root->aspect;
-  //   if (IS_CAMERA) {
-  BLOB_ASPECT = (float)root->viewport.w/(float)root->viewport.z;
-  
-  //   }
-  
+  //float BLOB_ASPECT = root->aspect;
+  //float BLOB_ASPECT = (float)root->viewport.w/(float)root->viewport.z; //do we need to recalc this every frame??
   
   
   Blob* topBlob = NULL;
-  int cb;
   list<Blob*>::iterator it = blobs.begin();
-  
+ 
+  int cb;
+    
   for(cb = 0, it = blobs.begin(); it != blobs.end(); ++it, ++cb){
     if ( cb == 0 ) {
       topBlob = (*it);
@@ -199,6 +192,14 @@ void RectBlobDetect::Draw() {
       
       if (topBlob != NULL) {
         
+          vec3 b2_t = blobGeom2->GetTranslate();
+          float b2_w = ((Rectangle*)blobGeom2)->GetWidth();
+          float b2_h = ((Rectangle*)blobGeom2)->GetHeight();
+
+          
+          //printf("topBlob bounds %f, %f, %f, %f\n", b2_t.x, b2_t.y, b2_w, b2_h);
+          
+          
       program->Bind(); {
         
         /*
@@ -227,13 +228,31 @@ void RectBlobDetect::Draw() {
         glUniformMatrix4fv(program->Uniform("Projection"), 1, 0, root->projection.Pointer());
         glUniform4fv(program->Uniform("Color"), 1, vec4(0,1,0,1).Pointer());
         blobGeom2->PassVertices(program, GL_LINES);
+          
+          
+          
         }
       }program->Unbind();
     } fbo->Unbind();
     
     
-  
-  
+    if (topBlob != NULL) {
+        
+        /* Here is where I calculate the centroid of the main blob - this will be used to send OSC message */
+        /* values are between 0.0->1.0 from top->bottom and left->right */
+        float Y_raw = (topBlob->bottom + topBlob->top) / 2.0;
+        float X_raw = (topBlob->left + topBlob->right) / 2.0;
+
+        float vp_w = (filterTexture->width);
+        float vp_h = (filterTexture->height);
+        
+        float OSC_X = Y_raw /  vp_h;
+        float OSC_Y = X_raw /  vp_w;
+        
+        printf(" OSC_X, OSC_Y = %f %f\n", OSC_X, OSC_Y);
+        
+        // TODO... charlieOSC(OSC_X, OSC_Y);
+    }
   
   Renderer::GetRenderer()->BindDefaultFrameBuffer();
   ivec4 vp = root->viewport;
