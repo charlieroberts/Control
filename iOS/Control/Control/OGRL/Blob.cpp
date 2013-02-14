@@ -6,6 +6,7 @@
 //for blob made from a starting pixel seed
 Blob::Blob(ivec2 pixel) {
 
+    //Hey
   numPixels = 0;
     left = pixel.x;
     right = pixel.x;

@@ -7,7 +7,7 @@
 
 
 #define PIXEL_SKIP 15
-#define IS_CAMERA 0
+#define IS_CAMERA 1
 #define USE_RGB_THRESHOLDS 1
 
 
@@ -469,11 +469,31 @@ void RectBlobDetect::HandleSelectedPixel() {
 
 void RectBlobDetect::ChooseSelectedPixel(ivec2 mouse) {
   
+    if (mouse.x < 0.0 || mouse.y < 0.0) {
+        printf("mouse too small!\n");
+        pixelSelected = false;
+        return;
+        
+    }
   vec3 objPt = mat4::Unproject(mouse.x, mouse.y, 0, ROT_MV, root->projection, root->viewport);
   objPt.Print("RectBlobDetect : mouse in 3D Coords = ");
-  
+    
+    if (objPt.x < 0.0 || objPt.y < 0.0 || objPt.x >= 1.0 || objPt.y >= 1.0) {
+        printf("objPt out of bounds!\n");
+        pixelSelected = false;
+        return;
+        
+    }
   pixelPt = ivec2(objPt.x * videoTexture->width, objPt.y * videoTexture->height);
-  pixelSelected = true;
+  
+    if (pixelPt.x < 0 || pixelPt.y < 0) {
+        printf("pixelPt too small!\n");
+        pixelSelected = false;
+        return;
+        
+    }
+    
+    pixelSelected = true;
 }
 
 void RectBlobDetect::HandleTouchMoved(ivec2 prevMouse, ivec2 mouse) {
