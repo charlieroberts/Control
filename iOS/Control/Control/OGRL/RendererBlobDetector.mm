@@ -147,28 +147,5 @@ void RendererBlobDetector::HandleLongPress(ivec2 mouse) {
   }
 }
 
-/*
-    
-
-  
-  //REAL ONE //think about...
-  if (ResourceHandler::GetResourceHandler()->IsUsingGyro()) {
-    transVals.y+=(mouse.y - prevMouse.y) * .001;
-    transVals.x+=(mouse.x - prevMouse.x) * .001;
-  } else {
-    rotVals.x+=(mouse.y - prevMouse.y) * .2;
-    rotVals.y+=(prevMouse.x - mouse.x) * .2;
-  }
-  
-  //  tc->moveCamX((prevMouse.x - mouse.x) * .002);
-  //  
-  //  tc->moveCamY((mouse.y - prevMouse.y) * .002);
-  //  tc->Transform();
-  //CheckScale();
-}
-*/
-
-//void RendererBlobDetector::Draw() {}
-//bool RendererBlobDetector::ContainsWindowPoint(ivec2 windowPt) { return false; }
 
 
