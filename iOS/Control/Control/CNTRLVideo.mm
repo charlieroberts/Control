@@ -73,19 +73,19 @@
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     for(UITouch *t in touches) {
         CGPoint p = [t locationInView:videoView];
-        NSLog(@"touch %u = %.0f", [t hash], p.x);
+        //NSLog(@"touch %u = %.0f", [t hash], p.x);
     }
 }
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     for(UITouch *t in touches) {
         CGPoint p = [t locationInView:videoView];
-        NSLog(@"touch %u = %.0f", [t hash], p.x);
+        //NSLog(@"touch %u = %.0f", [t hash], p.x);
     }
 }
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     for(UITouch *t in touches) {
         CGPoint p = [t locationInView:videoView];
-        NSLog(@"touch %u = %.0f", [t hash], p.x);
+        //NSLog(@"touch %u = %.0f", [t hash], p.x);
     }
 }
 

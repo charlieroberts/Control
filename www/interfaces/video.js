@@ -26,7 +26,7 @@ Control.interface = {
 	{
 		"name": "videoDisplay", 
 		"type": "Video", 
-		"bounds": [0, 0, .9, .9],
+		"bounds": [0, 0, 1, .9],
 	},
 	]],
 };
