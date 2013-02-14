@@ -31,7 +31,7 @@ Renderer::Renderer() {
 void Renderer::Transform() {
   //if (IsTransformed()) {
   //modelview = GetModelView(); //return camera's modelview
-  printf("in Renderer::Transform(), this should never be called!\n");
+  //printf("in Renderer::Transform(), this should never be called!\n");
 }
 
 
@@ -41,7 +41,7 @@ mat4 Renderer::GetModelView() {
   //printf("in Renderer GetModelView()\n");
   //return GetCamera()->GetModelView();
   //return modelview;
-  printf("in Renderer::GetModelView(), this should never be called!\n");
+  //printf("in Renderer::GetModelView(), this should never be called!\n");
   return mat4::Identity();
 }
 

@@ -17,14 +17,14 @@ Control.Video = function(ctx, props) {
 	this.ctx.appendChild(this.canvas);
 	this.canvasCtx = this.canvas.getContext('2d');
 	
-	// if(Control.protocol == "MIDI") {
-	// 	this.max = (typeof props.midiMax != "undefined") ? props.midiMax : 127;
-	// 	this.min = (typeof props.midiMin != "undefined") ? props.midiMin : 0;
-	// }else{
-	// 	this.max = (typeof props.max != "undefined") ? props.max : 360;
-	// 	this.min = (typeof props.min != "undefined") ? props.min : 0;			
-	// }
-	// this.userDefinedRange = this.max - this.min;
+	if(Control.protocol == "MIDI") {
+		this.max = (typeof props.midiMax != "undefined") ? props.midiMax : 127;
+		this.min = (typeof props.midiMin != "undefined") ? props.midiMin : 0;
+	}else{
+		this.max = (typeof props.max != "undefined") ? props.max : 1;
+		this.min = (typeof props.min != "undefined") ? props.min : 0;			
+	}
+	this.userDefinedRange = this.max - this.min;
     
 	console.log("MADE A VIDEO OBJECT");
 	Control.video = this;
@@ -35,10 +35,26 @@ Control.Video = function(ctx, props) {
 
 Control.Video.prototype = new Widget();
 
-Control.Video.prototype.onUpdate = function(videoFrame) {
+Control.Video.prototype.onUpdate = function(blobX, blobY) {
+    //console.log("BLOB"  + blobX + ":" + blobY);
+    this.x = blobX * this.userDefinedRange;
+    this.y = blobY * this.userDefinedRange;
+    //console.log(this.x + ":" + this.y);
+    if(!this.isLocal && Control.protocol == "OSC") {
+        var valueString = "|" + this.address;
+        valueString += ":" + this.x + "," + this.y;
+        Control.valuesString += valueString;
+    }else if (!this.isLocal && Control.protocol == "MIDI") {
+        var valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + this.midiNumber+ "," + Math.round(this.x);
+        Control.valuesString += valueString;
+        valueString = "|" + this.midiType + "," + (this.channel - 1) + "," + (this.midiNumber+ 1) + "," + Math.round(this.y);
+        Control.valuesString += valueString;
+    }
+    
+    
 	//console.log("RECEIVED FRAME!" + videoFrame[0] + ": " + videoFrame[20] + ":" + videoFrame[30]);
 	
-	var newFrame = [];
+	/*var newFrame = [];
 	var myImageData = this.canvasCtx.getImageData(0, 0, 144, 192);
 	for(var i = 0; i < videoFrame.length; i++) {
 		var pixVal = Math.floor(videoFrame[i] * 255);
@@ -49,7 +65,8 @@ Control.Video.prototype.onUpdate = function(videoFrame) {
 	}
 	
 	this.canvasCtx.putImageData(myImageData, 0, 0);
-	
+	*/
+     
     // this.x = x;
     // this.y = y;
     // this.z = z;

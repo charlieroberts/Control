@@ -5,16 +5,18 @@
 #include "Noise.hpp"
 #include "CameraManager.h"
 
+#import "PhoneGapViewController.h"
+#import "PhoneGapDelegate.h"
 
 #define PIXEL_SKIP 15
 #define IS_CAMERA 1
 #define USE_RGB_THRESHOLDS 1
 
-
-
 RectBlobDetect::RectBlobDetect() {
+  PhoneGapDelegate *del = (PhoneGapDelegate *)[[UIApplication sharedApplication] delegate];
+  PhoneGapViewController *vc = del.viewController;
   
-  
+  webView = vc.webView;
   minRed = 0;
   maxRed = 100;
   minGreen = 125;
@@ -249,8 +251,12 @@ void RectBlobDetect::Draw() {
         float OSC_X = Y_raw /  vp_h;
         float OSC_Y = X_raw /  vp_w;
         
-        printf(" OSC_X, OSC_Y = %f %f\n", OSC_X, OSC_Y);
+        //printf(" OSC_X, OSC_Y = %f %f\n", OSC_X, OSC_Y);
         
+        NSString * jsCallBack = [[NSString alloc] initWithFormat:@"Control.video.onUpdate(%f, %f);", OSC_X, OSC_Y];
+        [webView stringByEvaluatingJavaScriptFromString:jsCallBack];
+        [jsCallBack release];
+
         // TODO... charlieOSC(OSC_X, OSC_Y);
     }
   

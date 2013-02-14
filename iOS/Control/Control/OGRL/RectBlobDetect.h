@@ -7,6 +7,8 @@
 #include "FBO.hpp"
 #include "ContainerBlobInfo.h"
 
+#import <UIKit/UIKit.h>
+
 #ifndef RectBlobDetect_h
 #define RectBlobDetect_h
 
@@ -22,7 +24,9 @@ public:
   Texture* videoTexture;
   Texture* filterTexture;
   FBO* fbo;
- 
+    
+  UIWebView *webView;
+    
   Circle* blobCircle;
   
   Rectangle* blobRect;
