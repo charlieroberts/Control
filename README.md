@@ -54,7 +54,7 @@ Community
 ---------
 
 - [Website](http://www.charlie-roberts.com/Control)
-- [Forum](http://www.charlie-roberts.com/Control/forum)
+- [Forum](http://charlie-roberts.com/Control/?forum=control-2)
     
 License
 -------
