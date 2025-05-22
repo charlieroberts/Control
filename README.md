@@ -1,6 +1,8 @@
 Control
 ========
 
+*This repo has been archived.* 
+
 **IMPORTANT**: If you are planning on developing / submitting patches, please use the Development branch which has been
 completely refactored and is moving towards a 2.0 release.
 
